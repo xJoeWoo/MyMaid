@@ -37,8 +37,9 @@ public class Weibo_TimeLine extends Thread {
 
 			HttpResponse httpResponse = new DefaultHttpClient()
 					.execute(httpGet);
-
+			
 			httpResult = EntityUtils.toString(httpResponse.getEntity());
+			
 			Log.e(TAG, "GOT Statues length: " + String.valueOf(httpResult.length()));
 
 			mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO, httpResult)
@@ -51,75 +52,6 @@ public class Weibo_TimeLine extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		// try {
-		// URL url = new URL(WeiboConstant.TIMELINE_URL + "?access_token="
-		// + WeiboConstant.ACCESS_TOKEN + "&count=" + count);
-		//
-		// HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		// conn.setConnectTimeout(CONNECT_TIMEOUT);
-		// conn.setRequestMethod("GET");
-		//
-		// if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-		//
-		//
-		// InputStream is = conn.getInputStream();
-		//
-		// if (null != is && "gzip".equals(conn.getContentEncoding())) {
-		// // the response is gzipped
-		// is = new GZIPInputStream(is);
-		// Log.e(TAG, "GZIP");
-		// }
-		//
-		// BufferedReader in = new BufferedReader(new InputStreamReader(is));
-		// StringBuffer buffer = new StringBuffer();
-		// String line = "";
-		// try {
-		// while ((line = in.readLine()) != null){
-		// buffer.append(line);
-		// }
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		//
-		// // int i = -1;
-		// //
-		// // ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		// //
-		// // while((i=is.read()) != -1)
-		// // {
-		// // baos.write(i);
-		// // }
-		// //
-		// // httpResult = baos.toString();
-		// Log.e(TAG, "GOT: " + buffer.toString());
-		// //
-		//
-
-		//
-		// }
-		//
-		//
-		// } catch (ClientProtocolException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-
-		// Gson gson = new Gson();
-		// List<FriendsTimelineBean> list = gson.fromJson(httpResult,
-		// new TypeToken<List<FriendsTimelineBean>>() {
-		// }.getType());
-		//
-		// for (int i = 0; i < list.size(); i++) {
-		// Log.e(TAG, "No. " + String.valueOf(i));
-		// Log.e(TAG, list.get(i).getStatuses());
-		// Log.e(TAG, LOG_DEVIDER);
-		// }
-
 	}
 
 }

@@ -10,12 +10,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 
 @SuppressLint("HandlerLeak")
 public class TimeLine extends Activity {
 
+	
+	
 	ListView lv;
 	TextView tv;
 
@@ -23,6 +26,8 @@ public class TimeLine extends Activity {
 	SQLiteDatabase sql;
 
 	protected void onCreate(Bundle savedInstanceState) {
+		setContentView(R.layout.timeline);
+		
 		super.onCreate(savedInstanceState);
 
 		new Weibo_TimeLine(25, mHandler).start();
@@ -36,10 +41,11 @@ public class TimeLine extends Activity {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case GOT_FRIENDS_TIMELINE_INFO: {
-				String temp = (String)msg.obj;
-				if(temp != null && !temp.equals(""))
+				String temp = (String) msg.obj;
+				if (temp != null && !temp.equals("")) {
+					Log.e(TAG, temp);
 					tv.setText(temp);
-				else
+				} else
 					tv.setText("No Response");
 
 				break;
