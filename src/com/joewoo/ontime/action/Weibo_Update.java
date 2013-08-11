@@ -53,7 +53,7 @@ public class Weibo_Update extends AsyncTask<String, Integer, String> {
 		Log.e(TAG, "Update Weibo Thread Start");
 		String httpResult = "{ \"error_code\":\"233\",\"error\":\"新浪抽风了，没有信息返回\"}";
 
-		HttpPost httpRequest = new HttpPost(WeiboConstant.UPDATE_URL);
+		HttpPost httpRequest = new HttpPost(UPDATE_URL);
 		List<NameValuePair> params1 = new ArrayList<NameValuePair>();
 		params1.add(new BasicNameValuePair(ACCESS_TOKEN, WeiboConstant.ACCESS_TOKEN));
 		params1.add(new BasicNameValuePair(STATUS, status));

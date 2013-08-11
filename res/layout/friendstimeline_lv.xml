@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp" >
+
+    <TextView
+        android:id="@+id/friendstimeline_divider"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/mymaid"
+        android:gravity="center"
+        android:textSize="16sp" />
+    
+    <TextView
+        android:id="@+id/friendstimeline_screen_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="16dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_below="@+id/friendstimeline_divider"
+        android:text="用户名"
+        android:textSize="16sp"
+        android:textStyle="bold" />"
+
+    <TextView
+        android:id="@+id/friendstimeline_text"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/friendstimeline_screen_name"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:text="内容"
+        android:textSize="14sp" />
+    
+    <TextView
+        android:id="@+id/friendstimeline_retweeted_status_screen_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/friendstimeline_text"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/grey"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:text="用户名" />
+    
+    <TextView
+        android:id="@+id/friendstimeline_retweeted_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/friendstimeline_retweeted_status_screen_name"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:background="@color/grey"
+        
+        android:textSize="14sp"
+        android:text="内容" />
+    "
+
+    <TextView
+        android:layout_marginTop="16dp"
+        android:id="@+id/friendstimeline_comments_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/friendstimeline_retweeted_status"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:text="评论数"
+        android:textColor="@color/textGrey"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/friendstimeline_comments_count_img"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_below="@+id/friendstimeline_retweeted_status"
+        android:layout_marginTop="18dp"
+        android:layout_marginRight="2dp"
+        android:layout_toLeftOf="@+id/friendstimeline_comments_count"
+        android:src="@drawable/comments_dark" />
+
+    <TextView
+        android:id="@+id/friendstimeline_reposts_count"
+        android:layout_marginTop="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/friendstimeline_retweeted_status"
+        android:layout_marginRight="12dp"
+        android:layout_toLeftOf="@+id/friendstimeline_comments_count_img"
+        android:text="转发数"
+        android:textColor="@color/textGrey"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/friendstimeline_reposts_count_img"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_below="@+id/friendstimeline_retweeted_status"
+        android:layout_marginTop="18dp"
+        android:layout_marginRight="2dp"
+        android:layout_toLeftOf="@+id/friendstimeline_reposts_count"
+        android:src="@drawable/reposts_dark" />
+
+    <TextView
+        android:id="@+id/friendstimeline_created_at"
+        android:layout_marginTop="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/friendstimeline_retweeted_status"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:text="时间"
+        android:textColor="@color/textGrey"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/friendstimeline_source"
+        android:layout_marginTop="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/friendstimeline_retweeted_status"
+        android:layout_toRightOf="@+id/friendstimeline_created_at"
+        android:text="来源"
+        android:textColor="@color/textGrey"
+        android:textSize="12sp" />
+
+    
+
+</RelativeLayout>

@@ -29,7 +29,7 @@ public class Weibo_Show extends Thread {
 		Log.e(TAG, "Show User Info Thread Start");
 		String httpResult = "NO_MESSAGES";
 
-		HttpGet httpGet = new HttpGet(WeiboConstant.SHOW_URL + "?access_token="
+		HttpGet httpGet = new HttpGet(SHOW_URL + "?access_token="
 				+ WeiboConstant.ACCESS_TOKEN + "&uid=" + WeiboConstant.UID);
 		try {
 			HttpResponse httpResponse = new DefaultHttpClient().execute(httpGet);

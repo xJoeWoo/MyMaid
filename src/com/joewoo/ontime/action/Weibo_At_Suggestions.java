@@ -39,7 +39,7 @@ public class Weibo_At_Suggestions extends Thread {
 		Log.e(TAG, "At User Suggestions Thread Start");
 		String httpResult = "{ \"error_code\" : \"233\" }";
 
-		HttpGet httpGet = new HttpGet(WeiboConstant.AT_SUGGESTIONS_URL
+		HttpGet httpGet = new HttpGet(AT_SUGGESTIONS_URL
 				+ "?access_token=" + WeiboConstant.ACCESS_TOKEN + "&q=" + user
 				+ "&type=0");
 

@@ -54,7 +54,7 @@ public class Weibo_Upload extends AsyncTask<String, Integer, String> {
 
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpContext httpContext = new BasicHttpContext();
-		HttpPost httpPost = new HttpPost(WeiboConstant.UPLOAD_URL);
+		HttpPost httpPost = new HttpPost(UPLOAD_URL);
 
 		CustomMultipartEntity multipartContent = new CustomMultipartEntity(
 				new ProgressListener() {

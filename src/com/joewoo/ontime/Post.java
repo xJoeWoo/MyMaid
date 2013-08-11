@@ -280,8 +280,8 @@ public class Post extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home: {
-			startActivity(new Intent(Post.this, TimeLine.class));
-			finish();
+			startActivity(new Intent(Post.this, FriendsTimeLine.class));
+//			finish();
 			break;
 		}
 		case MENU_LETTERS: {

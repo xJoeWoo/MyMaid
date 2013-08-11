@@ -51,7 +51,7 @@ public class Login extends Activity {
 
 		wv_login = (WebView) findViewById(R.id.wv_login);
 		wv_login.getSettings().setJavaScriptEnabled(true);
-		wv_login.loadUrl(WeiboConstant.AUTH_URL);
+		wv_login.loadUrl(AUTH_URL);
 
 		uids = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
 		uidsE = uids.edit();
@@ -62,7 +62,7 @@ public class Login extends Activity {
 
 			@Override
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
-				if (url.startsWith(WeiboConstant.CALLBACK_URL)) {
+				if (url.startsWith(CALLBACK_URL)) {
 					view.cancelLongPress();
 					view.stopLoading();
 					Toast.makeText(Login.this, "大概要10秒钟授权…", Toast.LENGTH_LONG)

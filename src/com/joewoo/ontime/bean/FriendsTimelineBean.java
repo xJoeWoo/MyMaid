@@ -1,36 +1,17 @@
 package com.joewoo.ontime.bean;
 
-public class FriendsTimelineBean {
+import java.util.List;
 
-	private String statuses;
-	private String id;
-	private String text;
-	private String reposts_count;
-	private String comments_count;
-	private String thumbnail_pic;
-
-	private String total_number;
+public class FriendsTimeLineBean {
 	
-	public String getStatuses(){
+	List<StatusesBean> statuses;
+	private String total_number;
+
+	public List<StatusesBean> getStatuses(){
 		return statuses;
 	}
-	public String getId(){
-		return id;
-	}
-	public String getText(){
-		return text;
-	}
-	public String getRepostsCount(){
-		return reposts_count;
-	}
-	public String getCommentsCount(){
-		return comments_count;
-	}
-	public String getThumbnailPic(){
-		return thumbnail_pic;
-	}
-
 	public String getTotalNumber(){
 		return total_number;
 	}
+
 }

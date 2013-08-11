@@ -1,6 +1,5 @@
 package com.joewoo.ontime.action;
 
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -27,7 +26,6 @@ import android.util.Log;
 
 public class Weibo_Access_Token extends Thread {
 
-
 	private Handler mHandler;
 
 	public Weibo_Access_Token(Handler handler) {
@@ -37,15 +35,13 @@ public class Weibo_Access_Token extends Thread {
 	public void run() {
 		Log.e(TAG, "Request Access Token Thread Start");
 		String httpResult = "NO_MESSAGES";
-		HttpPost httpRequest = new HttpPost(WeiboConstant.TOKEN_URL);
+		HttpPost httpRequest = new HttpPost(TOKEN_URL);
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("client_id", WeiboConstant.APP_KEY));
-		params.add(new BasicNameValuePair("client_secret",
-				WeiboConstant.APP_SECRET));
+		params.add(new BasicNameValuePair("client_id", APP_KEY));
+		params.add(new BasicNameValuePair("client_secret", APP_SECRET));
 		params.add(new BasicNameValuePair("grant_type", "authorization_code"));
 		params.add(new BasicNameValuePair("code", WeiboConstant.AUTH_CODE));
-		params.add(new BasicNameValuePair("redirect_uri",
-				WeiboConstant.CALLBACK_URL));
+		params.add(new BasicNameValuePair("redirect_uri", CALLBACK_URL));
 		try {
 			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 			HttpClient httpClient = new DefaultHttpClient();
@@ -53,15 +49,15 @@ public class Weibo_Access_Token extends Thread {
 			if (httpResponse.getStatusLine().getStatusCode() == 200) {
 				httpResult = EntityUtils.toString(httpResponse.getEntity());
 				Log.e(TAG, "GOT: " + httpResult);
-				
+
 				Gson gson = new Gson();
-				WeiboBackBean j = gson.fromJson(httpResult, WeiboBackBean.class);
+				WeiboBackBean j = gson
+						.fromJson(httpResult, WeiboBackBean.class);
 
 				httpClient.getConnectionManager().shutdown();
-				
-				mHandler.obtainMessage(GOT_ACCESS_TOKEN, j)
-				.sendToTarget();
-				
+
+				mHandler.obtainMessage(GOT_ACCESS_TOKEN, j).sendToTarget();
+
 			}
 		} catch (UnsupportedEncodingException e) {
 			mHandler.obtainMessage(GOT_ACCESS_TOKEN_FAIL, httpResult)
