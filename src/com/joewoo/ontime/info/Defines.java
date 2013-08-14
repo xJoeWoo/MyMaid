@@ -44,8 +44,13 @@ public class Defines {
 	public final static String CREATED_AT = "created_at";
 	public final static String RETWEETED_STATUS = "retweeted_status";
 	public final static String RETWEETED_STATUS_SCREEN_NAME = "retweeted_status_screen_name";
+	public final static String RETWEETED_STATUS_CREATED_AT = "retweeted_status_created_at";
+	public final static String RETWEETED_STATUS_COMMENTS_COUNT = "retweeted_status_comments_count";
+	public final static String RETWEETED_STATUS_REPOSTS_COUNT = "retweeted_status_reposts_count";
 	public final static String WEIBO_ID = "weibo_id";
 	public final static String IS_COMMENT = "isComment";
+	public final static String HAVE_PIC = "havePic";
+	public final static String IS_REPOST = "isRepost";
 	
 	public final static String[] dayNames = {"星期几", "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
 	

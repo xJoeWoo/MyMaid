@@ -10,6 +10,9 @@ public class StatusesBean {
 	private String reposts_count;
 	private String comments_count;
 	private UserBean user;
+	private String thumbnail_pic;
+	private String bmiddle_pic;
+	private String original_pic;
 	
 	public String getCreatedAt(){
 		return created_at;
@@ -40,5 +43,14 @@ public class StatusesBean {
 	}
 	public UserBean getUser(){
 		return user;
+	}
+	public String getThumbnailPic(){
+		return thumbnail_pic;
+	}
+	public String getBmiddlePic(){
+		return bmiddle_pic;
+	}
+	public String getOriginalPic(){
+		return original_pic;
 	}
 }

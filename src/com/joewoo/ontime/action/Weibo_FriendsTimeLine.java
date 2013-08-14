@@ -66,10 +66,10 @@ public class Weibo_FriendsTimeLine extends Thread {
 				source = source.substring(source.indexOf(">") + 1,
 						source.length());
 				source = source.substring(0, source.indexOf("<"));
-				map.put(SOURCE, " · " + source);
+				map.put(SOURCE, source);
 				source = statuses.get(i).getCreatedAt();
 				source = source.substring(source.indexOf(":") - 2,
-						source.indexOf(":") + 6);
+						source.indexOf(":") + 3);
 				map.put(CREATED_AT, source);
 				map.put(UID, statuses.get(i).getUser().getId());
 				map.put(SCREEN_NAME, statuses.get(i).getUser().getScreenName());
@@ -78,12 +78,27 @@ public class Weibo_FriendsTimeLine extends Thread {
 				map.put(REPOSTS_COUNT, statuses.get(i).getRepostsCount());
 				map.put(WEIBO_ID, statuses.get(i).getId());
 				if (statuses.get(i).getRetweetedStatus() != null) {
+					map.put(IS_REPOST, " ");
+					String created_at;
+					created_at = statuses.get(i).getRetweetedStatus().getCreatedAt();
+					created_at = created_at.substring(created_at.indexOf(":") - 2,
+							created_at.indexOf(":") + 3);
+					map.put(RETWEETED_STATUS_CREATED_AT, created_at);
+					map.put(RETWEETED_STATUS_COMMENTS_COUNT, statuses.get(i).getRetweetedStatus().getCommentsCount());
+					map.put(RETWEETED_STATUS_REPOSTS_COUNT, statuses.get(i).getRetweetedStatus().getRepostsCount());
 					map.put(RETWEETED_STATUS_SCREEN_NAME, statuses.get(i).getRetweetedStatus().getUser().getScreenName());
 					map.put(RETWEETED_STATUS, statuses.get(i).getRetweetedStatus().getText());
+					if(statuses.get(i).getRetweetedStatus().getThumbnailPic() != null)
+					{
+						map.put(HAVE_PIC, " ");
+					}
+					
 				}
-//				else{
-//					map.put(RETWEETED_STATUS, "");
-//				}
+				if(statuses.get(i).getThumbnailPic() != null)
+				{
+//					map.put(HAVE_PIC, statuses.get(i).getThumbnailPic());
+					map.put(HAVE_PIC, " ");
+				}
 
 				text.add(map);
 			}
