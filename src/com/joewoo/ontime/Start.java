@@ -31,7 +31,7 @@ public class Start extends Activity {
 	public static Start _instance = null;
 
 	private MySQLHelper sqlHelper = new MySQLHelper(Start.this, SQL_NAME,
-			null, 1);
+			null, SQL_VERSION);
 	private SQLiteDatabase sql;
 
 	private static final Uri JouYiu = Uri.parse("http://weibo.com/1665287983");
@@ -95,7 +95,7 @@ public class Start extends Activity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
 
-		menu.add(0, MENU_PROFILE_SWITCH, 0, "切换用户").setIcon(R.drawable.list)
+		menu.add(0, MENU_PROFILE_SWITCH, 0, "切换用户").setIcon(R.drawable.social_cc_bcc)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		return true;

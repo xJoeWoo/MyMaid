@@ -15,9 +15,12 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
+        public static final int bgGrey=0x7f060003;
         public static final int grey=0x7f060001;
         public static final int mymaid=0x7f060000;
         public static final int textGrey=0x7f060002;
+        public static final int viewShadow1=0x7f060004;
+        public static final int viewShadow2=0x7f060005;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -30,76 +33,122 @@ public final class R {
         public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
-        public static final int actionbar=0x7f020000;
-        public static final int bg=0x7f020001;
-        public static final int bubbles=0x7f020002;
-        public static final int button_regist_down=0x7f020003;
-        public static final int button_regist_info=0x7f020004;
-        public static final int button_regist_up=0x7f020005;
-        public static final int comments_dark=0x7f020006;
-        public static final int ic_launcher=0x7f020007;
-        public static final int image=0x7f020008;
-        public static final int image_added=0x7f020009;
-        public static final int image_dark=0x7f02000a;
-        public static final int list=0x7f02000b;
-        public static final int progress_bg_holo_dark=0x7f02000c;
-        public static final int progress_primary_holo_light=0x7f02000d;
-        public static final int progress_secondary_holo_light=0x7f02000e;
-        public static final int progressbar=0x7f02000f;
-        public static final int reposts_dark=0x7f020010;
-        public static final int send=0x7f020011;
-        public static final int start_pic=0x7f020012;
-        public static final int start_pic_down=0x7f020013;
-        public static final int start_pic_jouyiu=0x7f020014;
-        public static final int start_pic_up=0x7f020015;
-        public static final int text_bg=0x7f020016;
-        public static final int text_bg2=0x7f020017;
-        public static final int user=0x7f020018;
-        public static final int wink=0x7f020019;
+        public static final int actionbar2=0x7f020000;
+        public static final int actionbar_split=0x7f020001;
+        public static final int actionbar_stack=0x7f020002;
+        public static final int bg=0x7f020003;
+        public static final int button_regist_down=0x7f020004;
+        public static final int button_regist_info=0x7f020005;
+        public static final int button_regist_up=0x7f020006;
+        public static final int collections_labels=0x7f020007;
+        public static final int comments_dark=0x7f020008;
+        public static final int content_edit=0x7f020009;
+        public static final int content_picture=0x7f02000a;
+        public static final int content_picture_ok=0x7f02000b;
+        public static final int ic_launcher=0x7f02000c;
+        public static final int ic_menu_emoticons=0x7f02000d;
+        public static final int image_dark=0x7f02000e;
+        public static final int navigation_refresh=0x7f02000f;
+        public static final int progress_bg_holo_dark=0x7f020010;
+        public static final int progress_primary_holo_light=0x7f020011;
+        public static final int progress_secondary_holo_light=0x7f020012;
+        public static final int progressbar=0x7f020013;
+        public static final int rating_important=0x7f020014;
+        public static final int reposts_dark=0x7f020015;
+        public static final int social_cc_bcc=0x7f020016;
+        public static final int social_group=0x7f020017;
+        public static final int social_reply=0x7f020018;
+        public static final int social_send_now=0x7f020019;
+        public static final int start_pic=0x7f02001a;
+        public static final int start_pic_down=0x7f02001b;
+        public static final int start_pic_jouyiu=0x7f02001c;
+        public static final int start_pic_up=0x7f02001d;
+        public static final int text_bg2=0x7f02001e;
+        public static final int view_bg=0x7f02001f;
     }
     public static final class id {
-        public static final int action_search=0x7f0a001d;
-        public static final int btn_start_info=0x7f0a001c;
-        public static final int btn_start_login=0x7f0a001a;
-        public static final int btn_start_post=0x7f0a001b;
+        public static final int action_search=0x7f0a003f;
+        public static final int btn_start_info=0x7f0a003d;
+        public static final int btn_start_login=0x7f0a003b;
+        public static final int btn_start_post=0x7f0a003c;
         public static final int comment_et=0x7f0a0002;
-        public static final int et_post=0x7f0a0016;
-        public static final int friendstimeline_comments_count=0x7f0a0009;
-        public static final int friendstimeline_comments_count_img=0x7f0a000a;
-        public static final int friendstimeline_created_at=0x7f0a000d;
-        public static final int friendstimeline_divider=0x7f0a0004;
-        public static final int friendstimeline_have_image=0x7f0a000f;
-        public static final int friendstimeline_reposts_count=0x7f0a000b;
-        public static final int friendstimeline_reposts_count_img=0x7f0a000c;
-        public static final int friendstimeline_retweeted_status=0x7f0a0008;
-        public static final int friendstimeline_retweeted_status_comments_count=0x7f0a0011;
-        public static final int friendstimeline_retweeted_status_created_at=0x7f0a0013;
-        public static final int friendstimeline_retweeted_status_reposts_count=0x7f0a0012;
-        public static final int friendstimeline_retweeted_status_rl=0x7f0a0010;
-        public static final int friendstimeline_retweeted_status_screen_name=0x7f0a0007;
-        public static final int friendstimeline_screen_name=0x7f0a0005;
-        public static final int friendstimeline_source=0x7f0a000e;
-        public static final int friendstimeline_text=0x7f0a0006;
-        public static final int iv_start=0x7f0a0019;
+        public static final int comments_to_me_created_at=0x7f0a0009;
+        public static final int comments_to_me_screen_name=0x7f0a0004;
+        public static final int comments_to_me_source=0x7f0a000a;
+        public static final int comments_to_me_status=0x7f0a0007;
+        public static final int comments_to_me_status_rl=0x7f0a0006;
+        public static final int comments_to_me_status_screen_name=0x7f0a0008;
+        public static final int comments_to_me_text=0x7f0a0005;
+        public static final int et_post=0x7f0a0027;
+        public static final int frag_cmt_tv=0x7f0a000b;
+        public static final int frag_mentions_tv=0x7f0a000c;
+        public static final int friendstimeline_comments_count=0x7f0a0013;
+        public static final int friendstimeline_comments_count_img=0x7f0a0014;
+        public static final int friendstimeline_created_at=0x7f0a0017;
+        public static final int friendstimeline_divider=0x7f0a000e;
+        public static final int friendstimeline_have_image=0x7f0a001a;
+        public static final int friendstimeline_reposts_count=0x7f0a0015;
+        public static final int friendstimeline_reposts_count_img=0x7f0a0016;
+        public static final int friendstimeline_retweeted_status=0x7f0a0012;
+        public static final int friendstimeline_retweeted_status_rl=0x7f0a0019;
+        public static final int friendstimeline_retweeted_status_screen_name=0x7f0a0011;
+        public static final int friendstimeline_rl2=0x7f0a0003;
+        public static final int friendstimeline_screen_name=0x7f0a000f;
+        public static final int friendstimeline_source=0x7f0a0018;
+        public static final int friendstimeline_text=0x7f0a0010;
+        public static final int iv_start=0x7f0a003a;
         public static final int lv_at=0x7f0a0000;
-        public static final int lv_friends_timeline=0x7f0a0003;
+        public static final int lv_friends_timeline=0x7f0a000d;
         public static final int lv_tv1=0x7f0a0001;
-        public static final int pb_post=0x7f0a0017;
-        public static final int tv_getup=0x7f0a0014;
-        public static final int tv_post_info=0x7f0a0018;
-        public static final int wv_login=0x7f0a0015;
+        public static final int mentions_comments_count=0x7f0a0024;
+        public static final int mentions_created_at=0x7f0a0023;
+        public static final int mentions_have_image=0x7f0a0026;
+        public static final int mentions_reposts_count=0x7f0a0025;
+        public static final int mentions_retweeted_status=0x7f0a0020;
+        public static final int mentions_retweeted_status_rl=0x7f0a001f;
+        public static final int mentions_retweeted_status_screen_name=0x7f0a0021;
+        public static final int mentions_screen_name=0x7f0a001d;
+        public static final int mentions_source=0x7f0a0022;
+        public static final int mentions_text=0x7f0a001e;
+        public static final int pager=0x7f0a003e;
+        public static final int pb_post=0x7f0a0028;
+        public static final int single_weibo_comments_count=0x7f0a0038;
+        public static final int single_weibo_created_at=0x7f0a002c;
+        public static final int single_weibo_image=0x7f0a0036;
+        public static final int single_weibo_profile_image=0x7f0a002a;
+        public static final int single_weibo_reposts_count=0x7f0a0039;
+        public static final int single_weibo_retweeted_status=0x7f0a0031;
+        public static final int single_weibo_retweeted_status_comments_count=0x7f0a002f;
+        public static final int single_weibo_retweeted_status_created_at=0x7f0a0034;
+        public static final int single_weibo_retweeted_status_reposts_count=0x7f0a0035;
+        public static final int single_weibo_retweeted_status_rl=0x7f0a002e;
+        public static final int single_weibo_retweeted_status_screen_name=0x7f0a0030;
+        public static final int single_weibo_retweeted_status_source=0x7f0a0033;
+        public static final int single_weibo_retweeted_status_weibo_image=0x7f0a0032;
+        public static final int single_weibo_screen_name=0x7f0a002b;
+        public static final int single_weibo_source=0x7f0a0037;
+        public static final int single_weibo_text=0x7f0a002d;
+        public static final int tv_getup=0x7f0a001b;
+        public static final int tv_post_info=0x7f0a0029;
+        public static final int wv_login=0x7f0a001c;
     }
     public static final class layout {
         public static final int at=0x7f030000;
         public static final int at_lv=0x7f030001;
         public static final int comment=0x7f030002;
-        public static final int friendstimeline=0x7f030003;
-        public static final int friendstimeline_lv=0x7f030004;
-        public static final int friendstimeline_lv_new=0x7f030005;
-        public static final int getup=0x7f030006;
-        public static final int login=0x7f030007;
-        public static final int post=0x7f030008;
-        public static final int start=0x7f030009;
+        public static final int comments_to_me_lv=0x7f030003;
+        public static final int fragment_comments=0x7f030004;
+        public static final int fragment_metions=0x7f030005;
+        public static final int friendstimeline=0x7f030006;
+        public static final int friendstimeline_lv=0x7f030007;
+        public static final int friendstimeline_lv_new=0x7f030008;
+        public static final int getup=0x7f030009;
+        public static final int login=0x7f03000a;
+        public static final int mentions_lv=0x7f03000b;
+        public static final int post=0x7f03000c;
+        public static final int singleweibo=0x7f03000d;
+        public static final int start=0x7f03000e;
+        public static final int timeline_cmt_atme=0x7f03000f;
     }
     public static final class menu {
         public static final int at=0x7f090000;
@@ -120,18 +169,24 @@ public final class R {
         public static final int action_search=0x7f070004;
         public static final int action_settings=0x7f070003;
         public static final int app_name=0x7f070000;
-        public static final int et_post_hint=0x7f070010;
-        public static final int hello_world=0x7f07000f;
+        public static final int et_post_hint=0x7f070011;
+        public static final int hello_world=0x7f070010;
+        public static final int menu_favourite_create=0x7f07000f;
+        public static final int title_atme=0x7f070013;
+        public static final int title_comments_to_me=0x7f070014;
+        public static final int title_friends_timeline=0x7f070012;
     }
     public static final class style {
         /** 
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+
     
 
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
+
         
 
         Base application theme for API 11+. This theme completely replaces
@@ -150,6 +205,9 @@ public final class R {
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f080001;
+        /**  <style name="Theme.MyMaid" parent="android:style/Theme.Holo.Light.DarkActionBar"> 
+ <item name="android:actionBarStyle">@style/Widget.ActionBar</item> 
+         */
         public static final int Theme_MyMaid=0x7f080003;
         public static final int Widget_ActionBar=0x7f080002;
     }

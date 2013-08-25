@@ -16,45 +16,46 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
-import android.os.Handler;
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.WeiboBackBean;
 import com.joewoo.ontime.info.WeiboConstant;
 
-public class Weibo_Repost extends Thread {
+import android.os.Handler;
+import android.util.Log;
+
+public class Weibo_CommentCreate extends Thread {
+
 	private String weibo_id;
 	private Handler mHandler;
-	private String status;
-	private boolean is_comment = false;
+	private String comment;
+	private boolean comment_ori = false;
 
-	public Weibo_Repost(String status, String weibo_id, Handler handler) {
+	public Weibo_CommentCreate(String comment, String weibo_id, Handler handler) {
 		this.weibo_id = weibo_id;
 		this.mHandler = handler;
-		this.status = status;
+		this.comment = comment;
 	}
 
-	public Weibo_Repost(String comment, String weibo_id, boolean is_comment,
-			Handler handler) {
+	public Weibo_CommentCreate(String comment, String weibo_id,
+			boolean comment_ori, Handler handler) {
 		this.weibo_id = weibo_id;
 		this.mHandler = handler;
-		this.status = comment;
-		this.is_comment = is_comment;
+		this.comment = comment;
+		this.comment_ori = comment_ori;
 	}
 
 	public void run() {
-		Log.e(TAG, "Repost Thread start");
+		Log.e(TAG, "Comment Create Thread start");
 		String httpResult = "{ \"error_code\" : \"233\" }";
 
-		HttpPost httpRequest = new HttpPost(REPOST_URL);
+		HttpPost httpRequest = new HttpPost(COMMENT_CREATE_URL);
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair(ACCESS_TOKEN,
 				WeiboConstant.ACCESS_TOKEN));
 		params.add(new BasicNameValuePair("id", weibo_id));
-		params.add(new BasicNameValuePair("status", status));
-		if (is_comment) {
-			params.add(new BasicNameValuePair("is_comment", "1"));
+		params.add(new BasicNameValuePair("comment", comment));
+		if (comment_ori) {
+			params.add(new BasicNameValuePair("comment_ori", "1"));
 		}
 		try {
 			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
@@ -63,7 +64,8 @@ public class Weibo_Repost extends Thread {
 			.execute(httpRequest).getEntity());
 			Log.e(TAG, "GOT: " + httpResult);
 
-			mHandler.obtainMessage(GOT_REPOST_INFO, new Gson().fromJson(httpResult, WeiboBackBean.class)).sendToTarget();
+
+			mHandler.obtainMessage(GOT_COMMENT_CREATE_INFO, new Gson().fromJson(httpResult, WeiboBackBean.class)).sendToTarget(); 
 
 		} catch (UnsupportedEncodingException e) {
 

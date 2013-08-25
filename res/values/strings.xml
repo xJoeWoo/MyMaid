@@ -16,7 +16,12 @@
     <string name="action_added">删除图片</string>
     <string name="action_logout">注销</string>
     <string name="action_clear_draft">清除草稿</string>
+    <string name="menu_favourite_create">收藏</string>
     <string name="hello_world">Hello world!</string>
     <string name="et_post_hint">Tell her your Mind…</string>
+    <string name="title_friends_timeline">微博</string>
+    <string name="title_atme">提及</string>
+    <string name="title_comments_to_me">评论</string>
+    
 
 </resources>

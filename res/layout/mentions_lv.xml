@@ -12,10 +12,10 @@
         android:id="@+id/friendstimeline_rl2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="16dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:background="@drawable/view_bg" >
+        android:background="@drawable/view_bg"
+        android:paddingBottom="16dp" >
 
         <!-- <TextView -->
         <!-- android:id="@+id/friendstimeline_divider" -->
@@ -29,7 +29,7 @@
         <!-- android:textSize="16sp" /> -->
 
         <TextView
-            android:id="@+id/friendstimeline_screen_name"
+            android:id="@+id/mentions_screen_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -40,15 +40,13 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        
-
         <TextView
-            android:id="@+id/friendstimeline_text"
+            android:id="@+id/mentions_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/friendstimeline_screen_name"
+            android:layout_below="@+id/mentions_screen_name"
             android:layout_marginTop="4dp"
             android:lineSpacingExtra="4dp"
             android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -57,24 +55,24 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/friendstimeline_retweeted_status_rl"
+            android:id="@+id/mentions_retweeted_status_rl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/friendstimeline_retweeted_status"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/friendstimeline_text"
+            android:layout_alignBottom="@+id/mentions_retweeted_status"
+            android:layout_below="@+id/mentions_text"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="16dp"
             android:background="@drawable/text_bg2" />
 
         <TextView
-            android:id="@+id/friendstimeline_retweeted_status_screen_name"
+            android:id="@+id/mentions_retweeted_status_screen_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/friendstimeline_retweeted_status_rl"
-            android:layout_below="@+id/friendstimeline_text"
+            android:layout_alignLeft="@+id/mentions_retweeted_status_rl"
+            android:layout_below="@+id/mentions_text"
             android:layout_marginLeft="12dp"
             android:layout_marginTop="16dp"
             android:text="用户名"
@@ -82,73 +80,47 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/friendstimeline_retweeted_status"
+            android:id="@+id/mentions_retweeted_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/friendstimeline_retweeted_status_rl"
-            android:layout_alignRight="@+id/friendstimeline_retweeted_status_rl"
-            android:layout_below="@+id/friendstimeline_retweeted_status_screen_name"
+            android:layout_alignLeft="@+id/mentions_retweeted_status_rl"
+            android:layout_alignRight="@+id/mentions_retweeted_status_rl"
+            android:layout_below="@+id/mentions_retweeted_status_screen_name"
             android:layout_marginLeft="12dp"
             android:layout_marginTop="4dp"
             android:lineSpacingExtra="4dp"
             android:text="转发微博原文 转发微博原文 转发微博原文 转发微博原文 转发微博原文 转发微博原文"
             android:textSize="15sp" />
 
-<!--         <TextView -->
-<!--             android:id="@+id/friendstimeline_retweeted_status_comments_count" -->
-<!--             android:layout_width="wrap_content" -->
-<!--             android:layout_height="wrap_content" -->
-<!--             android:layout_alignRight="@+id/friendstimeline_retweeted_status_rl" -->
-<!--             android:layout_below="@+id/friendstimeline_retweeted_status" -->
-<!--             android:layout_marginTop="4dp" -->
-<!--             android:background="@drawable/comments_dark" -->
-<!--             android:paddingRight="@dimen/activity_horizontal_margin" -->
-<!--             android:text="评论数" -->
-<!--             android:textColor="@color/textGrey" -->
-<!--             android:textSize="12sp" /> -->
-
-<!--         <TextView -->
-<!--             android:id="@+id/friendstimeline_retweeted_status_reposts_count" -->
-<!--             android:layout_width="wrap_content" -->
-<!--             android:layout_height="wrap_content" -->
-<!--             android:layout_below="@+id/friendstimeline_retweeted_status" -->
-<!--             android:layout_marginRight="12dp" -->
-<!--             android:layout_marginTop="4dp" -->
-<!--             android:layout_toLeftOf="@+id/friendstimeline_retweeted_status_comments_count" -->
-<!--             android:background="@drawable/reposts_dark" -->
-<!--             android:text="转发数" -->
-<!--             android:textColor="@color/textGrey" -->
-<!--             android:textSize="12sp" /> -->
-
         <TextView
-            android:id="@+id/friendstimeline_source"
+            android:id="@+id/mentions_source"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/friendstimeline_created_at"
-            android:layout_below="@+id/friendstimeline_retweeted_status_rl"
+            android:layout_below="@+id/mentions_retweeted_status_rl"
             android:layout_marginTop="16dp"
+            android:layout_toRightOf="@+id/mentions_created_at"
             android:text="来源"
             android:textColor="@color/textGrey"
             android:textSize="12sp" />
-        
+
         <TextView
-            android:id="@+id/friendstimeline_created_at"
+            android:id="@+id/mentions_created_at"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/friendstimeline_retweeted_status_rl"
             android:layout_alignParentLeft="true"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:layout_below="@+id/mentions_retweeted_status_rl"
             android:layout_marginTop="16dp"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
             android:text="17:25"
             android:textColor="@color/textGrey"
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/friendstimeline_comments_count"
+            android:id="@+id/mentions_comments_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/friendstimeline_retweeted_status_rl"
+            android:layout_below="@+id/mentions_retweeted_status_rl"
             android:layout_marginTop="16dp"
             android:background="@drawable/comments_dark"
             android:paddingRight="@dimen/activity_horizontal_margin"
@@ -157,39 +129,38 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/friendstimeline_reposts_count"
+            android:id="@+id/mentions_reposts_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/friendstimeline_retweeted_status_rl"
+            android:layout_below="@+id/mentions_retweeted_status_rl"
             android:layout_marginRight="12dp"
             android:layout_marginTop="16dp"
-            android:layout_toLeftOf="@+id/friendstimeline_comments_count"
+            android:layout_toLeftOf="@+id/mentions_comments_count"
             android:background="@drawable/reposts_dark"
             android:text="转发数"
             android:textColor="@color/textGrey"
             android:textSize="12sp" />
 
-<!--         <TextView -->
-<!--             android:id="@+id/friendstimeline_retweeted_status_created_at" -->
-<!--             android:layout_width="wrap_content" -->
-<!--             android:layout_height="wrap_content" -->
-<!--             android:layout_alignBottom="@+id/friendstimeline_retweeted_status_screen_name" -->
-<!--             android:layout_toRightOf="@+id/friendstimeline_retweeted_status_screen_name" -->
-<!--             android:paddingLeft="@dimen/activity_horizontal_margin" -->
-<!--             android:text="0:00" -->
-<!--             android:textColor="@color/textGrey" -->
-<!--             android:textSize="14sp" /> -->
+        <!-- <TextView -->
+        <!-- android:id="@+id/friendstimeline_retweeted_status_created_at" -->
+        <!-- android:layout_width="wrap_content" -->
+        <!-- android:layout_height="wrap_content" -->
+        <!-- android:layout_alignBottom="@+id/friendstimeline_retweeted_status_screen_name" -->
+        <!-- android:layout_toRightOf="@+id/friendstimeline_retweeted_status_screen_name" -->
+        <!-- android:paddingLeft="@dimen/activity_horizontal_margin" -->
+        <!-- android:text="0:00" -->
+        <!-- android:textColor="@color/textGrey" -->
+        <!-- android:textSize="14sp" /> -->
 
         <TextView
-            android:id="@+id/friendstimeline_have_image"
+            android:id="@+id/mentions_have_image"
             android:layout_width="14dp"
             android:layout_height="14dp"
-            android:layout_alignTop="@+id/friendstimeline_screen_name"
             android:layout_alignParentRight="true"
-            android:background="@drawable/image_dark"
+            android:layout_alignTop="@+id/mentions_screen_name"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="4dp" />
-
+            android:layout_marginTop="4dp"
+            android:background="@drawable/image_dark" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -69,7 +69,9 @@ public class Weibo_Upload extends AsyncTask<String, Integer, String> {
 			multipartContent.addPart(ACCESS_TOKEN, new StringBody(
 					WeiboConstant.ACCESS_TOKEN));
 			multipartContent.addPart(STATUS, new StringBody(status));
-			
+			Log.e(TAG, WeiboConstant.ACCESS_TOKEN);
+			Log.e(TAG, status);
+			Log.e(TAG, file.getName());
 		} catch (UnsupportedEncodingException e2) {
 			e2.printStackTrace();
 		}

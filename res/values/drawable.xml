@@ -3,4 +3,7 @@
     <color name="mymaid">#fcdc85</color>
 	<color name="grey">#e8e8e8</color>
 	<color name="textGrey">#888888</color>
+	<color name="bgGrey">#e5e5e5</color>
+	<color name="viewShadow1">#d3d3d3</color>
+	<color name="viewShadow2">#d9d9d9</color>
 </resources>

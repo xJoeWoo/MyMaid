@@ -5,6 +5,7 @@ import java.io.File;
 import com.joewoo.ontime.action.Weibo_Update;
 import com.joewoo.ontime.action.Weibo_Upload;
 import com.joewoo.ontime.bean.WeiboBackBean;
+import com.joewoo.ontime.fragment.Timeline_Comments_Mentions;
 import com.joewoo.ontime.info.WeiboConstant;
 import com.joewoo.ontime.tools.Id2MidUtil;
 import com.joewoo.ontime.tools.MySQLHelper;
@@ -60,13 +61,14 @@ public class Post extends Activity {
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
 
-	MySQLHelper sqlHelper = new MySQLHelper(Post.this, SQL_NAME, null, 1);
+	MySQLHelper sqlHelper = new MySQLHelper(Post.this, SQL_NAME, null, SQL_VERSION);
 	SQLiteDatabase sql;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		
 		setContentView(R.layout.post);
 		findViews();
@@ -96,13 +98,12 @@ public class Post extends Activity {
 					sqlHelper.EXPIRES_IN, sqlHelper.SCREEN_NAME,
 					sqlHelper.DRIFT, sqlHelper.PROFILEIMG }, sqlHelper.UID
 					+ "=?", new String[] { lastUid }, null, null, null);
-			c.moveToFirst();
 
 			Log.e(TAG, "2");
 
 			Log.e(TAG, "3");
 
-			if (c.getCount() != 0) {
+			if (c.moveToFirst()) {
 
 				Log.e(TAG, "4");
 
@@ -238,11 +239,11 @@ public class Post extends Activity {
 
 		if (picFile != null) {
 			menu.add(0, MENU_ADD, 0, R.string.action_added)
-					.setIcon(R.drawable.image_added)
+					.setIcon(R.drawable.content_picture_ok)
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		} else {
 			menu.add(0, MENU_ADD, 0, R.string.action_add)
-					.setIcon(R.drawable.image)
+					.setIcon(R.drawable.content_picture)
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
 
@@ -250,25 +251,25 @@ public class Post extends Activity {
 		// .setIcon(R.drawable.ic_menu_btn_at)
 		// .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
-		menu.add(0, MENU_AT, 0, "@人").setIcon(R.drawable.user)
+		menu.add(0, MENU_AT, 0, "@人").setIcon(R.drawable.social_group)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		menu.add(0, MENU_EMOTION, 0, R.string.action_add_emotion)
-				.setIcon(R.drawable.wink)
+				.setIcon(R.drawable.ic_menu_emoticons)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		menu.add(0, MENU_TOPIC, 0, R.string.action_add_topic)
-				.setIcon(R.drawable.bubbles)
+				.setIcon(R.drawable.collections_labels)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
 		if (!sending) {
 			menu.add(0, MENU_POST, 0, R.string.action_post)
-					.setIcon(R.drawable.send)
+					.setIcon(R.drawable.social_send_now)
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		} else {
-			menu.add(0, MENU_POST, 0, R.string.action_post).setEnabled(false)
-					.setIcon(R.drawable.send)
-					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//			menu.add(0, MENU_POST, 0, R.string.action_post).setEnabled(false)
+//					.setIcon(R.drawable.send)
+//					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
 
 		menu.add(0, MENU_CLEAR_DRAFT, 0, R.string.action_clear_draft);
@@ -280,7 +281,8 @@ public class Post extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home: {
-			startActivity(new Intent(Post.this, FriendsTimeLine.class));
+//			startActivity(new Intent(Post.this, FriendsTimeLine.class));
+			startActivity(new Intent(Post.this, Timeline_Comments_Mentions.class));
 //			finish();
 			break;
 		}
@@ -317,17 +319,15 @@ public class Post extends Activity {
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(et_post.getWindowToken(), 0);
 				if (!"".equals(et_post.getText().toString().trim())) {
-					if (picFile != null) {
+					if (picFile != null) 
 
 						new Weibo_Upload(et_post.getText().toString(), picFile,
 								pb_post, mHandler).execute();
-
-					} else {
+					else 
 						new Weibo_Update(et_post.getText().toString(), pb_post,
 								mHandler).execute();
-						Toast.makeText(Post.this, "不会写进度条…等一下吧~ ^ ^",
-								Toast.LENGTH_SHORT).show();
-					}
+					
+					setProgressBarIndeterminateVisibility(true);
 					sending = true;
 					rfBar(); // 刷新ActionBar
 				} else {
@@ -392,7 +392,7 @@ public class Post extends Activity {
 
 			sending = false;
 			sent = true;
-			clearDraft();
+			setProgressBarIndeterminateVisibility(false);
 			rfBar(); // 刷新ActionBar
 
 			switch (msg.what) {
@@ -402,6 +402,7 @@ public class Post extends Activity {
 				if (update.getId() == null) {
 					checkError(update);
 				} else {
+					clearDraft();
 					tv_post_info.setVisibility(View.VISIBLE);
 					tv_post_info.startAnimation(a_in);
 					tv_post_info.setText("SUCCESS!\n发表于 - "
@@ -427,6 +428,7 @@ public class Post extends Activity {
 				if (upload.getId() == null) {
 					checkError(upload);
 				} else {
+					clearDraft();
 					final String picURL = upload.getOriginalPic();
 					tv_post_info.setVisibility(View.VISIBLE);
 					tv_post_info.startAnimation(a_in);

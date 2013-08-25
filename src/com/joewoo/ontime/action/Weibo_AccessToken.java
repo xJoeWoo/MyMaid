@@ -24,11 +24,11 @@ import static com.joewoo.ontime.info.Defines.*;
 import android.os.Handler;
 import android.util.Log;
 
-public class Weibo_Access_Token extends Thread {
+public class Weibo_AccessToken extends Thread {
 
 	private Handler mHandler;
 
-	public Weibo_Access_Token(Handler handler) {
+	public Weibo_AccessToken(Handler handler) {
 		this.mHandler = handler;
 	}
 

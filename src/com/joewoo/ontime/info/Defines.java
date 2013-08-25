@@ -17,18 +17,30 @@ public class Defines {
 	public final static int GOT_FRIENDS_TIMELINE_INFO = 13;
 	public final static int GOT_COMMENT_CREATE_INFO = 14;
 	public final static int GOT_REPOST_INFO = 15;
-	
+	public final static int GOT_FRIENDS_TIMELINE_INFO_FAIL = 16;
+	public final static int GOT_FAVOURITE_CREATE_INFO = 17;
+	public final static int GOT_COMMENTS_TO_ME_INFO = 18;
+	public final static int GOT_COMMENTS_TO_ME_INFO_FAIL = 19;
+	public final static int GOT_MENTIONS_INFO = 20;
+	public final static int GOT_MENTIONS_INFO_FAIL = 21;
+	public final static int GOT_REPLY_INFO = 22;
+	public final static int GOT_UNREAD_COUNT_INFO = 23;
+
+	public final static int FRAGMENT_COUNT = 3;
+
 	public final static int ACT_GOT_PHOTO = 1;
 	public final static int ACT_GOT_AT = 2;
-	
+
 	public final static String TAG = "OnTime --- ";
 	public final static String TAG_SQL = "OnTime SQL ---";
 	public final static String LOG_DEVIDER = "=========================";
 	public final static String SQL_NAME = "MyMaid.db";
-	
+
 	public final static String KEY_AT_USER = "at_user";
-	
-	public final static String EXPIRES_IN =  "expires_in";
+
+	public final static int SQL_VERSION = 2;
+
+	public final static String EXPIRES_IN = "expires_in";
 	public final static String ACCESS_TOKEN = "access_token";
 	public final static String STATUS = "status";
 	public final static String PIC = "pic";
@@ -47,19 +59,39 @@ public class Defines {
 	public final static String RETWEETED_STATUS_CREATED_AT = "retweeted_status_created_at";
 	public final static String RETWEETED_STATUS_COMMENTS_COUNT = "retweeted_status_comments_count";
 	public final static String RETWEETED_STATUS_REPOSTS_COUNT = "retweeted_status_reposts_count";
+	public final static String RETWEETED_STATUS_THUMBNAIL_PIC = "retweeted_status_thumbnail_pic";
+	public final static String RETWEETED_STATUS_BMIDDLE_PIC = "retweeted_status_bmiddle_pic";
+	public final static String RETWEETED_STATUS_ORIGINAL_PIC = "retweeted_status_original_pic";
+	public final static String RETWEETED_STATUS_PIC_URLS = "retweeted_status_pic_urls";
+	public final static String RETWEETED_STATUS_SOURCE = "retweeted_status_source";
 	public final static String WEIBO_ID = "weibo_id";
+	public final static String COMMENT_ID = "comment_id";
 	public final static String IS_COMMENT = "isComment";
 	public final static String HAVE_PIC = "havePic";
+	public final static String RETWEETED_STATUS_HAVE_PIC = "retweeted_status_havePic";
 	public final static String IS_REPOST = "isRepost";
+	public final static String STATUS_TEXT = "status_text";
+	public final static String STATUS_CREATED_AT = "status_created_at";
+	public final static String STATUS_COMMENTS_COUNT = "status_comments_count";
+	public final static String STATUS_REPOSTS_COUNT = "status_reposts_count";
+	public final static String STATUS_USER_SCREEN_NAME = "status_user_screen_name";
+	public final static String IS_REPLY = "isReply";
+	public final static String THUMBNAIL_PIC = "thumbnail_pic";
+	public final static String BMIDDLE_PIC = "bmiddle_pic";
+	public final static String ORIGINAL_PIC = "original_pic";
+	public final static String PIC_URLS = "pic_urls";
 	
-	public final static String[] dayNames = {"星期几", "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
-	
+	public final static String PROFILE_IMAGE_URL = "profile_image_url";
+
+	public final static String[] dayNames = { "星期几", "星期日", "星期一", "星期二",
+			"星期三", "星期四", "星期五", "星期六" };
+
 	public final static String PREFERENCES = "ontime";
 	public final static String LASTUID = "last_uid";
 	public final static String ALLUID = "all_uid";
 	public final static String ALLUSER = "all_user";
 	public final static String DRAFT = "draft";
-	
+
 	public final static int MENU_ADD = 1;
 	public final static int MENU_POST = 2;
 	public final static int MENU_ACCESS_TOKEN = 3;
@@ -70,10 +102,15 @@ public class Defines {
 	public final static int MENU_EMOTION = 8;
 	public final static int MENU_TOPIC = 9;
 	public final static int MENU_PROFILE_SWITCH = 10;
-	
+	public final static int MENU_REFRESH = 11;
+	public final static int MENU_FAVOURITE_CREATE = 12;
+	public final static int MENU_UNREAD_COUNT = 13;
+	public final static int MENU_REPOST = 14;
+	public final static int MENU_COMMENT_CREATE = 15;
+
 	public final static int CONNECT_TIMEOUT = 5000;
 	public final static int READ_TIMEOUT = 5000;
-	
+
 	public final static String CALLBACK_URL = "http://mymaid.sinaapp.com/callback.php";
 	public final static String UPDATE_URL = "https://api.weibo.com/2/statuses/update.json";
 	public final static String UPLOAD_URL = "https://upload.api.weibo.com/2/statuses/upload.json";
@@ -90,4 +127,9 @@ public class Defines {
 	public final static String TIMELINE_URL = "https://api.weibo.com/2/statuses/friends_timeline.json";
 	public final static String COMMENT_CREATE_URL = "https://api.weibo.com/2/comments/create.json";
 	public final static String REPOST_URL = "https://api.weibo.com/2/statuses/repost.json";
+	public final static String FAVOURITE_CREATE_URL = "https://api.weibo.com/2/favorites/create.json";
+	public final static String COMMENTS_TO_ME_URL = "https://api.weibo.com/2/comments/to_me.json";
+	public final static String MENTIONS_URL = "https://api.weibo.com/2/statuses/mentions.json";
+	public final static String REPLY_URL = "https://api.weibo.com/2/comments/reply.json";
+	public final static String UNREAD_COUNT_URL = "https://rm.api.weibo.com/2/remind/unread_count.json";
 }

@@ -7,7 +7,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -24,52 +23,54 @@ import com.joewoo.ontime.info.WeiboConstant;
 import android.os.Handler;
 import android.util.Log;
 
-public class Weibo_Comment_Create extends Thread {
+public class Weibo_Reply extends Thread {
 
-	private String weibo_id;
-	private Handler mHandler;
 	private String comment;
-	private boolean comment_ori = false;
-
-	public Weibo_Comment_Create(String comment, String weibo_id, Handler handler) {
-		this.weibo_id = weibo_id;
-		this.mHandler = handler;
+	private String weibo_id;
+	private String comment_id;
+	private Handler mHandler;
+	private boolean comment_ori;
+	
+	public Weibo_Reply(String comment, String weibo_id, String comment_id,
+			Handler handler) {
 		this.comment = comment;
+		this.weibo_id = weibo_id;
+		this.comment_id = comment_id;
+		this.mHandler = handler;
 	}
-
-	public Weibo_Comment_Create(String comment, String weibo_id,
-			boolean comment_ori, Handler handler) {
-		this.weibo_id = weibo_id;
-		this.mHandler = handler;
+	
+	public Weibo_Reply( String comment, String weibo_id, String comment_id, boolean comment_ori,
+			Handler handler) {
 		this.comment = comment;
+		this.weibo_id = weibo_id;
+		this.comment_id = comment_id;
+		this.mHandler = handler;
 		this.comment_ori = comment_ori;
 	}
-
-	public void run() {
-		Log.e(TAG, "Comment Create Thread start");
+	
+	public void run(){
+		Log.e(TAG, "Comment Reply Thread start");
 		String httpResult = "{ \"error_code\" : \"233\" }";
 
-		HttpPost httpRequest = new HttpPost(COMMENT_CREATE_URL);
+		HttpPost httpRequest = new HttpPost(REPLY_URL);
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair(ACCESS_TOKEN,
 				WeiboConstant.ACCESS_TOKEN));
 		params.add(new BasicNameValuePair("id", weibo_id));
 		params.add(new BasicNameValuePair("comment", comment));
+		params.add(new BasicNameValuePair("cid", comment_id));
 		if (comment_ori) {
 			params.add(new BasicNameValuePair("comment_ori", "1"));
 		}
 		try {
 			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-			HttpResponse httpResponse = new DefaultHttpClient()
-					.execute(httpRequest);
 
-			httpResult = EntityUtils.toString(httpResponse.getEntity());
+			httpResult = EntityUtils.toString(new DefaultHttpClient()
+			.execute(httpRequest).getEntity());
 			Log.e(TAG, "GOT: " + httpResult);
-			
-			Gson gson = new Gson();
-			WeiboBackBean b = gson.fromJson(httpResult, WeiboBackBean.class);
 
-			mHandler.obtainMessage(GOT_COMMENT_CREATE_INFO, b).sendToTarget(); 
+
+			mHandler.obtainMessage(GOT_REPLY_INFO, new Gson().fromJson(httpResult, WeiboBackBean.class)).sendToTarget(); 
 
 		} catch (UnsupportedEncodingException e) {
 
@@ -79,4 +80,5 @@ public class Weibo_Comment_Create extends Thread {
 
 		}
 	}
+
 }

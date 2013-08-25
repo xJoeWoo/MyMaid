@@ -13,44 +13,56 @@ public class StatusesBean {
 	private String thumbnail_pic;
 	private String bmiddle_pic;
 	private String original_pic;
-	
-	public String getCreatedAt(){
+
+	public String getCreatedAt() {
 		return created_at;
 	}
-	public String getId(){
+
+	public String getId() {
 		return id;
 	}
-	public String getText(){
+
+	public String getText() {
 		return text;
 	}
-	public String getSource(){
+
+	public String getSource() {
 		return source;
 	}
-	public StatusesBean getRetweetedStatus(){
-		if(retweeted_status != null)
+
+	public StatusesBean getRetweetedStatus() {
+		if (retweeted_status != null)
 			return retweeted_status;
 		else
 			return null;
 	}
-	public boolean isFavorited(){
+
+	public boolean isFavorited() {
 		return favorited;
 	}
-	public String getRepostsCount(){
+
+	public String getRepostsCount() {
 		return reposts_count;
 	}
-	public String getCommentsCount(){
+
+	public String getCommentsCount() {
 		return comments_count;
 	}
-	public UserBean getUser(){
+
+	public UserBean getUser() {
 		return user;
 	}
-	public String getThumbnailPic(){
+
+	public String getThumbnailPic() {
 		return thumbnail_pic;
 	}
-	public String getBmiddlePic(){
+
+	public String getBmiddlePic() {
 		return bmiddle_pic;
 	}
-	public String getOriginalPic(){
+
+	public String getOriginalPic() {
 		return original_pic;
 	}
+
 }

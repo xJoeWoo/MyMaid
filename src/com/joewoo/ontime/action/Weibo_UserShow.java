@@ -17,11 +17,11 @@ import com.joewoo.ontime.bean.WeiboBackBean;
 import com.joewoo.ontime.info.WeiboConstant;
 import static com.joewoo.ontime.info.Defines.*;
 
-public class Weibo_Show extends Thread {
+public class Weibo_UserShow extends Thread {
 
 	private Handler mHandler;
 
-	public Weibo_Show(Handler handler) {
+	public Weibo_UserShow(Handler handler) {
 		this.mHandler = handler;
 	}
 

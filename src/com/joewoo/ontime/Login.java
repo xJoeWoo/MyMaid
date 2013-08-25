@@ -1,8 +1,8 @@
 package com.joewoo.ontime;
 
-import com.joewoo.ontime.action.Weibo_Access_Token;
+import com.joewoo.ontime.action.Weibo_AccessToken;
 import com.joewoo.ontime.action.Weibo_ProfileImage;
-import com.joewoo.ontime.action.Weibo_Show;
+import com.joewoo.ontime.action.Weibo_UserShow;
 import com.joewoo.ontime.bean.WeiboBackBean;
 import com.joewoo.ontime.info.WeiboConstant;
 import com.joewoo.ontime.tools.MySQLHelper;
@@ -37,7 +37,7 @@ public class Login extends Activity {
 	public static Login _instance = null;
 
 	private MySQLHelper sqlHelper = new MySQLHelper(Login.this, SQL_NAME, null,
-			1);
+			SQL_VERSION);
 	private SQLiteDatabase sql;
 
 	@Override
@@ -51,7 +51,7 @@ public class Login extends Activity {
 
 		wv_login = (WebView) findViewById(R.id.wv_login);
 		wv_login.getSettings().setJavaScriptEnabled(true);
-		wv_login.loadUrl(AUTH_URL);
+		
 
 		uids = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
 		uidsE = uids.edit();
@@ -69,11 +69,13 @@ public class Login extends Activity {
 							.show();
 					WeiboConstant.AUTH_CODE = url.substring(url.indexOf("=") + 1);
 					Log.e(TAG, "Auth Code: " + WeiboConstant.AUTH_CODE);
-					new Weibo_Access_Token(mHandler).start();
+					new Weibo_AccessToken(mHandler).start();
 
 				}
 			}
 		});
+		
+		wv_login.loadUrl(AUTH_URL);
 
 	}
 
@@ -94,7 +96,7 @@ public class Login extends Activity {
 				// + sdf.format(token.getExpiresIn() * 1000) + "\nUid - "
 				// + token.getUid());
 
-				new Weibo_Show(mHandler).start();
+				new Weibo_UserShow(mHandler).start();
 				break;
 			}
 			case GOT_ACCESS_TOKEN_FAIL: {

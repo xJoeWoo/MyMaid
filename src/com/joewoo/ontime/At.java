@@ -1,6 +1,6 @@
 package com.joewoo.ontime;
 
-import com.joewoo.ontime.action.Weibo_At_Suggestions;
+import com.joewoo.ontime.action.Weibo_AtSuggestions;
 import com.joewoo.ontime.bean.AtSuggestionBean;
 
 import android.annotation.SuppressLint;
@@ -96,7 +96,7 @@ public class At extends Activity {
 				String user = searchView.getQuery().toString().trim();
 				if (!"".equals(user)) {
 					Log.e(TAG, user);
-					new Weibo_At_Suggestions(user, At.this, mHandler).start();
+					new Weibo_AtSuggestions(user, At.this, mHandler).start();
 				}
 				return false;
 			}

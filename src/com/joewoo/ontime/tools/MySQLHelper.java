@@ -16,13 +16,17 @@ public class MySQLHelper extends SQLiteOpenHelper {
 	public final String SCREEN_NAME = "screen_name";
 	public final String DRIFT = "drift";
 	public final String PROFILEIMG = "profile_image";
+	public final String FRIENDS_TIMELINE = "friends_time_line";
+	public final String TO_ME_COMMENTS = "comments";
+	public final String MENTIONS = "at";
 
 	final String CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS " + tableName
 			+ "(_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + UID
 			+ " int, " + ACCESS_TOKEN + " char, " + LOCATION + " varchar, "
 			+ EXPIRES_IN + " varchar, " + SCREEN_NAME + " varchar, " + DRIFT
-			+ " varchar, " + PROFILEIMG + " blob);";
-
+			+ " varchar, " + PROFILEIMG + " blob, " + FRIENDS_TIMELINE
+			+ " varchar, " + TO_ME_COMMENTS + " varchar, " + MENTIONS
+			+ " varchar);";
 
 	public MySQLHelper(Context context, String name, CursorFactory factory,
 			int version) {
@@ -44,6 +48,23 @@ public class MySQLHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
+
+		// switch (newVersion) {
+		// case 2: {
+		// Log.e(TAG_SQL, "Version " + String.valueOf(oldVersion) + " to "
+		// + String.valueOf(newVersion));
+		// db.beginTransaction();
+		// db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + AT
+		// + " varchar;");
+		// db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + COMMENTS
+		// + " varchar;");
+		// db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN "
+		// + FRIENDS_TIMELINE + " varchar;");
+		// db.setTransactionSuccessful();
+		// db.endTransaction();
+		// break;
+		// }
+		// }
 
 	}
 

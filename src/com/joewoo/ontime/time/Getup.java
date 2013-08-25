@@ -33,7 +33,7 @@ import android.widget.TextView;
 public class Getup extends Activity {
 
 	TextView tv;
-	MySQLHelper sqlHelper = new MySQLHelper(Getup.this, "MyMaid.db", null, 1);
+	MySQLHelper sqlHelper = new MySQLHelper(Getup.this, "MyMaid.db", null, SQL_VERSION);
 	SQLiteDatabase sql;
 	
 	@Override
@@ -86,12 +86,7 @@ public class Getup extends Activity {
 					}
 				} else {
 
-					int day = (int) (WeiboConstant.EXPIRES_IN / 86400);
-					int hour = (int) (WeiboConstant.EXPIRES_IN / 3600 % 24);
-					int minute = (int) (WeiboConstant.EXPIRES_IN / 60 % 60);
-
-					tv.setText("SUCCESS!\n" + "剩余时间 - " + day + "天" + hour
-							+ "小时" + minute + "分钟" + "\n\n" + update.getText()
+					tv.setText("SUCCESS!\n\n" + update.getText()
 							+ "\n\n> 点击这里查看微博 <");
 					tv.setOnClickListener(new View.OnClickListener() {
 						@Override

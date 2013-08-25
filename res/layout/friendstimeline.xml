@@ -11,7 +11,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:fastScrollEnabled="true" >
+        android:fastScrollEnabled="true"
+        android:background="@color/bgGrey"
+        android:footerDividersEnabled="false" >
 
     </ListView>
 

@@ -15,8 +15,8 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        
+        android:theme="@android:style/Theme.Holo.Light" >
+<!--         android:theme="@android:style/Theme.Holo.Light" -->
         
         
         <activity android:name=".Start"
@@ -68,6 +68,8 @@
         <activity android:name=".FriendsTimeLine" android:label="刷微博" /> 
         <activity android:name=".Comment_Repost" android:label="评论" /> 
         <activity android:name=".Repost" android:label="转发" /> 
+        <activity android:name=".fragment.Timeline_Comments_Mentions" android:label="MyMaid" android:uiOptions="splitActionBarWhenNarrow"/>
+        <activity android:name=".SingleWeibo" android:label="查看微博" /> 
 
         <activity android:name=".Post" 
             android:label="@string/app_name" >

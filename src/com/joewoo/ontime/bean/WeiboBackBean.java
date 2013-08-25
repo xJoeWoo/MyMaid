@@ -27,7 +27,8 @@ public class WeiboBackBean {
 	private String error;
 	private String error_code;
 	
-	
+	//Favourite
+	private String favorited_time;
 	
 	//Access Token
 	public String getAccessToken()
@@ -90,5 +91,10 @@ public class WeiboBackBean {
 	}
 	public String getErrorCode(){
 		return error_code;
+	}
+	
+	//Favourite
+	public String getFavoritedTime(){
+		return favorited_time;
 	}
 }

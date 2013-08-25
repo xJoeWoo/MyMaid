@@ -2,16 +2,15 @@ package com.joewoo.ontime.bean;
 
 import java.util.List;
 
-public class FriendsTimeLineBean {
+public class CommentsToMeBean {
 	
-	private List<StatusesBean> statuses;
+	private List<CommentsBean> comments;
 	private String total_number;
-
-	public List<StatusesBean> getStatuses(){
-		return statuses;
+	
+	public List<CommentsBean> getComments(){
+		return comments;
 	}
 	public String getTotalNumber(){
 		return total_number;
 	}
-
 }
