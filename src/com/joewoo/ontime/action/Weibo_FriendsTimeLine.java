@@ -94,103 +94,92 @@ public class Weibo_FriendsTimeLine extends Thread {
 			}
 		}
 
-		if (httpResult == null) {
-
-			mHandler.sendEmptyMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL);
-
-		} else {
+		try {
 
 			FriendsTimeLineBean timeline = new Gson().fromJson(httpResult,
 					FriendsTimeLineBean.class);
 
-			if (timeline.getTotalNumber() != null) {
+			ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
 
-				if (sqlHelper != null && !isProvidedResult) {
-					SQLiteDatabase sql = sqlHelper.getWritableDatabase();
+			List<StatusesBean> statuses = timeline.getStatuses();
 
-					ContentValues cv = new ContentValues();
-					cv.put(sqlHelper.FRIENDS_TIMELINE, httpResult);
-					if (sql.update(sqlHelper.tableName, cv, sqlHelper.UID
-							+ "='" + WeiboConstant.UID + "'", null) != 0) {
-						Log.e(TAG_SQL, "Saved httpResult");
+			String source;
+			String rt_source;
+
+			for (int i = 0; i < statuses.size(); i++) {
+				HashMap<String, String> map = new HashMap<String, String>();
+				source = statuses.get(i).getSource();
+				source = source.substring(source.indexOf(">") + 1,
+						source.length());
+				source = source.substring(0, source.indexOf("<"));
+				map.put(SOURCE, " · " + source);
+				source = statuses.get(i).getCreatedAt();
+				source = source.substring(source.indexOf(":") - 2,
+						source.indexOf(":") + 3);
+				map.put(CREATED_AT, source);
+				map.put(UID, statuses.get(i).getUser().getId());
+				map.put(SCREEN_NAME, statuses.get(i).getUser().getScreenName());
+				map.put(TEXT, statuses.get(i).getText());
+				map.put(COMMENTS_COUNT, statuses.get(i).getCommentsCount());
+				map.put(REPOSTS_COUNT, statuses.get(i).getRepostsCount());
+				map.put(WEIBO_ID, statuses.get(i).getId());
+				map.put(PROFILE_IMAGE_URL, statuses.get(i).getUser()
+						.getProfileImageUrl());
+				map.put(UID, statuses.get(i).getUser().getId());
+				if (statuses.get(i).getRetweetedStatus() != null) {
+					map.put(IS_REPOST, " ");
+					rt_source = statuses.get(i).getRetweetedStatus()
+							.getSource();
+					rt_source = rt_source.substring(rt_source.indexOf(">") + 1,
+							rt_source.length());
+					rt_source = rt_source.substring(0, rt_source.indexOf("<"));
+					map.put(RETWEETED_STATUS_SOURCE, " · " + rt_source);
+					rt_source = statuses.get(i).getRetweetedStatus()
+							.getCreatedAt();
+					rt_source = rt_source.substring(rt_source.indexOf(":") - 2,
+							rt_source.indexOf(":") + 3);
+					map.put(RETWEETED_STATUS_CREATED_AT, rt_source);
+
+					map.put(RETWEETED_STATUS_COMMENTS_COUNT, statuses.get(i)
+							.getRetweetedStatus().getCommentsCount());
+					map.put(RETWEETED_STATUS_REPOSTS_COUNT, statuses.get(i)
+							.getRetweetedStatus().getRepostsCount());
+					map.put(RETWEETED_STATUS_SCREEN_NAME, statuses.get(i)
+							.getRetweetedStatus().getUser().getScreenName());
+					map.put(RETWEETED_STATUS, statuses.get(i)
+							.getRetweetedStatus().getText());
+
+					if (statuses.get(i).getRetweetedStatus().getThumbnailPic() != null) {
+						map.put(RETWEETED_STATUS_HAVE_PIC, " ");
+						map.put(RETWEETED_STATUS_THUMBNAIL_PIC, statuses.get(i)
+								.getRetweetedStatus().getThumbnailPic());
 					}
+
+				}
+				if (statuses.get(i).getThumbnailPic() != null) {
+					map.put(THUMBNAIL_PIC, statuses.get(i).getThumbnailPic());
+					map.put(HAVE_PIC, " ");
 				}
 
-				List<StatusesBean> statuses = timeline.getStatuses();
-
-				ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
-
-				String source;
-				String rt_source;
-				
-				for (int i = 0; i < statuses.size(); i++) {
-					HashMap<String, String> map = new HashMap<String, String>();
-					source = statuses.get(i).getSource();
-					source = source.substring(source.indexOf(">") + 1,
-							source.length());
-					source = source.substring(0, source.indexOf("<"));
-					map.put(SOURCE, " · " + source);
-					source = statuses.get(i).getCreatedAt();
-					source = source.substring(source.indexOf(":") - 2,
-							source.indexOf(":") + 3);
-					map.put(CREATED_AT, source);
-					map.put(UID, statuses.get(i).getUser().getId());
-					map.put(SCREEN_NAME, statuses.get(i).getUser()
-							.getScreenName());
-					map.put(TEXT, statuses.get(i).getText());
-					map.put(COMMENTS_COUNT, statuses.get(i).getCommentsCount());
-					map.put(REPOSTS_COUNT, statuses.get(i).getRepostsCount());
-					map.put(WEIBO_ID, statuses.get(i).getId());
-					map.put(PROFILE_IMAGE_URL, statuses.get(i).getUser()
-							.getProfileImageUrl());
-					map.put(UID, statuses.get(i).getUser().getId());
-					if (statuses.get(i).getRetweetedStatus() != null) {
-						map.put(IS_REPOST, " ");
-						rt_source = statuses.get(i).getRetweetedStatus()
-								.getSource();
-						rt_source = rt_source.substring(
-								rt_source.indexOf(">") + 1, rt_source.length());
-						rt_source = rt_source.substring(0,
-								rt_source.indexOf("<"));
-						map.put(RETWEETED_STATUS_SOURCE, " · " + rt_source);
-						rt_source = statuses.get(i)
-								.getRetweetedStatus().getCreatedAt();
-						rt_source = rt_source.substring(rt_source.indexOf(":") - 2,
-								rt_source.indexOf(":") + 3);
-						map.put(RETWEETED_STATUS_CREATED_AT, rt_source);
-
-						map.put(RETWEETED_STATUS_COMMENTS_COUNT, statuses
-								.get(i).getRetweetedStatus().getCommentsCount());
-						map.put(RETWEETED_STATUS_REPOSTS_COUNT, statuses.get(i)
-								.getRetweetedStatus().getRepostsCount());
-						map.put(RETWEETED_STATUS_SCREEN_NAME, statuses.get(i)
-								.getRetweetedStatus().getUser().getScreenName());
-						map.put(RETWEETED_STATUS, statuses.get(i)
-								.getRetweetedStatus().getText());
-
-						if (statuses.get(i).getRetweetedStatus()
-								.getThumbnailPic() != null) {
-							map.put(RETWEETED_STATUS_HAVE_PIC, " ");
-							map.put(RETWEETED_STATUS_THUMBNAIL_PIC, statuses
-									.get(i).getRetweetedStatus()
-									.getThumbnailPic());
-						}
-
-					}
-					if (statuses.get(i).getThumbnailPic() != null) {
-						map.put(THUMBNAIL_PIC, statuses.get(i)
-								.getThumbnailPic());
-						map.put(HAVE_PIC, " ");
-					}
-
-					text.add(map);
-				}
-
-				mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO, text)
-						.sendToTarget();
-			} else {
-				mHandler.sendEmptyMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL);
+				text.add(map);
 			}
+
+			mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO, text)
+					.sendToTarget();
+
+			if (sqlHelper != null && !isProvidedResult) {
+				SQLiteDatabase sql = sqlHelper.getWritableDatabase();
+
+				ContentValues cv = new ContentValues();
+				cv.put(sqlHelper.FRIENDS_TIMELINE, httpResult);
+				if (sql.update(sqlHelper.tableName, cv, sqlHelper.UID + "='"
+						+ WeiboConstant.UID + "'", null) != 0) {
+					Log.e(TAG_SQL, "Saved httpResult");
+				}
+			}
+
+		} catch (Exception e) {
+			mHandler.sendEmptyMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL);
 		}
 
 	}

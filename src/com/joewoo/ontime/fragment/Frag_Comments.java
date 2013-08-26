@@ -167,7 +167,7 @@ public class Frag_Comments extends Fragment {
 			case GOT_UNREAD_COUNT_INFO: {
 				UnreadCountBean b = (UnreadCountBean) msg.obj;
 				if(b.getMentionCmtCount() != null)
-					unreadCount = b.getMentionCmtCount();
+					unreadCount = b.getCmtCount();
 				else 
 					Toast.makeText(getActivity(), "获取未读数失败…", Toast.LENGTH_SHORT)
 					.show();

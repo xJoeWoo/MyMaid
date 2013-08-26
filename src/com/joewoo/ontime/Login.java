@@ -21,7 +21,9 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -44,14 +46,14 @@ public class Login extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		_instance = this;
-
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.login);
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		wv_login = (WebView) findViewById(R.id.wv_login);
 		wv_login.getSettings().setJavaScriptEnabled(true);
-		
+//		wv_login.loadUrl(AUTH_URL);
 
 		uids = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
 		uidsE = uids.edit();
@@ -62,20 +64,27 @@ public class Login extends Activity {
 
 			@Override
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
+				Log.e(TAG, "onPageStarted URL: " + url);
+				setProgressBarIndeterminateVisibility(true);
 				if (url.startsWith(CALLBACK_URL)) {
 					view.cancelLongPress();
 					view.stopLoading();
-					Toast.makeText(Login.this, "大概要10秒钟授权…", Toast.LENGTH_LONG)
-							.show();
 					WeiboConstant.AUTH_CODE = url.substring(url.indexOf("=") + 1);
 					Log.e(TAG, "Auth Code: " + WeiboConstant.AUTH_CODE);
 					new Weibo_AccessToken(mHandler).start();
-
 				}
+				super.onPageStarted(view, url, favicon);
+			}
+			
+			@Override
+			public void onPageFinished(WebView view, String url) {
+				Log.e(TAG, "onPageFinished");
+				setProgressBarIndeterminateVisibility(false);
+				super.onPageFinished(view, url);
 			}
 		});
 		
-		wv_login.loadUrl(AUTH_URL);
+		
 
 	}
 
@@ -187,12 +196,25 @@ public class Login extends Activity {
 			}
 		}
 	};
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.clear();
+		
+		menu.add(0, 555, 0, "LOGIN").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		
+		return true;
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home: {
 			finish();
+			break;
+		}
+		case 555:{
+			wv_login.loadUrl(AUTH_URL);
 			break;
 		}
 		}

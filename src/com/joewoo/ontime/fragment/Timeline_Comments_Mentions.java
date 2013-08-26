@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.info.WeiboConstant;
 
-public class Timeline_Comments_Mentions extends FragmentActivity{
+public class Timeline_Comments_Mentions extends FragmentActivity {
 
 	SectionsPagerAdapter mSectionsPagerAdapter;
 	ViewPager mViewPager;
@@ -27,7 +27,7 @@ public class Timeline_Comments_Mentions extends FragmentActivity{
 
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-//		actionBar.setDisplayHomeAsUpEnabled(true);
+		// actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setDisplayShowHomeEnabled(false);
 
@@ -39,6 +39,21 @@ public class Timeline_Comments_Mentions extends FragmentActivity{
 					@Override
 					public void onPageSelected(int arg0) {
 						actionBar.setSelectedNavigationItem(arg0);
+						Log.e(TAG, "Page " + String.valueOf(arg0));
+						switch (arg0) {
+						case 0: {
+							
+							break;
+						}
+						case 1: {
+							
+							break;
+						}
+						case 2: {
+
+							break;
+						}
+						}
 					}
 				});
 
@@ -80,7 +95,7 @@ public class Timeline_Comments_Mentions extends FragmentActivity{
 
 		mSectionsPagerAdapter = new SectionsPagerAdapter(mFragmentManager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		
+
 		Log.e(TAG, WeiboConstant.ACCESS_TOKEN);
 
 	}
