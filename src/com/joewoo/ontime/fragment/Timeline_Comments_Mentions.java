@@ -10,6 +10,8 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.info.WeiboConstant;
 
@@ -21,6 +23,7 @@ public class Timeline_Comments_Mentions extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.timeline_cmt_atme);
 
 		Log.e(TAG, "测试 ACTIVITY");

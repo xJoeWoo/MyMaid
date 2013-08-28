@@ -40,13 +40,14 @@ public class SingleWeibo extends Activity {
 	TextView tv_source;
 	ImageView iv_image;
 	ImageView iv_rt_image;
+	public static SingleWeibo _instance = null;
 	
 	File cache;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		_instance = this;
 		setContentView(R.layout.singleweibo);
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -171,7 +172,6 @@ public class SingleWeibo extends Activity {
 					Toast.makeText(SingleWeibo.this, "收藏失败…",
 							Toast.LENGTH_SHORT).show();
 				}
-				finish();
 				break;
 			}
 			}

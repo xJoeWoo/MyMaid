@@ -102,8 +102,14 @@ public class Frag_Comments extends Fragment {
 			menu.add(0, MENU_UNREAD_COUNT, 0, unreadCount).setShowAsAction(
 					MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		menu.add(0, MENU_REFRESH, 0, "刷新").setIcon(R.drawable.navigation_refresh)
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		if (!isRefreshing)
+			menu.add(0, MENU_REFRESH, 0, "刷新")
+					.setIcon(R.drawable.navigation_refresh)
+					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		else
+			menu.add(0, MENU_REFRESH, 0, "刷新").setEnabled(false)
+					.setIcon(R.drawable.navigation_refreshing)
+					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 	}
 
@@ -128,7 +134,9 @@ public class Frag_Comments extends Fragment {
 			new Weibo_UnreadCount(mHandler).start();
 			break;
 		}
+		
 		}
+		getActivity().invalidateOptionsMenu();
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -166,15 +174,15 @@ public class Frag_Comments extends Fragment {
 			}
 			case GOT_UNREAD_COUNT_INFO: {
 				UnreadCountBean b = (UnreadCountBean) msg.obj;
-				if(b.getMentionCmtCount() != null)
+				if (b.getMentionCmtCount() != null)
 					unreadCount = b.getCmtCount();
-				else 
-					Toast.makeText(getActivity(), "获取未读数失败…", Toast.LENGTH_SHORT)
-					.show();
-				getActivity().invalidateOptionsMenu();
+				else
+					Toast.makeText(getActivity(), "获取未读数失败…",
+							Toast.LENGTH_SHORT).show();
 				break;
 			}
 			}
+			getActivity().invalidateOptionsMenu();
 		}
 
 	};

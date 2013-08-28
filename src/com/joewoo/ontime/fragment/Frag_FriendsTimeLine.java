@@ -148,8 +148,14 @@ public class Frag_FriendsTimeLine extends Fragment {
 				WeiboConstant.SCREEN_NAME.toUpperCase(Locale.US))
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		menu.add(0, MENU_REFRESH, 0, "刷新").setIcon(R.drawable.navigation_refresh)
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		if (!isRefreshing)
+			menu.add(0, MENU_REFRESH, 0, "刷新")
+					.setIcon(R.drawable.navigation_refresh)
+					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		else
+			menu.add(0, MENU_REFRESH, 0, "刷新").setEnabled(false)
+					.setIcon(R.drawable.navigation_refreshing)
+					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 	}
 
@@ -170,6 +176,7 @@ public class Frag_FriendsTimeLine extends Fragment {
 			break;
 		}
 		}
+		getActivity().invalidateOptionsMenu();
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -194,6 +201,7 @@ public class Frag_FriendsTimeLine extends Fragment {
 				break;
 			}
 			}
+			getActivity().invalidateOptionsMenu();
 		}
 
 	};

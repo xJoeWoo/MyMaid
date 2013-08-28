@@ -150,7 +150,7 @@ public class Weibo_FriendsTimeLine extends Thread {
 							.getRetweetedStatus().getText());
 
 					if (statuses.get(i).getRetweetedStatus().getThumbnailPic() != null) {
-						map.put(RETWEETED_STATUS_HAVE_PIC, " ");
+						map.put(RETWEETED_STATUS_HAVE_PIC, "  ");
 						map.put(RETWEETED_STATUS_THUMBNAIL_PIC, statuses.get(i)
 								.getRetweetedStatus().getThumbnailPic());
 					}

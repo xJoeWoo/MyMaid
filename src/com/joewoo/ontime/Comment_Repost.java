@@ -39,7 +39,7 @@ public class Comment_Repost extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
 		setContentView(R.layout.comment);
@@ -51,7 +51,7 @@ public class Comment_Repost extends Activity {
 		isComment = i.getBooleanExtra(IS_COMMENT, false);
 		isReply = i.getBooleanExtra(IS_REPLY, false);
 		isRepost = i.getBooleanExtra(IS_REPOST, false);
-		
+
 		weibo_id = i.getStringExtra(WEIBO_ID);
 
 		if (isRepost) {
@@ -121,8 +121,8 @@ public class Comment_Repost extends Activity {
 			// .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
 
-//		menu.add(0, MENU_FAVOURITE_CREATE, 0,
-//				getString(R.string.menu_favourite_create));
+		// menu.add(0, MENU_FAVOURITE_CREATE, 0,
+		// getString(R.string.menu_favourite_create));
 
 		return true;
 	}
@@ -134,13 +134,13 @@ public class Comment_Repost extends Activity {
 			finish();
 			break;
 		}
-//		case MENU_FAVOURITE_CREATE: {
-//			rfBar(); // 刷新ActionBar
-//			sending = true;
-//			new Weibo_FavoritesCreate(weibo_id, mHandler).start();
-//			setProgressBarIndeterminateVisibility(true);
-//			break;
-//		}
+		// case MENU_FAVOURITE_CREATE: {
+		// rfBar(); // 刷新ActionBar
+		// sending = true;
+		// new Weibo_FavoritesCreate(weibo_id, mHandler).start();
+		// setProgressBarIndeterminateVisibility(true);
+		// break;
+		// }
 		case MENU_LETTERS: {
 			if (System.currentTimeMillis() - downTime > 2000) {
 				Toast.makeText(Comment_Repost.this, "再按一次清除文字",
@@ -227,6 +227,7 @@ public class Comment_Repost extends Activity {
 					Toast.makeText(Comment_Repost.this, "评论成功",
 							Toast.LENGTH_SHORT).show();
 					finish();
+					SingleWeibo._instance.finish();
 				} else {
 					Toast.makeText(Comment_Repost.this, "评论失败…",
 							Toast.LENGTH_SHORT).show();
@@ -239,30 +240,32 @@ public class Comment_Repost extends Activity {
 					Toast.makeText(Comment_Repost.this, "转发成功",
 							Toast.LENGTH_SHORT).show();
 					finish();
+					SingleWeibo._instance.finish();
 				} else {
 					Toast.makeText(Comment_Repost.this, "转发失败…",
 							Toast.LENGTH_SHORT).show();
 				}
 				break;
 			}
-//			case GOT_FAVOURITE_CREATE_INFO: {
-//
-//				if (b.getFavoritedTime() != null) {
-//					Toast.makeText(Comment_Repost.this, "收藏成功",
-//							Toast.LENGTH_SHORT).show();
-//					finish();
-//				} else {
-//					Toast.makeText(Comment_Repost.this, "收藏失败…",
-//							Toast.LENGTH_SHORT).show();
-//				}
-//				break;
-//			}
+			// case GOT_FAVOURITE_CREATE_INFO: {
+			//
+			// if (b.getFavoritedTime() != null) {
+			// Toast.makeText(Comment_Repost.this, "收藏成功",
+			// Toast.LENGTH_SHORT).show();
+			// finish();
+			// } else {
+			// Toast.makeText(Comment_Repost.this, "收藏失败…",
+			// Toast.LENGTH_SHORT).show();
+			// }
+			// break;
+			// }
 			case GOT_REPLY_INFO: {
 
 				if (b.getId() != null) {
 					Toast.makeText(Comment_Repost.this, "回复成功",
 							Toast.LENGTH_SHORT).show();
 					finish();
+					SingleWeibo._instance.finish();
 				} else {
 					Toast.makeText(Comment_Repost.this, "回复失败…",
 							Toast.LENGTH_SHORT).show();
