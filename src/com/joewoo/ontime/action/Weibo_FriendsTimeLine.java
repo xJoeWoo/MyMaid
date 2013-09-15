@@ -3,14 +3,12 @@ package com.joewoo.ontime.action;
 import static com.joewoo.ontime.info.Defines.*;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -32,10 +30,17 @@ public class Weibo_FriendsTimeLine extends Thread {
 	public boolean isProvidedResult = false;
 	private String httpResult = "{ \"error_code\" : \"233\" }";
 	private MySQLHelper sqlHelper;
+	private String max_id = null;
 
 	public Weibo_FriendsTimeLine(int count, Handler handler) {
 		this.count = String.valueOf(count);
 		this.mHandler = handler;
+	}
+
+	public Weibo_FriendsTimeLine(String max_id, int count, Handler handler) {
+		this.count = String.valueOf(count);
+		this.mHandler = handler;
+		this.max_id = max_id;
 	}
 
 	public Weibo_FriendsTimeLine(int count, MySQLHelper sqlHelper,
@@ -58,10 +63,17 @@ public class Weibo_FriendsTimeLine extends Thread {
 		Log.e(TAG, "TimeLine Thread Start");
 
 		if (!isProvidedResult) {
+			HttpUriRequest httpGet;
 
-			HttpUriRequest httpGet = new HttpGet(TIMELINE_URL
-					+ "?access_token=" + WeiboConstant.ACCESS_TOKEN + "&count="
-					+ count);
+			if (max_id == null) {
+				httpGet = new HttpGet(FRIENDS_TIMELINE_URL + "?access_token="
+						+ WeiboConstant.ACCESS_TOKEN + "&count=" + count);
+			} else {
+				httpGet = new HttpGet(FRIENDS_TIMELINE_URL + "?access_token="
+						+ WeiboConstant.ACCESS_TOKEN + "&count=" + count
+						+ "&max_id=" + max_id);
+			}
+
 			httpGet.addHeader("Accept-Encoding", "gzip");
 
 			try {
@@ -83,14 +95,10 @@ public class Weibo_FriendsTimeLine extends Thread {
 				Log.e(TAG,
 						"GOT Statues length: "
 								+ String.valueOf(httpResult.length()));
-				Log.e(TAG, httpResult);
+				// Log.e(TAG, httpResult);
 
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (Exception e) {
+				Log.e(TAG, "Friends Time Line Thread Network Problem");
 			}
 		}
 
@@ -125,9 +133,11 @@ public class Weibo_FriendsTimeLine extends Thread {
 				map.put(WEIBO_ID, statuses.get(i).getId());
 				map.put(PROFILE_IMAGE_URL, statuses.get(i).getUser()
 						.getProfileImageUrl());
-				map.put(UID, statuses.get(i).getUser().getId());
-				if (statuses.get(i).getRetweetedStatus() != null) {
-					map.put(IS_REPOST, " ");
+
+				try {
+
+					map.put(RETWEETED_STATUS_UID, statuses.get(i)
+							.getRetweetedStatus().getUser().getId());
 					rt_source = statuses.get(i).getRetweetedStatus()
 							.getSource();
 					rt_source = rt_source.substring(rt_source.indexOf(">") + 1,
@@ -150,24 +160,33 @@ public class Weibo_FriendsTimeLine extends Thread {
 							.getRetweetedStatus().getText());
 
 					if (statuses.get(i).getRetweetedStatus().getThumbnailPic() != null) {
-						map.put(RETWEETED_STATUS_HAVE_PIC, "  ");
 						map.put(RETWEETED_STATUS_THUMBNAIL_PIC, statuses.get(i)
 								.getRetweetedStatus().getThumbnailPic());
+						map.put(RETWEETED_STATUS_BMIDDLE_PIC, statuses.get(i)
+								.getRetweetedStatus().getBmiddlePic());
 					}
+					map.put(IS_REPOST, " ");
+
+				} catch (Exception e) {
 
 				}
+
 				if (statuses.get(i).getThumbnailPic() != null) {
 					map.put(THUMBNAIL_PIC, statuses.get(i).getThumbnailPic());
-					map.put(HAVE_PIC, " ");
+					map.put(BMIDDLE_PIC, statuses.get(i).getBmiddlePic());
 				}
 
 				text.add(map);
 			}
 
-			mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO, text)
-					.sendToTarget();
+			if (max_id == null)
+				mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO, text)
+						.sendToTarget();
+			else
+				mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_ADD_INFO, text)
+						.sendToTarget();
 
-			if (sqlHelper != null && !isProvidedResult) {
+			if (sqlHelper != null && !isProvidedResult && max_id == null) {
 				SQLiteDatabase sql = sqlHelper.getWritableDatabase();
 
 				ContentValues cv = new ContentValues();

@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
 
     <ListView
-        android:id="@+id/lv_friends_timeline"
+        android:id="@+id/lv_single_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -13,8 +13,6 @@
         android:layout_alignParentTop="true"
         android:fastScrollEnabled="true"
         android:background="@color/bgGrey"
-         >
-
-    </ListView>
+        android:footerDividersEnabled="false" />
 
 </RelativeLayout>

@@ -3,9 +3,14 @@ package com.joewoo.ontime.fragment;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
+
 import com.joewoo.ontime.Comment_Repost;
 import com.joewoo.ontime.Post;
 import com.joewoo.ontime.R;
+import com.joewoo.ontime.SingleUser;
+import com.joewoo.ontime.SingleWeibo;
 import com.joewoo.ontime.action.Weibo_Mentions;
 import com.joewoo.ontime.action.Weibo_UnreadCount;
 import com.joewoo.ontime.bean.UnreadCountBean;
@@ -13,7 +18,6 @@ import com.joewoo.ontime.info.WeiboConstant;
 
 import static com.joewoo.ontime.info.Defines.*;
 
-import com.joewoo.ontime.tools.Id2MidUtil;
 import com.joewoo.ontime.tools.MySQLHelper;
 
 import android.support.v4.app.Fragment;
@@ -21,10 +25,12 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,7 +43,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressLint("HandlerLeak")
-public class Frag_Mentions extends Fragment {
+public class Frag_Mentions extends Fragment implements OnRefreshListener {
 
 	ArrayList<HashMap<String, String>> text;
 	ListView lv;
@@ -45,6 +51,15 @@ public class Frag_Mentions extends Fragment {
 	SQLiteDatabase sql;
 	boolean isRefreshing;
 	String unreadCount;
+	private PullToRefreshAttacher mPullToRefreshAttacher;
+	int mentionsCount = 20;
+	byte[] profileImg;
+
+	@Override
+	public void onRefreshStarted(View view) {
+		Log.e(TAG, "Refresh Mentions");
+		refreshMentions();
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,18 +74,22 @@ public class Frag_Mentions extends Fragment {
 		lv = (ListView) getView().findViewById(R.id.lv_friends_timeline);
 		lv.setDivider(null);
 
+		mPullToRefreshAttacher = ((Timeline_Comments_Mentions) getActivity())
+				.getPullToRefreshAttacher();
+		mPullToRefreshAttacher.addRefreshableView(lv, this);
+
 		sqlHelper = new MySQLHelper(getActivity(), SQL_NAME, null, SQL_VERSION);
 		sql = sqlHelper.getReadableDatabase();
-		Cursor c = sql.query(sqlHelper.tableName,
-				new String[] { sqlHelper.MENTIONS }, sqlHelper.UID + "=?",
-				new String[] { WeiboConstant.UID }, null, null, null);
+		Cursor c = sql.query(sqlHelper.tableName, new String[] {
+				sqlHelper.MENTIONS, sqlHelper.PROFILEIMG }, sqlHelper.UID
+				+ "=?", new String[] { WeiboConstant.UID }, null, null, null);
 
 		if (c != null && c.moveToFirst()) {
 			new Weibo_Mentions(
 					c.getString(c.getColumnIndex(sqlHelper.MENTIONS)),
 					sqlHelper, mHandler).start();
 		} else {
-			new Weibo_Mentions(20, sqlHelper, mHandler).start();
+			refreshMentions();
 		}
 		
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -84,20 +103,58 @@ public class Frag_Mentions extends Fragment {
 				startActivity(i);
 			}
 		});
-		
+
 		lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
-				startActivity(new Intent(Intent.ACTION_VIEW, Uri
-						.parse("http://weibo.com/"
-								+ text.get(arg2).get(UID)
-								+ "/"
-								+ Id2MidUtil.Id2Mid(text.get(arg2)
-										.get(WEIBO_ID)))));
+				
+				Intent i = new Intent();
+				i.setClass(getActivity(), SingleWeibo.class);
+				
+				HashMap<String, String> map = text.get(arg2);
+
+				i.putExtra(SCREEN_NAME, map.get(SCREEN_NAME));
+				i.putExtra(CREATED_AT, map.get(CREATED_AT));
+				i.putExtra(TEXT, map.get(TEXT));
+				i.putExtra(PROFILE_IMAGE_URL, map.get(PROFILE_IMAGE_URL));
+				i.putExtra(IS_REPOST, map.get(IS_REPOST));
+				i.putExtra(RETWEETED_STATUS_SCREEN_NAME,
+						map.get(RETWEETED_STATUS_SCREEN_NAME));
+				i.putExtra(RETWEETED_STATUS, map.get(RETWEETED_STATUS));
+				i.putExtra(RETWEETED_STATUS_COMMENTS_COUNT,
+						map.get(RETWEETED_STATUS_COMMENTS_COUNT));
+				i.putExtra(RETWEETED_STATUS_REPOSTS_COUNT,
+						map.get(RETWEETED_STATUS_REPOSTS_COUNT));
+				i.putExtra(RETWEETED_STATUS_SOURCE,
+						map.get(RETWEETED_STATUS_SOURCE));
+				i.putExtra(RETWEETED_STATUS_CREATED_AT,
+						map.get(RETWEETED_STATUS_CREATED_AT));
+				i.putExtra(RETWEETED_STATUS_THUMBNAIL_PIC,
+						map.get(RETWEETED_STATUS_THUMBNAIL_PIC));
+				i.putExtra(COMMENTS_COUNT, map.get(COMMENTS_COUNT));
+				i.putExtra(REPOSTS_COUNT, map.get(REPOSTS_COUNT));
+				i.putExtra(SOURCE, map.get(SOURCE));
+				i.putExtra(WEIBO_ID, map.get(WEIBO_ID));
+				i.putExtra(RETWEETED_STATUS_BMIDDLE_PIC, map.get(RETWEETED_STATUS_BMIDDLE_PIC));
+				i.putExtra(BMIDDLE_PIC,
+						map.get(BMIDDLE_PIC));
+				i.putExtra(UID, map.get(UID));
+				i.putExtra(RETWEETED_STATUS_UID, map.get(RETWEETED_STATUS_UID));
+
+				startActivity(i);
+				
+//				startActivity(new Intent(Intent.ACTION_VIEW, Uri
+//						.parse("http://weibo.com/"
+//								+ text.get(arg2).get(UID)
+//								+ "/"
+//								+ Id2MidUtil.Id2Mid(text.get(arg2)
+//										.get(WEIBO_ID)))));
 				return false;
 			}
 		});
+
+		profileImg = c.getBlob(c.getColumnIndex(sqlHelper.PROFILEIMG));
 
 	}
 
@@ -106,26 +163,22 @@ public class Frag_Mentions extends Fragment {
 
 		menu.clear();
 
-		// if (!isRefreshing)
-		
-		menu.add(0, MENU_POST, 0, "发Po").setIcon(R.drawable.social_send_now)
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		
+		menu.add(0, MENU_PROFILE_IMAGE, 0, "加什么功能好呢")
+				.setIcon(
+						new BitmapDrawable(getResources(), BitmapFactory
+								.decodeByteArray(profileImg, 0,
+										profileImg.length)))
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
 		if (unreadCount == null)
 			menu.add(0, MENU_UNREAD_COUNT, 0, "未读").setShowAsAction(
 					MenuItem.SHOW_AS_ACTION_ALWAYS);
 		else
 			menu.add(0, MENU_UNREAD_COUNT, 0, unreadCount).setShowAsAction(
 					MenuItem.SHOW_AS_ACTION_ALWAYS);
-		
-		if (!isRefreshing)
-			menu.add(0, MENU_REFRESH, 0, "刷新")
-					.setIcon(R.drawable.navigation_refresh)
-					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		else
-			menu.add(0, MENU_REFRESH, 0, "刷新").setEnabled(false)
-					.setIcon(R.drawable.navigation_refreshing)
-					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+		menu.add(0, MENU_POST, 0, "发Po").setIcon(R.drawable.social_send_now)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 	}
 
@@ -136,17 +189,24 @@ public class Frag_Mentions extends Fragment {
 
 			break;
 		}
-		case MENU_REFRESH: {
-			new Weibo_Mentions(20, sqlHelper, mHandler).start();
-			isRefreshing = true;
-			break;
-		}
 		case MENU_POST: {
-			startActivity(new Intent(getActivity(), Post.class));
+			Intent i = new Intent();
+			i.setClass(getActivity(), Post.class);
+			i.putExtra(IS_FRAG_POST, true);
+			i.putExtra(PROFILE_IMAGE, profileImg);
+			startActivity(i);
 			break;
 		}
 		case MENU_UNREAD_COUNT: {
-			new Weibo_UnreadCount(mHandler).start();
+			getUnreadMentionsCount();
+			break;
+		}
+		case MENU_PROFILE_IMAGE: {
+			Intent i = new Intent();
+			i.setClass(getActivity(), SingleUser.class);
+			i.putExtra(UID, "1893689251");
+			i.putExtra(SCREEN_NAME, "Selley__LauChingYee");
+			startActivity(i);
 			break;
 		}
 		}
@@ -161,11 +221,14 @@ public class Frag_Mentions extends Fragment {
 		public void handleMessage(Message msg) {
 			// getActivity().setProgressBarIndeterminateVisibility(false);
 			isRefreshing = false;
+			mPullToRefreshAttacher.setRefreshComplete();
 			switch (msg.what) {
 			case GOT_MENTIONS_INFO: {
 
 				text = (ArrayList<HashMap<String, String>>) msg.obj;
 				setListView(text);
+				
+//				new Weibo_RemindSetCount(mHandler).execute(SET_MENTIONS_COUNT);
 
 				break;
 			}
@@ -176,11 +239,16 @@ public class Frag_Mentions extends Fragment {
 			}
 			case GOT_UNREAD_COUNT_INFO: {
 				UnreadCountBean b = (UnreadCountBean) msg.obj;
-				if(b.getMentionStatusCount() != null)
+				if (b.getMentionStatusCount() != null)
 					unreadCount = b.getMentionStatusCount();
-				else 
-					Toast.makeText(getActivity(), "获取未读数失败…", Toast.LENGTH_SHORT)
-					.show();
+				else
+					Toast.makeText(getActivity(), "获取未读数失败…",
+							Toast.LENGTH_SHORT).show();
+				break;
+			}
+			case GOT_SET_REMIND_COUNT_INFO_FAIL: {
+				Toast.makeText(getActivity(), "清除未读数失败…", Toast.LENGTH_SHORT)
+						.show();
 				break;
 			}
 			}
@@ -251,6 +319,15 @@ public class Frag_Mentions extends Fragment {
 		data.setViewBinder(binder);
 
 		lv.setAdapter(data);
+	}
+
+	public void getUnreadMentionsCount() {
+		new Weibo_UnreadCount(mHandler).start();
+	}
+
+	public void refreshMentions() {
+		new Weibo_Mentions(mentionsCount, sqlHelper, mHandler).start();
+		isRefreshing = true;
 	}
 
 }

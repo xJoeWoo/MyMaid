@@ -2,23 +2,45 @@ package com.joewoo.ontime.fragment;
 
 import static com.joewoo.ontime.info.Defines.*;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
+
+import com.joewoo.ontime.Login;
 import com.joewoo.ontime.Post;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.SingleWeibo;
 import com.joewoo.ontime.action.Weibo_FriendsTimeLine;
 import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.tools.GausscianBlur;
 import com.joewoo.ontime.tools.Id2MidUtil;
+import com.joewoo.ontime.tools.MyMaidAdapter;
 import com.joewoo.ontime.tools.MySQLHelper;
+import com.joewoo.ontime.fragment.Timeline_Comments_Mentions;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,25 +48,35 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 @SuppressLint("HandlerLeak")
-public class Frag_FriendsTimeLine extends Fragment {
+public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener {
 
 	ArrayList<HashMap<String, String>> text;
 	ListView lv;
 	MySQLHelper sqlHelper;
 	SQLiteDatabase sql;
 	boolean isRefreshing = true;
+	MyMaidAdapter mAdapter;
 	String unreadCount;
+	int lvPos;
+	private PullToRefreshAttacher mPullToRefreshAttacher;
+	byte[] profileImg;
+
+	@Override
+	public void onRefreshStarted(View view) {
+		Log.e(TAG, "Refresh FriendsTimeLine");
+		refreshFriendsTimeLine();
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,6 +91,10 @@ public class Frag_FriendsTimeLine extends Fragment {
 
 		lv = (ListView) getView().findViewById(R.id.lv_friends_timeline);
 		lv.setDivider(null);
+
+		mPullToRefreshAttacher = ((Timeline_Comments_Mentions) getActivity())
+				.getPullToRefreshAttacher();
+		mPullToRefreshAttacher.addRefreshableView(lv, this);
 
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -92,11 +128,12 @@ public class Frag_FriendsTimeLine extends Fragment {
 				i.putExtra(COMMENTS_COUNT, map.get(COMMENTS_COUNT));
 				i.putExtra(REPOSTS_COUNT, map.get(REPOSTS_COUNT));
 				i.putExtra(SOURCE, map.get(SOURCE));
-				i.putExtra(THUMBNAIL_PIC, map.get(THUMBNAIL_PIC));
 				i.putExtra(WEIBO_ID, map.get(WEIBO_ID));
-				i.putExtra(HAVE_PIC, map.get(HAVE_PIC));
-				i.putExtra(RETWEETED_STATUS_HAVE_PIC,
-						map.get(RETWEETED_STATUS_HAVE_PIC));
+				i.putExtra(RETWEETED_STATUS_BMIDDLE_PIC,
+						map.get(RETWEETED_STATUS_BMIDDLE_PIC));
+				i.putExtra(BMIDDLE_PIC, map.get(BMIDDLE_PIC));
+				i.putExtra(UID, map.get(UID));
+				i.putExtra(RETWEETED_STATUS_UID, map.get(RETWEETED_STATUS_UID));
 
 				startActivity(i);
 			}
@@ -116,24 +153,57 @@ public class Frag_FriendsTimeLine extends Fragment {
 			}
 		});
 
+		lv.setOnScrollListener(new OnScrollListener() {
+			@Override
+			public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				switch (scrollState) {
+				case OnScrollListener.SCROLL_STATE_IDLE: { // 已经停止
+					if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
+						if (!isRefreshing) {
+							Log.e(TAG, "到底");
+							new Weibo_FriendsTimeLine(text.get(
+									view.getLastVisiblePosition())
+									.get(WEIBO_ID), 25, mHandler).start();
+							isRefreshing = true;
+							mPullToRefreshAttacher.setRefreshing(true);
+						}
+					}
+					break;
+				}
+				case OnScrollListener.SCROLL_STATE_FLING: { // 开始滚动
+
+					break;
+				}
+				case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL: { // 正在滚动
+
+					break;
+				}
+				}
+			}
+		});
+
 		sqlHelper = new MySQLHelper(getActivity(), SQL_NAME, null, SQL_VERSION);
 		sql = sqlHelper.getReadableDatabase();
-		Cursor c = sql.query(sqlHelper.tableName,
-				new String[] { sqlHelper.FRIENDS_TIMELINE }, sqlHelper.UID
-						+ "=?", new String[] { WeiboConstant.UID }, null, null,
-				null);
+		Cursor c = sql.query(sqlHelper.tableName, new String[] {
+				sqlHelper.FRIENDS_TIMELINE, sqlHelper.PROFILEIMG },
+				sqlHelper.UID + "=?", new String[] { WeiboConstant.UID }, null,
+				null, null);
 
 		if (c != null && c.moveToFirst()) {
-			Log.e(TAG_SQL,
-					"SQL Timeline:\n"
-							+ c.getString(c
-									.getColumnIndex(sqlHelper.FRIENDS_TIMELINE)));
 			new Weibo_FriendsTimeLine(c.getString(c
 					.getColumnIndex(sqlHelper.FRIENDS_TIMELINE)), sqlHelper,
 					mHandler).start();
 		} else {
-			new Weibo_FriendsTimeLine(50, sqlHelper, mHandler).start();
+			refreshFriendsTimeLine();
 		}
+
+		profileImg = c.getBlob(c.getColumnIndex(sqlHelper.PROFILEIMG));
 	}
 
 	@Override
@@ -141,21 +211,19 @@ public class Frag_FriendsTimeLine extends Fragment {
 
 		menu.clear();
 
-		menu.add(0, MENU_POST, 0, "发Po").setIcon(R.drawable.social_send_now)
+		menu.add(0, MENU_PROFILE_IMAGE, 0, WeiboConstant.UID)
+				.setIcon(
+						new BitmapDrawable(getResources(), BitmapFactory
+								.decodeByteArray(profileImg, 0,
+										profileImg.length)))
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		menu.add(0, MENU_UNREAD_COUNT, 0,
 				WeiboConstant.SCREEN_NAME.toUpperCase(Locale.US))
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		if (!isRefreshing)
-			menu.add(0, MENU_REFRESH, 0, "刷新")
-					.setIcon(R.drawable.navigation_refresh)
-					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		else
-			menu.add(0, MENU_REFRESH, 0, "刷新").setEnabled(false)
-					.setIcon(R.drawable.navigation_refreshing)
-					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		menu.add(0, MENU_POST, 0, "发Po").setIcon(R.drawable.social_send_now)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 	}
 
@@ -167,12 +235,128 @@ public class Frag_FriendsTimeLine extends Fragment {
 			break;
 		}
 		case MENU_REFRESH: {
-			new Weibo_FriendsTimeLine(50, sqlHelper, mHandler).start();
-			isRefreshing = true;
+			refreshFriendsTimeLine();
 			break;
 		}
 		case MENU_POST: {
-			startActivity(new Intent(getActivity(), Post.class));
+			Intent i = new Intent();
+			i.setClass(getActivity(), Post.class);
+			i.putExtra(IS_FRAG_POST, true);
+			i.putExtra(PROFILE_IMAGE, profileImg);
+			startActivity(i);
+			break;
+		}
+		case MENU_UNREAD_COUNT: {
+
+			Cursor cursor = sql.query(sqlHelper.tableName, new String[] {
+					sqlHelper.UID, sqlHelper.SCREEN_NAME }, null, null, null,
+					null, null);
+			Log.e(TAG_SQL, "Queried users");
+
+			if (cursor.getCount() > 0) {
+				final String[] singleUid = new String[cursor.getCount() + 2];
+				final String[] singleUser = new String[cursor.getCount() + 2];
+
+				for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
+						.moveToNext()) {
+
+					singleUid[cursor.getPosition()] = cursor.getString(0);
+					singleUser[cursor.getPosition()] = cursor.getString(1);
+					Log.e(TAG, "Cursor position - " + cursor.getPosition());
+					Log.e(TAG, "Single Uid - "
+							+ singleUid[cursor.getPosition()]);
+					Log.e(TAG,
+							"Single User - " + singleUser[cursor.getPosition()]);
+					Log.e(TAG, LOG_DEVIDER);
+				}
+
+				singleUser[cursor.getCount()] = "【添加帐号…】";
+				singleUid[cursor.getCount()] = "0";
+
+				singleUser[cursor.getCount() + 1] = "【登出…】";
+				singleUid[cursor.getCount() + 1] = "1";
+
+				new AlertDialog.Builder(getActivity()).setTitle("选择帐号")
+						.setItems(singleUser, new OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+
+								SharedPreferences uids = getActivity()
+										.getSharedPreferences(PREFERENCES,
+												Context.MODE_PRIVATE);
+								SharedPreferences.Editor uidsE = uids.edit();
+
+								Log.e(TAG, "Chose UID: " + singleUid[which]);
+								Log.e(TAG, "Chose Screen Name: "
+										+ singleUid[which]);
+
+								if (!singleUid[which].equals("0")
+										&& !singleUid[which].equals("1")) {
+									uidsE.putString(LASTUID, singleUid[which]);
+									uidsE.commit();
+									getActivity().finish();
+									startActivity(new Intent(getActivity(),
+											Timeline_Comments_Mentions.class));
+								} else if (singleUid[which].equals("0")) {
+									startActivity(new Intent(getActivity(),
+											Login.class));
+									getActivity().finish();
+								} else if (singleUid[which].equals("1")) {
+
+									new AlertDialog.Builder(getActivity(),
+											AlertDialog.THEME_HOLO_LIGHT)
+											.setTitle("登出？")
+											.setPositiveButton("确定",
+													new OnClickListener() {
+
+														@Override
+														public void onClick(
+																DialogInterface dialog,
+																int which) {
+															SharedPreferences.Editor editor = ((Timeline_Comments_Mentions) getActivity())
+																	.getEditor();
+
+															editor.putString(
+																	LASTUID, "");
+															editor.commit();
+
+															if (sql.delete(
+																	sqlHelper.tableName,
+																	sqlHelper.UID
+																			+ "=?",
+																	new String[] { WeiboConstant.UID }) > 0) {
+																Log.e(TAG_SQL,
+																		"LOGOUT - Cleared user info");
+
+																Toast.makeText(
+																		getActivity(),
+																		"<(￣︶￣)>",
+																		Toast.LENGTH_SHORT)
+																		.show();
+																startActivity(new Intent(
+																		getActivity(),
+																		Login.class));
+																getActivity()
+																		.finish();
+															}
+														}
+													})
+											.setNegativeButton("不要", null)
+											.show();
+								}
+							}
+						}).show();
+			} else {
+				// Toast.makeText(Start.this, "木有哪怕一个帐号", Toast.LENGTH_SHORT)
+				// .show();
+			}
+
+			break;
+		}
+		case MENU_PROFILE_IMAGE: {
+			Toast.makeText(getActivity(), "分组功能", Toast.LENGTH_SHORT).show();
 			break;
 		}
 		}
@@ -186,18 +370,27 @@ public class Frag_FriendsTimeLine extends Fragment {
 		@Override
 		public void handleMessage(Message msg) {
 			// getActivity().setProgressBarIndeterminateVisibility(false);
+			mPullToRefreshAttacher.setRefreshComplete();
 			isRefreshing = false;
 			switch (msg.what) {
 			case GOT_FRIENDS_TIMELINE_INFO: {
-
 				text = (ArrayList<HashMap<String, String>>) msg.obj;
 				setListView(text);
-
+				
+				break;
+			}
+			case GOT_FRIENDS_TIMELINE_ADD_INFO: {
+				text.addAll((ArrayList<HashMap<String, String>>) msg.obj);
+				addListView(text);
 				break;
 			}
 			case GOT_FRIENDS_TIMELINE_INFO_FAIL: {
 				Toast.makeText(getActivity(), "获取信息失败…", Toast.LENGTH_SHORT)
 						.show();
+				break;
+			}
+			case GOT_FRIENDS_TIMELINE_EXTRA_INFO: {
+
 				break;
 			}
 			}
@@ -206,104 +399,19 @@ public class Frag_FriendsTimeLine extends Fragment {
 
 	};
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		// TODO Add your menu entries here
-		super.onCreateOptionsMenu(menu, inflater);
+	private void setListView(ArrayList<HashMap<String, String>> arrayList) {
+		mAdapter = new MyMaidAdapter(getActivity(), arrayList);
+		lv.setAdapter(mAdapter);
 	}
 
-	private void setListView(ArrayList<HashMap<String, String>> arrayList) {
-		SimpleAdapter data = new SimpleAdapter(getActivity(), arrayList,
-				R.layout.friendstimeline_lv_new, new String[] { SCREEN_NAME,
-						TEXT, COMMENTS_COUNT, REPOSTS_COUNT, SOURCE,
-						CREATED_AT, RETWEETED_STATUS_SCREEN_NAME,
-						RETWEETED_STATUS,
-						// RETWEETED_STATUS_COMMENTS_COUNT,
-						// RETWEETED_STATUS_REPOSTS_COUNT,
-						IS_REPOST, HAVE_PIC, RETWEETED_STATUS_HAVE_PIC },
-				new int[] {
-						R.id.friendstimeline_screen_name,
-						R.id.friendstimeline_text,
-						R.id.friendstimeline_comments_count,
-						R.id.friendstimeline_reposts_count,
-						R.id.friendstimeline_source,
-						R.id.friendstimeline_created_at,
-						R.id.friendstimeline_retweeted_status_screen_name,
-						R.id.friendstimeline_retweeted_status,
-						// R.id.friendstimeline_retweeted_status_comments_count,
-						// R.id.friendstimeline_retweeted_status_reposts_count,
-						R.id.friendstimeline_retweeted_status_rl,
-						R.id.friendstimeline_have_image,
-						R.id.friendstimeline_have_image });
+	private void addListView(ArrayList<HashMap<String, String>> arrayList) {
+		mAdapter.addItem(arrayList);
+		mAdapter.notifyDataSetChanged();
+	}
 
-		SimpleAdapter.ViewBinder binder = new SimpleAdapter.ViewBinder() {
-			@Override
-			public boolean setViewValue(View view, Object data,
-					String textRepresentation) {
-
-				if (view.equals((TextView) view
-						.findViewById(R.id.friendstimeline_retweeted_status_rl))) {
-					if (" ".equals(textRepresentation)) {
-						view.setVisibility(View.VISIBLE);
-					} else {
-						view.setVisibility(View.GONE);
-					}
-				}
-
-				if (view.equals((TextView) view
-						.findViewById(R.id.friendstimeline_retweeted_status_screen_name))) {
-					if (!"".equals(textRepresentation)) {
-						view.setVisibility(View.VISIBLE);
-					} else {
-						view.setVisibility(View.GONE);
-					}
-				}
-
-				if (view.equals((TextView) view
-						.findViewById(R.id.friendstimeline_retweeted_status))) {
-					if (!"".equals(textRepresentation)) {
-						view.setVisibility(View.VISIBLE);
-					} else {
-						view.setVisibility(View.GONE);
-					}
-				}
-				// if (view.equals((TextView) view
-				// .findViewById(R.id.friendstimeline_retweeted_status_comments_count)))
-				// {
-				// if (!"".equals(textRepresentation)) {
-				// view.setVisibility(View.VISIBLE);
-				// } else {
-				// view.setVisibility(View.GONE);
-				// }
-				// }
-				//
-				// if (view.equals((TextView) view
-				// .findViewById(R.id.friendstimeline_retweeted_status_reposts_count)))
-				// {
-				//
-				// if (!"".equals(textRepresentation)) {
-				// view.setVisibility(View.VISIBLE);
-				// } else {
-				// view.setVisibility(View.GONE);
-				// }
-				// }
-
-				if (view.equals((TextView) view
-						.findViewById(R.id.friendstimeline_have_image))) {
-					if (" ".equals(textRepresentation)) {
-						view.setVisibility(View.VISIBLE);
-
-					} else {
-						view.setVisibility(View.GONE);
-					}
-				}
-				return false;
-			}
-		};
-
-		data.setViewBinder(binder);
-
-		lv.setAdapter(data);
+	public void refreshFriendsTimeLine() {
+		new Weibo_FriendsTimeLine(50, sqlHelper, mHandler).start();
+		isRefreshing = true;
 	}
 
 }

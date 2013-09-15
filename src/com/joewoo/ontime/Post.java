@@ -5,7 +5,6 @@ import java.io.File;
 import com.joewoo.ontime.action.Weibo_Update;
 import com.joewoo.ontime.action.Weibo_Upload;
 import com.joewoo.ontime.bean.WeiboBackBean;
-import com.joewoo.ontime.fragment.Timeline_Comments_Mentions;
 import com.joewoo.ontime.info.WeiboConstant;
 import com.joewoo.ontime.tools.Id2MidUtil;
 import com.joewoo.ontime.tools.MySQLHelper;
@@ -61,26 +60,27 @@ public class Post extends Activity {
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
 
-	MySQLHelper sqlHelper = new MySQLHelper(Post.this, SQL_NAME, null, SQL_VERSION);
+	MySQLHelper sqlHelper = new MySQLHelper(Post.this, SQL_NAME, null,
+			SQL_VERSION);
 	SQLiteDatabase sql;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		
+
 		setContentView(R.layout.post);
 		findViews();
-		
+
+		Log.e(TAG, "Post Weibo");
+
 		getActionBar().setDisplayUseLogoEnabled(true);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		setTitle(getString(R.string.act_post_title));
 
 		sql = sqlHelper.getWritableDatabase();
-
-		Log.e(TAG, "1");
 
 		preferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
 		editor = preferences.edit();
@@ -89,116 +89,145 @@ public class Post extends Activity {
 		String action = intent.getAction();
 		String type = intent.getType();
 
-		if (preferences.getString(LASTUID, null) != null) {
+		if (!intent.getBooleanExtra(IS_FRAG_POST, false)) {
 
-			String lastUid = preferences.getString(LASTUID, null);
+			if (preferences.getString(LASTUID, null) != null) {
 
-			Cursor c = sql.query(sqlHelper.tableName, new String[] {
-					sqlHelper.UID, sqlHelper.ACCESS_TOKEN, sqlHelper.LOCATION,
-					sqlHelper.EXPIRES_IN, sqlHelper.SCREEN_NAME,
-					sqlHelper.DRIFT, sqlHelper.PROFILEIMG }, sqlHelper.UID
-					+ "=?", new String[] { lastUid }, null, null, null);
+				String lastUid = preferences.getString(LASTUID, null);
 
-			Log.e(TAG, "2");
+				Cursor c = sql.query(sqlHelper.tableName, new String[] {
+						sqlHelper.UID, sqlHelper.ACCESS_TOKEN,
+						sqlHelper.LOCATION, sqlHelper.EXPIRES_IN,
+						sqlHelper.SCREEN_NAME, sqlHelper.DRAFT,
+						sqlHelper.PROFILEIMG }, sqlHelper.UID + "=?",
+						new String[] { lastUid }, null, null, null);
 
-			Log.e(TAG, "3");
+				Log.e(TAG, "2");
 
-			if (c.moveToFirst()) {
+				Log.e(TAG, "3");
 
-				Log.e(TAG, "4");
+				if (c.moveToFirst()) {
 
-				WeiboConstant.UID = c
-						.getString(c.getColumnIndex(sqlHelper.UID));
-				WeiboConstant.ACCESS_TOKEN = c.getString(c
-						.getColumnIndex(sqlHelper.ACCESS_TOKEN));
-				WeiboConstant.LOCATION = c.getString(c
-						.getColumnIndex(sqlHelper.LOCATION));
-				WeiboConstant.EXPIRES_IN = Integer.valueOf(c.getString(c
-						.getColumnIndex(sqlHelper.EXPIRES_IN)));
-				WeiboConstant.SCREEN_NAME = c.getString(c
-						.getColumnIndex(sqlHelper.SCREEN_NAME));
+					Log.e(TAG, "4");
 
-				byte[] profileImg = c.getBlob(c
-						.getColumnIndex(sqlHelper.PROFILEIMG));
-				getActionBar().setLogo(new BitmapDrawable(getResources(), BitmapFactory.decodeByteArray(profileImg, 0,
-						profileImg.length)));
+					WeiboConstant.UID = c.getString(c
+							.getColumnIndex(sqlHelper.UID));
+					WeiboConstant.ACCESS_TOKEN = c.getString(c
+							.getColumnIndex(sqlHelper.ACCESS_TOKEN));
+					WeiboConstant.LOCATION = c.getString(c
+							.getColumnIndex(sqlHelper.LOCATION));
+					WeiboConstant.EXPIRES_IN = Integer.valueOf(c.getString(c
+							.getColumnIndex(sqlHelper.EXPIRES_IN)));
+					WeiboConstant.SCREEN_NAME = c.getString(c
+							.getColumnIndex(sqlHelper.SCREEN_NAME));
 
-				Log.e(TAG, "WeiboConstant: " + WeiboConstant.ACCESS_TOKEN
-						+ WeiboConstant.SCREEN_NAME + WeiboConstant.UID
-						+ WeiboConstant.LOCATION);
+					byte[] profileImg = c.getBlob(c
+							.getColumnIndex(sqlHelper.PROFILEIMG));
+					getActionBar().setLogo(
+							new BitmapDrawable(getResources(), BitmapFactory
+									.decodeByteArray(profileImg, 0,
+											profileImg.length)));
 
-				if (c.getString(5) != null) {
-					Log.e(TAG, "5");
-					draft = c.getString(5);
-					if (!"".equals(draft) && draft != null) {
-						Log.e(TAG, "Draft: " + draft);
-						et_post.setText(draft);
-						et_post.setSelection(draft.length());
-					}
-				}
+					Log.e(TAG, "WeiboConstant: " + WeiboConstant.ACCESS_TOKEN
+							+ WeiboConstant.SCREEN_NAME + WeiboConstant.UID
+							+ WeiboConstant.LOCATION);
 
-				Log.e(TAG, "6");
-
-				if (WeiboConstant.PICPATH != null
-						|| WeiboConstant.WORDS != null) {
-					Log.e(TAG, WeiboConstant.PICPATH + WeiboConstant.WORDS);
-					if (WeiboConstant.PICPATH != null) {
-						picFile = new File(WeiboConstant.PICPATH);
-						rfBar();
-					} else if (WeiboConstant.WORDS != null) {
-						et_post.setText(WeiboConstant.WORDS);
-					}
-				}
-
-				Log.e(TAG, "7");
-				if (Intent.ACTION_SEND.equals(action) && type != null) {// 分享到此Activity
-					Log.e(TAG, "8");
-					Toast.makeText(
-							Post.this,
-							"欢迎" + WeiboConstant.LOCATION + "Po主 "
-									+ WeiboConstant.SCREEN_NAME,
-							Toast.LENGTH_LONG).show();
-					Log.e(TAG, "9");
-					if ("text/plain".equals(type)) { // 传入文件为文字
-						Log.e(TAG, "10 TEXT");
-						et_post.setText(intent
-								.getStringExtra(Intent.EXTRA_TEXT));
-					} else if (type.startsWith("image/")) { // 传入文件为图片
-						Log.e(TAG, "10 PHOTO");
-						Uri uri = (Uri) intent
-								.getParcelableExtra(Intent.EXTRA_STREAM);
-						if (uri != null) {
-							String picPath = getFilePath(uri);
-							picFile = new File(picPath);
+					if ((draft = c.getString(c.getColumnIndex(sqlHelper.DRAFT))) != null) {
+						Log.e(TAG, "5");
+						if (!"".equals(draft) && draft != null) {
+							Log.e(TAG, "Draft: " + draft);
+							et_post.setText(draft);
+							et_post.setSelection(draft.length());
 						}
-						rfBar();
 					}
 
-				} else {// 登录到此Activity
+					Log.e(TAG, "6");
 
-					Start._instance.finish();
-					Log.e(TAG, "11");
-					if (WeiboConstant.SCREEN_NAME != null
-							&& WeiboConstant.LOCATION != null) {
-						Log.e(TAG, "12");
+					if (WeiboConstant.PICPATH != null
+							|| WeiboConstant.WORDS != null) {
+						Log.e(TAG, WeiboConstant.PICPATH + WeiboConstant.WORDS);
+						if (WeiboConstant.PICPATH != null) {
+							picFile = new File(WeiboConstant.PICPATH);
+							rfBar();
+						} else if (WeiboConstant.WORDS != null) {
+							et_post.setText(WeiboConstant.WORDS);
+						}
+					}
+
+					Log.e(TAG, "7");
+					if (Intent.ACTION_SEND.equals(action) && type != null) {// 分享到此Activity
+						Log.e(TAG, "8");
 						Toast.makeText(
 								Post.this,
 								"欢迎" + WeiboConstant.LOCATION + "Po主 "
 										+ WeiboConstant.SCREEN_NAME,
 								Toast.LENGTH_LONG).show();
+						Log.e(TAG, "9");
+						if ("text/plain".equals(type)) { // 传入文件为文字
+							Log.e(TAG, "10 TEXT");
+							et_post.setText(intent
+									.getStringExtra(Intent.EXTRA_TEXT));
+						} else if (type.startsWith("image/")) { // 传入文件为图片
+							Log.e(TAG, "10 PHOTO");
+							Uri uri = (Uri) intent
+									.getParcelableExtra(Intent.EXTRA_STREAM);
+							if (uri != null) {
+								String picPath = getFilePath(uri);
+								picFile = new File(picPath);
+							}
+							rfBar();
+						}
+
+					} else {// 登录到此Activity
+
+						Log.e(TAG, "11");
+						if (WeiboConstant.SCREEN_NAME != null
+								&& WeiboConstant.LOCATION != null) {
+							Log.e(TAG, "12");
+							Toast.makeText(
+									Post.this,
+									"欢迎" + WeiboConstant.LOCATION + "Po主 "
+											+ WeiboConstant.SCREEN_NAME,
+									Toast.LENGTH_LONG).show();
+						}
 					}
+				} else {// 没有查询到数据库信息
+					Log.e(TAG, "17");
+					saveSharingInfo(intent, type, action);
+					Toast.makeText(Post.this, "请先登录~", Toast.LENGTH_LONG)
+							.show();
+					jumpToLogin();
 				}
-			} else {// 没有查询到数据库信息
-				Log.e(TAG, "17");
+			} else {// 不存在配置文件，需要登录
+				Log.e(TAG, "18");
 				saveSharingInfo(intent, type, action);
 				Toast.makeText(Post.this, "请先登录~", Toast.LENGTH_LONG).show();
 				jumpToLogin();
 			}
-		} else {// 不存在配置文件，需要登录
-			Log.e(TAG, "18");
-			saveSharingInfo(intent, type, action);
-			Toast.makeText(Post.this, "请先登录~", Toast.LENGTH_LONG).show();
-			jumpToLogin();
+		} else {
+			Log.e(TAG, "19");
+			byte[] profileImg = intent.getByteArrayExtra(PROFILE_IMAGE);
+			Log.e(TAG, "20");
+			getActionBar()
+					.setLogo(
+							new BitmapDrawable(getResources(), BitmapFactory
+									.decodeByteArray(profileImg, 0,
+											profileImg.length)));
+			Log.e(TAG, "21");
+			Cursor c = sql.query(sqlHelper.tableName,
+					new String[] { sqlHelper.DRAFT }, sqlHelper.UID + "=?",
+					new String[] { WeiboConstant.UID }, null, null, null);
+			Log.e(TAG, "22");
+			if (c.moveToFirst()) {
+				if ((draft = c.getString(c.getColumnIndex(sqlHelper.DRAFT))) != null) {
+					if (!"".equals(draft) && draft != null) {
+						Log.e(TAG, "23");
+						Log.e(TAG, "Draft: " + draft);
+						et_post.setText(draft);
+						et_post.setSelection(draft.length());
+					}
+				}
+			}
 		}
 
 		et_post.addTextChangedListener(new TextWatcher() {
@@ -267,13 +296,13 @@ public class Post extends Activity {
 					.setIcon(R.drawable.social_send_now)
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		} else {
-//			menu.add(0, MENU_POST, 0, R.string.action_post).setEnabled(false)
-//					.setIcon(R.drawable.send)
-//					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			// menu.add(0, MENU_POST, 0, R.string.action_post).setEnabled(false)
+			// .setIcon(R.drawable.send)
+			// .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
 
 		menu.add(0, MENU_CLEAR_DRAFT, 0, R.string.action_clear_draft);
-		menu.add(0, MENU_LOGOUT, 0, R.string.action_logout);
+		// menu.add(0, MENU_LOGOUT, 0, R.string.action_logout);
 		return true;
 	}
 
@@ -281,9 +310,7 @@ public class Post extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home: {
-//			startActivity(new Intent(Post.this, FriendsTimeLine.class));
-			startActivity(new Intent(Post.this, Timeline_Comments_Mentions.class));
-//			finish();
+			finish();
 			break;
 		}
 		case MENU_LETTERS: {
@@ -319,14 +346,14 @@ public class Post extends Activity {
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(et_post.getWindowToken(), 0);
 				if (!"".equals(et_post.getText().toString().trim())) {
-					if (picFile != null) 
+					if (picFile != null)
 
 						new Weibo_Upload(et_post.getText().toString(), picFile,
 								pb_post, mHandler).execute();
-					else 
+					else
 						new Weibo_Update(et_post.getText().toString(), pb_post,
 								mHandler).execute();
-					
+
 					setProgressBarIndeterminateVisibility(true);
 					sending = true;
 					rfBar(); // 刷新ActionBar
@@ -340,25 +367,25 @@ public class Post extends Activity {
 
 			break;
 		}
-		case MENU_LOGOUT: {
-
-			editor.putString(LASTUID, "");
-			editor.commit();
-
-			if (sql.delete(sqlHelper.tableName, sqlHelper.UID + "=?",
-					new String[] { WeiboConstant.UID }) > 0) {
-				Log.e(TAG_SQL, "LOGOUT - Cleared user info");
-			}
-
-			clearWeiboConstant();
-
-			Toast.makeText(Post.this, "<(￣︶￣)>", Toast.LENGTH_SHORT).show();
-			Intent i = new Intent();
-			i.setClass(Post.this, Start.class);
-			startActivity(i);
-			finish();
-			break;
-		}
+//		case MENU_LOGOUT: {
+//
+//			editor.putString(LASTUID, "");
+//			editor.commit();
+//
+//			if (sql.delete(sqlHelper.tableName, sqlHelper.UID + "=?",
+//					new String[] { WeiboConstant.UID }) > 0) {
+//				Log.e(TAG_SQL, "LOGOUT - Cleared user info");
+//			}
+//
+//			clearWeiboConstant();
+//
+//			Toast.makeText(Post.this, "<(￣︶￣)>", Toast.LENGTH_SHORT).show();
+//			Intent i = new Intent();
+//			i.setClass(Post.this, Start.class);
+//			startActivity(i);
+//			finish();
+//			break;
+//		}
 		case MENU_CLEAR_DRAFT: {
 			clearDraft();
 			Toast.makeText(Post.this, "清除草稿成功", Toast.LENGTH_SHORT).show();
@@ -487,25 +514,25 @@ public class Post extends Activity {
 	}
 
 	private void jumpToLogin() {
-		Intent i = new Intent();
-		i.setClass(Post.this, Login.class);
-		startActivity(i);
+		startActivity(new Intent(Post.this, Login.class));
 		finish();
 	}
 
 	private void saveDraft() {
-		draft = et_post.getText().toString();
-		ContentValues cv = new ContentValues();
-		cv.put(sqlHelper.DRIFT, draft);
-		if (sql.update(sqlHelper.tableName, cv, sqlHelper.UID + "='"
-				+ WeiboConstant.UID + "'", null) != 0) {
-			Log.e(TAG_SQL, "Saved draft: " + draft);
+		if (!sent && !(et_post.getText().toString().trim()).equals("")) {
+			draft = et_post.getText().toString();
+			ContentValues cv = new ContentValues();
+			cv.put(sqlHelper.DRAFT, draft);
+			if (sql.update(sqlHelper.tableName, cv, sqlHelper.UID + "='"
+					+ WeiboConstant.UID + "'", null) != 0) {
+				Log.e(TAG_SQL, "Saved draft: " + draft);
+			}
 		}
 	}
 
 	private void clearDraft() {
 		ContentValues cv = new ContentValues();
-		cv.put(sqlHelper.DRIFT, "");
+		cv.put(sqlHelper.DRAFT, "");
 		if (sql.update(sqlHelper.tableName, cv, sqlHelper.UID + "='"
 				+ WeiboConstant.UID + "'", null) != 0) {
 			Log.e(TAG_SQL, "Cleared draft");
@@ -520,8 +547,8 @@ public class Post extends Activity {
 	protected void onPause() {
 		Log.e(TAG, "PAUSE");
 		super.onPause();
-		if (!sent && !(et_post.getText().toString().trim()).equals(""))
-			saveDraft();
+
+		saveDraft();
 	}
 
 	@Override
@@ -534,7 +561,6 @@ public class Post extends Activity {
 	protected void onDestroy() {
 		Log.e(TAG, "DESTROY");
 		super.onDestroy();
-		clearWeiboConstant();
 	}
 
 	private String checkError(WeiboBackBean error) {

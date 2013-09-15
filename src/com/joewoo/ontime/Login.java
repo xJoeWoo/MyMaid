@@ -4,6 +4,7 @@ import com.joewoo.ontime.action.Weibo_AccessToken;
 import com.joewoo.ontime.action.Weibo_ProfileImage;
 import com.joewoo.ontime.action.Weibo_UserShow;
 import com.joewoo.ontime.bean.WeiboBackBean;
+import com.joewoo.ontime.fragment.Timeline_Comments_Mentions;
 import com.joewoo.ontime.info.WeiboConstant;
 import com.joewoo.ontime.tools.MySQLHelper;
 
@@ -53,7 +54,7 @@ public class Login extends Activity {
 
 		wv_login = (WebView) findViewById(R.id.wv_login);
 		wv_login.getSettings().setJavaScriptEnabled(true);
-//		wv_login.loadUrl(AUTH_URL);
+		wv_login.loadUrl(AUTH_URL);
 
 		uids = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
 		uidsE = uids.edit();
@@ -73,14 +74,14 @@ public class Login extends Activity {
 					Log.e(TAG, "Auth Code: " + WeiboConstant.AUTH_CODE);
 					new Weibo_AccessToken(mHandler).start();
 				}
-				super.onPageStarted(view, url, favicon);
+//				super.onPageStarted(view, url, favicon);
 			}
 			
 			@Override
 			public void onPageFinished(WebView view, String url) {
 				Log.e(TAG, "onPageFinished");
 				setProgressBarIndeterminateVisibility(false);
-				super.onPageFinished(view, url);
+//				super.onPageFinished(view, url);
 			}
 		});
 		
@@ -91,6 +92,7 @@ public class Login extends Activity {
 	private Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
+			setProgressBarIndeterminateVisibility(true);
 			switch (msg.what) {
 			case GOT_ACCESS_TOKEN: {
 				WeiboBackBean token = (WeiboBackBean) msg.obj;
@@ -185,8 +187,8 @@ public class Login extends Activity {
 				uidsE.putString(LASTUID, WeiboConstant.UID);
 				uidsE.commit();
 
-				Start._instance.finish();
-				startActivity(new Intent(Login.this, Post.class));
+//				Start._instance.finish();
+				startActivity(new Intent(Login.this, Timeline_Comments_Mentions.class));
 				finish();
 				break;
 			}
@@ -200,9 +202,6 @@ public class Login extends Activity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
-		
-		menu.add(0, 555, 0, "LOGIN").setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		
 		return true;
 	}
 
@@ -211,10 +210,6 @@ public class Login extends Activity {
 		switch (item.getItemId()) {
 		case android.R.id.home: {
 			finish();
-			break;
-		}
-		case 555:{
-			wv_login.loadUrl(AUTH_URL);
 			break;
 		}
 		}

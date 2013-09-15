@@ -6,16 +6,18 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.joewoo.ontime.info.Defines;
+
 public class MySQLHelper extends SQLiteOpenHelper {
 
 	public final String tableName = "User";
-	public final String UID = "uid";
-	public final String ACCESS_TOKEN = "access_token";
-	public final String LOCATION = "location";
-	public final String EXPIRES_IN = "expires_in";
-	public final String SCREEN_NAME = "screen_name";
-	public final String DRIFT = "drift";
-	public final String PROFILEIMG = "profile_image";
+	public final String UID = Defines.UID;
+	public final String ACCESS_TOKEN = Defines.ACCESS_TOKEN;
+	public final String LOCATION = Defines.LOCATION;
+	public final String EXPIRES_IN = Defines.EXPIRES_IN;
+	public final String SCREEN_NAME = Defines.SCREEN_NAME;
+	public final String DRAFT = Defines.DRAFT;
+	public final String PROFILEIMG = Defines.PROFILE_IMAGE;
 	public final String FRIENDS_TIMELINE = "friends_time_line";
 	public final String TO_ME_COMMENTS = "comments";
 	public final String MENTIONS = "at";
@@ -23,7 +25,7 @@ public class MySQLHelper extends SQLiteOpenHelper {
 	final String CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS " + tableName
 			+ "(_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + UID
 			+ " int, " + ACCESS_TOKEN + " char, " + LOCATION + " varchar, "
-			+ EXPIRES_IN + " varchar, " + SCREEN_NAME + " varchar, " + DRIFT
+			+ EXPIRES_IN + " varchar, " + SCREEN_NAME + " varchar, " + DRAFT
 			+ " varchar, " + PROFILEIMG + " blob, " + FRIENDS_TIMELINE
 			+ " varchar, " + TO_ME_COMMENTS + " varchar, " + MENTIONS
 			+ " varchar);";

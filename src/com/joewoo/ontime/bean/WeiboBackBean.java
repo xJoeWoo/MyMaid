@@ -1,100 +1,115 @@
 package com.joewoo.ontime.bean;
 
 public class WeiboBackBean {
-	//Access Token
+	// Access Token
 	private String access_token;
 	private long remind_in;
 	private long expires_in;
 	private String uid;
-	
-	//Show
+
+	// Show
 	private String screen_name;
 	private String profile_image_url;
 	private String location;
-	private int followers_count;
-	private int friends_count;
-	private int statuses_count;
-	
-	//Create, Upload
+	private String followers_count;
+	private String friends_count;
+	private String statuses_count;
+
+	// Create, Upload
 	private String id;
 	private String created_at;
 	private String text;
-	
-	//Upload
+
+	// Upload
 	private String original_pic;
-	
-	//Error
+
+	// Error
 	private String error;
 	private String error_code;
-	
-	//Favourite
+
+	// Favourite
 	private String favorited_time;
-	
-	//Access Token
-	public String getAccessToken()
-	{
+
+	// Set remind count
+	private String result;
+
+	// Access Token
+	public String getAccessToken() {
 		return access_token;
 	}
-	public long getRemindIn()
-	{
+
+	public long getRemindIn() {
 		return remind_in;
 	}
-	public long getExpiresIn()
-	{
+
+	public long getExpiresIn() {
 		return expires_in;
 	}
-	public String getUid()
-	{
+
+	public String getUid() {
 		return uid;
 	}
-	
-	//Show
-	public String getScreenName(){
+
+	// Show
+	public String getScreenName() {
 		return screen_name;
 	}
-	public String getProfileImageUrl(){
+
+	public String getProfileImageUrl() {
 		return profile_image_url;
 	}
+
 	public String getLocation() {
 		location = location.replace(" ", "");
 		return location;
 	}
-	public int getFollowersCount() {
+
+	public String getFollowersCount() {
 		return followers_count;
 	}
-	public int getFriendsCount() {
+
+	public String getFriendsCount() {
 		return friends_count;
 	}
-	public int getStatusesCount() {
+
+	public String getStatusesCount() {
 		return statuses_count;
 	}
-	
-	//Create, Upload
-	public String getId(){
+
+	// Create, Upload
+	public String getId() {
 		return id;
 	}
-	public String getCreatedAt(){
+
+	public String getCreatedAt() {
 		return created_at;
 	}
-	public String getText(){
+
+	public String getText() {
 		return text;
 	}
-	
-	//Upload
-	public String getOriginalPic(){
+
+	// Upload
+	public String getOriginalPic() {
 		return original_pic;
 	}
-	
-	//Error
-	public String getError(){
+
+	// Error
+	public String getError() {
 		return error;
 	}
-	public String getErrorCode(){
+
+	public String getErrorCode() {
 		return error_code;
 	}
-	
-	//Favourite
-	public String getFavoritedTime(){
+
+	// Favourite
+	public String getFavoritedTime() {
 		return favorited_time;
+	}
+
+	// Set remind count
+	public String getSetRemindCountResult() {
+		return result;
 	}
 }

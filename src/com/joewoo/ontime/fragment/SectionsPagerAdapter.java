@@ -16,9 +16,12 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		super(fm);
 
 		// add fragments
+		// 顺序不要错
 		mFragments.add(new Frag_FriendsTimeLine());
 		mFragments.add(new Frag_Comments());
 		mFragments.add(new Frag_Mentions());
+
+		
 	}
 
 	@Override
@@ -30,4 +33,17 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 	public int getCount() {
 		return FRAGMENT_COUNT;
 	}
+	
+	public Frag_FriendsTimeLine getFriendsTimeLineFrag(){
+		return (Frag_FriendsTimeLine) getItem(FRAG_FRIENDSTIMELINE_POS);
+	}
+
+	public Frag_Comments getCommentsFrag(){
+		return (Frag_Comments) getItem(FRAG_COMMENTS_POS);
+	}
+	
+	public Frag_Mentions getMentionsFrag(){
+		return (Frag_Mentions) getItem(FRAG_MENTIONS_POS);
+	}
+	
 }

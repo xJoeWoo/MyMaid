@@ -121,22 +121,32 @@ public class Weibo_Mentions extends Thread {
 				map.put(REPOSTS_COUNT, statuses.get(i).getRepostsCount());
 				map.put(UID, statuses.get(i).getUser().getId());
 
-				if (statuses.get(i).getRetweetedStatus() != null) {
-					map.put(IS_REPOST, " ");
-					map.put(UID, statuses.get(i).getRetweetedStatus().getUser()
-							.getId());
+				try {
+					map.put(RETWEETED_STATUS_UID, statuses.get(i)
+							.getRetweetedStatus().getUser().getId());
 					map.put(RETWEETED_STATUS_SCREEN_NAME, statuses.get(i)
 							.getRetweetedStatus().getUser().getScreenName());
 					map.put(RETWEETED_STATUS, statuses.get(i)
 							.getRetweetedStatus().getText());
+					map.put(RETWEETED_STATUS_COMMENTS_COUNT, statuses.get(i)
+							.getRetweetedStatus().getCommentsCount());
+					map.put(RETWEETED_STATUS_REPOSTS_COUNT, statuses.get(i)
+							.getRetweetedStatus().getRepostsCount());
+					
 					if (statuses.get(i).getRetweetedStatus().getThumbnailPic() != null) {
 						map.put(HAVE_PIC, " ");
+						map.put(RETWEETED_STATUS_BMIDDLE_PIC, statuses.get(i)
+								.getRetweetedStatus().getBmiddlePic());
 					}
+					map.put(IS_REPOST, " ");
+
+				} catch (Exception e) {
 
 				}
 
 				if (statuses.get(i).getThumbnailPic() != null) {
 					map.put(HAVE_PIC, " ");
+					map.put(BMIDDLE_PIC, statuses.get(i).getBmiddlePic());
 				}
 
 				text.add(map);

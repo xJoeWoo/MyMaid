@@ -13,6 +13,8 @@
         android:layout_alignParentTop="true"
         android:ems="10"
         android:hint=""
+        android:imeOptions="actionNone"
+    	android:autoText="true"
         android:gravity="top">
 
         <requestFocus />

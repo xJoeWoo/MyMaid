@@ -64,5 +64,4 @@ public class StatusesBean {
 	public String getOriginalPic() {
 		return original_pic;
 	}
-
 }

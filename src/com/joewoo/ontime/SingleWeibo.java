@@ -1,7 +1,7 @@
 package com.joewoo.ontime;
 
 import java.io.File;
-
+import com.joewoo.ontime.action.Weibo_DownloadPic;
 import com.joewoo.ontime.action.Weibo_FavoritesCreate;
 import com.joewoo.ontime.bean.WeiboBackBean;
 import android.annotation.SuppressLint;
@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +25,6 @@ public class SingleWeibo extends Activity {
 
 	String weibo_id;
 
-	TextView tv_profile_img;
 	TextView tv_screen_name;
 	TextView tv_created_at;
 	TextView tv_text;
@@ -40,8 +40,10 @@ public class SingleWeibo extends Activity {
 	TextView tv_source;
 	ImageView iv_image;
 	ImageView iv_rt_image;
+	ImageView iv_profile_image;
+	ProgressBar pb;
 	public static SingleWeibo _instance = null;
-	
+
 	File cache;
 
 	@Override
@@ -54,7 +56,7 @@ public class SingleWeibo extends Activity {
 
 		findViews();
 
-		Intent i = getIntent();
+		final Intent i = getIntent();
 
 		weibo_id = i.getStringExtra(WEIBO_ID);
 		tv_screen_name.setText(i.getStringExtra(SCREEN_NAME));
@@ -63,8 +65,15 @@ public class SingleWeibo extends Activity {
 		tv_comments_count.setText(i.getStringExtra(COMMENTS_COUNT));
 		tv_reposts_count.setText(i.getStringExtra(REPOSTS_COUNT));
 		tv_source.setText(i.getStringExtra(SOURCE));
-		if(i.getStringExtra(HAVE_PIC) == null)
+
+		if (i.getStringExtra(BMIDDLE_PIC) == null)
 			iv_image.setVisibility(View.GONE);
+		else {
+
+			new Weibo_DownloadPic(iv_image, pb).execute(i
+					.getStringExtra(BMIDDLE_PIC));
+
+		}
 
 		if (i.getStringExtra(IS_REPOST) == null) {
 			tv_rt_rl.setVisibility(View.GONE);
@@ -76,8 +85,14 @@ public class SingleWeibo extends Activity {
 			tv_rt_source.setVisibility(View.GONE);
 			iv_rt_image.setVisibility(View.GONE);
 		} else {
-			if(i.getStringExtra(RETWEETED_STATUS_HAVE_PIC) == null)
+			if (i.getStringExtra(RETWEETED_STATUS_BMIDDLE_PIC) == null)
 				iv_rt_image.setVisibility(View.GONE);
+			else {
+
+				new Weibo_DownloadPic(iv_rt_image, pb).execute(i
+						.getStringExtra(RETWEETED_STATUS_BMIDDLE_PIC));
+
+			}
 			tv_rt_screen_name.setText(i
 					.getStringExtra(RETWEETED_STATUS_SCREEN_NAME));
 			tv_rt_created_at.setText(i
@@ -89,25 +104,49 @@ public class SingleWeibo extends Activity {
 					.getStringExtra(RETWEETED_STATUS_COMMENTS_COUNT));
 			tv_rt_source.setText(i.getStringExtra(RETWEETED_STATUS_SOURCE));
 		}
+
+		iv_profile_image.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				new Weibo_DownloadPic(iv_profile_image, pb).execute(i
+						.getStringExtra(PROFILE_IMAGE_URL));
+				iv_profile_image.setClickable(false);
+			}
+		});
 		
-//		cache = new File(Environment.getExternalStorageDirectory(), "cache/MyMaid");
-//		
-//		if(!cache.exists())
-//		{
-//			cache.mkdir();
-//		}
-//		
+		tv_screen_name.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				jumpToSingleUser(i);
+			}
+		});
 		
+		tv_created_at.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				jumpToSingleUser(i);
+			}
+		});
+
+		// cache = new File(Environment.getExternalStorageDirectory(),
+		// "cache/MyMaid");
+		//
+		// if(!cache.exists())
+		// {
+		// cache.mkdir();
+		// }
+		//
 
 	}
 
 	public boolean onPrepareOptionsMenu(Menu menu) {
 
 		menu.clear();
-		
+
 		menu.add(0, MENU_FAVOURITE_CREATE, 0, "收藏")
-		.setIcon(R.drawable.rating_important)
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+				.setIcon(R.drawable.rating_important)
+				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		menu.add(0, MENU_REPOST, 0, "转发").setIcon(R.drawable.social_reply)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -115,7 +154,6 @@ public class SingleWeibo extends Activity {
 		menu.add(0, MENU_COMMENT_CREATE, 0, "评论")
 				.setIcon(R.drawable.content_edit)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		
 
 		return true;
 
@@ -125,7 +163,7 @@ public class SingleWeibo extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home: {
-
+			finish();
 			break;
 		}
 		case MENU_REPOST: {
@@ -161,12 +199,12 @@ public class SingleWeibo extends Activity {
 
 			switch (msg.what) {
 			case GOT_FAVOURITE_CREATE_INFO: {
-				
+
 				WeiboBackBean b = (WeiboBackBean) msg.obj;
-				
+
 				if (b.getFavoritedTime() != null) {
-					Toast.makeText(SingleWeibo.this, "收藏成功",
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(SingleWeibo.this, "收藏成功", Toast.LENGTH_SHORT)
+							.show();
 					finish();
 				} else {
 					Toast.makeText(SingleWeibo.this, "收藏失败…",
@@ -180,8 +218,7 @@ public class SingleWeibo extends Activity {
 	};
 
 	private void findViews() {
-
-		tv_profile_img = (TextView) findViewById(R.id.single_weibo_profile_image);
+		pb = (ProgressBar) findViewById(R.id.single_weibo_pb);
 		tv_screen_name = (TextView) findViewById(R.id.single_weibo_screen_name);
 		tv_created_at = (TextView) findViewById(R.id.single_weibo_created_at);
 		tv_text = (TextView) findViewById(R.id.single_weibo_text);
@@ -196,7 +233,15 @@ public class SingleWeibo extends Activity {
 		tv_reposts_count = (TextView) findViewById(R.id.single_weibo_reposts_count);
 		tv_source = (TextView) findViewById(R.id.single_weibo_source);
 		iv_image = (ImageView) findViewById(R.id.single_weibo_image);
-		iv_rt_image = (ImageView ) findViewById(R.id.single_weibo_retweeted_status_weibo_image);
+		iv_rt_image = (ImageView) findViewById(R.id.single_weibo_retweeted_status_weibo_image);
+		iv_profile_image = (ImageView) findViewById(R.id.single_weibo_profile_image);
 	}
 
+	void jumpToSingleUser(Intent i){
+		Intent it = new Intent();
+		it.setClass(SingleWeibo.this, SingleUser.class);
+//		it.putExtra(UID, i.getStringExtra(UID));
+		it.putExtra(SCREEN_NAME, i.getStringExtra(SCREEN_NAME));
+		startActivity(it);
+	}
 }

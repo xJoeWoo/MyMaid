@@ -106,8 +106,4 @@ public class Weibo_Upload extends AsyncTask<String, Integer, String> {
 		mHandler.obtainMessage(GOT_UPLOAD_INFO, j).sendToTarget();
 	}
 	
-	@Override
-	protected void onCancelled() {
-	}
-	
 }

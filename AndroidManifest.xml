@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
             
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="11"
         android:targetSdkVersion="17" />
 
     <application
@@ -19,8 +19,11 @@
 <!--         android:theme="@android:style/Theme.Holo.Light" -->
         
         
-        <activity android:name=".Start"
-            android:label="@string/app_name" >
+        <activity android:name=".Start" android:label="@string/app_name" />
+        
+        <activity android:name=".fragment.Timeline_Comments_Mentions"
+            android:label="@string/app_name"
+            android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -67,8 +70,8 @@
         <activity android:name=".At" android:label="\@" /> 
         <activity android:name=".FriendsTimeLine" android:label="刷微博" /> 
         <activity android:name=".Comment_Repost" android:label="评论" /> 
-        <activity android:name=".Repost" android:label="转发" /> 
-        <activity android:name=".fragment.Timeline_Comments_Mentions" android:label="MyMaid" android:uiOptions="splitActionBarWhenNarrow"/>
+        <activity android:name=".Repost" android:label="转发" />
+        <activity android:name=".SingleUser" android:label="查看用户" /> 
         <activity android:name=".SingleWeibo" android:label="查看微博" /> 
 
         <activity android:name=".Post" 

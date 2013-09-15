@@ -1,6 +1,16 @@
 package com.joewoo.ontime.info;
 
 public class Defines {
+	
+	public final static int FRAG_FRIENDSTIMELINE_POS = 0;
+	public final static int FRAG_COMMENTS_POS = 1;
+	public final static int FRAG_MENTIONS_POS = 2;
+	
+	public final static String SET_COMMENTS_COUNT = "cmt";
+	public final static String SET_DM_COUNT = "dm";
+	public final static String SET_MENTIONS_COUNT = "mention_status";
+	public final static String SET_COMMENT_MENTIONS_COUNT = "mention_cmt";
+	public final static String SET_FOLLOWERS_COUNT = "follower";
 
 	public final static int GOT_ACCESS_TOKEN = 1;
 	public final static int GOT_ACCESS_TOKEN_FAIL = 2;
@@ -25,6 +35,12 @@ public class Defines {
 	public final static int GOT_MENTIONS_INFO_FAIL = 21;
 	public final static int GOT_REPLY_INFO = 22;
 	public final static int GOT_UNREAD_COUNT_INFO = 23;
+	public final static int GOT_FRIENDS_TIMELINE_EXTRA_INFO = 24;
+	public final static int GOT_SET_REMIND_COUNT_INFO = 25;
+	public final static int GOT_SET_REMIND_COUNT_INFO_FAIL = 26;
+	public final static int GOT_USER_TIMELINE_INFO = 27;
+	public final static int GOT_USER_TIMELINE_INFO_FAIL = 28;
+	public final static int GOT_FRIENDS_TIMELINE_ADD_INFO = 29;
 
 	public final static int FRAGMENT_COUNT = 3;
 
@@ -55,6 +71,7 @@ public class Defines {
 	public final static String SOURCE = "source";
 	public final static String CREATED_AT = "created_at";
 	public final static String RETWEETED_STATUS = "retweeted_status";
+	public final static String RETWEETED_STATUS_UID = "retweeted_status_uid";
 	public final static String RETWEETED_STATUS_SCREEN_NAME = "retweeted_status_screen_name";
 	public final static String RETWEETED_STATUS_CREATED_AT = "retweeted_status_created_at";
 	public final static String RETWEETED_STATUS_COMMENTS_COUNT = "retweeted_status_comments_count";
@@ -80,6 +97,8 @@ public class Defines {
 	public final static String BMIDDLE_PIC = "bmiddle_pic";
 	public final static String ORIGINAL_PIC = "original_pic";
 	public final static String PIC_URLS = "pic_urls";
+	public final static String IS_FRAG_POST = "isFragPost";
+	public final static String PROFILE_IMAGE = "profile_image";
 	
 	public final static String PROFILE_IMAGE_URL = "profile_image_url";
 
@@ -107,6 +126,10 @@ public class Defines {
 	public final static int MENU_UNREAD_COUNT = 13;
 	public final static int MENU_REPOST = 14;
 	public final static int MENU_COMMENT_CREATE = 15;
+	public final static int MENU_PROFILE_IMAGE = 16;
+	public final static int MENU_FOLLOWERS_COUNT = 17;
+	public final static int MENU_FRIENDS_COUNT = 18;
+	public final static int MENU_STATUSES_COUNT = 19;
 
 	public final static int CONNECT_TIMEOUT = 5000;
 	public final static int READ_TIMEOUT = 5000;
@@ -124,7 +147,7 @@ public class Defines {
 			+ "&display=mobile";
 	public final static String AT_SUGGESTIONS_URL = "https://api.weibo.com/2/search/suggestions/at_users.json";
 	public final static String TOKEN_URL = "https://api.weibo.com/oauth2/access_token";
-	public final static String TIMELINE_URL = "https://api.weibo.com/2/statuses/friends_timeline.json";
+	public final static String FRIENDS_TIMELINE_URL = "https://api.weibo.com/2/statuses/friends_timeline.json";
 	public final static String COMMENT_CREATE_URL = "https://api.weibo.com/2/comments/create.json";
 	public final static String REPOST_URL = "https://api.weibo.com/2/statuses/repost.json";
 	public final static String FAVOURITE_CREATE_URL = "https://api.weibo.com/2/favorites/create.json";
@@ -132,4 +155,6 @@ public class Defines {
 	public final static String MENTIONS_URL = "https://api.weibo.com/2/statuses/mentions.json";
 	public final static String REPLY_URL = "https://api.weibo.com/2/comments/reply.json";
 	public final static String UNREAD_COUNT_URL = "https://rm.api.weibo.com/2/remind/unread_count.json";
+	public final static String SET_REMIND_COUNT_URL = "https://rm.api.weibo.com/2/remind/set_count.json";
+	public final static String USER_TIMELINE_URL = "https://api.weibo.com/2/statuses/user_timeline.json";
 }

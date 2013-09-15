@@ -39,7 +39,7 @@ public class Comment_Repost extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
 		setContentView(R.layout.comment);
@@ -227,7 +227,11 @@ public class Comment_Repost extends Activity {
 					Toast.makeText(Comment_Repost.this, "评论成功",
 							Toast.LENGTH_SHORT).show();
 					finish();
-					SingleWeibo._instance.finish();
+					try {
+						SingleWeibo._instance.finish();
+					} catch (Exception e) {
+						Log.e(TAG, "SingleWeibo haven't start");
+					}
 				} else {
 					Toast.makeText(Comment_Repost.this, "评论失败…",
 							Toast.LENGTH_SHORT).show();
@@ -240,7 +244,11 @@ public class Comment_Repost extends Activity {
 					Toast.makeText(Comment_Repost.this, "转发成功",
 							Toast.LENGTH_SHORT).show();
 					finish();
-					SingleWeibo._instance.finish();
+					try {
+						SingleWeibo._instance.finish();
+					} catch (Exception e) {
+						Log.e(TAG, "SingleWeibo haven't start");
+					}
 				} else {
 					Toast.makeText(Comment_Repost.this, "转发失败…",
 							Toast.LENGTH_SHORT).show();
@@ -265,7 +273,11 @@ public class Comment_Repost extends Activity {
 					Toast.makeText(Comment_Repost.this, "回复成功",
 							Toast.LENGTH_SHORT).show();
 					finish();
-					SingleWeibo._instance.finish();
+					try {
+						SingleWeibo._instance.finish();
+					} catch (Exception e) {
+						Log.e(TAG, "SingleWeibo haven't start");
+					}
 				} else {
 					Toast.makeText(Comment_Repost.this, "回复失败…",
 							Toast.LENGTH_SHORT).show();
