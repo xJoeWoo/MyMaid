@@ -1,11 +1,7 @@
 package com.joewoo.ontime.action;
 
-
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.content.FileBody;
@@ -34,9 +30,9 @@ public class Weibo_Upload extends AsyncTask<String, Integer, String> {
 	private ProgressBar pb;
 	private long totalSize;
 	private Handler mHandler;
-	
 
-	public Weibo_Upload(String status, File file, ProgressBar pb, Handler handler) {
+	public Weibo_Upload(String status, File file, ProgressBar pb,
+			Handler handler) {
 		this.status = status;
 		this.file = file;
 		this.pb = pb;
@@ -78,20 +74,17 @@ public class Weibo_Upload extends AsyncTask<String, Integer, String> {
 		totalSize = multipartContent.getContentLength();
 
 		try {
-			
+
 			httpPost.setEntity(multipartContent);
-			HttpResponse httpResponse = httpClient.execute(
-					httpPost, httpContext);
-			httpResult = EntityUtils.toString(httpResponse.getEntity());
-			
-		} catch (ClientProtocolException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
+			httpResult = EntityUtils.toString(httpClient.execute(httpPost,
+					httpContext).getEntity());
+
+		}catch (Exception e) {
+
 		}
 		return httpResult;
 	}
-	
+
 	@Override
 	protected void onProgressUpdate(Integer... progress) {
 		pb.setProgress((int) (progress[0]));
@@ -102,8 +95,8 @@ public class Weibo_Upload extends AsyncTask<String, Integer, String> {
 		Log.e(TAG, result);
 		Gson gson = new Gson();
 		WeiboBackBean j = gson.fromJson(result, WeiboBackBean.class);
-		
+
 		mHandler.obtainMessage(GOT_UPLOAD_INFO, j).sendToTarget();
 	}
-	
+
 }

@@ -7,9 +7,11 @@ import com.joewoo.ontime.bean.WeiboBackBean;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,7 +25,9 @@ import static com.joewoo.ontime.info.Defines.*;
 @SuppressLint("HandlerLeak")
 public class SingleWeibo extends Activity {
 
-	String weibo_id;
+	String repostReason;
+
+	Intent i = null;
 
 	TextView tv_screen_name;
 	TextView tv_created_at;
@@ -42,6 +46,7 @@ public class SingleWeibo extends Activity {
 	ImageView iv_rt_image;
 	ImageView iv_profile_image;
 	ProgressBar pb;
+	Weibo_DownloadPic dp;
 	public static SingleWeibo _instance = null;
 
 	File cache;
@@ -56,12 +61,13 @@ public class SingleWeibo extends Activity {
 
 		findViews();
 
-		final Intent i = getIntent();
+		i = getIntent();
 
-		weibo_id = i.getStringExtra(WEIBO_ID);
 		tv_screen_name.setText(i.getStringExtra(SCREEN_NAME));
 		tv_created_at.setText(i.getStringExtra(CREATED_AT));
+
 		tv_text.setText(i.getStringExtra(TEXT));
+
 		tv_comments_count.setText(i.getStringExtra(COMMENTS_COUNT));
 		tv_reposts_count.setText(i.getStringExtra(REPOSTS_COUNT));
 		tv_source.setText(i.getStringExtra(SOURCE));
@@ -70,8 +76,8 @@ public class SingleWeibo extends Activity {
 			iv_image.setVisibility(View.GONE);
 		else {
 
-			new Weibo_DownloadPic(iv_image, pb).execute(i
-					.getStringExtra(BMIDDLE_PIC));
+			dp = new Weibo_DownloadPic(iv_image, pb);
+			dp.execute(i.getStringExtra(BMIDDLE_PIC));
 
 		}
 
@@ -114,29 +120,21 @@ public class SingleWeibo extends Activity {
 				iv_profile_image.setClickable(false);
 			}
 		});
-		
-		tv_screen_name.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				jumpToSingleUser(i);
-			}
-		});
-		
-		tv_created_at.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				jumpToSingleUser(i);
-			}
-		});
 
-		// cache = new File(Environment.getExternalStorageDirectory(),
-		// "cache/MyMaid");
-		//
-		// if(!cache.exists())
-		// {
-		// cache.mkdir();
-		// }
-		//
+		if (i.getStringExtra(USER_WEIBO) == null) {
+			tv_screen_name.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					jumpToSingleUser(i);
+				}
+			});
+			tv_created_at.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					jumpToSingleUser(i);
+				}
+			});
+		}
 
 	}
 
@@ -167,23 +165,27 @@ public class SingleWeibo extends Activity {
 			break;
 		}
 		case MENU_REPOST: {
-			Intent i = new Intent();
-			i.setClass(SingleWeibo.this, Comment_Repost.class);
-			i.putExtra(IS_REPOST, true);
-			i.putExtra(WEIBO_ID, weibo_id);
-			startActivity(i);
+			Intent it = new Intent();
+			it.setClass(SingleWeibo.this, Comment_Repost.class);
+			if (i.getStringExtra(IS_REPOST) != null)
+				it.putExtra(TEXT, "//@" + i.getStringExtra(SCREEN_NAME) + ":"
+						+ i.getStringExtra(TEXT));
+			it.putExtra(IS_REPOST, true);
+			it.putExtra(WEIBO_ID, i.getStringExtra(WEIBO_ID));
+			startActivity(it);
 			break;
 		}
 		case MENU_COMMENT_CREATE: {
-			Intent i = new Intent();
-			i.setClass(SingleWeibo.this, Comment_Repost.class);
-			i.putExtra(IS_COMMENT, true);
-			i.putExtra(WEIBO_ID, weibo_id);
-			startActivity(i);
+			Intent it = new Intent();
+			it.setClass(SingleWeibo.this, Comment_Repost.class);
+			it.putExtra(IS_COMMENT, true);
+			it.putExtra(WEIBO_ID, i.getStringExtra(WEIBO_ID));
+			startActivity(it);
 			break;
 		}
 		case MENU_FAVOURITE_CREATE: {
-			new Weibo_FavoritesCreate(weibo_id, mHandler).start();
+			new Weibo_FavoritesCreate(i.getStringExtra(WEIBO_ID), mHandler)
+					.start();
 			setProgressBarIndeterminateVisibility(true);
 			break;
 		}
@@ -237,10 +239,19 @@ public class SingleWeibo extends Activity {
 		iv_profile_image = (ImageView) findViewById(R.id.single_weibo_profile_image);
 	}
 
-	void jumpToSingleUser(Intent i){
+	@Override
+	protected void onDestroy() {
+		if (dp != null && dp.getStatus() != AsyncTask.Status.FINISHED) {
+			Log.e(TAG, "onDestroy - cancel dp");
+			dp.cancel(true);
+		}
+		super.onDestroy();
+	}
+
+	void jumpToSingleUser(Intent i) {
 		Intent it = new Intent();
 		it.setClass(SingleWeibo.this, SingleUser.class);
-//		it.putExtra(UID, i.getStringExtra(UID));
+		// it.putExtra(UID, i.getStringExtra(UID));
 		it.putExtra(SCREEN_NAME, i.getStringExtra(SCREEN_NAME));
 		startActivity(it);
 	}

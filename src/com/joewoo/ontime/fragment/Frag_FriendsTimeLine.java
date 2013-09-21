@@ -2,14 +2,9 @@ package com.joewoo.ontime.fragment;
 
 import static com.joewoo.ontime.info.Defines.*;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
-
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
@@ -20,7 +15,6 @@ import com.joewoo.ontime.R;
 import com.joewoo.ontime.SingleWeibo;
 import com.joewoo.ontime.action.Weibo_FriendsTimeLine;
 import com.joewoo.ontime.info.WeiboConstant;
-import com.joewoo.ontime.tools.GausscianBlur;
 import com.joewoo.ontime.tools.Id2MidUtil;
 import com.joewoo.ontime.tools.MyMaidAdapter;
 import com.joewoo.ontime.tools.MySQLHelper;
@@ -36,7 +30,6 @@ import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;

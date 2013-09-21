@@ -73,59 +73,66 @@ public class Weibo_DownloadPic extends AsyncTask<String, Integer, Bitmap> {
 			byte[] buffer = new byte[1024];
 			int len = -1;
 
-			while ((len = is.read(buffer)) != -1) {
-				baos.write(buffer, 0, len);
-				baos.flush();
-				nowSize += len;
-//				Log.e(TAG, "NowSize - " + String.valueOf(nowSize));
-				publishProgress((int) ((nowSize / (float) maxSize) * 100));
+			try {
+				while ((len = is.read(buffer)) != -1 && !isCancelled()) {
+					baos.write(buffer, 0, len);
+					baos.flush();
+					nowSize += len;
+					Log.e(TAG, String.valueOf(nowSize));
+					publishProgress((int) ((nowSize / (float) maxSize) * 100));
+				}
+			} catch (Exception e) {
+
+			} finally {
+				is.close();
 			}
 
 			byte[] imgBytes = baos.toByteArray();
 
 			if (maxSize > 10000) {
-				
-//				image = new GausscianBlur(BitmapFactory.decodeByteArray(imgBytes,
-//						0, imgBytes.length)).getBitmap();
-				
-				image = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length);
 
-				
+				// image = new
+				// GausscianBlur(BitmapFactory.decodeByteArray(imgBytes,
+				// 0, imgBytes.length)).getBitmap();
+
+				image = BitmapFactory.decodeByteArray(imgBytes, 0,
+						imgBytes.length);
+
 			} else {
-	
+
 				image = new RoundCorner(BitmapFactory.decodeByteArray(imgBytes,
 						0, imgBytes.length), 25).getBitmap();
-				
+
 			}
-			
+
 			is.close();
 
 		} catch (Exception e) {
 			Log.e(TAG, "Download pic ERROR!");
 		}
-		
-		
 
 		return image;
 	}
 
 	@Override
 	protected void onProgressUpdate(Integer... progress) {
-
-		if (pb != null) {
-			if (progress[0] == 0)
-				pb.setVisibility(View.VISIBLE);
-//			Log.e(TAG, "Process - " + String.valueOf(progress[0]));
-			pb.setProgress((int) progress[0]);
+		if (!isCancelled()) {
+			if (pb != null) {
+				if (progress[0] == 0)
+					pb.setVisibility(View.VISIBLE);
+				// Log.e(TAG, "Process - " + String.valueOf(progress[0]));
+				pb.setProgress((int) progress[0]);
+			}
 		}
 	}
 
 	@Override
 	protected void onPostExecute(Bitmap bitmap) {
-		iv.setImageBitmap(image);
-		if (pb != null)
-			pb.setVisibility(View.INVISIBLE);
+		if (!isCancelled()) {
+			iv.setImageBitmap(image);
+			if (pb != null)
+				pb.setVisibility(View.INVISIBLE);
+		}
 	}
-
 
 }

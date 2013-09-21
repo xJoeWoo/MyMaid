@@ -13,6 +13,7 @@ import com.joewoo.ontime.Post;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.SingleUser;
 import com.joewoo.ontime.action.Weibo_CommentsToMe;
+import com.joewoo.ontime.action.Weibo_RemindSetCount;
 import com.joewoo.ontime.action.Weibo_UnreadCount;
 import com.joewoo.ontime.bean.UnreadCountBean;
 import com.joewoo.ontime.info.WeiboConstant;
@@ -57,6 +58,8 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
 	public void onRefreshStarted(View view) {
 		Log.e(TAG, "Refresh Comments");
 		refreshComments();
+		new Weibo_RemindSetCount(mHandler)
+				.execute(Weibo_RemindSetCount.setCommentsCount);
 	}
 
 	@Override
@@ -90,18 +93,17 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
 				startActivity(i);
 			}
 		});
-		
+
 		lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
-				
+
 				Intent i = new Intent();
 				i.setClass(getActivity(), SingleUser.class);
-				
 				i.putExtra(SCREEN_NAME, text.get(arg2).get(SCREEN_NAME));
 				startActivity(i);
-				
+
 				return false;
 			}
 		});
@@ -204,8 +206,6 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
 						R.layout.comments_to_me_lv, from, to);
 
 				lv.setAdapter(data);
-
-//				new Weibo_RemindSetCount(mHandler).execute(SET_COMMENTS_COUNT);
 
 				break;
 			}

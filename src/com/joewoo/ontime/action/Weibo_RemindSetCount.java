@@ -24,6 +24,11 @@ import android.util.Log;
 public class Weibo_RemindSetCount extends AsyncTask<String, Integer, String> {
 
 	private Handler mHandler;
+	
+	public final static String setCommentsCount = SET_COMMENTS_COUNT;
+	public final static String setMentionsCount = SET_COMMENTS_COUNT;
+	public final static String setCommentMentionsCount = SET_COMMENTS_COUNT;
+	public final static String setFollowersCount = SET_COMMENTS_COUNT;
 
 	public Weibo_RemindSetCount(Handler handler) {
 		this.mHandler = handler;
@@ -64,9 +69,9 @@ public class Weibo_RemindSetCount extends AsyncTask<String, Integer, String> {
 	protected void onPostExecute(String result) {
 		Log.e(TAG, result);
 		Gson gson = new Gson();
-		WeiboBackBean j = gson.fromJson(result, WeiboBackBean.class);
+		WeiboBackBean b = gson.fromJson(result, WeiboBackBean.class);
 		
-		if(j.getSetRemindCountResult() == null)
+		if(b.getSetRemindCountResult() == null)
 		{
 			mHandler.sendEmptyMessage(GOT_SET_REMIND_COUNT_INFO_FAIL);
 		}

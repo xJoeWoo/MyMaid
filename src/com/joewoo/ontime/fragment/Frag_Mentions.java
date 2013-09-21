@@ -12,6 +12,7 @@ import com.joewoo.ontime.R;
 import com.joewoo.ontime.SingleUser;
 import com.joewoo.ontime.SingleWeibo;
 import com.joewoo.ontime.action.Weibo_Mentions;
+import com.joewoo.ontime.action.Weibo_RemindSetCount;
 import com.joewoo.ontime.action.Weibo_UnreadCount;
 import com.joewoo.ontime.bean.UnreadCountBean;
 import com.joewoo.ontime.info.WeiboConstant;
@@ -59,6 +60,8 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
 	public void onRefreshStarted(View view) {
 		Log.e(TAG, "Refresh Mentions");
 		refreshMentions();
+		new Weibo_RemindSetCount(mHandler)
+		.execute(Weibo_RemindSetCount.setMentionsCount);
 	}
 
 	@Override

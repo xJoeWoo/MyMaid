@@ -41,6 +41,7 @@ public class Defines {
 	public final static int GOT_USER_TIMELINE_INFO = 27;
 	public final static int GOT_USER_TIMELINE_INFO_FAIL = 28;
 	public final static int GOT_FRIENDS_TIMELINE_ADD_INFO = 29;
+	public final static int GOT_UNREAD_COUNT_INFO_FAIL = 30;
 
 	public final static int FRAGMENT_COUNT = 3;
 
@@ -99,6 +100,7 @@ public class Defines {
 	public final static String PIC_URLS = "pic_urls";
 	public final static String IS_FRAG_POST = "isFragPost";
 	public final static String PROFILE_IMAGE = "profile_image";
+	public final static String USER_WEIBO = "user_weibo";
 	
 	public final static String PROFILE_IMAGE_URL = "profile_image_url";
 

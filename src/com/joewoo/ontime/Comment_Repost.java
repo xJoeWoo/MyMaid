@@ -105,11 +105,9 @@ public class Comment_Repost extends Activity {
 				.setIcon(R.drawable.ic_menu_emoticons)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		menu.add(0, MENU_TOPIC, 0, R.string.action_add_topic)
-				.setIcon(R.drawable.collections_labels)
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-		menu.add(0, 1000, 0, "转发");
+		menu.add(0, MENU_TOPIC, 0, R.string.action_add_topic);
+//
+//		menu.add(0, 1000, 0, "转发");
 
 		if (!sending) {
 			menu.add(0, MENU_POST, 0, R.string.action_post)
@@ -179,19 +177,19 @@ public class Comment_Repost extends Activity {
 
 			break;
 		}
-		case 1000: {
-			if (!"".equals(et.getText().toString().trim())) {
-				sending = true;
-				rfBar(); // 刷新ActionBar
-				new Weibo_Repost(et.getText().toString(), weibo_id, mHandler)
-						.start();
-				setProgressBarIndeterminateVisibility(true);
-			} else {
-				Toast.makeText(Comment_Repost.this, "说点什么吧", Toast.LENGTH_SHORT)
-						.show();
-			}
-			break;
-		}
+//		case 1000: {
+//			if (!"".equals(et.getText().toString().trim())) {
+//				sending = true;
+//				rfBar(); // 刷新ActionBar
+//				new Weibo_Repost(et.getText().toString(), weibo_id, mHandler)
+//						.start();
+//				setProgressBarIndeterminateVisibility(true);
+//			} else {
+//				Toast.makeText(Comment_Repost.this, "说点什么吧", Toast.LENGTH_SHORT)
+//						.show();
+//			}
+//			break;
+//		}
 		case MENU_AT: {
 
 			startActivityForResult(new Intent(Comment_Repost.this, At.class),
