@@ -74,17 +74,21 @@ public class Weibo_DownloadPic extends AsyncTask<String, Integer, Bitmap> {
 			int len = -1;
 
 			try {
-				while ((len = is.read(buffer)) != -1 && !isCancelled()) {
-					baos.write(buffer, 0, len);
-					baos.flush();
-					nowSize += len;
-					Log.e(TAG, String.valueOf(nowSize));
-					publishProgress((int) ((nowSize / (float) maxSize) * 100));
+				while ((len = is.read(buffer)) != -1) {
+					if (!isCancelled()) {
+						baos.write(buffer, 0, len);
+						baos.flush();
+						nowSize += len;
+//						Log.e(TAG, String.valueOf(nowSize));
+						publishProgress((int) ((nowSize / (float) maxSize) * 100));
+					}else{
+						is.close();
+					}
 				}
 			} catch (Exception e) {
 
 			} finally {
-				is.close();
+
 			}
 
 			byte[] imgBytes = baos.toByteArray();

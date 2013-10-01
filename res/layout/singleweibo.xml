@@ -2,19 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
-    
+
     <ProgressBar
-                android:id="@+id/single_weibo_pb"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:max="100"
-                android:progressDrawable="@drawable/progressbar"
-                android:visibility="invisible" />
+        android:id="@+id/single_weibo_pb"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:max="100"
+        android:progressDrawable="@drawable/progressbar"
+        android:visibility="invisible" />
 
     <ScrollView
+        android:id="@+id/single_weibo_sv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/single_weibo_pb" >
@@ -23,19 +24,16 @@
             android:id="@+id/relativeLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="32dp"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin" >
-
-            
 
             <ImageView
                 android:id="@+id/single_weibo_profile_image"
                 android:layout_width="33dp"
                 android:layout_height="33dp"
                 android:layout_alignParentLeft="true"
-                android:layout_marginTop="4dp"
-                android:layout_alignTop="@+id/single_weibo_screen_name" />
+                android:layout_alignTop="@+id/single_weibo_screen_name"
+                android:layout_marginTop="4dp" />
 
             <TextView
                 android:id="@+id/single_weibo_screen_name"
@@ -70,7 +68,7 @@
                 android:layout_below="@+id/single_weibo_profile_image"
                 android:layout_marginTop="16dp"
                 android:lineSpacingExtra="5dp"
-                android:text="正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文"
+                android:text="正文正文正文正文"
                 android:textSize="16sp" />
 
             <TextView
@@ -106,7 +104,7 @@
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="4dp"
                 android:lineSpacingExtra="4dp"
-                android:text="评论微博原文 评论微博原文 评论微博原文 评论微博原文 评论微博原文 评论微博原文 "
+                android:text="评论微博原文 "
                 android:textSize="16sp" />
 
             <ImageView
@@ -226,6 +224,37 @@
                 android:text="转发数"
                 android:textColor="@color/textGrey"
                 android:textSize="14sp" />
+            
+            <TextView
+                android:id="@+id/single_weibo_divider"
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:layout_alignLeft="@+id/single_weibo_lv_comments"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_below="@+id/single_weibo_reposts_count"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/dividerGrey" />
+
+            <ListView
+                android:id="@+id/single_weibo_lv_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/single_weibo_divider" />
+
+            <ProgressBar
+                android:id="@+id/single_weibo_pb_comments_show"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/single_weibo_divider"/>
+
         </RelativeLayout>
     </ScrollView>
 

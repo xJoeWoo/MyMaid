@@ -42,6 +42,10 @@ public class Defines {
 	public final static int GOT_USER_TIMELINE_INFO_FAIL = 28;
 	public final static int GOT_FRIENDS_TIMELINE_ADD_INFO = 29;
 	public final static int GOT_UNREAD_COUNT_INFO_FAIL = 30;
+	public final static int GOT_COMMNETS_SHOW_INFO = 31;
+	public final static int GOT_COMMNETS_SHOW_INFO_FAIL = 32;
+	public final static int GOT_STATUSES_DESTROY_INFO = 33;
+	public final static int GOT_STATUSES_DESTROY_INFO_FAIL = 34;
 
 	public final static int FRAGMENT_COUNT = 3;
 
@@ -132,6 +136,7 @@ public class Defines {
 	public final static int MENU_FOLLOWERS_COUNT = 17;
 	public final static int MENU_FRIENDS_COUNT = 18;
 	public final static int MENU_STATUSES_COUNT = 19;
+	public final static int MENU_STATUSES_DESTROY = 20;
 
 	public final static int CONNECT_TIMEOUT = 5000;
 	public final static int READ_TIMEOUT = 5000;
@@ -159,4 +164,6 @@ public class Defines {
 	public final static String UNREAD_COUNT_URL = "https://rm.api.weibo.com/2/remind/unread_count.json";
 	public final static String SET_REMIND_COUNT_URL = "https://rm.api.weibo.com/2/remind/set_count.json";
 	public final static String USER_TIMELINE_URL = "https://api.weibo.com/2/statuses/user_timeline.json";
+	public final static String COMMENTS_SHOW_URL = "https://api.weibo.com/2/comments/show.json";
+	public final static String STATUSES_DESTROY_URL = "https://api.weibo.com/2/statuses/destroy.json";
 }

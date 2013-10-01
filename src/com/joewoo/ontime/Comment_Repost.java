@@ -55,16 +55,16 @@ public class Comment_Repost extends Activity {
 		weibo_id = i.getStringExtra(WEIBO_ID);
 
 		if (isRepost) {
-			setTitle("转发");
+			setTitle(R.string.title_act_repost);
 			if (i.getStringExtra(TEXT) != null) {
 				et.setText(i.getStringExtra(TEXT));
 				et.setSelection(0);
 			}
 		} else if (isReply) {
-			setTitle("回复");
+			setTitle(R.string.title_act_reply);
 			comment_id = i.getStringExtra(COMMENT_ID);
 		} else if (isComment) {
-			setTitle("评论");
+			setTitle(R.string.title_act_comment);
 		}
 
 		if (weibo_id != null)
@@ -85,7 +85,7 @@ public class Comment_Repost extends Activity {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				rfBar(); // 刷新ActionBar
+				rfBar(); // Refresh ActionBar
 			}
 		});
 	}
@@ -98,19 +98,19 @@ public class Comment_Repost extends Activity {
 				String.valueOf(140 - et.getText().length())).setShowAsAction(
 				MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		menu.add(0, MENU_AT, 0, "@人").setIcon(R.drawable.social_group)
+		menu.add(0, MENU_AT, 0, R.string.menu_at).setIcon(R.drawable.social_group)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		menu.add(0, MENU_EMOTION, 0, R.string.action_add_emotion)
+		menu.add(0, MENU_EMOTION, 0, R.string.menu_emotion)
 				.setIcon(R.drawable.ic_menu_emoticons)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		menu.add(0, MENU_TOPIC, 0, R.string.action_add_topic);
+		menu.add(0, MENU_TOPIC, 0, R.string.menu_topic);
 //
 //		menu.add(0, 1000, 0, "转发");
 
 		if (!sending) {
-			menu.add(0, MENU_POST, 0, R.string.action_post)
+			menu.add(0, MENU_POST, 0, R.string.menu_post)
 					.setIcon(R.drawable.social_send_now)
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		} else {
@@ -141,7 +141,7 @@ public class Comment_Repost extends Activity {
 		// }
 		case MENU_LETTERS: {
 			if (System.currentTimeMillis() - downTime > 2000) {
-				Toast.makeText(Comment_Repost.this, "再按一次清除文字",
+				Toast.makeText(Comment_Repost.this, R.string.toast_press_again_to_clear_text,
 						Toast.LENGTH_SHORT).show();
 				downTime = System.currentTimeMillis();
 			} else {
@@ -171,7 +171,7 @@ public class Comment_Repost extends Activity {
 				setProgressBarIndeterminateVisibility(true);
 
 			} else {
-				Toast.makeText(Comment_Repost.this, "说点什么吧", Toast.LENGTH_SHORT)
+				Toast.makeText(Comment_Repost.this, R.string.toast_say_sth, Toast.LENGTH_SHORT)
 						.show();
 			}
 
@@ -222,7 +222,7 @@ public class Comment_Repost extends Activity {
 			case GOT_COMMENT_CREATE_INFO: {
 
 				if (b.getId() != null) {
-					Toast.makeText(Comment_Repost.this, "评论成功",
+					Toast.makeText(Comment_Repost.this, R.string.toast_comment_success,
 							Toast.LENGTH_SHORT).show();
 					finish();
 					try {
@@ -231,7 +231,7 @@ public class Comment_Repost extends Activity {
 						Log.e(TAG, "SingleWeibo haven't start");
 					}
 				} else {
-					Toast.makeText(Comment_Repost.this, "评论失败…",
+					Toast.makeText(Comment_Repost.this, R.string.toast_comment_fail,
 							Toast.LENGTH_SHORT).show();
 				}
 				break;
@@ -239,7 +239,7 @@ public class Comment_Repost extends Activity {
 			case GOT_REPOST_INFO: {
 
 				if (b.getId() != null) {
-					Toast.makeText(Comment_Repost.this, "转发成功",
+					Toast.makeText(Comment_Repost.this, R.string.toast_repost_success,
 							Toast.LENGTH_SHORT).show();
 					finish();
 					try {
@@ -248,7 +248,7 @@ public class Comment_Repost extends Activity {
 						Log.e(TAG, "SingleWeibo haven't start");
 					}
 				} else {
-					Toast.makeText(Comment_Repost.this, "转发失败…",
+					Toast.makeText(Comment_Repost.this, R.string.toast_repost_fail,
 							Toast.LENGTH_SHORT).show();
 				}
 				break;
@@ -268,7 +268,7 @@ public class Comment_Repost extends Activity {
 			case GOT_REPLY_INFO: {
 
 				if (b.getId() != null) {
-					Toast.makeText(Comment_Repost.this, "回复成功",
+					Toast.makeText(Comment_Repost.this, R.string.toast_reply_success,
 							Toast.LENGTH_SHORT).show();
 					finish();
 					try {
@@ -277,7 +277,7 @@ public class Comment_Repost extends Activity {
 						Log.e(TAG, "SingleWeibo haven't start");
 					}
 				} else {
-					Toast.makeText(Comment_Repost.this, "回复失败…",
+					Toast.makeText(Comment_Repost.this, R.string.toast_reply_fail,
 							Toast.LENGTH_SHORT).show();
 				}
 				break;

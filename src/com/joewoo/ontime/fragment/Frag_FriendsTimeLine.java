@@ -12,6 +12,7 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefres
 import com.joewoo.ontime.Login;
 import com.joewoo.ontime.Post;
 import com.joewoo.ontime.R;
+import com.joewoo.ontime.SingleUser;
 import com.joewoo.ontime.SingleWeibo;
 import com.joewoo.ontime.action.Weibo_FriendsTimeLine;
 import com.joewoo.ontime.info.WeiboConstant;
@@ -21,7 +22,6 @@ import com.joewoo.ontime.tools.MySQLHelper;
 import com.joewoo.ontime.fragment.Timeline_Comments_Mentions;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,7 +33,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -50,7 +49,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 @SuppressLint("HandlerLeak")
 public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener {
 
@@ -204,7 +202,7 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 
 		menu.clear();
 
-		menu.add(0, MENU_PROFILE_IMAGE, 0, WeiboConstant.UID)
+		menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_user_statuses)
 				.setIcon(
 						new BitmapDrawable(getResources(), BitmapFactory
 								.decodeByteArray(profileImg, 0,
@@ -215,7 +213,7 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 				WeiboConstant.SCREEN_NAME.toUpperCase(Locale.US))
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		menu.add(0, MENU_POST, 0, "发Po").setIcon(R.drawable.social_send_now)
+		menu.add(0, MENU_POST, 0, R.string.menu_post).setIcon(R.drawable.social_send_now)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 	}
@@ -263,13 +261,13 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 					Log.e(TAG, LOG_DEVIDER);
 				}
 
-				singleUser[cursor.getCount()] = "【添加帐号…】";
+				singleUser[cursor.getCount()] = getActivity().getResources().getString(R.string.frag_ftl_dialog_choose_account_add_account);
 				singleUid[cursor.getCount()] = "0";
 
-				singleUser[cursor.getCount() + 1] = "【登出…】";
+				singleUser[cursor.getCount() + 1] = getActivity().getResources().getString(R.string.frag_ftl_dialog_choose_account_logout);
 				singleUid[cursor.getCount() + 1] = "1";
 
-				new AlertDialog.Builder(getActivity()).setTitle("选择帐号")
+				new AlertDialog.Builder(getActivity()).setTitle(R.string.frag_ftl_dialog_choose_account_title)
 						.setItems(singleUser, new OnClickListener() {
 
 							@Override
@@ -300,8 +298,8 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 
 									new AlertDialog.Builder(getActivity(),
 											AlertDialog.THEME_HOLO_LIGHT)
-											.setTitle("登出？")
-											.setPositiveButton("确定",
+											.setTitle(R.string.frag_ftl_dialog_confirm_logout_title)
+											.setPositiveButton(R.string.frag_ftl_dialog_confirm_logout_btn_ok,
 													new OnClickListener() {
 
 														@Override
@@ -336,7 +334,7 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 															}
 														}
 													})
-											.setNegativeButton("不要", null)
+											.setNegativeButton(R.string.frag_ftl_dialog_confirm_logout_btn_cancle, null)
 											.show();
 								}
 							}
@@ -349,7 +347,12 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 			break;
 		}
 		case MENU_PROFILE_IMAGE: {
-			Toast.makeText(getActivity(), "分组功能", Toast.LENGTH_SHORT).show();
+			Intent i = new Intent();
+			i.setClass(getActivity(), SingleUser.class);
+
+			i.putExtra(SCREEN_NAME, WeiboConstant.SCREEN_NAME);
+
+			startActivity(i);
 			break;
 		}
 		}
@@ -378,7 +381,7 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 				break;
 			}
 			case GOT_FRIENDS_TIMELINE_INFO_FAIL: {
-				Toast.makeText(getActivity(), "获取信息失败…", Toast.LENGTH_SHORT)
+				Toast.makeText(getActivity(), R.string.toast_user_timeline_fail, Toast.LENGTH_SHORT)
 						.show();
 				break;
 			}

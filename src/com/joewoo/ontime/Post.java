@@ -159,7 +159,7 @@ public class Post extends Activity {
 						Log.e(TAG, "8");
 						Toast.makeText(
 								Post.this,
-								"欢迎" + WeiboConstant.LOCATION + "Po主 "
+								R.string.toast_post_welcome_part_1 + WeiboConstant.LOCATION + R.string.toast_post_welcome_part_2
 										+ WeiboConstant.SCREEN_NAME,
 								Toast.LENGTH_LONG).show();
 						Log.e(TAG, "9");
@@ -186,22 +186,22 @@ public class Post extends Activity {
 							Log.e(TAG, "12");
 							Toast.makeText(
 									Post.this,
-									"欢迎" + WeiboConstant.LOCATION + "Po主 "
-											+ WeiboConstant.SCREEN_NAME,
+									R.string.toast_post_welcome_part_1 + WeiboConstant.LOCATION + R.string.toast_post_welcome_part_2
+										+ WeiboConstant.SCREEN_NAME,
 									Toast.LENGTH_LONG).show();
 						}
 					}
 				} else {// 没有查询到数据库信息
 					Log.e(TAG, "17");
 					saveSharingInfo(intent, type, action);
-					Toast.makeText(Post.this, "请先登录~", Toast.LENGTH_LONG)
+					Toast.makeText(Post.this, R.string.toast_login_acquired, Toast.LENGTH_LONG)
 							.show();
 					jumpToLogin();
 				}
 			} else {// 不存在配置文件，需要登录
 				Log.e(TAG, "18");
 				saveSharingInfo(intent, type, action);
-				Toast.makeText(Post.this, "请先登录~", Toast.LENGTH_LONG).show();
+				Toast.makeText(Post.this, R.string.toast_login_acquired, Toast.LENGTH_LONG).show();
 				jumpToLogin();
 			}
 		} else {
@@ -267,11 +267,11 @@ public class Post extends Activity {
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		if (picFile != null) {
-			menu.add(0, MENU_ADD, 0, R.string.action_added)
+			menu.add(0, MENU_ADD, 0, R.string.menu_image_clear)
 					.setIcon(R.drawable.content_picture_ok)
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		} else {
-			menu.add(0, MENU_ADD, 0, R.string.action_add)
+			menu.add(0, MENU_ADD, 0, R.string.menu_image_add)
 					.setIcon(R.drawable.content_picture)
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
@@ -280,17 +280,17 @@ public class Post extends Activity {
 		// .setIcon(R.drawable.ic_menu_btn_at)
 		// .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
-		menu.add(0, MENU_AT, 0, "@人").setIcon(R.drawable.social_group)
+		menu.add(0, MENU_AT, 0, R.string.menu_at).setIcon(R.drawable.social_group)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		menu.add(0, MENU_EMOTION, 0, R.string.action_add_emotion)
+		menu.add(0, MENU_EMOTION, 0, R.string.menu_emotion)
 				.setIcon(R.drawable.ic_menu_emoticons)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		menu.add(0, MENU_TOPIC, 0, R.string.action_add_topic);
+		menu.add(0, MENU_TOPIC, 0, R.string.menu_topic);
 
 		if (!sending) {
-			menu.add(0, MENU_POST, 0, R.string.action_post)
+			menu.add(0, MENU_POST, 0, R.string.menu_post)
 					.setIcon(R.drawable.social_send_now)
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		} else {
@@ -299,7 +299,7 @@ public class Post extends Activity {
 			// .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		}
 
-		menu.add(0, MENU_CLEAR_DRAFT, 0, R.string.action_clear_draft);
+		menu.add(0, MENU_CLEAR_DRAFT, 0, R.string.menu_draft_clear);
 		// menu.add(0, MENU_LOGOUT, 0, R.string.action_logout);
 		return true;
 	}
@@ -313,7 +313,7 @@ public class Post extends Activity {
 		}
 		case MENU_LETTERS: {
 			if (System.currentTimeMillis() - downTime > 2000) {
-				Toast.makeText(Post.this, "再按一次清除文字", Toast.LENGTH_SHORT)
+				Toast.makeText(Post.this, R.string.toast_press_again_to_clear_text, Toast.LENGTH_SHORT)
 						.show();
 				downTime = System.currentTimeMillis();
 			} else {
@@ -329,14 +329,14 @@ public class Post extends Activity {
 				startActivityForResult(intent, ACT_GOT_PHOTO);
 			} else {
 				if (System.currentTimeMillis() - downTime > 2000) {
-					Toast.makeText(Post.this, "再按一次删除图片", Toast.LENGTH_SHORT)
+					Toast.makeText(Post.this, R.string.toast_press_again_to_clear_img, Toast.LENGTH_SHORT)
 							.show();
 					downTime = System.currentTimeMillis();
 				} else {
 					picFile = null;
 				}
 			}
-			rfBar(); // 刷新ActionBar
+			rfBar();
 			break;
 		}
 		case MENU_POST: {
@@ -356,11 +356,11 @@ public class Post extends Activity {
 					sending = true;
 					rfBar(); // 刷新ActionBar
 				} else {
-					Toast.makeText(Post.this, "说点什么吧", Toast.LENGTH_SHORT)
+					Toast.makeText(Post.this, R.string.toast_say_sth, Toast.LENGTH_SHORT)
 							.show();
 				}
 			} else {
-				Toast.makeText(Post.this, "没有网络神烦…", Toast.LENGTH_SHORT).show();
+				Toast.makeText(Post.this, R.string.toast_no_network, Toast.LENGTH_SHORT).show();
 			}
 
 			break;
@@ -386,7 +386,7 @@ public class Post extends Activity {
 //		}
 		case MENU_CLEAR_DRAFT: {
 			clearDraft();
-			Toast.makeText(Post.this, "清除草稿成功", Toast.LENGTH_SHORT).show();
+			Toast.makeText(Post.this, R.string.toast_clear_draft_success, Toast.LENGTH_SHORT).show();
 			break;
 		}
 		case MENU_AT: {
@@ -394,7 +394,7 @@ public class Post extends Activity {
 				startActivityForResult(new Intent(Post.this, At.class),
 						ACT_GOT_AT);
 			else {
-				Toast.makeText(Post.this, "没有网络自己@吧…", Toast.LENGTH_SHORT)
+				Toast.makeText(Post.this, R.string.toast_no_network_to_at, Toast.LENGTH_SHORT)
 						.show();
 			}
 			break;
@@ -418,7 +418,7 @@ public class Post extends Activity {
 			sending = false;
 			sent = true;
 			setProgressBarIndeterminateVisibility(false);
-			rfBar(); // 刷新ActionBar
+			rfBar();
 
 			switch (msg.what) {
 			case GOT_UPDATE_INFO: {
@@ -430,9 +430,9 @@ public class Post extends Activity {
 					clearDraft();
 					tv_post_info.setVisibility(View.VISIBLE);
 					tv_post_info.startAnimation(a_in);
-					tv_post_info.setText("SUCCESS!\n发表于 - "
-							+ update.getCreatedAt() + "\nID - "
-							+ update.getId() + "\n> 点击这里查看微博 <");
+					tv_post_info.setText(R.string.post_send_success_part_1
+							+ update.getCreatedAt() + R.string.post_send_success_part_2
+							+ update.getId() + R.string.post_send_success_part_3);
 					tv_post_info.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
@@ -457,10 +457,10 @@ public class Post extends Activity {
 					final String picURL = upload.getOriginalPic();
 					tv_post_info.setVisibility(View.VISIBLE);
 					tv_post_info.startAnimation(a_in);
-					tv_post_info.setText("SUCCESS!\n发表于 - "
-							+ upload.getCreatedAt() + "\nID - "
-							+ upload.getId() + "\n图片 - " + picURL
-							+ "\n> 点这里查看微博 <");
+					tv_post_info.setText(R.string.post_send_success_part_1
+							+ upload.getCreatedAt() + R.string.post_send_success_part_2
+							+ upload.getId() + R.string.post_send_success_part_img + picURL
+							+ R.string.post_send_success_part_3);
 					tv_post_info.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
@@ -489,7 +489,7 @@ public class Post extends Activity {
 			}
 			case ACT_GOT_PHOTO: {
 				picFile = new File(getFilePath(data.getData()));
-				rfBar(); // 刷新ActionBar
+				rfBar();
 				break;
 			}
 			}
@@ -568,16 +568,16 @@ public class Post extends Activity {
 		if (errorCode.equals("21315") || errorCode.equals("21314")
 				|| errorCode.equals("21316") || errorCode.equals("21317")
 				|| errorCode.equals("21301") || errorCode.equals("21332")) {
-			Toast.makeText(Post.this, "身份认证过期…请重新登录", Toast.LENGTH_LONG).show();
+			Toast.makeText(Post.this, R.string.error_token_out_of_date, Toast.LENGTH_LONG).show();
 			saveDraft();
 			jumpToLogin();
 		} else if (errorCode.equals("20019") || errorCode.equals("20017")) {
 			tv_post_info.setVisibility(View.VISIBLE);
-			tv_post_info.setText("ERROR!\n不能重复发同一个Po哦\nError - "
+			tv_post_info.setText(R.string.error_repeat_content
 					+ error.getError());
 		} else if (errorCode.equals("233")) {
 			tv_post_info.setVisibility(View.VISIBLE);
-			tv_post_info.setText("ERROR!\n目测超字数了…缩句吧~\nError - "
+			tv_post_info.setText(R.string.error_out_of_max_text_count
 					+ error.getError());
 		}
 		return error.getError();

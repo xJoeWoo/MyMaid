@@ -129,7 +129,7 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
 	public void onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
 
-		menu.add(0, MENU_PROFILE_IMAGE, 0, "加什么功能好呢")
+		menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_coming)
 				.setIcon(
 						new BitmapDrawable(getResources(), BitmapFactory
 								.decodeByteArray(profileImg, 0,
@@ -137,13 +137,13 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		if (unreadCount == null)
-			menu.add(0, MENU_UNREAD_COUNT, 0, "未读").setShowAsAction(
+			menu.add(0, MENU_UNREAD_COUNT, 0, R.string.menu_unread).setShowAsAction(
 					MenuItem.SHOW_AS_ACTION_ALWAYS);
 		else
 			menu.add(0, MENU_UNREAD_COUNT, 0, unreadCount).setShowAsAction(
 					MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		menu.add(0, MENU_POST, 0, "发Po").setIcon(R.drawable.social_send_now)
+		menu.add(0, MENU_POST, 0, R.string.menu_post).setIcon(R.drawable.social_send_now)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 	}
@@ -210,7 +210,7 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
 				break;
 			}
 			case GOT_COMMENTS_TO_ME_INFO_FAIL: {
-				Toast.makeText(getActivity(), "获取评论失败…", Toast.LENGTH_SHORT)
+				Toast.makeText(getActivity(), R.string.toast_commnets_fail, Toast.LENGTH_SHORT)
 						.show();
 				break;
 			}
@@ -219,12 +219,12 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
 				if (b.getMentionCmtCount() != null)
 					unreadCount = b.getCmtCount();
 				else
-					Toast.makeText(getActivity(), "获取未读数失败…",
+					Toast.makeText(getActivity(), R.string.toast_unread_count_fail,
 							Toast.LENGTH_SHORT).show();
 				break;
 			}
 			case GOT_SET_REMIND_COUNT_INFO_FAIL: {
-				Toast.makeText(getActivity(), "清除未读数失败…", Toast.LENGTH_SHORT)
+				Toast.makeText(getActivity(), R.string.toast_clear_unread_count_fail, Toast.LENGTH_SHORT)
 						.show();
 				break;
 			}

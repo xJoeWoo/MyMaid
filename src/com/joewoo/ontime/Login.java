@@ -111,7 +111,7 @@ public class Login extends Activity {
 				break;
 			}
 			case GOT_ACCESS_TOKEN_FAIL: {
-				Toast.makeText(Login.this, "获取信息失败", Toast.LENGTH_SHORT).show();
+				Toast.makeText(Login.this, R.string.toast_access_token_fail, Toast.LENGTH_SHORT).show();
 				break;
 			}
 			case GOT_SHOW_INFO: {

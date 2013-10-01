@@ -1,9 +1,16 @@
 package com.joewoo.ontime;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.joewoo.ontime.action.Weibo_CommentsShow;
 import com.joewoo.ontime.action.Weibo_DownloadPic;
 import com.joewoo.ontime.action.Weibo_FavoritesCreate;
+import com.joewoo.ontime.action.Weibo_StatusesDestroy;
 import com.joewoo.ontime.bean.WeiboBackBean;
+import com.joewoo.ontime.info.WeiboConstant;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -15,8 +22,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,8 +57,13 @@ public class SingleWeibo extends Activity {
 	ImageView iv_image;
 	ImageView iv_rt_image;
 	ImageView iv_profile_image;
+	ListView lv_comments;
 	ProgressBar pb;
 	Weibo_DownloadPic dp;
+	ProgressBar pb_comments_loading;
+	ScrollView sv;
+	TextView tv_divider;
+	long downTime = 0;
 	public static SingleWeibo _instance = null;
 
 	File cache;
@@ -55,6 +72,7 @@ public class SingleWeibo extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		_instance = this;
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.singleweibo);
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -69,6 +87,8 @@ public class SingleWeibo extends Activity {
 		tv_text.setText(i.getStringExtra(TEXT));
 
 		tv_comments_count.setText(i.getStringExtra(COMMENTS_COUNT));
+		new Weibo_CommentsShow(i.getStringExtra(WEIBO_ID), mHandler).start();
+
 		tv_reposts_count.setText(i.getStringExtra(REPOSTS_COUNT));
 		tv_source.setText(i.getStringExtra(SOURCE));
 
@@ -142,14 +162,20 @@ public class SingleWeibo extends Activity {
 
 		menu.clear();
 
-		menu.add(0, MENU_FAVOURITE_CREATE, 0, "收藏")
-				.setIcon(R.drawable.rating_important)
+		if (i.getStringExtra(SCREEN_NAME).equals(WeiboConstant.SCREEN_NAME)) {
+			menu.add(0, MENU_STATUSES_DESTROY, 0, R.string.menu_delete)
+					.setIcon(R.drawable.content_discard)
+					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		}
+
+		menu.add(0, MENU_FAVOURITE_CREATE, 0, R.string.menu_add_favourite)
+				.setIcon(R.drawable.rating_favorite)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		menu.add(0, MENU_REPOST, 0, "转发").setIcon(R.drawable.social_reply)
+		menu.add(0, MENU_REPOST, 0, R.string.menu_repost).setIcon(R.drawable.social_reply)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		menu.add(0, MENU_COMMENT_CREATE, 0, "评论")
+		menu.add(0, MENU_COMMENT_CREATE, 0, R.string.menu_comment)
 				.setIcon(R.drawable.content_edit)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
@@ -189,11 +215,25 @@ public class SingleWeibo extends Activity {
 			setProgressBarIndeterminateVisibility(true);
 			break;
 		}
+		case MENU_STATUSES_DESTROY: {
+			if (System.currentTimeMillis() - downTime > 2000) {
+				Toast.makeText(SingleWeibo.this, R.string.toast_press_again_to_delete_statuse, Toast.LENGTH_SHORT)
+						.show();
+				downTime = System.currentTimeMillis();
+			} else {
+				new Weibo_StatusesDestroy(i.getStringExtra(WEIBO_ID), mHandler)
+						.start();
+				setProgressBarIndeterminateVisibility(true);
+			}
+
+			break;
+		}
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	Handler mHandler = new Handler() {
+		@SuppressWarnings("unchecked")
 		@Override
 		public void handleMessage(Message msg) {
 
@@ -205,13 +245,66 @@ public class SingleWeibo extends Activity {
 				WeiboBackBean b = (WeiboBackBean) msg.obj;
 
 				if (b.getFavoritedTime() != null) {
-					Toast.makeText(SingleWeibo.this, "收藏成功", Toast.LENGTH_SHORT)
+					Toast.makeText(SingleWeibo.this, R.string.toast_add_favourite_success, Toast.LENGTH_SHORT)
 							.show();
 					finish();
 				} else {
-					Toast.makeText(SingleWeibo.this, "收藏失败…",
+					Toast.makeText(SingleWeibo.this, R.string.toast_add_favourite_fail,
 							Toast.LENGTH_SHORT).show();
 				}
+				break;
+			}
+			case GOT_STATUSES_DESTROY_INFO: {
+				WeiboBackBean b = (WeiboBackBean) msg.obj;
+
+				if (b.getId() != null) {
+					Toast.makeText(SingleWeibo.this, R.string.toast_delete_success, Toast.LENGTH_SHORT)
+							.show();
+					finish();
+				} else {
+					Toast.makeText(SingleWeibo.this, R.string.toast_delete_fail,
+							Toast.LENGTH_SHORT).show();
+				}
+				break;
+			}
+			case GOT_COMMNETS_SHOW_INFO: {
+
+				ArrayList<HashMap<String, String>> text = (ArrayList<HashMap<String, String>>) msg.obj;
+
+				String[] from = { SCREEN_NAME, TEXT };
+				int[] to = { R.id.comments_show_screen_name,
+						R.id.comments_show_text };
+
+				SimpleAdapter data = new SimpleAdapter(SingleWeibo.this, text,
+						R.layout.comments_show_lv, from, to);
+
+//				int sv_pos = sv.getScrollY();
+
+				pb_comments_loading.setVisibility(View.GONE);
+
+				lv_comments.setAdapter(data);
+
+				if (data.getCount() > 0) {
+
+					int totalHeight = 0;
+					for (int i = 0; i < data.getCount(); i++) {
+						View listItem = data.getView(i, null, lv_comments);
+						listItem.measure(0, 0);
+						totalHeight += listItem.getMeasuredHeight() + 8;
+					}
+
+					ViewGroup.LayoutParams params = lv_comments
+							.getLayoutParams();
+					params.height = totalHeight
+							+ (lv_comments.getDividerHeight() * (data
+									.getCount() - 1));
+					lv_comments.setLayoutParams(params);
+
+					sv.scrollTo(0, 0);
+				} else {
+					tv_divider.setVisibility(View.GONE);
+				}
+
 				break;
 			}
 			}
@@ -237,13 +330,31 @@ public class SingleWeibo extends Activity {
 		iv_image = (ImageView) findViewById(R.id.single_weibo_image);
 		iv_rt_image = (ImageView) findViewById(R.id.single_weibo_retweeted_status_weibo_image);
 		iv_profile_image = (ImageView) findViewById(R.id.single_weibo_profile_image);
+		lv_comments = (ListView) findViewById(R.id.single_weibo_lv_comments);
+		pb_comments_loading = (ProgressBar) findViewById(R.id.single_weibo_pb_comments_show);
+		sv = (ScrollView) findViewById(R.id.single_weibo_sv);
+		tv_divider = (TextView) findViewById(R.id.single_weibo_divider);
+	}
+
+	@Override
+	protected void onStop() {
+		Log.e(TAG, "onStop");
+
+		super.onStop();
 	}
 
 	@Override
 	protected void onDestroy() {
-		if (dp != null && dp.getStatus() != AsyncTask.Status.FINISHED) {
-			Log.e(TAG, "onDestroy - cancel dp");
-			dp.cancel(true);
+		Log.e(TAG, "onDestroy");
+		// if (dp != null && dp.getStatus() == AsyncTask.Status.RUNNING) {
+		// Log.e(TAG, "onDestroy - cancel dp");
+		// dp.cancel(true);
+		// }
+		if (dp != null) {
+			if (dp.getStatus() != AsyncTask.Status.FINISHED) {
+				Log.e(TAG, "onDestroy - cancel dp");
+				dp.cancel(true);
+			}
 		}
 		super.onDestroy();
 	}

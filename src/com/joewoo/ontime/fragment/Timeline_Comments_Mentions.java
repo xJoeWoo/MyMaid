@@ -45,7 +45,7 @@ public class Timeline_Comments_Mentions extends FragmentActivity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.timeline_cmt_atme);
 
-		Log.e(TAG, "TCM");
+		Log.e(TAG, "MyMaid START!");
 
 		sql = sqlHelper.getWritableDatabase();
 		preferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
@@ -62,7 +62,7 @@ public class Timeline_Comments_Mentions extends FragmentActivity {
 					new String[] { lastUid }, null, null, null);
 
 			if (!loadConstant(c)) {
-				Toast.makeText(Timeline_Comments_Mentions.this, "请先登录~",
+				Toast.makeText(Timeline_Comments_Mentions.this, R.string.toast_login_acquired,
 						Toast.LENGTH_LONG).show();
 				jumpToLogin();
 			}
@@ -79,13 +79,13 @@ public class Timeline_Comments_Mentions extends FragmentActivity {
 			mViewPager.setOffscreenPageLimit(3);
 
 			actionBar.addTab(actionBar.newTab()
-					.setText(getString(R.string.title_friends_timeline))
+					.setText(getString(R.string.title_frag_friends_timeline))
 					.setTabListener(tabListener));
 			actionBar.addTab(actionBar.newTab()
-					.setText(getString(R.string.title_comments_to_me))
+					.setText(getString(R.string.title_frag_comments_to_me))
 					.setTabListener(tabListener));
 			actionBar.addTab(actionBar.newTab()
-					.setText(getString(R.string.title_atme))
+					.setText(getString(R.string.title_frag_atme))
 					.setTabListener(tabListener));
 
 			FragmentManager mFragmentManager = getSupportFragmentManager();
@@ -125,7 +125,7 @@ public class Timeline_Comments_Mentions extends FragmentActivity {
 					});
 			
 		} else {// 不存在配置文件，需要登录
-			Toast.makeText(Timeline_Comments_Mentions.this, "请先登录~",
+			Toast.makeText(Timeline_Comments_Mentions.this, R.string.toast_login_acquired,
 					Toast.LENGTH_LONG).show();
 			jumpToLogin();
 		}

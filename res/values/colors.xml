@@ -4,6 +4,7 @@
 	<color name="grey">#ffe8e8e8</color>
 	<color name="textGrey">#ff888888</color>
 	<color name="bgGrey">#ffe5e5e5</color>
+	<color name="dividerGrey">#1c000000</color>
 	<color name="viewShadow1">#ffd3d3d3</color>
 	<color name="viewShadow2">#ffd9d9d9</color>
 	<color name="mymaid_pink">#fffcb9b9</color>

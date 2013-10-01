@@ -20,21 +20,21 @@ import com.joewoo.ontime.info.WeiboConstant;
 import android.os.Handler;
 import android.util.Log;
 
-public class Weibo_FavoritesCreate extends Thread {
-	
-	private String weibo_id;
+public class Weibo_StatusesDestroy extends Thread {
+
 	private Handler mHandler;
+	private String weibo_id;
 	
-	public Weibo_FavoritesCreate(String weibo_id, Handler handler){
-		this.weibo_id = weibo_id;
+	public Weibo_StatusesDestroy(String weibo_id, Handler handler){
 		this.mHandler = handler;
+		this.weibo_id = weibo_id;
 	}
 	
 	public void run(){
-		Log.e(TAG, "Favourite Create Thread start");
+		Log.e(TAG, "Statuses Destroy Thread start");
 		String httpResult = "{ \"error_code\" : \"233\" }";
 
-		HttpPost httpRequest = new HttpPost(FAVOURITE_CREATE_URL);
+		HttpPost httpRequest = new HttpPost(STATUSES_DESTROY_URL);
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair(ACCESS_TOKEN,
 				WeiboConstant.ACCESS_TOKEN));
@@ -47,12 +47,10 @@ public class Weibo_FavoritesCreate extends Thread {
 			
 			Log.e(TAG, "GOT: " + httpResult);
 
-			mHandler.obtainMessage(GOT_FAVOURITE_CREATE_INFO, new Gson().fromJson(httpResult, WeiboBackBean.class)).sendToTarget();
+			mHandler.obtainMessage(GOT_STATUSES_DESTROY_INFO, new Gson().fromJson(httpResult, WeiboBackBean.class)).sendToTarget();
 
 		} catch (Exception e) {
-
+			mHandler.sendEmptyMessage(GOT_STATUSES_DESTROY_INFO_FAIL);
 		}
-		
 	}
-
 }
