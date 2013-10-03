@@ -9,7 +9,6 @@ public class WeiboConstant {
 	public static String LOCATION;
 	public static long EXPIRES_IN;
 
-	
 	public static String PICPATH;
 	public static String WORDS;
 }

@@ -69,17 +69,15 @@ public class Post extends Activity {
 		super.onCreate(savedInstanceState);
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
 		setContentView(R.layout.post);
+		setProgressBarIndeterminateVisibility(false);
 		findViews();
 
 		Log.e(TAG, "Post Weibo");
 
 		getActionBar().setDisplayUseLogoEnabled(true);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-
-		setTitle(getString(R.string.act_post_title));
-
+		
 		sql = sqlHelper.getWritableDatabase();
 
 		preferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
@@ -157,16 +155,22 @@ public class Post extends Activity {
 					Log.e(TAG, "7");
 					if (Intent.ACTION_SEND.equals(action) && type != null) {// 分享到此Activity
 						Log.e(TAG, "8");
-						Toast.makeText(
-								Post.this,
-								R.string.toast_post_welcome_part_1 + WeiboConstant.LOCATION + R.string.toast_post_welcome_part_2
-										+ WeiboConstant.SCREEN_NAME,
-								Toast.LENGTH_LONG).show();
+//						Toast.makeText(
+//								Post.this,
+//								getResources().getString(
+//										R.string.toast_post_welcome_part_1)
+//										+ WeiboConstant.LOCATION
+//										+ getResources()
+//												.getString(
+//														R.string.toast_post_welcome_part_2)
+//										+ WeiboConstant.SCREEN_NAME,
+//								Toast.LENGTH_LONG).show();
 						Log.e(TAG, "9");
 						if ("text/plain".equals(type)) { // 传入文件为文字
 							Log.e(TAG, "10 TEXT");
 							et_post.setText(intent
 									.getStringExtra(Intent.EXTRA_TEXT));
+							et_post.setSelection(et_post.getText().length());
 						} else if (type.startsWith("image/")) { // 传入文件为图片
 							Log.e(TAG, "10 PHOTO");
 							Uri uri = (Uri) intent
@@ -184,24 +188,30 @@ public class Post extends Activity {
 						if (WeiboConstant.SCREEN_NAME != null
 								&& WeiboConstant.LOCATION != null) {
 							Log.e(TAG, "12");
-							Toast.makeText(
-									Post.this,
-									R.string.toast_post_welcome_part_1 + WeiboConstant.LOCATION + R.string.toast_post_welcome_part_2
-										+ WeiboConstant.SCREEN_NAME,
-									Toast.LENGTH_LONG).show();
+//							Toast.makeText(
+//									Post.this,
+//									getResources().getString(
+//											R.string.toast_post_welcome_part_1)
+//											+ WeiboConstant.LOCATION
+//											+ getResources()
+//													.getString(
+//															R.string.toast_post_welcome_part_2)
+//											+ WeiboConstant.SCREEN_NAME,
+//									Toast.LENGTH_LONG).show();
 						}
 					}
 				} else {// 没有查询到数据库信息
 					Log.e(TAG, "17");
 					saveSharingInfo(intent, type, action);
-					Toast.makeText(Post.this, R.string.toast_login_acquired, Toast.LENGTH_LONG)
-							.show();
+					Toast.makeText(Post.this, R.string.toast_login_acquired,
+							Toast.LENGTH_LONG).show();
 					jumpToLogin();
 				}
 			} else {// 不存在配置文件，需要登录
 				Log.e(TAG, "18");
 				saveSharingInfo(intent, type, action);
-				Toast.makeText(Post.this, R.string.toast_login_acquired, Toast.LENGTH_LONG).show();
+				Toast.makeText(Post.this, R.string.toast_login_acquired,
+						Toast.LENGTH_LONG).show();
 				jumpToLogin();
 			}
 		} else {
@@ -246,6 +256,9 @@ public class Post extends Activity {
 				rfBar(); // 刷新ActionBar
 			}
 		});
+		
+		setTitle(R.string.title_act_post);
+		getActionBar().setSubtitle(WeiboConstant.SCREEN_NAME);
 
 		a_out = AnimationUtils.loadAnimation(Post.this, R.anim.alpha_out);
 		a_in = AnimationUtils.loadAnimation(Post.this, R.anim.alpha_in);
@@ -280,7 +293,8 @@ public class Post extends Activity {
 		// .setIcon(R.drawable.ic_menu_btn_at)
 		// .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
-		menu.add(0, MENU_AT, 0, R.string.menu_at).setIcon(R.drawable.social_group)
+		menu.add(0, MENU_AT, 0, R.string.menu_at)
+				.setIcon(R.drawable.social_group)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		menu.add(0, MENU_EMOTION, 0, R.string.menu_emotion)
@@ -313,8 +327,9 @@ public class Post extends Activity {
 		}
 		case MENU_LETTERS: {
 			if (System.currentTimeMillis() - downTime > 2000) {
-				Toast.makeText(Post.this, R.string.toast_press_again_to_clear_text, Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(Post.this,
+						R.string.toast_press_again_to_clear_text,
+						Toast.LENGTH_SHORT).show();
 				downTime = System.currentTimeMillis();
 			} else {
 				et_post.setText("");
@@ -329,8 +344,9 @@ public class Post extends Activity {
 				startActivityForResult(intent, ACT_GOT_PHOTO);
 			} else {
 				if (System.currentTimeMillis() - downTime > 2000) {
-					Toast.makeText(Post.this, R.string.toast_press_again_to_clear_img, Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(Post.this,
+							R.string.toast_press_again_to_clear_img,
+							Toast.LENGTH_SHORT).show();
 					downTime = System.currentTimeMillis();
 				} else {
 					picFile = null;
@@ -356,37 +372,39 @@ public class Post extends Activity {
 					sending = true;
 					rfBar(); // 刷新ActionBar
 				} else {
-					Toast.makeText(Post.this, R.string.toast_say_sth, Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(Post.this, R.string.toast_say_sth,
+							Toast.LENGTH_SHORT).show();
 				}
 			} else {
-				Toast.makeText(Post.this, R.string.toast_no_network, Toast.LENGTH_SHORT).show();
+				Toast.makeText(Post.this, R.string.toast_no_network,
+						Toast.LENGTH_SHORT).show();
 			}
 
 			break;
 		}
-//		case MENU_LOGOUT: {
-//
-//			editor.putString(LASTUID, "");
-//			editor.commit();
-//
-//			if (sql.delete(sqlHelper.tableName, sqlHelper.UID + "=?",
-//					new String[] { WeiboConstant.UID }) > 0) {
-//				Log.e(TAG_SQL, "LOGOUT - Cleared user info");
-//			}
-//
-//			clearWeiboConstant();
-//
-//			Toast.makeText(Post.this, "<(￣︶￣)>", Toast.LENGTH_SHORT).show();
-//			Intent i = new Intent();
-//			i.setClass(Post.this, Start.class);
-//			startActivity(i);
-//			finish();
-//			break;
-//		}
+		// case MENU_LOGOUT: {
+		//
+		// editor.putString(LASTUID, "");
+		// editor.commit();
+		//
+		// if (sql.delete(sqlHelper.tableName, sqlHelper.UID + "=?",
+		// new String[] { WeiboConstant.UID }) > 0) {
+		// Log.e(TAG_SQL, "LOGOUT - Cleared user info");
+		// }
+		//
+		// clearWeiboConstant();
+		//
+		// Toast.makeText(Post.this, "<(￣︶￣)>", Toast.LENGTH_SHORT).show();
+		// Intent i = new Intent();
+		// i.setClass(Post.this, Start.class);
+		// startActivity(i);
+		// finish();
+		// break;
+		// }
 		case MENU_CLEAR_DRAFT: {
 			clearDraft();
-			Toast.makeText(Post.this, R.string.toast_clear_draft_success, Toast.LENGTH_SHORT).show();
+			Toast.makeText(Post.this, R.string.toast_clear_draft_success,
+					Toast.LENGTH_SHORT).show();
 			break;
 		}
 		case MENU_AT: {
@@ -394,8 +412,8 @@ public class Post extends Activity {
 				startActivityForResult(new Intent(Post.this, At.class),
 						ACT_GOT_AT);
 			else {
-				Toast.makeText(Post.this, R.string.toast_no_network_to_at, Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(Post.this, R.string.toast_no_network_to_at,
+						Toast.LENGTH_SHORT).show();
 			}
 			break;
 		}
@@ -430,9 +448,11 @@ public class Post extends Activity {
 					clearDraft();
 					tv_post_info.setVisibility(View.VISIBLE);
 					tv_post_info.startAnimation(a_in);
-					tv_post_info.setText(R.string.post_send_success_part_1
-							+ update.getCreatedAt() + R.string.post_send_success_part_2
-							+ update.getId() + R.string.post_send_success_part_3);
+					tv_post_info.setText(getResources().getString(R.string.post_send_success_part_1)
+							+ update.getCreatedAt()
+							+ getResources().getString(R.string.post_send_success_part_2)
+							+ update.getId()
+							+ getResources().getString(R.string.post_send_success_part_3));
 					tv_post_info.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
@@ -457,10 +477,12 @@ public class Post extends Activity {
 					final String picURL = upload.getOriginalPic();
 					tv_post_info.setVisibility(View.VISIBLE);
 					tv_post_info.startAnimation(a_in);
-					tv_post_info.setText(R.string.post_send_success_part_1
-							+ upload.getCreatedAt() + R.string.post_send_success_part_2
-							+ upload.getId() + R.string.post_send_success_part_img + picURL
-							+ R.string.post_send_success_part_3);
+					tv_post_info.setText(getResources().getString(R.string.post_send_success_part_1)
+							+ upload.getCreatedAt()
+							+ getResources().getString(R.string.post_send_success_part_2)
+							+ upload.getId()
+							+ getResources().getString(R.string.post_send_success_part_img) + picURL
+							+ getResources().getString(R.string.post_send_success_part_3));
 					tv_post_info.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
@@ -568,7 +590,8 @@ public class Post extends Activity {
 		if (errorCode.equals("21315") || errorCode.equals("21314")
 				|| errorCode.equals("21316") || errorCode.equals("21317")
 				|| errorCode.equals("21301") || errorCode.equals("21332")) {
-			Toast.makeText(Post.this, R.string.error_token_out_of_date, Toast.LENGTH_LONG).show();
+			Toast.makeText(Post.this, R.string.error_token_out_of_date,
+					Toast.LENGTH_LONG).show();
 			saveDraft();
 			jumpToLogin();
 		} else if (errorCode.equals("20019") || errorCode.equals("20017")) {

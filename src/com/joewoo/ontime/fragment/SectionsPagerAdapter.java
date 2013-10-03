@@ -20,8 +20,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		mFragments.add(new Frag_FriendsTimeLine());
 		mFragments.add(new Frag_Comments());
 		mFragments.add(new Frag_Mentions());
-
-		
 	}
 
 	@Override

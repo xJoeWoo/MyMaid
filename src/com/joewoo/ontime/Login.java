@@ -49,7 +49,7 @@ public class Login extends Activity {
 		_instance = this;
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.login);
-
+		setProgressBarIndeterminateVisibility(false);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		wv_login = (WebView) findViewById(R.id.wv_login);
@@ -186,9 +186,10 @@ public class Login extends Activity {
 
 				uidsE.putString(LASTUID, WeiboConstant.UID);
 				uidsE.commit();
-
+				setProgressBarIndeterminateVisibility(false);
 //				Start._instance.finish();
 				startActivity(new Intent(Login.this, Timeline_Comments_Mentions.class));
+				
 				finish();
 				break;
 			}

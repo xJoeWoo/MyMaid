@@ -1,8 +1,6 @@
 package com.joewoo.ontime.action;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.ProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -50,12 +48,8 @@ public class Weibo_ProfileImage extends Thread {
 
 			// }
 
-		} catch (ProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}catch (Exception e) {
+
 		}
 
 	}

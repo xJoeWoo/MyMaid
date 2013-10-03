@@ -2,6 +2,8 @@ package com.joewoo.ontime.fragment;
 
 import static com.joewoo.ontime.info.Defines.*;
 
+import java.util.Locale;
+
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -16,7 +18,6 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 import android.widget.Toast;
 
 import com.joewoo.ontime.Login;
@@ -42,7 +43,7 @@ public class Timeline_Comments_Mentions extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+//		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.timeline_cmt_atme);
 
 		Log.e(TAG, "MyMaid START!");
@@ -62,11 +63,12 @@ public class Timeline_Comments_Mentions extends FragmentActivity {
 					new String[] { lastUid }, null, null, null);
 
 			if (!loadConstant(c)) {
-				Toast.makeText(Timeline_Comments_Mentions.this, R.string.toast_login_acquired,
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(Timeline_Comments_Mentions.this,
+						R.string.toast_login_acquired, Toast.LENGTH_LONG)
+						.show();
 				jumpToLogin();
 			}
-			
+
 			mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
 
 			final ActionBar actionBar = getActionBar();
@@ -79,13 +81,13 @@ public class Timeline_Comments_Mentions extends FragmentActivity {
 			mViewPager.setOffscreenPageLimit(3);
 
 			actionBar.addTab(actionBar.newTab()
-					.setText(getString(R.string.title_frag_friends_timeline))
+					.setText(getString(R.string.title_frag_friends_timeline).toUpperCase(Locale.US))
 					.setTabListener(tabListener));
 			actionBar.addTab(actionBar.newTab()
-					.setText(getString(R.string.title_frag_comments_to_me))
+					.setText(getString(R.string.title_frag_comments_to_me).toUpperCase(Locale.US))
 					.setTabListener(tabListener));
 			actionBar.addTab(actionBar.newTab()
-					.setText(getString(R.string.title_frag_atme))
+					.setText(getString(R.string.title_frag_atme).toUpperCase(Locale.US))
 					.setTabListener(tabListener));
 
 			FragmentManager mFragmentManager = getSupportFragmentManager();
@@ -123,10 +125,10 @@ public class Timeline_Comments_Mentions extends FragmentActivity {
 							}
 						}
 					});
-			
+
 		} else {// 不存在配置文件，需要登录
-			Toast.makeText(Timeline_Comments_Mentions.this, R.string.toast_login_acquired,
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(Timeline_Comments_Mentions.this,
+					R.string.toast_login_acquired, Toast.LENGTH_LONG).show();
 			jumpToLogin();
 		}
 
@@ -149,14 +151,14 @@ public class Timeline_Comments_Mentions extends FragmentActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-//	@Override
-//	protected void onResume() {
-//		super.onResume();
-//		if (loadConstant(c))
-//			Log.e(TAG, "Reload WeiboConstant succeed");
-//		else
-//			Log.e(TAG, "Reload WeiboConstant failed");
-//	}
+	// @Override
+	// protected void onResume() {
+	// super.onResume();
+	// if (loadConstant(c))
+	// Log.e(TAG, "Reload WeiboConstant succeed");
+	// else
+	// Log.e(TAG, "Reload WeiboConstant failed");
+	// }
 
 	ActionBar.TabListener tabListener = new ActionBar.TabListener() {
 
@@ -169,7 +171,6 @@ public class Timeline_Comments_Mentions extends FragmentActivity {
 		@Override
 		public void onTabSelected(Tab tab, android.app.FragmentTransaction ft) {
 			mViewPager.setCurrentItem(tab.getPosition());
-
 		}
 
 		@Override
@@ -182,7 +183,7 @@ public class Timeline_Comments_Mentions extends FragmentActivity {
 	public PullToRefreshAttacher getPullToRefreshAttacher() {
 		return mPullToRefreshAttacher;
 	}
-	
+
 	public SharedPreferences.Editor getEditor() {
 		return editor;
 	}
@@ -204,8 +205,8 @@ public class Timeline_Comments_Mentions extends FragmentActivity {
 			WeiboConstant.SCREEN_NAME = c.getString(c
 					.getColumnIndex(sqlHelper.SCREEN_NAME));
 			return true;
-		} else 
+		} else
 			return false;
-		
+
 	}
 }

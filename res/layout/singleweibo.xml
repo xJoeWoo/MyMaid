@@ -44,7 +44,7 @@
                 android:layout_toRightOf="@+id/single_weibo_profile_image"
                 android:paddingLeft="8dp"
                 android:text="用户名"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -79,8 +79,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/single_weibo_text"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/text_bg2" />
+                android:layout_marginTop="8dp"
+                android:background="@drawable/text_bg_3" />
 
             <TextView
                 android:id="@+id/single_weibo_retweeted_status_screen_name"
@@ -89,9 +89,9 @@
                 android:layout_alignLeft="@+id/single_weibo_retweeted_status_rl"
                 android:layout_below="@+id/single_weibo_text"
                 android:layout_marginLeft="12dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="@dimen/lv_retweet_rl_top_margin"
                 android:text="用户名"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -184,13 +184,13 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/single_weibo_image"
                 android:layout_marginTop="16dp"
-                android:layout_toRightOf="@+id/single_weibo_created_at"
+                android:layout_toRightOf="@+id/single_weibo_created_at_bottom"
                 android:text="来源"
                 android:textColor="@color/textGrey"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/single_weibo_created_at"
+                android:id="@+id/single_weibo_created_at_bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -234,8 +234,9 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_below="@+id/single_weibo_reposts_count"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
+                android:layout_marginTop="24dp"
+                android:visibility="invisible"
                 android:background="@color/dividerGrey" />
 
             <ListView

@@ -74,6 +74,22 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		sqlHelper = new MySQLHelper(getActivity(), SQL_NAME, null, SQL_VERSION);
+		sql = sqlHelper.getReadableDatabase();
+		Cursor c = sql.query(sqlHelper.tableName, new String[] {
+				sqlHelper.TO_ME_COMMENTS, sqlHelper.PROFILEIMG }, sqlHelper.UID
+				+ "=?", new String[] { WeiboConstant.UID }, null, null, null);
+
+		if (c != null && c.moveToFirst()) {
+			new Weibo_CommentsToMe(c.getString(c
+					.getColumnIndex(sqlHelper.TO_ME_COMMENTS)), sqlHelper,
+					mHandler).start();
+		} else {
+			refreshComments();
+		}
+
+		profileImg = c.getBlob(c.getColumnIndex(sqlHelper.PROFILEIMG));
+
 		lv = (ListView) getView().findViewById(R.id.lv_friends_timeline);
 		lv.setDivider(null);
 
@@ -107,43 +123,31 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
 				return false;
 			}
 		});
-
-		sqlHelper = new MySQLHelper(getActivity(), SQL_NAME, null, SQL_VERSION);
-		sql = sqlHelper.getReadableDatabase();
-		Cursor c = sql.query(sqlHelper.tableName, new String[] {
-				sqlHelper.TO_ME_COMMENTS, sqlHelper.PROFILEIMG }, sqlHelper.UID
-				+ "=?", new String[] { WeiboConstant.UID }, null, null, null);
-
-		if (c != null && c.moveToFirst()) {
-			new Weibo_CommentsToMe(c.getString(c
-					.getColumnIndex(sqlHelper.TO_ME_COMMENTS)), sqlHelper,
-					mHandler).start();
-		} else {
-			refreshComments();
-		}
-
-		profileImg = c.getBlob(c.getColumnIndex(sqlHelper.PROFILEIMG));
 	}
 
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
 
-		menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_coming)
-				.setIcon(
-						new BitmapDrawable(getResources(), BitmapFactory
-								.decodeByteArray(profileImg, 0,
-										profileImg.length)))
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		try {
+			menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_coming)
+					.setIcon(
+							new BitmapDrawable(getResources(), BitmapFactory
+									.decodeByteArray(profileImg, 0,
+											profileImg.length)))
+					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		} catch (Exception e) {
+		}
 
 		if (unreadCount == null)
-			menu.add(0, MENU_UNREAD_COUNT, 0, R.string.menu_unread).setShowAsAction(
-					MenuItem.SHOW_AS_ACTION_ALWAYS);
+			menu.add(0, MENU_UNREAD_COUNT, 0, R.string.menu_unread)
+					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		else
 			menu.add(0, MENU_UNREAD_COUNT, 0, unreadCount).setShowAsAction(
 					MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		menu.add(0, MENU_POST, 0, R.string.menu_post).setIcon(R.drawable.social_send_now)
+		menu.add(0, MENU_POST, 0, R.string.menu_post)
+				.setIcon(R.drawable.social_send_now)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 	}
@@ -186,7 +190,7 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
 		@Override
 		public void handleMessage(Message msg) {
 
-			mPullToRefreshAttacher.setRefreshComplete();
+			mPullToRefreshAttacher.setRefreshing(false);
 			isRefreshing = false;
 			switch (msg.what) {
 			case GOT_COMMENTS_TO_ME_INFO: {
@@ -210,8 +214,8 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
 				break;
 			}
 			case GOT_COMMENTS_TO_ME_INFO_FAIL: {
-				Toast.makeText(getActivity(), R.string.toast_commnets_fail, Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(getActivity(), R.string.toast_commnets_fail,
+						Toast.LENGTH_SHORT).show();
 				break;
 			}
 			case GOT_UNREAD_COUNT_INFO: {
@@ -219,13 +223,15 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
 				if (b.getMentionCmtCount() != null)
 					unreadCount = b.getCmtCount();
 				else
-					Toast.makeText(getActivity(), R.string.toast_unread_count_fail,
+					Toast.makeText(getActivity(),
+							R.string.toast_unread_count_fail,
 							Toast.LENGTH_SHORT).show();
 				break;
 			}
 			case GOT_SET_REMIND_COUNT_INFO_FAIL: {
-				Toast.makeText(getActivity(), R.string.toast_clear_unread_count_fail, Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(getActivity(),
+						R.string.toast_clear_unread_count_fail,
+						Toast.LENGTH_SHORT).show();
 				break;
 			}
 			}

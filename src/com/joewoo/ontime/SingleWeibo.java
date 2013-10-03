@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -43,6 +44,7 @@ public class SingleWeibo extends Activity {
 
 	TextView tv_screen_name;
 	TextView tv_created_at;
+	TextView tv_created_at_bottom;
 	TextView tv_text;
 	TextView tv_rt_rl;
 	TextView tv_rt_screen_name;
@@ -74,6 +76,7 @@ public class SingleWeibo extends Activity {
 		_instance = this;
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.singleweibo);
+		setProgressBarIndeterminateVisibility(false);
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -83,6 +86,7 @@ public class SingleWeibo extends Activity {
 
 		tv_screen_name.setText(i.getStringExtra(SCREEN_NAME));
 		tv_created_at.setText(i.getStringExtra(CREATED_AT));
+		tv_created_at_bottom.setText(i.getStringExtra(CREATED_AT));
 
 		tv_text.setText(i.getStringExtra(TEXT));
 
@@ -172,7 +176,8 @@ public class SingleWeibo extends Activity {
 				.setIcon(R.drawable.rating_favorite)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		menu.add(0, MENU_REPOST, 0, R.string.menu_repost).setIcon(R.drawable.social_reply)
+		menu.add(0, MENU_REPOST, 0, R.string.menu_repost)
+				.setIcon(R.drawable.social_reply)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		menu.add(0, MENU_COMMENT_CREATE, 0, R.string.menu_comment)
@@ -217,8 +222,9 @@ public class SingleWeibo extends Activity {
 		}
 		case MENU_STATUSES_DESTROY: {
 			if (System.currentTimeMillis() - downTime > 2000) {
-				Toast.makeText(SingleWeibo.this, R.string.toast_press_again_to_delete_statuse, Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(SingleWeibo.this,
+						R.string.toast_press_again_to_delete_statuse,
+						Toast.LENGTH_SHORT).show();
 				downTime = System.currentTimeMillis();
 			} else {
 				new Weibo_StatusesDestroy(i.getStringExtra(WEIBO_ID), mHandler)
@@ -245,11 +251,13 @@ public class SingleWeibo extends Activity {
 				WeiboBackBean b = (WeiboBackBean) msg.obj;
 
 				if (b.getFavoritedTime() != null) {
-					Toast.makeText(SingleWeibo.this, R.string.toast_add_favourite_success, Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(SingleWeibo.this,
+							R.string.toast_add_favourite_success,
+							Toast.LENGTH_SHORT).show();
 					finish();
 				} else {
-					Toast.makeText(SingleWeibo.this, R.string.toast_add_favourite_fail,
+					Toast.makeText(SingleWeibo.this,
+							R.string.toast_add_favourite_fail,
 							Toast.LENGTH_SHORT).show();
 				}
 				break;
@@ -258,18 +266,20 @@ public class SingleWeibo extends Activity {
 				WeiboBackBean b = (WeiboBackBean) msg.obj;
 
 				if (b.getId() != null) {
-					Toast.makeText(SingleWeibo.this, R.string.toast_delete_success, Toast.LENGTH_SHORT)
+					Toast.makeText(SingleWeibo.this,
+							R.string.toast_delete_success, Toast.LENGTH_SHORT)
 							.show();
 					finish();
 				} else {
-					Toast.makeText(SingleWeibo.this, R.string.toast_delete_fail,
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(SingleWeibo.this,
+							R.string.toast_delete_fail, Toast.LENGTH_SHORT)
+							.show();
 				}
 				break;
 			}
 			case GOT_COMMNETS_SHOW_INFO: {
 
-				ArrayList<HashMap<String, String>> text = (ArrayList<HashMap<String, String>>) msg.obj;
+				final ArrayList<HashMap<String, String>> text = (ArrayList<HashMap<String, String>>) msg.obj;
 
 				String[] from = { SCREEN_NAME, TEXT };
 				int[] to = { R.id.comments_show_screen_name,
@@ -278,9 +288,25 @@ public class SingleWeibo extends Activity {
 				SimpleAdapter data = new SimpleAdapter(SingleWeibo.this, text,
 						R.layout.comments_show_lv, from, to);
 
-//				int sv_pos = sv.getScrollY();
+				// int sv_pos = sv.getScrollY();
 
-				pb_comments_loading.setVisibility(View.GONE);
+				lv_comments
+						.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+							@Override
+							public void onItemClick(AdapterView<?> arg0,
+									View arg1, int arg2, long arg3) {
+								
+								Intent it = new Intent();
+								it.setClass(SingleWeibo.this, Comment_Repost.class);
+								it.putExtra(IS_REPLY, true);
+								it.putExtra(WEIBO_ID, i.getStringExtra(WEIBO_ID));
+								it.putExtra(COMMENT_ID, text.get(arg2).get(COMMENT_ID));
+								startActivity(it);
+								
+							}
+						});
+				
+				
 
 				lv_comments.setAdapter(data);
 
@@ -301,8 +327,11 @@ public class SingleWeibo extends Activity {
 					lv_comments.setLayoutParams(params);
 
 					sv.scrollTo(0, 0);
+
+					pb_comments_loading.setVisibility(View.GONE);
+					tv_divider.setVisibility(View.VISIBLE);
 				} else {
-					tv_divider.setVisibility(View.GONE);
+
 				}
 
 				break;
@@ -316,6 +345,7 @@ public class SingleWeibo extends Activity {
 		pb = (ProgressBar) findViewById(R.id.single_weibo_pb);
 		tv_screen_name = (TextView) findViewById(R.id.single_weibo_screen_name);
 		tv_created_at = (TextView) findViewById(R.id.single_weibo_created_at);
+		tv_created_at_bottom = (TextView) findViewById(R.id.single_weibo_created_at_bottom);
 		tv_text = (TextView) findViewById(R.id.single_weibo_text);
 		tv_rt_rl = (TextView) findViewById(R.id.single_weibo_retweeted_status_rl);
 		tv_rt_screen_name = (TextView) findViewById(R.id.single_weibo_retweeted_status_screen_name);
@@ -346,10 +376,7 @@ public class SingleWeibo extends Activity {
 	@Override
 	protected void onDestroy() {
 		Log.e(TAG, "onDestroy");
-		// if (dp != null && dp.getStatus() == AsyncTask.Status.RUNNING) {
-		// Log.e(TAG, "onDestroy - cancel dp");
-		// dp.cancel(true);
-		// }
+
 		if (dp != null) {
 			if (dp.getStatus() != AsyncTask.Status.FINISHED) {
 				Log.e(TAG, "onDestroy - cancel dp");

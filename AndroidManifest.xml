@@ -35,11 +35,11 @@
             </intent-filter>
 		</activity>
         
-        <activity android:name=".Login" android:label="登录" /> 
+        <activity android:name=".Login" android:label="@string/title_act_login" /> 
         <activity android:name=".At" android:label="\@" /> 
-        <activity android:name=".Comment_Repost" android:label="评论" /> 
-        <activity android:name=".SingleUser" android:label="查看用户" /> 
-        <activity android:name=".SingleWeibo" android:label="查看微博" /> 
+        <activity android:name=".Comment_Repost" android:label="@string/title_act_comment" /> 
+        <activity android:name=".SingleUser" android:label="@string/title_act_single_user" /> 
+        <activity android:name=".SingleWeibo" android:label="@string/title_act_single_weibo" /> 
 
         <activity android:name=".Post" 
             android:label="@string/app_name" >

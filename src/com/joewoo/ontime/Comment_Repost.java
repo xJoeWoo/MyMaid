@@ -41,10 +41,11 @@ public class Comment_Repost extends Activity {
 		super.onCreate(savedInstanceState);
 
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
 		setContentView(R.layout.comment);
-		et = (EditText) findViewById(R.id.comment_et);
+		setProgressBarIndeterminateVisibility(false);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayShowTitleEnabled(true);
+		et = (EditText) findViewById(R.id.comment_et);
 
 		Intent i = getIntent();
 

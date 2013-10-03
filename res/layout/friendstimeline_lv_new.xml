@@ -16,7 +16,7 @@
         android:paddingBottom="16dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:background="@drawable/view_bg" 
+        android:background="@drawable/view_bg_2" 
         android:descendantFocusability="blocksDescendants" >
 
         <!-- <TextView -->
@@ -68,7 +68,7 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="8dp"
-            android:background="@drawable/text_bg2" />
+            android:background="@drawable/text_bg_3" />
 
         <TextView
             android:id="@+id/friendstimeline_retweeted_status_screen_name"
@@ -76,8 +76,8 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/friendstimeline_retweeted_status_rl"
             android:layout_below="@+id/friendstimeline_text"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="@dimen/lv_retweet_rl_top_margin"
             android:text="用户名"
             android:textSize="15sp"
             android:textStyle="bold" />

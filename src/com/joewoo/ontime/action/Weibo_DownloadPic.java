@@ -79,21 +79,21 @@ public class Weibo_DownloadPic extends AsyncTask<String, Integer, Bitmap> {
 						baos.write(buffer, 0, len);
 						baos.flush();
 						nowSize += len;
-//						Log.e(TAG, String.valueOf(nowSize));
+						Log.e(TAG, String.valueOf(nowSize));
 						publishProgress((int) ((nowSize / (float) maxSize) * 100));
-					}else{
+					} else {
 						is.close();
 					}
 				}
 			} catch (Exception e) {
 
 			} finally {
-
+				is.close();
 			}
 
 			byte[] imgBytes = baos.toByteArray();
 
-			if (maxSize > 10000) {
+			if (maxSize > 2000) {
 
 				// image = new
 				// GausscianBlur(BitmapFactory.decodeByteArray(imgBytes,
@@ -108,8 +108,6 @@ public class Weibo_DownloadPic extends AsyncTask<String, Integer, Bitmap> {
 						0, imgBytes.length), 25).getBitmap();
 
 			}
-
-			is.close();
 
 		} catch (Exception e) {
 			Log.e(TAG, "Download pic ERROR!");
@@ -137,6 +135,7 @@ public class Weibo_DownloadPic extends AsyncTask<String, Integer, Bitmap> {
 			if (pb != null)
 				pb.setVisibility(View.INVISIBLE);
 		}
+		image = null;
 	}
 
 }

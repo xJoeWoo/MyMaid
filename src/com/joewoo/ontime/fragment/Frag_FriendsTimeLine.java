@@ -80,6 +80,23 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		sqlHelper = new MySQLHelper(getActivity(), SQL_NAME, null, SQL_VERSION);
+		sql = sqlHelper.getReadableDatabase();
+		Cursor c = sql.query(sqlHelper.tableName, new String[] {
+				sqlHelper.FRIENDS_TIMELINE, sqlHelper.PROFILEIMG },
+				sqlHelper.UID + "=?", new String[] { WeiboConstant.UID }, null,
+				null, null);
+
+		if (c != null && c.moveToFirst()) {
+			new Weibo_FriendsTimeLine(c.getString(c
+					.getColumnIndex(sqlHelper.FRIENDS_TIMELINE)), sqlHelper,
+					mHandler).start();
+		} else {
+			refreshFriendsTimeLine();
+		}
+
+		profileImg = c.getBlob(c.getColumnIndex(sqlHelper.PROFILEIMG));
+
 		lv = (ListView) getView().findViewById(R.id.lv_friends_timeline);
 		lv.setDivider(null);
 
@@ -178,23 +195,6 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 				}
 			}
 		});
-
-		sqlHelper = new MySQLHelper(getActivity(), SQL_NAME, null, SQL_VERSION);
-		sql = sqlHelper.getReadableDatabase();
-		Cursor c = sql.query(sqlHelper.tableName, new String[] {
-				sqlHelper.FRIENDS_TIMELINE, sqlHelper.PROFILEIMG },
-				sqlHelper.UID + "=?", new String[] { WeiboConstant.UID }, null,
-				null, null);
-
-		if (c != null && c.moveToFirst()) {
-			new Weibo_FriendsTimeLine(c.getString(c
-					.getColumnIndex(sqlHelper.FRIENDS_TIMELINE)), sqlHelper,
-					mHandler).start();
-		} else {
-			refreshFriendsTimeLine();
-		}
-
-		profileImg = c.getBlob(c.getColumnIndex(sqlHelper.PROFILEIMG));
 	}
 
 	@Override
@@ -202,18 +202,30 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 
 		menu.clear();
 
-		menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_user_statuses)
-				.setIcon(
-						new BitmapDrawable(getResources(), BitmapFactory
-								.decodeByteArray(profileImg, 0,
-										profileImg.length)))
-				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		// menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_user_statuses)
+		// .setIcon(
+		// new BitmapDrawable(getResources(), BitmapFactory
+		// .decodeByteArray(profileImg, 0,
+		// profileImg.length)))
+		// .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+		try {
+			menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_user_statuses)
+					.setIcon(
+							new BitmapDrawable(getResources(), BitmapFactory
+									.decodeByteArray(profileImg, 0,
+											profileImg.length)))
+					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		} catch (Exception e) {
+			Log.e(TAG, "Profile image length: (Timeline) ERROR!");
+		}
 
 		menu.add(0, MENU_UNREAD_COUNT, 0,
 				WeiboConstant.SCREEN_NAME.toUpperCase(Locale.US))
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		menu.add(0, MENU_POST, 0, R.string.menu_post).setIcon(R.drawable.social_send_now)
+		menu.add(0, MENU_POST, 0, R.string.menu_post)
+				.setIcon(R.drawable.social_send_now)
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 	}
@@ -261,13 +273,19 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 					Log.e(TAG, LOG_DEVIDER);
 				}
 
-				singleUser[cursor.getCount()] = getActivity().getResources().getString(R.string.frag_ftl_dialog_choose_account_add_account);
+				singleUser[cursor.getCount()] = getActivity()
+						.getResources()
+						.getString(
+								R.string.frag_ftl_dialog_choose_account_add_account);
 				singleUid[cursor.getCount()] = "0";
 
-				singleUser[cursor.getCount() + 1] = getActivity().getResources().getString(R.string.frag_ftl_dialog_choose_account_logout);
+				singleUser[cursor.getCount() + 1] = getActivity()
+						.getResources().getString(
+								R.string.frag_ftl_dialog_choose_account_logout);
 				singleUid[cursor.getCount() + 1] = "1";
 
-				new AlertDialog.Builder(getActivity()).setTitle(R.string.frag_ftl_dialog_choose_account_title)
+				new AlertDialog.Builder(getActivity())
+						.setTitle(R.string.frag_ftl_dialog_choose_account_title)
 						.setItems(singleUser, new OnClickListener() {
 
 							@Override
@@ -298,8 +316,10 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 
 									new AlertDialog.Builder(getActivity(),
 											AlertDialog.THEME_HOLO_LIGHT)
-											.setTitle(R.string.frag_ftl_dialog_confirm_logout_title)
-											.setPositiveButton(R.string.frag_ftl_dialog_confirm_logout_btn_ok,
+											.setTitle(
+													R.string.frag_ftl_dialog_confirm_logout_title)
+											.setPositiveButton(
+													R.string.frag_ftl_dialog_confirm_logout_btn_ok,
 													new OnClickListener() {
 
 														@Override
@@ -334,8 +354,9 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 															}
 														}
 													})
-											.setNegativeButton(R.string.frag_ftl_dialog_confirm_logout_btn_cancle, null)
-											.show();
+											.setNegativeButton(
+													R.string.frag_ftl_dialog_confirm_logout_btn_cancle,
+													null).show();
 								}
 							}
 						}).show();
@@ -372,7 +393,7 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 			case GOT_FRIENDS_TIMELINE_INFO: {
 				text = (ArrayList<HashMap<String, String>>) msg.obj;
 				setListView(text);
-				
+
 				break;
 			}
 			case GOT_FRIENDS_TIMELINE_ADD_INFO: {
@@ -381,7 +402,8 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 				break;
 			}
 			case GOT_FRIENDS_TIMELINE_INFO_FAIL: {
-				Toast.makeText(getActivity(), R.string.toast_user_timeline_fail, Toast.LENGTH_SHORT)
+				Toast.makeText(getActivity(),
+						R.string.toast_user_timeline_fail, Toast.LENGTH_SHORT)
 						.show();
 				break;
 			}
@@ -408,6 +430,10 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 	public void refreshFriendsTimeLine() {
 		new Weibo_FriendsTimeLine(50, sqlHelper, mHandler).start();
 		isRefreshing = true;
+	}
+
+	public void scrollToTop() {
+		lv.scrollTo(0, 0);
 	}
 
 }

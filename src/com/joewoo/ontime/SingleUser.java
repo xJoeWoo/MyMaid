@@ -47,6 +47,7 @@ public class SingleUser extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.singleuser);
+		setProgressBarIndeterminateVisibility(false);
 		getActionBar().setDisplayUseLogoEnabled(true);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		findViews();
@@ -169,21 +170,21 @@ public class SingleUser extends Activity {
 			menu.add(0, MENU_FRIENDS_COUNT, 0, "").setShowAsAction(
 					MenuItem.SHOW_AS_ACTION_ALWAYS);
 		else
-			menu.add(0, MENU_FRIENDS_COUNT, 0, R.string.menu_fan_xxx + friendsCount)
+			menu.add(0, MENU_FRIENDS_COUNT, 0, getResources().getString(R.string.menu_fan_xxx) + friendsCount)
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		if (followersCount == null)
 			menu.add(0, MENU_FOLLOWERS_COUNT, 0, "").setShowAsAction(
 					MenuItem.SHOW_AS_ACTION_ALWAYS);
 		else
-			menu.add(0, MENU_FOLLOWERS_COUNT, 0, followersCount + R.string.menu_xxx_fans)
+			menu.add(0, MENU_FOLLOWERS_COUNT, 0, followersCount + getResources().getString(R.string.menu_xxx_fans))
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		if (statusesCount == null)
 			menu.add(0, MENU_STATUSES_COUNT, 0, "").setShowAsAction(
 					MenuItem.SHOW_AS_ACTION_ALWAYS);
 		else
-			menu.add(0, MENU_STATUSES_COUNT, 0, statusesCount + R.string.menu_xxx_statuses)
+			menu.add(0, MENU_STATUSES_COUNT, 0, statusesCount + getResources().getString(R.string.menu_xxx_statuses))
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		return true;

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import com.joewoo.ontime.R;
 import static com.joewoo.ontime.info.Defines.*;
 
-import android.R.integer;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
@@ -176,38 +175,61 @@ public class MyMaidAdapter extends BaseAdapter {
 			// SpannableString ss = new SpannableString(str);
 			strarray = str.toCharArray();
 
-			StringBuffer sb1 = new StringBuffer();
+//			StringBuffer sb1 = new StringBuffer();
+//			for (int i = 0; i < str.length(); i++) {
+//				sb1.append(strarray[i]);
+//			}
+//			Log.e(TAG, sb1.toString());
+
+//			for (int i = 0; i < str.length(); i++) {
+//				if (strarray[i] == 'h' && strarray[i + 1] == 't'
+//						&& strarray[i + 2] == 't' && strarray[i + 3] == 'p'
+//						&& strarray[i + 4] == ':' && strarray[i + 5] == '/'
+//						&& strarray[i + 6] == '/') {
+//
+//					Log.e(TAG, "Found URL");
+//
+//					StringBuffer sb = new StringBuffer("http://");
+//					for (int j = i + 7; j <19; j++) {
+//						if (strarray[j] != ' ') {
+//							sb.append(strarray[j]);
+//						} else if (strarray[j] == '\0') {
+//							Log.e(TAG, "URL - " + sb.toString());
+//							i = j;
+//							break;
+//						} else {
+//							Log.e(TAG, "URL - " + sb.toString());
+//							i = j;
+//							break;
+//						}
+//					}
+//				}
+//			}
+			
 			for (int i = 0; i < str.length(); i++) {
-				sb1.append(strarray[i]);
-			}
-			Log.e(TAG, sb1.toString());
-
-			for (int i = 0; i < str.length(); i++) {
-				if (strarray[i] == 'h' && strarray[i + 1] == 't'
-						&& strarray[i + 2] == 't' && strarray[i + 3] == 'p'
-						&& strarray[i + 4] == ':' && strarray[i + 5] == '/'
-						&& strarray[i + 6] == '/') {
-
-					Log.e(TAG, "Found URL");
-
-					StringBuffer sb = new StringBuffer("http://");
-					for (int j = i + 7; j <19; j++) {
+				if (strarray[i] == '@') {
+					StringBuffer sb = new StringBuffer();
+					for (int j = i + 1; j < i + 50; j++) {
 						if (strarray[j] != ' ') {
-							sb.append(strarray[j]);
-						} else if (strarray[j] == '\0') {
-							Log.e(TAG, "URL - " + sb.toString());
-							i = j;
-							break;
+							if(strarray[j] != ':')
+								if(strarray[j] != '/')
+									if(strarray[j] != '…')
+										if(strarray[j] != '。')
+											if(strarray[j] != '，')
+												if(strarray[j] != '@')
+												sb.append(strarray[j]);
 						} else {
-							Log.e(TAG, "URL - " + sb.toString());
+							Log.e(TAG, "@" + sb.toString());
 							i = j;
+							sb = null;
 							break;
 						}
 					}
 				}
 			}
+			
 		} catch (Exception e) {
-			Log.e(TAG, "URL Failed");
+			Log.e(TAG, "--- @ Failed");
 		}
 
 		return null;
