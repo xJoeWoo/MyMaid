@@ -2,7 +2,7 @@ package com.joewoo.ontime.bean;
 
 import java.util.List;
 
-public class FriendsTimeLineBean {
+public class FriendsTimelineBean {
 	
 	private List<StatusesBean> statuses;
 	private String total_number;

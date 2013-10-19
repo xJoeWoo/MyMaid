@@ -4,7 +4,8 @@ import com.joewoo.ontime.action.Weibo_AccessToken;
 import com.joewoo.ontime.action.Weibo_ProfileImage;
 import com.joewoo.ontime.action.Weibo_UserShow;
 import com.joewoo.ontime.bean.WeiboBackBean;
-import com.joewoo.ontime.fragment.Timeline_Comments_Mentions;
+import com.joewoo.ontime.info.Weibo_URLs;
+import com.joewoo.ontime.main.Main;
 import com.joewoo.ontime.info.WeiboConstant;
 import com.joewoo.ontime.tools.MySQLHelper;
 
@@ -54,7 +55,7 @@ public class Login extends Activity {
 
 		wv_login = (WebView) findViewById(R.id.wv_login);
 		wv_login.getSettings().setJavaScriptEnabled(true);
-		wv_login.loadUrl(AUTH_URL);
+		wv_login.loadUrl(Weibo_URLs.AUTH);
 
 		uids = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
 		uidsE = uids.edit();
@@ -67,7 +68,7 @@ public class Login extends Activity {
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
 				Log.e(TAG, "onPageStarted URL: " + url);
 				setProgressBarIndeterminateVisibility(true);
-				if (url.startsWith(CALLBACK_URL)) {
+				if (url.startsWith(Weibo_URLs.CALLBACK)) {
 					view.cancelLongPress();
 					view.stopLoading();
 					WeiboConstant.AUTH_CODE = url.substring(url.indexOf("=") + 1);
@@ -188,7 +189,7 @@ public class Login extends Activity {
 				uidsE.commit();
 				setProgressBarIndeterminateVisibility(false);
 //				Start._instance.finish();
-				startActivity(new Intent(Login.this, Timeline_Comments_Mentions.class));
+				startActivity(new Intent(Login.this, Main.class));
 				
 				finish();
 				break;

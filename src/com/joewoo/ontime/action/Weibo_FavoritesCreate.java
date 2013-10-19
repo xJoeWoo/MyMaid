@@ -16,43 +16,45 @@ import org.apache.http.util.EntityUtils;
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.WeiboBackBean;
 import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_URLs;
 
 import android.os.Handler;
 import android.util.Log;
 
 public class Weibo_FavoritesCreate extends Thread {
-	
-	private String weibo_id;
-	private Handler mHandler;
-	
-	public Weibo_FavoritesCreate(String weibo_id, Handler handler){
-		this.weibo_id = weibo_id;
-		this.mHandler = handler;
-	}
-	
-	public void run(){
-		Log.e(TAG, "Favourite Create Thread start");
-		String httpResult = "{ \"error_code\" : \"233\" }";
 
-		HttpPost httpRequest = new HttpPost(FAVOURITE_CREATE_URL);
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair(ACCESS_TOKEN,
-				WeiboConstant.ACCESS_TOKEN));
-		params.add(new BasicNameValuePair("id", weibo_id));
-		
-		try {
-			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-			httpResult = EntityUtils.toString(new DefaultHttpClient()
-			.execute(httpRequest).getEntity());
-			
-			Log.e(TAG, "GOT: " + httpResult);
+    private String weibo_id;
+    private Handler mHandler;
 
-			mHandler.obtainMessage(GOT_FAVOURITE_CREATE_INFO, new Gson().fromJson(httpResult, WeiboBackBean.class)).sendToTarget();
+    public Weibo_FavoritesCreate(String weibo_id, Handler handler) {
+        this.weibo_id = weibo_id;
+        this.mHandler = handler;
+    }
 
-		} catch (Exception e) {
+    public void run() {
+        Log.e(TAG, "Favourite Create Thread START");
+        String httpResult = "{ \"error_code\" : \"233\" }";
 
-		}
-		
-	}
+        HttpPost httpRequest = new HttpPost(Weibo_URLs.FAVOURITE_CREATE);
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair(ACCESS_TOKEN,
+                WeiboConstant.ACCESS_TOKEN));
+        params.add(new BasicNameValuePair("id", weibo_id));
+
+        try {
+            httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+            httpResult = EntityUtils.toString(new DefaultHttpClient()
+                    .execute(httpRequest).getEntity());
+
+            Log.e(TAG, "GOT: " + httpResult);
+
+            mHandler.obtainMessage(GOT_FAVOURITE_CREATE_INFO, new Gson().fromJson(httpResult, WeiboBackBean.class)).sendToTarget();
+
+        } catch (Exception e) {
+            Log.e(TAG, "Favourite Create Thread FILED");
+            e.printStackTrace();
+        }
+
+    }
 
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.joewoo.ontime"
-    android:versionCode="6"
-    android:versionName="0.6.130921" >
+    android:versionCode="7"
+    android:versionName="0.7.131019" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Holo.Light" >
 
-        <activity android:name=".fragment.Timeline_Comments_Mentions"
+        <activity android:name=".main.Main"
             android:label="@string/app_name"
             android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
@@ -39,7 +39,6 @@
         <activity android:name=".At" android:label="\@" /> 
         <activity android:name=".Comment_Repost" android:label="@string/title_act_comment" /> 
         <activity android:name=".SingleUser" android:label="@string/title_act_single_user" /> 
-        <activity android:name=".SingleWeibo" android:label="@string/title_act_single_weibo" /> 
 
         <activity android:name=".Post" 
             android:label="@string/app_name" >
@@ -54,9 +53,9 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        
-        
-		
+        <activity android:name=".singleWeibo.SingleWeibo" android:uiOptions="splitActionBarWhenNarrow" android:label="@string/title_act_single_weibo"/>
+
+
     </application>
 
 </manifest>

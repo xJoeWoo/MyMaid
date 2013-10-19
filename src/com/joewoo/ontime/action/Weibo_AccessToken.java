@@ -19,6 +19,8 @@ import org.apache.http.util.EntityUtils;
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.WeiboBackBean;
 import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_URLs;
+
 import static com.joewoo.ontime.info.Defines.*;
 
 import android.os.Handler;
@@ -26,54 +28,42 @@ import android.util.Log;
 
 public class Weibo_AccessToken extends Thread {
 
-	private Handler mHandler;
+    private Handler mHandler;
 
-	public Weibo_AccessToken(Handler handler) {
-		this.mHandler = handler;
-	}
+    public Weibo_AccessToken(Handler handler) {
+        this.mHandler = handler;
+    }
 
-	public void run() {
-		Log.e(TAG, "Request Access Token Thread Start");
-		String httpResult = "NO_MESSAGES";
-		HttpPost httpRequest = new HttpPost(TOKEN_URL);
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("client_id", APP_KEY));
-		params.add(new BasicNameValuePair("client_secret", APP_SECRET));
-		params.add(new BasicNameValuePair("grant_type", "authorization_code"));
-		params.add(new BasicNameValuePair("code", WeiboConstant.AUTH_CODE));
-		params.add(new BasicNameValuePair("redirect_uri", CALLBACK_URL));
-		try {
-			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-			HttpClient httpClient = new DefaultHttpClient();
-			HttpResponse httpResponse = httpClient.execute(httpRequest);
-			if (httpResponse.getStatusLine().getStatusCode() == 200) {
-				httpResult = EntityUtils.toString(httpResponse.getEntity());
-				Log.e(TAG, "GOT: " + httpResult);
+    public void run() {
+        Log.e(TAG, "Request Access Token Thread Start");
+        String httpResult = "NO_MESSAGES";
+        HttpPost httpRequest = new HttpPost(Weibo_URLs.TOKEN);
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("client_id", APP_KEY));
+        params.add(new BasicNameValuePair("client_secret", APP_SECRET));
+        params.add(new BasicNameValuePair("grant_type", "authorization_code"));
+        params.add(new BasicNameValuePair("code", WeiboConstant.AUTH_CODE));
+        params.add(new BasicNameValuePair("redirect_uri", Weibo_URLs.CALLBACK));
+        try {
+            httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpResponse httpResponse = httpClient.execute(httpRequest);
+            if (httpResponse.getStatusLine().getStatusCode() == 200) {
+                httpResult = EntityUtils.toString(httpResponse.getEntity());
+                Log.e(TAG, "GOT: " + httpResult);
 
-				Gson gson = new Gson();
-				WeiboBackBean j = gson
-						.fromJson(httpResult, WeiboBackBean.class);
+                Gson gson = new Gson();
+                WeiboBackBean j = gson
+                        .fromJson(httpResult, WeiboBackBean.class);
 
-				httpClient.getConnectionManager().shutdown();
+                httpClient.getConnectionManager().shutdown();
 
-				mHandler.obtainMessage(GOT_ACCESS_TOKEN, j).sendToTarget();
+                mHandler.obtainMessage(GOT_ACCESS_TOKEN, j).sendToTarget();
 
-			}
-		} catch (UnsupportedEncodingException e) {
-			mHandler.obtainMessage(GOT_ACCESS_TOKEN_FAIL, httpResult)
-					.sendToTarget();
-			Log.e("OnTime --- ", "Thread Fail 1");
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			mHandler.obtainMessage(GOT_ACCESS_TOKEN_FAIL, httpResult)
-					.sendToTarget();
-			Log.e("OnTime --- ", "Thread Fail 2");
-			e.printStackTrace();
-		} catch (IOException e) {
-			mHandler.obtainMessage(GOT_ACCESS_TOKEN_FAIL, httpResult)
-					.sendToTarget();
-			Log.e("OnTime --- ", "Thread Fail 3");
-			e.printStackTrace();
-		}
-	}
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Access Token FAILED");
+            e.printStackTrace();
+        }
+    }
 };

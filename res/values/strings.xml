@@ -20,7 +20,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="et_post_hint">Tell her your Mind…</string>
 	
-    <string name="title_frag_friends_timeline">Weibo</string>
+    <string name="title_frag_friends_timeline">Timeline</string>
     <string name="title_frag_atme">Mention</string>
     <string name="title_frag_comments_to_me">Comment</string>
     <string name="title_act_reply">Reply</string>
@@ -28,10 +28,13 @@
     <string name="title_act_comment">Comment</string>
     <string name="title_act_login">Login</string>
     <string name="title_act_single_user">User</string>
-    <string name="title_act_single_weibo">Statuse</string>
+    <string name="title_act_single_weibo">Post</string>
     <string name="title_act_post">Post</string>
-	
-	<string name="toast_press_again_to_clear_text">Press again to clear text</string>
+    <string name="title_frag_single_weibo">Post</string>
+    <string name="title_frag_single_weibo_comments">Comment</string>
+    <string name="title_frag_single_weibo_reposts">Repost</string>
+
+    <string name="toast_press_again_to_clear_text">Press again to clear text</string>
 	<string name="toast_press_again_to_clear_img">Press again to clear image</string>
 	<string name="toast_press_again_to_delete_statuse">Press again to delete weibo</string>
 	<string name="toast_say_sth">Say something :)</string>
@@ -55,8 +58,9 @@
 	<string name="toast_user_timeline_fail">Acquire timeline failed…</string>
 	<string name="toast_unread_count_fail">Unread count failed…</string>
 	<string name="toast_clear_unread_count_fail">Clear unread count failed…</string>
-	<string name="toast_commnets_fail">Acquire comments failed…</string>
+	<string name="toast_comments_fail">Acquire comments failed…</string>
 	<string name="toast_mentions_fail">Acquire mentions failed…</string>
+    <string name="toast_repost_timeline_fail">Acquire reposts failed…</string>
 	
 	<string name="menu_repost">REPOST</string>
 	<string name="menu_reply">REPLY</string>

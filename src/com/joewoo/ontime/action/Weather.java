@@ -1,6 +1,7 @@
 package com.joewoo.ontime.action;
 
 import java.io.IOException;
+
 import static com.joewoo.ontime.info.Defines.*;
 
 import org.apache.http.HttpResponse;
@@ -20,43 +21,44 @@ import android.util.Log;
 
 public class Weather extends Thread {
 
-	private Handler mHandler;
-	private String httpResult;
-	private int timeoutConnection = 10000;
-	private int timeoutSocket = 10000;
-	public Weather(Handler handler) {
-		mHandler = handler;
-	}
+    private Handler mHandler;
+    private String httpResult;
+    private int timeoutConnection = 10000;
+    private int timeoutSocket = 10000;
 
-	public void run() {
-		Log.e(TAG, "Weather Thread Start");
-		HttpGet httpGet = new HttpGet(
-				"http://m.weather.com.cn/data/101280901.html");
-		try {
-			HttpParams httpParameters = new BasicHttpParams();
-			HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
-			HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
+    public Weather(Handler handler) {
+        mHandler = handler;
+    }
 
-			HttpResponse httpResponse = new DefaultHttpClient(httpParameters)
-					.execute(httpGet);
-			httpResult = EntityUtils.toString(httpResponse.getEntity());
-			Log.e(TAG, httpResult);
-			httpResult = httpResult.replace("{\"weatherinfo\":", "");
-			httpResult = httpResult.substring(0, httpResult.length() - 1);
-			Gson gson = new Gson();
-			WeatherBean weather = gson
-					.fromJson(httpResult, WeatherBean.class);
-			mHandler.obtainMessage(GOT_WEATHER_INFO, weather).sendToTarget();
-			Log.e(TAG, weather.getWeather1() + weather.getIndex_uv());
+    public void run() {
+        Log.e(TAG, "Weather Thread Start");
+        HttpGet httpGet = new HttpGet(
+                "http://m.weather.com.cn/data/101280901.html");
+        try {
+            HttpParams httpParameters = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+            HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            HttpResponse httpResponse = new DefaultHttpClient(httpParameters)
+                    .execute(httpGet);
+            httpResult = EntityUtils.toString(httpResponse.getEntity());
+            Log.e(TAG, httpResult);
+            httpResult = httpResult.replace("{\"weatherinfo\":", "");
+            httpResult = httpResult.substring(0, httpResult.length() - 1);
+            Gson gson = new Gson();
+            WeatherBean weather = gson
+                    .fromJson(httpResult, WeatherBean.class);
+            mHandler.obtainMessage(GOT_WEATHER_INFO, weather).sendToTarget();
+            Log.e(TAG, weather.getWeather1() + weather.getIndex_uv());
 
-	}
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
 
 }

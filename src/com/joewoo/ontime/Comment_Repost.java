@@ -226,11 +226,6 @@ public class Comment_Repost extends Activity {
 					Toast.makeText(Comment_Repost.this, R.string.toast_comment_success,
 							Toast.LENGTH_SHORT).show();
 					finish();
-					try {
-						SingleWeibo._instance.finish();
-					} catch (Exception e) {
-						Log.e(TAG, "SingleWeibo haven't start");
-					}
 				} else {
 					Toast.makeText(Comment_Repost.this, R.string.toast_comment_fail,
 							Toast.LENGTH_SHORT).show();
@@ -243,11 +238,6 @@ public class Comment_Repost extends Activity {
 					Toast.makeText(Comment_Repost.this, R.string.toast_repost_success,
 							Toast.LENGTH_SHORT).show();
 					finish();
-					try {
-						SingleWeibo._instance.finish();
-					} catch (Exception e) {
-						Log.e(TAG, "SingleWeibo haven't start");
-					}
 				} else {
 					Toast.makeText(Comment_Repost.this, R.string.toast_repost_fail,
 							Toast.LENGTH_SHORT).show();
@@ -272,11 +262,6 @@ public class Comment_Repost extends Activity {
 					Toast.makeText(Comment_Repost.this, R.string.toast_reply_success,
 							Toast.LENGTH_SHORT).show();
 					finish();
-					try {
-						SingleWeibo._instance.finish();
-					} catch (Exception e) {
-						Log.e(TAG, "SingleWeibo haven't start");
-					}
 				} else {
 					Toast.makeText(Comment_Repost.this, R.string.toast_reply_fail,
 							Toast.LENGTH_SHORT).show();

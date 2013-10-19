@@ -7,73 +7,77 @@ import java.util.zip.GZIPInputStream;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.WeiboBackBean;
 import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_URLs;
+
 import static com.joewoo.ontime.info.Defines.*;
 
 public class Weibo_UserShow extends Thread {
 
-	private Handler mHandler;
-	private String screenNameOrUid = null;
-	private boolean isUid = false;
+    private Handler mHandler;
+    private String screenNameOrUid = null;
+    private boolean isUid = false;
 
-	public Weibo_UserShow(Handler handler) {
-		this.mHandler = handler;
-	}
+    public Weibo_UserShow(Handler handler) {
+        this.mHandler = handler;
+    }
 
-	public Weibo_UserShow(boolean isUid, String screenNameOrUid, Handler handler) {
-		this.isUid = isUid;
-		this.screenNameOrUid = screenNameOrUid;
-		this.mHandler = handler;
-	}
+    public Weibo_UserShow(boolean isUid, String screenNameOrUid, Handler handler) {
+        this.isUid = isUid;
+        this.screenNameOrUid = screenNameOrUid;
+        this.mHandler = handler;
+    }
 
-	public void run() {
-		Log.e(TAG, "Show User Info Thread Start");
-		String httpResult = "{ \"error_code\" : \"233\" }";
+    public void run() {
+        Log.e(TAG, "Show User Info Thread START");
+        String httpResult = "{ \"error_code\" : \"233\" }";
 
-		HttpUriRequest httpGet;
-		
-		if (screenNameOrUid == null)
-			httpGet = new HttpGet(SHOW_URL + "?access_token="
-					+ WeiboConstant.ACCESS_TOKEN + "&uid=" + WeiboConstant.UID);
-		else if (!isUid)
-			httpGet = new HttpGet(SHOW_URL + "?access_token="
-					+ WeiboConstant.ACCESS_TOKEN + "&screen_name=" + screenNameOrUid);
-		else
-			httpGet = new HttpGet(SHOW_URL + "?access_token="
-					+ WeiboConstant.ACCESS_TOKEN + "&uid=" + screenNameOrUid);
+        HttpUriRequest httpGet;
 
-		httpGet.addHeader("Accept-Encoding", "gzip");
-		try {
-			// HttpResponse httpResponse = new DefaultHttpClient()
-			// .execute(httpGet);
+        if (screenNameOrUid == null)
+            httpGet = new HttpGet(Weibo_URLs.USER_SHOW + "?access_token="
+                    + WeiboConstant.ACCESS_TOKEN + "&uid=" + WeiboConstant.UID);
+        else if (!isUid)
+            httpGet = new HttpGet(Weibo_URLs.USER_SHOW + "?access_token="
+                    + WeiboConstant.ACCESS_TOKEN + "&screen_name=" + screenNameOrUid);
+        else
+            httpGet = new HttpGet(Weibo_URLs.USER_SHOW + "?access_token="
+                    + WeiboConstant.ACCESS_TOKEN + "&uid=" + screenNameOrUid);
 
-			InputStream is = new DefaultHttpClient().execute(httpGet)
-					.getEntity().getContent();
+        httpGet.addHeader("Accept-Encoding", "gzip");
+        try {
+            // HttpResponse httpResponse = new DefaultHttpClient()
+            // .execute(httpGet);
 
-			is = new GZIPInputStream(is);
+            InputStream is = new DefaultHttpClient().execute(httpGet)
+                    .getEntity().getContent();
 
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            is = new GZIPInputStream(is);
 
-			int i = -1;
-			while ((i = is.read()) != -1) {
-				baos.write(i);
-			}
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-			httpResult = baos.toString();
+            int i = -1;
+            while ((i = is.read()) != -1) {
+                baos.write(i);
+            }
 
-			Gson gson = new Gson();
-			WeiboBackBean show = gson.fromJson(httpResult, WeiboBackBean.class);
+            httpResult = baos.toString();
 
-			mHandler.obtainMessage(GOT_SHOW_INFO, show).sendToTarget();
+            Gson gson = new Gson();
+            WeiboBackBean show = gson.fromJson(httpResult, WeiboBackBean.class);
 
-		} catch (Exception e) {
-			mHandler.obtainMessage(GOT_SHOW_INFO_FAIL, httpResult)
-					.sendToTarget();
-		}
-	}
+            mHandler.obtainMessage(GOT_SHOW_INFO, show).sendToTarget();
+
+        } catch (Exception e) {
+            mHandler.obtainMessage(GOT_SHOW_INFO_FAIL, httpResult)
+                    .sendToTarget();
+            e.printStackTrace();
+        }
+    }
 }

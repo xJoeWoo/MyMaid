@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="8dp"
-    android:paddingTop="8dp"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:layout_alignBottom="@+id/friendstimeline_rl2" >
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:layout_alignBottom="@+id/friendstimeline_rl2">
 
     <RelativeLayout
-        android:id="@+id/friendstimeline_rl2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/view_bg_2"
-        android:paddingBottom="16dp" >
+            android:id="@+id/friendstimeline_rl2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/view_bg_2"
+            android:paddingBottom="16dp">
 
         <!-- <TextView -->
         <!-- android:id="@+id/friendstimeline_divider" -->
@@ -29,117 +29,117 @@
         <!-- android:textSize="16sp" /> -->
 
         <TextView
-            android:id="@+id/mentions_screen_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginTop="16dp"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:text="用户名"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+                android:id="@+id/mentions_screen_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:text="用户名"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/mentions_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/mentions_screen_name"
-            android:layout_marginTop="4dp"
-            android:lineSpacingExtra="4dp"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:text="正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文"
-            android:textSize="15sp" />
+                android:id="@+id/mentions_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/mentions_screen_name"
+                android:layout_marginTop="4dp"
+                android:lineSpacingExtra="4dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:text="正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文"
+                android:textSize="15sp"/>
 
         <TextView
-            android:id="@+id/mentions_retweeted_status_rl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignBottom="@+id/mentions_retweeted_status"
-            android:layout_below="@+id/mentions_text"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/text_bg_3" />
+                android:id="@+id/mentions_retweeted_status_rl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignBottom="@+id/mentions_retweeted_status"
+                android:layout_below="@+id/mentions_text"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/text_bg_3"/>
 
         <TextView
-            android:id="@+id/mentions_retweeted_status_screen_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/mentions_retweeted_status_rl"
-            android:layout_below="@+id/mentions_text"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="@dimen/lv_retweet_rl_top_margin"
-            android:text="用户名"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+                android:id="@+id/mentions_retweeted_status_screen_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/mentions_retweeted_status_rl"
+                android:layout_below="@+id/mentions_text"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="@dimen/lv_retweet_rl_top_margin"
+                android:text="用户名"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/mentions_retweeted_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/mentions_retweeted_status_rl"
-            android:layout_alignRight="@+id/mentions_retweeted_status_rl"
-            android:layout_below="@+id/mentions_retweeted_status_screen_name"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="4dp"
-            android:lineSpacingExtra="4dp"
-            android:text="转发微博原文 转发微博原文 转发微博原文 转发微博原文 转发微博原文 转发微博原文"
-            android:textSize="15sp" />
+                android:id="@+id/mentions_retweeted_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/mentions_retweeted_status_rl"
+                android:layout_alignRight="@+id/mentions_retweeted_status_rl"
+                android:layout_below="@+id/mentions_retweeted_status_screen_name"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="4dp"
+                android:lineSpacingExtra="4dp"
+                android:text="转发微博原文 转发微博原文 转发微博原文 转发微博原文 转发微博原文 转发微博原文"
+                android:textSize="15sp"/>
 
         <TextView
-            android:id="@+id/mentions_source"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/mentions_retweeted_status_rl"
-            android:layout_marginTop="16dp"
-            android:layout_toRightOf="@+id/mentions_created_at"
-            android:text="来源"
-            android:textColor="@color/textGrey"
-            android:textSize="12sp" />
+                android:id="@+id/mentions_source"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/mentions_retweeted_status_rl"
+                android:layout_marginTop="16dp"
+                android:layout_toRightOf="@+id/mentions_created_at"
+                android:text="来源"
+                android:textColor="@color/textGrey"
+                android:textSize="12sp"/>
 
         <TextView
-            android:id="@+id/mentions_created_at"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/mentions_retweeted_status_rl"
-            android:layout_marginTop="16dp"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:text="17:25"
-            android:textColor="@color/textGrey"
-            android:textSize="12sp" />
+                android:id="@+id/mentions_created_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/mentions_retweeted_status_rl"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:text="17:25"
+                android:textColor="@color/textGrey"
+                android:textSize="12sp"/>
 
         <TextView
-            android:id="@+id/mentions_comments_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/mentions_retweeted_status_rl"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/comments_dark"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:text="评论数"
-            android:textColor="@color/textGrey"
-            android:textSize="12sp" />
+                android:id="@+id/mentions_comments_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/mentions_retweeted_status_rl"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/comments_dark"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:text="评论数"
+                android:textColor="@color/textGrey"
+                android:textSize="12sp"/>
 
         <TextView
-            android:id="@+id/mentions_reposts_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/mentions_retweeted_status_rl"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="16dp"
-            android:layout_toLeftOf="@+id/mentions_comments_count"
-            android:background="@drawable/reposts_dark"
-            android:text="转发数"
-            android:textColor="@color/textGrey"
-            android:textSize="12sp" />
+                android:id="@+id/mentions_reposts_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/mentions_retweeted_status_rl"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="16dp"
+                android:layout_toLeftOf="@+id/mentions_comments_count"
+                android:background="@drawable/reposts_dark"
+                android:text="转发数"
+                android:textColor="@color/textGrey"
+                android:textSize="12sp"/>
 
         <!-- <TextView -->
         <!-- android:id="@+id/friendstimeline_retweeted_status_created_at" -->
@@ -153,14 +153,14 @@
         <!-- android:textSize="14sp" /> -->
 
         <TextView
-            android:id="@+id/mentions_have_image"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/mentions_screen_name"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/image_dark" />
+                android:id="@+id/mentions_have_image"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/mentions_screen_name"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/image_dark"/>
     </RelativeLayout>
 
 </RelativeLayout>

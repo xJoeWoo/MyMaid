@@ -1,20 +1,5 @@
 package com.joewoo.ontime.action;
 
-import static com.joewoo.ontime.info.Defines.*;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.zip.GZIPInputStream;
-
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
@@ -24,139 +9,161 @@ import com.google.gson.Gson;
 import com.joewoo.ontime.bean.CommentsBean;
 import com.joewoo.ontime.bean.CommentsToMeBean;
 import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_URLs;
 import com.joewoo.ontime.tools.MySQLHelper;
+
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
+
+import static com.joewoo.ontime.info.Defines.COMMENT_ID;
+import static com.joewoo.ontime.info.Defines.CREATED_AT;
+import static com.joewoo.ontime.info.Defines.GOT_COMMENTS_TO_ME_INFO;
+import static com.joewoo.ontime.info.Defines.GOT_COMMENTS_TO_ME_INFO_FAIL;
+import static com.joewoo.ontime.info.Defines.SCREEN_NAME;
+import static com.joewoo.ontime.info.Defines.SOURCE;
+import static com.joewoo.ontime.info.Defines.STATUS_TEXT;
+import static com.joewoo.ontime.info.Defines.STATUS_USER_SCREEN_NAME;
+import static com.joewoo.ontime.info.Defines.TAG;
+import static com.joewoo.ontime.info.Defines.TAG_SQL;
+import static com.joewoo.ontime.info.Defines.TEXT;
+import static com.joewoo.ontime.info.Defines.WEIBO_ID;
 
 public class Weibo_CommentsToMe extends Thread {
 
-	private String count;
-	private Handler mHandler;
-	public boolean isProvidedResult = false;
-	private String httpResult = "{ \"error_code\" : \"233\" }";
-	private MySQLHelper sqlHelper;
+    private String count;
+    private Handler mHandler;
+    public boolean isProvidedResult = false;
+    private String httpResult = "{ \"error_code\" : \"233\" }";
+    private MySQLHelper sqlHelper;
 
-	public Weibo_CommentsToMe(int count, Handler handler) {
-		this.count = String.valueOf(count);
-		this.mHandler = handler;
-	}
+    public Weibo_CommentsToMe(int count, Handler handler) {
+        this.count = String.valueOf(count);
+        this.mHandler = handler;
+    }
 
-	public Weibo_CommentsToMe(int count, MySQLHelper sqlHelper, Handler handler) {
-		this.count = String.valueOf(count);
-		this.mHandler = handler;
-		this.sqlHelper = sqlHelper;
-	}
+    public Weibo_CommentsToMe(int count, MySQLHelper sqlHelper, Handler handler) {
+        this.count = String.valueOf(count);
+        this.mHandler = handler;
+        this.sqlHelper = sqlHelper;
+    }
 
-	public Weibo_CommentsToMe(String httpResult, MySQLHelper sqlHelper,
-			Handler handler) {
-		this.mHandler = handler;
-		this.httpResult = httpResult;
-		isProvidedResult = true;
-		this.sqlHelper = sqlHelper;
-	}
+    public Weibo_CommentsToMe(String httpResult, MySQLHelper sqlHelper,
+                              Handler handler) {
+        this.mHandler = handler;
+        this.httpResult = httpResult;
+        isProvidedResult = true;
+        this.sqlHelper = sqlHelper;
+    }
 
-	@Override
-	public void run() {
-		Log.e(TAG, "Comments To Me Thread Start");
+    @Override
+    public void run() {
+        Log.e(TAG, "Comments To Me Thread START");
 
-		if (!isProvidedResult) {
+        if (!isProvidedResult) {
 
-			HttpUriRequest httpGet = new HttpGet(COMMENTS_TO_ME_URL
-					+ "?access_token=" + WeiboConstant.ACCESS_TOKEN + "&count="
-					+ count);
-			httpGet.addHeader("Accept-Encoding", "gzip");
+            HttpUriRequest httpGet = new HttpGet(Weibo_URLs.COMMENTS_TO_ME
+                    + "?access_token=" + WeiboConstant.ACCESS_TOKEN + "&count="
+                    + count);
+            httpGet.addHeader("Accept-Encoding", "gzip");
 
-			try {
+            try {
 
-				InputStream is = new DefaultHttpClient().execute(httpGet)
-						.getEntity().getContent();
+                InputStream is = new DefaultHttpClient().execute(httpGet)
+                        .getEntity().getContent();
 
-				is = new GZIPInputStream(is);
+                is = new GZIPInputStream(is);
 
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-				int i = -1;
-				while ((i = is.read()) != -1) {
-					baos.write(i);
-				}
+                int i = -1;
+                while ((i = is.read()) != -1) {
+                    baos.write(i);
+                }
 
-				httpResult = baos.toString();
+                httpResult = baos.toString();
+                is.close();
+                baos.close();
 
-				Log.e(TAG,
-						"GOT Statues length: "
-								+ String.valueOf(httpResult.length()));
-				Log.e(TAG, httpResult);
+                Log.e(TAG,
+                        "GOT Statues length: "
+                                + String.valueOf(httpResult.length()));
+                Log.e(TAG, httpResult);
 
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-		try {
+        try {
+            List<CommentsBean> comments = new Gson().fromJson(httpResult,
+                    CommentsToMeBean.class).getComments();
 
-			CommentsToMeBean commentsToMe = new Gson().fromJson(httpResult,
-					CommentsToMeBean.class);
+            ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
 
-			List<CommentsBean> comments = commentsToMe.getComments();
+            String source;
 
-			ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
+            for (CommentsBean c : comments) {
+                HashMap<String, String> map = new HashMap<String, String>();
+                source = c.getSource();
+                source = source.substring(source.indexOf(">") + 1,
+                        source.length());
+                source = source.substring(0, source.indexOf("<"));
+                map.put(SOURCE, " · " + source);
+                source = c.getCreatedAt();
+                source = source.substring(source.indexOf(":") - 2,
+                        source.indexOf(":") + 3);
+                map.put(CREATED_AT, source);
+                // map.put(UID, c.getUser().getId());
+                map.put(SCREEN_NAME, c.getUser().getScreenName());
+                map.put(TEXT, c.getText());
+                map.put(COMMENT_ID, c.getId());
+                map.put(WEIBO_ID, c.getStatus().getId());
 
-			String source;
+                if (c.getReplyComment() != null) {
+                    map.put(STATUS_USER_SCREEN_NAME, c
+                            .getReplyComment().getUser().getScreenName());
+                    map.put(STATUS_TEXT, c.getReplyComment()
+                            .getText());
+                } else {
+                    map.put(STATUS_USER_SCREEN_NAME, c
+                            .getStatus().getUser().getScreenName());
+                    map.put(STATUS_TEXT, c.getStatus().getText());
+                }
+                // map.put(STATUS_COMMENTS_COUNT,
+                // c.getStatus()
+                // .getCommentsCount());
+                // map.put(STATUS_REPOSTS_COUNT, c.getStatus()
+                // .getRepostsCount());
 
-			for (int i = 0; i < comments.size(); i++) {
-				HashMap<String, String> map = new HashMap<String, String>();
-				source = comments.get(i).getSource();
-				source = source.substring(source.indexOf(">") + 1,
-						source.length());
-				source = source.substring(0, source.indexOf("<"));
-				map.put(SOURCE, " · " + source);
-				source = comments.get(i).getCreatedAt();
-				source = source.substring(source.indexOf(":") - 2,
-						source.indexOf(":") + 3);
-				map.put(CREATED_AT, source);
-				// map.put(UID, comments.get(i).getUser().getId());
-				map.put(SCREEN_NAME, comments.get(i).getUser().getScreenName());
-				map.put(TEXT, comments.get(i).getText());
-				map.put(COMMENT_ID, comments.get(i).getId());
-				map.put(WEIBO_ID, comments.get(i).getStatus().getId());
+                text.add(map);
+            }
 
-				if (comments.get(i).getReplyComment() != null) {
-					map.put(STATUS_USER_SCREEN_NAME, comments.get(i)
-							.getReplyComment().getUser().getScreenName());
-					map.put(STATUS_TEXT, comments.get(i).getReplyComment()
-							.getText());
-				} else {
-					map.put(STATUS_USER_SCREEN_NAME, comments.get(i)
-							.getStatus().getUser().getScreenName());
-					map.put(STATUS_TEXT, comments.get(i).getStatus().getText());
-				}
-				// map.put(STATUS_COMMENTS_COUNT,
-				// comments.get(i).getStatus()
-				// .getCommentsCount());
-				// map.put(STATUS_REPOSTS_COUNT, comments.get(i).getStatus()
-				// .getRepostsCount());
+            mHandler.obtainMessage(GOT_COMMENTS_TO_ME_INFO, text)
+                    .sendToTarget();
 
-				text.add(map);
-			}
+            if (sqlHelper != null && !isProvidedResult) {
+                SQLiteDatabase sql = sqlHelper.getWritableDatabase();
 
-			mHandler.obtainMessage(GOT_COMMENTS_TO_ME_INFO, text)
-					.sendToTarget();
-			
-			if (sqlHelper != null && !isProvidedResult) {
-				SQLiteDatabase sql = sqlHelper.getWritableDatabase();
+                ContentValues cv = new ContentValues();
+                cv.put(sqlHelper.TO_ME_COMMENTS, httpResult);
+                if (sql.update(sqlHelper.tableName, cv, sqlHelper.UID + "='"
+                        + WeiboConstant.UID + "'", null) != 0) {
+                    Log.e(TAG_SQL, "Saved Comments httpResult");
+                }
+            }
 
-				ContentValues cv = new ContentValues();
-				cv.put(sqlHelper.TO_ME_COMMENTS, httpResult);
-				if (sql.update(sqlHelper.tableName, cv, sqlHelper.UID + "='"
-						+ WeiboConstant.UID + "'", null) != 0) {
-					Log.e(TAG_SQL, "Saved Comments httpResult");
-				}
-			}
-
-		} catch (Exception e) {
-			mHandler.sendEmptyMessage(GOT_COMMENTS_TO_ME_INFO_FAIL);
-		}
-	}
+        } catch (Exception e) {
+            mHandler.sendEmptyMessage(GOT_COMMENTS_TO_ME_INFO_FAIL);
+            Log.e(TAG, "Comments To Me Thread FAILED");
+            e.printStackTrace();
+        }
+    }
 }

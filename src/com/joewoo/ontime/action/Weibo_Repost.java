@@ -22,55 +22,52 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.WeiboBackBean;
 import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_URLs;
 
 public class Weibo_Repost extends Thread {
-	private String weibo_id;
-	private Handler mHandler;
-	private String status;
-	private boolean is_comment = false;
+    private String weibo_id;
+    private Handler mHandler;
+    private String status;
+    private boolean is_comment = false;
 
-	public Weibo_Repost(String status, String weibo_id, Handler handler) {
-		this.weibo_id = weibo_id;
-		this.mHandler = handler;
-		this.status = status;
-	}
+    public Weibo_Repost(String status, String weibo_id, Handler handler) {
+        this.weibo_id = weibo_id;
+        this.mHandler = handler;
+        this.status = status;
+    }
 
-	public Weibo_Repost(String comment, String weibo_id, boolean is_comment,
-			Handler handler) {
-		this.weibo_id = weibo_id;
-		this.mHandler = handler;
-		this.status = comment;
-		this.is_comment = is_comment;
-	}
+    public Weibo_Repost(String comment, String weibo_id, boolean is_comment,
+                        Handler handler) {
+        this.weibo_id = weibo_id;
+        this.mHandler = handler;
+        this.status = comment;
+        this.is_comment = is_comment;
+    }
 
-	public void run() {
-		Log.e(TAG, "Repost Thread start");
-		String httpResult = "{ \"error_code\" : \"233\" }";
+    public void run() {
+        Log.e(TAG, "Repost Thread START");
+        String httpResult = "{ \"error_code\" : \"233\" }";
 
-		HttpPost httpRequest = new HttpPost(REPOST_URL);
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair(ACCESS_TOKEN,
-				WeiboConstant.ACCESS_TOKEN));
-		params.add(new BasicNameValuePair("id", weibo_id));
-		params.add(new BasicNameValuePair("status", status));
-		if (is_comment) {
-			params.add(new BasicNameValuePair("is_comment", "1"));
-		}
-		try {
-			httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+        HttpPost httpRequest = new HttpPost(Weibo_URLs.REPOST);
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair(ACCESS_TOKEN,
+                WeiboConstant.ACCESS_TOKEN));
+        params.add(new BasicNameValuePair("id", weibo_id));
+        params.add(new BasicNameValuePair("status", status));
+        if (is_comment) {
+            params.add(new BasicNameValuePair("is_comment", "1"));
+        }
+        try {
+            httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 
-			httpResult = EntityUtils.toString(new DefaultHttpClient()
-			.execute(httpRequest).getEntity());
-			Log.e(TAG, "GOT: " + httpResult);
+            httpResult = EntityUtils.toString(new DefaultHttpClient()
+                    .execute(httpRequest).getEntity());
+            Log.e(TAG, "GOT: " + httpResult);
 
-			mHandler.obtainMessage(GOT_REPOST_INFO, new Gson().fromJson(httpResult, WeiboBackBean.class)).sendToTarget();
+            mHandler.obtainMessage(GOT_REPOST_INFO, new Gson().fromJson(httpResult, WeiboBackBean.class)).sendToTarget();
 
-		} catch (UnsupportedEncodingException e) {
-
-		} catch (ClientProtocolException e) {
-
-		} catch (IOException e) {
-
-		}
-	}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

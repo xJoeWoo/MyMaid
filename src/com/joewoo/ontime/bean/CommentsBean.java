@@ -28,9 +28,6 @@ public class CommentsBean {
 		return status;
 	}
 	public CommentsBean getReplyComment(){
-		if(reply_comment != null)
-			return reply_comment;
-		else
-			return null;
+		return reply_comment;
 	}
 }

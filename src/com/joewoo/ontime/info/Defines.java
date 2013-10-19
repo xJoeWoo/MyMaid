@@ -1,11 +1,7 @@
 package com.joewoo.ontime.info;
 
 public class Defines {
-	
-	public final static int FRAG_FRIENDSTIMELINE_POS = 0;
-	public final static int FRAG_COMMENTS_POS = 1;
-	public final static int FRAG_MENTIONS_POS = 2;
-	
+
 	public final static String SET_COMMENTS_COUNT = "cmt";
 	public final static String SET_DM_COUNT = "dm";
 	public final static String SET_MENTIONS_COUNT = "mention_status";
@@ -46,8 +42,8 @@ public class Defines {
 	public final static int GOT_COMMNETS_SHOW_INFO_FAIL = 32;
 	public final static int GOT_STATUSES_DESTROY_INFO = 33;
 	public final static int GOT_STATUSES_DESTROY_INFO_FAIL = 34;
-
-	public final static int FRAGMENT_COUNT = 3;
+    public final static int GOT_REPOST_TIMELINE_INFO = 35;
+    public final static int GOT_REPOST_TIMELINE_INFO_FAIL = 36;
 
 	public final static int ACT_GOT_PHOTO = 1;
 	public final static int ACT_GOT_AT = 2;
@@ -87,6 +83,7 @@ public class Defines {
 	public final static String RETWEETED_STATUS_PIC_URLS = "retweeted_status_pic_urls";
 	public final static String RETWEETED_STATUS_SOURCE = "retweeted_status_source";
 	public final static String WEIBO_ID = "weibo_id";
+    public final static String REPOST_WEIBO_ID = "repost_weibo_id";
 	public final static String COMMENT_ID = "comment_id";
 	public final static String IS_COMMENT = "isComment";
 	public final static String HAVE_PIC = "havePic";
@@ -141,29 +138,7 @@ public class Defines {
 	public final static int CONNECT_TIMEOUT = 5000;
 	public final static int READ_TIMEOUT = 5000;
 
-	public final static String CALLBACK_URL = "http://mymaid.sinaapp.com/callback.php";
-	public final static String UPDATE_URL = "https://api.weibo.com/2/statuses/update.json";
-	public final static String UPLOAD_URL = "https://upload.api.weibo.com/2/statuses/upload.json";
-	public final static String SHOW_URL = "https://api.weibo.com/2/users/show.json";
-	public final static String APP_KEY = "462564571";
-	public final static String APP_SECRET = "f08ee7c15ba9afced27b3b916126f5ac";
-	public final static String AUTH_URL = "https://api.weibo.com/oauth2/authorize?client_id="
-			+ APP_KEY
-			+ "&response_type=code&redirect_uri="
-			+ CALLBACK_URL
-			+ "&display=mobile";
-	public final static String AT_SUGGESTIONS_URL = "https://api.weibo.com/2/search/suggestions/at_users.json";
-	public final static String TOKEN_URL = "https://api.weibo.com/oauth2/access_token";
-	public final static String FRIENDS_TIMELINE_URL = "https://api.weibo.com/2/statuses/friends_timeline.json";
-	public final static String COMMENT_CREATE_URL = "https://api.weibo.com/2/comments/create.json";
-	public final static String REPOST_URL = "https://api.weibo.com/2/statuses/repost.json";
-	public final static String FAVOURITE_CREATE_URL = "https://api.weibo.com/2/favorites/create.json";
-	public final static String COMMENTS_TO_ME_URL = "https://api.weibo.com/2/comments/to_me.json";
-	public final static String MENTIONS_URL = "https://api.weibo.com/2/statuses/mentions.json";
-	public final static String REPLY_URL = "https://api.weibo.com/2/comments/reply.json";
-	public final static String UNREAD_COUNT_URL = "https://rm.api.weibo.com/2/remind/unread_count.json";
-	public final static String SET_REMIND_COUNT_URL = "https://rm.api.weibo.com/2/remind/set_count.json";
-	public final static String USER_TIMELINE_URL = "https://api.weibo.com/2/statuses/user_timeline.json";
-	public final static String COMMENTS_SHOW_URL = "https://api.weibo.com/2/comments/show.json";
-	public final static String STATUSES_DESTROY_URL = "https://api.weibo.com/2/statuses/destroy.json";
+    public final static String APP_KEY = "462564571";
+    public final static String APP_SECRET = "f08ee7c15ba9afced27b3b916126f5ac";
+
 }

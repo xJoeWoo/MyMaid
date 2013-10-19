@@ -2,6 +2,7 @@ package com.joewoo.ontime.action;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -11,131 +12,167 @@ import com.joewoo.ontime.tools.RoundCorner;
 
 import static com.joewoo.ontime.info.Defines.*;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 public class Weibo_DownloadPic extends AsyncTask<String, Integer, Bitmap> {
 
-	private ImageView iv;
-	private Bitmap image;
-	private ProgressBar pb;
+    private ImageView iv;
+    private Bitmap image;
+    private ProgressBar pb;
+    private TextView tv;
+    private boolean isRepost = false;
+    private Activity act;
 
-	public Weibo_DownloadPic(ImageView iv, ProgressBar pb) {
-		this.iv = iv;
-		this.pb = pb;
+    public Weibo_DownloadPic(ImageView iv, ProgressBar pb) {
+        this.iv = iv;
+        this.pb = pb;
 
-	}
+    }
 
-	public Weibo_DownloadPic(ImageView iv) {
-		this.iv = iv;
-	}
+    public Weibo_DownloadPic(ImageView iv) {
+        this.iv = iv;
+    }
 
-	@Override
-	protected void onPreExecute() {
-		// Toast.makeText(activity, "开始下载图片…", Toast.LENGTH_SHORT).show();
-	}
+    public Weibo_DownloadPic(ImageView iv, TextView tv, boolean isRepost, Activity act) {
+        this.iv = iv;
+        this.tv = tv;
+        this.isRepost = isRepost;
+        this.act = act;
+    }
 
-	@Override
-	protected Bitmap doInBackground(String... params) {
+    @Override
+    protected void onPreExecute() {
+        // Toast.makeText(activity, "开始下载图片…", Toast.LENGTH_SHORT).show();
+    }
 
-		Log.e(TAG, "Download pic AsyncTask start");
+    @Override
+    protected Bitmap doInBackground(String... params) {
 
-		try {
+        Log.e(TAG, "Download Pic AsyncTask START");
 
-			HttpUriRequest httpGet = new HttpGet(params[0]);
+        try {
 
-			Log.e(TAG, "Pic URL - " + params[0]);
+            HttpUriRequest httpGet = new HttpGet(params[0]);
 
-			HttpEntity httpResponse = new DefaultHttpClient().execute(httpGet)
-					.getEntity();
+            Log.e(TAG, "Pic URL - " + params[0]);
 
-			// Log.e(TAG, "2");
+            HttpEntity httpResponse = new DefaultHttpClient().execute(httpGet)
+                    .getEntity();
 
-			publishProgress(0);
+            // Log.e(TAG, "2");
 
-			InputStream is = httpResponse.getContent();
+            publishProgress(0);
 
-			long maxSize = httpResponse.getContentLength();
-			Log.e(TAG, "MaxSize - " + String.valueOf(maxSize));
-			float nowSize = 0;
+            InputStream is = httpResponse.getContent();
 
-			// Log.e(TAG, "3");
+            long maxSize = httpResponse.getContentLength();
+            Log.e(TAG, "MaxSize - " + String.valueOf(maxSize));
+            float nowSize = 0;
 
-			// Log.e(TAG, "4");
+            // Log.e(TAG, "3");
 
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            // Log.e(TAG, "4");
 
-			byte[] buffer = new byte[1024];
-			int len = -1;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-			try {
-				while ((len = is.read(buffer)) != -1) {
-					if (!isCancelled()) {
-						baos.write(buffer, 0, len);
-						baos.flush();
-						nowSize += len;
-						Log.e(TAG, String.valueOf(nowSize));
-						publishProgress((int) ((nowSize / (float) maxSize) * 100));
-					} else {
-						is.close();
-					}
-				}
-			} catch (Exception e) {
+            byte[] buffer = new byte[1024];
+            int len = -1;
 
-			} finally {
-				is.close();
-			}
+            try {
+                while ((len = is.read(buffer)) != -1) {
+                    if (!isCancelled()) {
+                        baos.write(buffer, 0, len);
+                        baos.flush();
+                        nowSize += len;
+//						Log.e(TAG, String.valueOf(nowSize));
+                        publishProgress((int) ((nowSize / (float) maxSize) * 100));
+                    } else {
+                        is.close();
+                    }
+                }
+            } catch (Exception e) {
 
-			byte[] imgBytes = baos.toByteArray();
+            } finally {
+                is.close();
+            }
 
-			if (maxSize > 2000) {
+            byte[] imgBytes = baos.toByteArray();
 
-				// image = new
-				// GausscianBlur(BitmapFactory.decodeByteArray(imgBytes,
-				// 0, imgBytes.length)).getBitmap();
+            if (maxSize > 4000) {
 
-				image = BitmapFactory.decodeByteArray(imgBytes, 0,
-						imgBytes.length);
+                // image = new
+                // GausscianBlur(BitmapFactory.decodeByteArray(imgBytes,
+                // 0, imgBytes.length)).getBitmap();
 
-			} else {
+                image = BitmapFactory.decodeByteArray(imgBytes, 0,
+                        imgBytes.length);
 
-				image = new RoundCorner(BitmapFactory.decodeByteArray(imgBytes,
-						0, imgBytes.length), 25).getBitmap();
+            } else {
 
-			}
+                image = new RoundCorner(BitmapFactory.decodeByteArray(imgBytes,
+                        0, imgBytes.length), 25).getBitmap();
 
-		} catch (Exception e) {
-			Log.e(TAG, "Download pic ERROR!");
-		}
+            }
 
-		return image;
-	}
+        } catch (Exception e) {
+            Log.e(TAG, "Download Pic AsyncTask FALIED");
+            e.printStackTrace();
+        }
 
-	@Override
-	protected void onProgressUpdate(Integer... progress) {
-		if (!isCancelled()) {
-			if (pb != null) {
-				if (progress[0] == 0)
-					pb.setVisibility(View.VISIBLE);
-				// Log.e(TAG, "Process - " + String.valueOf(progress[0]));
-				pb.setProgress((int) progress[0]);
-			}
-		}
-	}
+        return image;
+    }
 
-	@Override
-	protected void onPostExecute(Bitmap bitmap) {
-		if (!isCancelled()) {
-			iv.setImageBitmap(image);
-			if (pb != null)
-				pb.setVisibility(View.INVISIBLE);
-		}
-		image = null;
-	}
+    @Override
+    protected void onProgressUpdate(Integer... progress) {
+//        Log.e(TAG, "Progress: "+String.valueOf(progress[0]));
+        if (!isCancelled()) {
+            if (pb != null) {
+                if (progress[0] == 0)
+                    pb.setVisibility(View.VISIBLE);
+                // Log.e(TAG, "Process - " + String.valueOf(progress[0]));
+                pb.setProgress((int) progress[0]);
+            } else if (tv != null) {
+
+                DisplayMetrics dm = new DisplayMetrics();
+                act.getWindowManager().getDefaultDisplay().getMetrics(dm);
+                float width = ((dm.widthPixels * dm.density) - 32) / 100;
+
+
+//                Log.e(TAG, "SCREEN WIDTH: " + String.valueOf(width * 100));
+
+                tv.setVisibility(View.VISIBLE);
+//                float tv_width = screenWidth / 100;
+                ViewGroup.LayoutParams lp = tv.getLayoutParams();
+                lp.width = (int) (width * progress[0]);
+//                Log.e(TAG, String.valueOf(lp.width));
+                tv.setLayoutParams(lp);
+            }
+        }
+    }
+
+    @Override
+    protected void onPostExecute(Bitmap bitmap) {
+        if (!isCancelled()) {
+            iv.setImageBitmap(image);
+            if (pb != null)
+                pb.setVisibility(View.INVISIBLE);
+            if (tv != null && !isRepost)
+                tv.setVisibility(View.GONE);
+        }
+        image = null;
+    }
+
 
 }

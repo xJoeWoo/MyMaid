@@ -2,6 +2,15 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
+    <excludeFromCompile>
+      <directory url="file://$PROJECT_DIR$/gen" includeSubdirectories="true" />
+      <directory url="file://$USER_HOME$/Documents/GitHub/ActionBar-PullToRefresh/samples/actionbarcompat/gen" includeSubdirectories="true" />
+      <directory url="file://$USER_HOME$/Documents/GitHub/ActionBar-PullToRefresh/samples/actionbarsherlock/gen" includeSubdirectories="true" />
+      <directory url="file://$USER_HOME$/Documents/GitHub/ActionBar-PullToRefresh/extras/actionbarsherlock/gen" includeSubdirectories="true" />
+      <directory url="file://$USER_HOME$/Documents/GitHub/ActionBar-PullToRefresh/library/gen" includeSubdirectories="true" />
+      <directory url="file://$USER_HOME$/Documents/GitHub/ActionBar-PullToRefresh/extras/actionbarcompat/gen" includeSubdirectories="true" />
+      <directory url="file://$USER_HOME$/Documents/GitHub/ActionBar-PullToRefresh/samples/stock/gen" includeSubdirectories="true" />
+    </excludeFromCompile>
     <resourceExtensions />
     <wildcardResourcePatterns>
       <entry name="!?*.java" />

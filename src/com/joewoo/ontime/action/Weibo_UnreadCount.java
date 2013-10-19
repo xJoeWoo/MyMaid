@@ -9,42 +9,43 @@ import org.apache.http.util.EntityUtils;
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.UnreadCountBean;
 import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_URLs;
 
 import android.os.Handler;
 import android.util.Log;
 
 public class Weibo_UnreadCount extends Thread {
 
-	private Handler mHandler;
-	private String httpResult = "{ \"error_code\":\"233\"";
+    private Handler mHandler;
+    private String httpResult = "{ \"error_code\":\"233\"";
 
-	public Weibo_UnreadCount(Handler handler) {
-		this.mHandler = handler;
-	}
+    public Weibo_UnreadCount(Handler handler) {
+        this.mHandler = handler;
+    }
 
-	public void run() {
-		Log.e(TAG, "Unread Count Thread Start");
+    public void run() {
+        Log.e(TAG, "Unread Count Thread START");
 
-		HttpGet httpGet = new HttpGet(UNREAD_COUNT_URL + "?access_token="
-				+ WeiboConstant.ACCESS_TOKEN + "&uid=" + WeiboConstant.UID);
+        HttpGet httpGet = new HttpGet(Weibo_URLs.UNREAD_COUNT + "?access_token="
+                + WeiboConstant.ACCESS_TOKEN + "&uid=" + WeiboConstant.UID);
 
-		try {
-			httpResult = EntityUtils.toString(new DefaultHttpClient().execute(
-					httpGet).getEntity());
+        try {
+            httpResult = EntityUtils.toString(new DefaultHttpClient().execute(
+                    httpGet).getEntity());
 
-			Log.e(TAG, "GOT: " + httpResult);
+            Log.e(TAG, "GOT: " + httpResult);
 
-			UnreadCountBean b = new Gson().fromJson(httpResult,
-					UnreadCountBean.class);
+            UnreadCountBean b = new Gson().fromJson(httpResult,
+                    UnreadCountBean.class);
 
-			if (b.getCmtCount() != null)
-				mHandler.obtainMessage(GOT_UNREAD_COUNT_INFO, b).sendToTarget();
-			else
-				mHandler.sendEmptyMessage(GOT_UNREAD_COUNT_INFO_FAIL);
-		} catch (Exception e) {
+            if (b.getCmtCount() != null)
+                mHandler.obtainMessage(GOT_UNREAD_COUNT_INFO, b).sendToTarget();
+            else
+                mHandler.sendEmptyMessage(GOT_UNREAD_COUNT_INFO_FAIL);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-		}
-
-	}
+    }
 
 }
