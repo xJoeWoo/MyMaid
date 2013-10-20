@@ -92,6 +92,9 @@
 	<string name="frag_ftl_dialog_confirm_logout_title">登出？</string>
 	<string name="frag_ftl_dialog_confirm_logout_btn_ok">确定</string>
 	<string name="frag_ftl_dialog_confirm_logout_btn_cancle">不要</string>
+
+    <string name="frag_single_weibo_no_comments">再怎么刷也木有啦…… ヽ(´▽｀)ﾉ</string>
+    <string name="frag_single_weibo_no_reposts">木有人推Po哇……</string>
 	
 	<string name="error_token_out_of_date">身份认证过期…请重新登录</string>
 	<string name="error_repeat_content">ERROR!\n不能重复发同一个Po哦\nError -&#160;</string>

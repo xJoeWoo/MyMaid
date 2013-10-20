@@ -84,7 +84,7 @@
 	<string name="post_send_success_part_1">SUCCESS!\nPost at -&#160;</string>
 	<string name="post_send_success_part_2">\nID -&#160;</string>
 	<string name="post_send_success_part_3">\n&gt; CLICK HERE TO CHECK THIS WEIBO &lt;</string>
-	<string name="post_send_success_part_img">\n图片 -&#160;</string>
+	<string name="post_send_success_part_img">\nPic -&#160;</string>
 	
 	<string name="frag_ftl_dialog_choose_account_add_account">【ADD ACCOUNT…】</string>
 	<string name="frag_ftl_dialog_choose_account_logout">【LOGOUT…】</string>
@@ -92,6 +92,9 @@
 	<string name="frag_ftl_dialog_confirm_logout_title">Logout?</string>
 	<string name="frag_ftl_dialog_confirm_logout_btn_ok">YEP</string>
 	<string name="frag_ftl_dialog_confirm_logout_btn_cancle">NOPE</string>
+
+    <string name="frag_single_weibo_no_comments">YEP… You\'ll be the FIRST Cuckoo Bird!</string>
+    <string name="frag_single_weibo_no_reposts">Ah… Why not retweet it?</string>
 	
 	<string name="error_token_out_of_date">Your authorize was out of date</string>
 	<string name="error_repeat_content">ERROR!\nRepeat content\nError -&#160;</string>

@@ -7,14 +7,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.joewoo.ontime.Comment_Repost;
@@ -25,12 +24,9 @@ import com.joewoo.ontime.info.Weibo_AcquireCount;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.joewoo.ontime.info.Defines.COMMENT_ID;
-import static com.joewoo.ontime.info.Defines.GOT_COMMNETS_SHOW_INFO;
 import static com.joewoo.ontime.info.Defines.GOT_REPOST_TIMELINE_INFO;
 import static com.joewoo.ontime.info.Defines.GOT_REPOST_TIMELINE_INFO_FAIL;
 import static com.joewoo.ontime.info.Defines.IS_COMMENT;
-import static com.joewoo.ontime.info.Defines.IS_REPLY;
 import static com.joewoo.ontime.info.Defines.SCREEN_NAME;
 import static com.joewoo.ontime.info.Defines.TEXT;
 import static com.joewoo.ontime.info.Defines.WEIBO_ID;
@@ -42,6 +38,7 @@ public class Frag_SingleWeibo_Reposts extends Fragment {
     private ListView lv;
     private ProgressBar pb;
     private String weibo_id;
+    private TextView tv;
 
     public void showReposts(String weibo_id){
         this.weibo_id = weibo_id;
@@ -83,6 +80,12 @@ public class Frag_SingleWeibo_Reposts extends Fragment {
 
                     lv.setAdapter(data);
 
+                    if(lv.getCount() == 0)
+                    {
+                        tv.setVisibility(View.VISIBLE);
+                        tv.setText(R.string.frag_single_weibo_no_reposts);
+                    }
+
                     break;
                 }
                 case GOT_REPOST_TIMELINE_INFO_FAIL:{
@@ -102,6 +105,7 @@ public class Frag_SingleWeibo_Reposts extends Fragment {
 
         lv = (ListView)v.findViewById(R.id.frag_single_weibo_comments_lv);
         pb = (ProgressBar)v.findViewById(R.id.frag_single_weibo_comments_pb);
+        tv = (TextView)v.findViewById(R.id.frag_single_weibo_comments_tv);
 
         return v;
 	}
@@ -113,21 +117,21 @@ public class Frag_SingleWeibo_Reposts extends Fragment {
         act = getActivity();
 	}
 
-	@Override
-	public void onPrepareOptionsMenu(Menu menu) {
-		menu.clear();
-
-
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-
-		}
-
-		return super.onOptionsItemSelected(item);
-	}
+//	@Override
+//	public void onPrepareOptionsMenu(Menu menu) {
+//		menu.clear();
+//
+//
+//	}
+//
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch (item.getItemId()) {
+//
+//		}
+//
+//		return super.onOptionsItemSelected(item);
+//	}
 
 
 }

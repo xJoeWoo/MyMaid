@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.joewoo.ontime.Comment_Repost;
@@ -34,6 +35,7 @@ public class Frag_SingleWeibo_Comments extends Fragment {
     private ListView lv;
     private String weibo_id;
     private ProgressBar pb;
+    private TextView tv;
 
     public void showComments(String weibo_id){
         this.weibo_id = weibo_id;
@@ -48,6 +50,7 @@ public class Frag_SingleWeibo_Comments extends Fragment {
 
         lv = (ListView)v.findViewById(R.id.frag_single_weibo_comments_lv);
         pb = (ProgressBar)v.findViewById(R.id.frag_single_weibo_comments_pb);
+        tv = (TextView)v.findViewById(R.id.frag_single_weibo_comments_tv);
 
         return v;
 
@@ -114,6 +117,12 @@ public class Frag_SingleWeibo_Comments extends Fragment {
                             });
 
                     lv.setAdapter(data);
+
+                    if(lv.getCount() == 0)
+                    {
+                        tv.setVisibility(View.VISIBLE);
+                        tv.setText(R.string.frag_single_weibo_no_comments);
+                    }
 
                     break;
                 }

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,7 +14,19 @@ import com.joewoo.ontime.R;
 import com.joewoo.ontime.SingleUser;
 import com.joewoo.ontime.action.Weibo_DownloadPic;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Defines.BMIDDLE_PIC;
+import static com.joewoo.ontime.info.Defines.CREATED_AT;
+import static com.joewoo.ontime.info.Defines.IS_REPOST;
+import static com.joewoo.ontime.info.Defines.PROFILE_IMAGE_URL;
+import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS;
+import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS_BMIDDLE_PIC;
+import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS_CREATED_AT;
+import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS_SCREEN_NAME;
+import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS_SOURCE;
+import static com.joewoo.ontime.info.Defines.SCREEN_NAME;
+import static com.joewoo.ontime.info.Defines.SOURCE;
+import static com.joewoo.ontime.info.Defines.TEXT;
+import static com.joewoo.ontime.info.Defines.USER_WEIBO;
 
 public class Frag_SingleWeibo extends Fragment {
 
@@ -70,7 +81,6 @@ public class Frag_SingleWeibo extends Fragment {
         tv_source.setText(i.getStringExtra(SOURCE));
 
 
-
         if (i.getStringExtra(IS_REPOST) == null) {
             tv_rt_rl.setVisibility(View.GONE);
             tv_rt_screen_name.setVisibility(View.GONE);
@@ -92,17 +102,39 @@ public class Frag_SingleWeibo extends Fragment {
                     .getStringExtra(RETWEETED_STATUS_CREATED_AT));
             tv_rt_text.setText(i.getStringExtra(RETWEETED_STATUS));
             tv_rt_source.setText(i.getStringExtra(RETWEETED_STATUS_SOURCE));
+
+
+            if (i.getStringExtra(USER_WEIBO) == null) {
+                tv_rt_screen_name.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        jumpToRetweetedUser(i);
+                    }
+                });
+                tv_rt_source.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        jumpToRetweetedUser(i);
+                    }
+                });
+                tv_rt_created_at.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        jumpToRetweetedUser(i);
+                    }
+                });
+            }
+
         }
 
-        if (i.getStringExtra(BMIDDLE_PIC) == null){
-            if(i.getStringExtra(RETWEETED_STATUS_BMIDDLE_PIC) == null){
+        if (i.getStringExtra(BMIDDLE_PIC) == null) {
+            if (i.getStringExtra(RETWEETED_STATUS_BMIDDLE_PIC) == null) {
                 ViewGroup.LayoutParams lp = tv_rt_rl.getLayoutParams();
-                lp.width = 580;
+                lp.width = 10000;
                 tv_rt_rl.setLayoutParams(lp);
             }
             iv_image.setVisibility(View.GONE);
-        }
-        else {
+        } else {
 
             dp = new Weibo_DownloadPic(iv_image, tv_rt_rl, false, act);
             dp.execute(i.getStringExtra(BMIDDLE_PIC));
@@ -143,12 +175,12 @@ public class Frag_SingleWeibo extends Fragment {
 
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-
-        menu.clear();
-
-    }
+//    @Override
+//    public void onPrepareOptionsMenu(Menu menu) {
+//
+//        menu.clear();
+//
+//    }
 
     private void findViews(View v) {
         tv_screen_name = (TextView) v.findViewById(R.id.frag_single_weibo_screen_name);
@@ -168,8 +200,15 @@ public class Frag_SingleWeibo extends Fragment {
     void jumpToSingleUser(Intent i) {
         Intent it = new Intent();
         it.setClass(act, SingleUser.class);
-        // it.putExtra(UID, i.getStringExtra(UID));
         it.putExtra(SCREEN_NAME, i.getStringExtra(SCREEN_NAME));
+        startActivity(it);
+    }
+
+    void jumpToRetweetedUser(Intent i) {
+        Intent it = new Intent();
+        it.setClass(act, SingleUser.class);
+        // it.putExtra(UID, i.getStringExtra(UID));
+        it.putExtra(SCREEN_NAME, i.getStringExtra(RETWEETED_STATUS_SCREEN_NAME));
         startActivity(it);
     }
 

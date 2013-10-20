@@ -52,30 +52,37 @@ public class SingleWeibo extends FragmentActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setOffscreenPageLimit(3);
 
-        String count = i.getStringExtra(REPOSTS_COUNT);
-        if(count.equals("1"))
-            actionBar.addTab(actionBar.newTab()
-                    .setText((count + " " + getString(R.string.title_frag_single_weibo_reposts)).toUpperCase(Locale.US))
-                    .setTabListener(tabListener));
-        else
-            actionBar.addTab(actionBar.newTab()
-                    .setText((count + " " + getString(R.string.title_frag_single_weibo_reposts) + "s").toUpperCase(Locale.US))
-                    .setTabListener(tabListener));
+
+        String titleRepost = getResources().getString(R.string.title_frag_single_weibo_reposts).toUpperCase(Locale.US);
+        String titleComment = getResources().getString(R.string.title_frag_single_weibo_comments).toUpperCase(Locale.US);
+        String repostCount = i.getStringExtra(REPOSTS_COUNT);
+        String commentsCount = i.getStringExtra(COMMENTS_COUNT);
+
+        if (Locale.getDefault().getLanguage().equals("en")) {
+            if (!repostCount.equals("1"))
+                titleRepost = titleRepost + "S";
+
+            if (!commentsCount.equals("1"))
+                titleComment = titleComment + "S";
+        }
+
+        actionBar.addTab(actionBar.newTab()
+                .setText(repostCount + " " + titleRepost)
+                .setTabListener(tabListener));
 
         actionBar.addTab(actionBar.newTab()
                 .setText(getString(R.string.title_frag_single_weibo).toUpperCase(Locale.US))
                 .setTabListener(tabListener));
 
-        count = i.getStringExtra(COMMENTS_COUNT);
-        if (count.equals("1"))
-            actionBar.addTab(actionBar.newTab()
-                    .setText((count + " " + getString(R.string.title_frag_single_weibo_comments)).toUpperCase(Locale.US))
-                    .setTabListener(tabListener));
-        else
-            actionBar.addTab(actionBar.newTab()
-                    .setText((count + " " + getString(R.string.title_frag_single_weibo_comments) + "s").toUpperCase(Locale.US))
-                    .setTabListener(tabListener));
-        count = null;
+        actionBar.addTab(actionBar.newTab()
+                .setText(commentsCount + " " + titleComment)
+                .setTabListener(tabListener));
+
+        titleRepost = null;
+        titleComment = null;
+        repostCount = null;
+        commentsCount = null;
+
 
         mSectionsPagerAdapter = new SingleWeiboPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -93,7 +100,7 @@ public class SingleWeibo extends FragmentActivity {
                             }
                             case SingleWeiboPagerAdapter.FRAG_SINGLEWEIBOCOMMENTS_POS: {
 
-                                if(!isShowedComments)
+                                if (!isShowedComments)
                                     mSectionsPagerAdapter.getSingleWeiboCommentsFrag().showComments(i.getStringExtra(WEIBO_ID));
                                 isShowedComments = true;
 
@@ -101,7 +108,7 @@ public class SingleWeibo extends FragmentActivity {
                             }
                             case SingleWeiboPagerAdapter.FRAG_SINGLEWEIBOREPOSTS_POS: {
 
-                                if(!isShowedReposts)
+                                if (!isShowedReposts)
                                     mSectionsPagerAdapter.getSingleWeiboRepostsFrag().showReposts(i.getStringExtra(WEIBO_ID));
                                 isShowedReposts = true;
                                 break;
@@ -152,7 +159,7 @@ public class SingleWeibo extends FragmentActivity {
                     }
                     break;
                 }
-               
+
             }
         }
 

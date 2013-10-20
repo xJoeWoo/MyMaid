@@ -1,0 +1,28 @@
+# view res/layout/singelweibo.xml #generated:2
+# view res/layout/timeline_cmt_atme.xml #generated:2
+-keep class android.support.v4.view.ViewPager { <init>(...); }
+
+# view AndroidManifest.xml #generated:39
+-keep class com.joewoo.ontime.At { <init>(...); }
+
+# view AndroidManifest.xml #generated:40
+-keep class com.joewoo.ontime.Comment_Repost { <init>(...); }
+
+# view AndroidManifest.xml #generated:38
+-keep class com.joewoo.ontime.Login { <init>(...); }
+
+# view AndroidManifest.xml #generated:43
+-keep class com.joewoo.ontime.Post { <init>(...); }
+
+# view AndroidManifest.xml #generated:41
+-keep class com.joewoo.ontime.SingleUser { <init>(...); }
+
+# view AndroidManifest.xml #generated:20
+-keep class com.joewoo.ontime.main.Main { <init>(...); }
+
+# view AndroidManifest.xml #generated:56
+-keep class com.joewoo.ontime.singleWeibo.SingleWeibo { <init>(...); }
+
+# view AndroidManifest.xml #generated:29
+-keep class com.joewoo.ontime.time.Getup { <init>(...); }
+

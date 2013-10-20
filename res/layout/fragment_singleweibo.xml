@@ -71,6 +71,7 @@
                     android:layout_below="@+id/frag_single_weibo_profile_image"
                     android:layout_marginTop="8dp"
                     android:lineSpacingExtra="5dp"
+                    android:textIsSelectable="true"
                     android:text="正文正文正文正文"
                     android:textSize="16sp"/>
 
@@ -125,6 +126,7 @@
                     android:layout_marginLeft="12dp"
                     android:layout_marginTop="8dp"
                     android:lineSpacingExtra="4dp"
+                    android:textIsSelectable="true"
                     android:text="评论微博原文 "
                     android:textSize="16sp"/>
 
