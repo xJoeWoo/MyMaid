@@ -58,7 +58,7 @@
 	<string name="toast_user_timeline_fail">获取微博失败…</string>
 	<string name="toast_unread_count_fail">获取未读数失败…</string>
 	<string name="toast_clear_unread_count_fail">清除未读数失败…</string>
-	<string name="toast_commnets_fail">获取评论失败…</string>
+	<string name="toast_comments_fail">获取评论失败…</string>
 	<string name="toast_mentions_fail">获取提及失败…</string>
     <string name="toast_repost_timeline_fail">获取转发微博失败…</string>
 	

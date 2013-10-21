@@ -86,11 +86,11 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
 			new Weibo_Mentions(
 					c.getString(c.getColumnIndex(sqlHelper.MENTIONS)),
 					sqlHelper, mHandler).start();
+
+            profileImg = c.getBlob(c.getColumnIndex(sqlHelper.PROFILEIMG));
 		} else {
 			refreshMentions();
 		}
-		
-		profileImg = c.getBlob(c.getColumnIndex(sqlHelper.PROFILEIMG));
 		
 		lv = (ListView) getView().findViewById(R.id.lv_friends_timeline);
 		lv.setDivider(null);
@@ -175,6 +175,7 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
 											profileImg.length)))
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		} catch (Exception e) {
+            e.printStackTrace();
 		}
 
 		if (unreadCount == null)

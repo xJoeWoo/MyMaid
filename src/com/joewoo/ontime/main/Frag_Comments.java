@@ -84,11 +84,13 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
 			new Weibo_CommentsToMe(c.getString(c
 					.getColumnIndex(sqlHelper.TO_ME_COMMENTS)), sqlHelper,
 					mHandler).start();
+
+
+            profileImg = c.getBlob(c.getColumnIndex(sqlHelper.PROFILEIMG));
 		} else {
 			refreshComments();
 		}
 
-		profileImg = c.getBlob(c.getColumnIndex(sqlHelper.PROFILEIMG));
 
 		lv = (ListView) getView().findViewById(R.id.lv_friends_timeline);
 		lv.setDivider(null);
@@ -137,6 +139,7 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
 											profileImg.length)))
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		} catch (Exception e) {
+            e.printStackTrace();
 		}
 
 		if (unreadCount == null)
@@ -214,7 +217,7 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
 				break;
 			}
 			case GOT_COMMENTS_TO_ME_INFO_FAIL: {
-				Toast.makeText(getActivity(), R.string.toast_commnets_fail,
+				Toast.makeText(getActivity(), R.string.toast_comments_fail,
 						Toast.LENGTH_SHORT).show();
 				break;
 			}

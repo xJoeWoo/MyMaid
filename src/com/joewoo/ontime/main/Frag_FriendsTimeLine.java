@@ -89,11 +89,13 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 			new Weibo_FriendsTimeLine(c.getString(c
 					.getColumnIndex(sqlHelper.FRIENDS_TIMELINE)), sqlHelper,
 					mHandler).start();
+
+            profileImg = c.getBlob(c.getColumnIndex(sqlHelper.PROFILEIMG));
 		} else {
 			refreshFriendsTimeLine();
 		}
 
-		profileImg = c.getBlob(c.getColumnIndex(sqlHelper.PROFILEIMG));
+
 
 		lv = (ListView) getView().findViewById(R.id.lv_friends_timeline);
 		lv.setDivider(null);
@@ -217,6 +219,7 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		} catch (Exception e) {
 			Log.e(TAG, "Profile image length: (Timeline) ERROR!");
+            e.printStackTrace();
 		}
 
 		menu.add(0, MENU_UNREAD_COUNT, 0,

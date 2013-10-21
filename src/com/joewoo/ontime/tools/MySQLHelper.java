@@ -10,19 +10,19 @@ import com.joewoo.ontime.info.Defines;
 
 public class MySQLHelper extends SQLiteOpenHelper {
 
-	public final String tableName = "User";
-	public final String UID = Defines.UID;
-	public final String ACCESS_TOKEN = Defines.ACCESS_TOKEN;
-	public final String LOCATION = Defines.LOCATION;
-	public final String EXPIRES_IN = Defines.EXPIRES_IN;
-	public final String SCREEN_NAME = Defines.SCREEN_NAME;
-	public final String DRAFT = Defines.DRAFT;
-	public final String PROFILEIMG = Defines.PROFILE_IMAGE;
-	public final String FRIENDS_TIMELINE = "friends_time_line";
-	public final String TO_ME_COMMENTS = "comments";
-	public final String MENTIONS = "at";
+	public static final String tableName = "User";
+	public static final String UID = Defines.UID;
+	public static final String ACCESS_TOKEN = Defines.ACCESS_TOKEN;
+	public static final String LOCATION = Defines.LOCATION;
+	public static final String EXPIRES_IN = Defines.EXPIRES_IN;
+	public static final String SCREEN_NAME = Defines.SCREEN_NAME;
+	public static final String DRAFT = Defines.DRAFT;
+	public static final String PROFILEIMG = Defines.PROFILE_IMAGE;
+	public static final String FRIENDS_TIMELINE = "friends_time_line";
+	public static final String TO_ME_COMMENTS = "comments";
+	public static final String MENTIONS = "at";
 
-	final String CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS " + tableName
+	private static final String CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS " + tableName
 			+ "(_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + UID
 			+ " int, " + ACCESS_TOKEN + " char, " + LOCATION + " varchar, "
 			+ EXPIRES_IN + " varchar, " + SCREEN_NAME + " varchar, " + DRAFT
