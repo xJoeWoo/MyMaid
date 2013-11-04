@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="mymaid">#fffcdc85</color>
+
 	<color name="grey">#ffe8e8e8</color>
 	<color name="textGrey">#ff888888</color>
-	<color name="bgGrey">#ffe5e5e5</color>
+    <color name="sourceMyMaidGrey">#ff999999</color>
+	<color name="bgGrey">#ffeeeeee</color>
+    <color name="defBgGrey">#fff3f3f3</color>
 	<color name="dividerGrey">#1c000000</color>
+
 	<color name="viewShadow1">#ffd3d3d3</color>
 	<color name="viewShadow2">#ffd9d9d9</color>
-	<color name="mymaid_pink">#fffcb9b9</color>
+
+	<color name="mymaidPink">#fffbb2b2</color>
+    <color name="sourcePink">#fff28686</color>
+    <color name="highlightPink">#fff28686</color>
+
+    <color name="white">#ffffffff</color>
+
+    <color name="yellow">#fffde39d</color>
+
 </resources>

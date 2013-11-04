@@ -3,7 +3,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingBottom="4dp"
-                android:paddingTop="4dp">
+                android:paddingTop="4dp"
+                android:background="@drawable/lv_singleweibo_item_bg">
 
     <TextView
             android:id="@+id/comments_show_screen_name"

@@ -11,4 +11,5 @@ public class Weibo_AcquireCount {
     public final static int COMMENTS_TO_ME_COUNT = 25;
     public final static int COMMENTS_SHOW_COUNT = 50;
     public final static int REPOSTS_TIMELINE_COUNT = 50;
+    public final static int COMMENTS_MENTIONS_COUNT = 25;
 }

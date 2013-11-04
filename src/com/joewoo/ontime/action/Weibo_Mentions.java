@@ -64,12 +64,10 @@ public class Weibo_Mentions extends Thread {
         this.sqlHelper = sqlHelper;
     }
 
-    public Weibo_Mentions(String httpResult, MySQLHelper sqlHelper,
-                          Handler handler) {
+    public Weibo_Mentions(String httpResult, Handler handler) {
         this.mHandler = handler;
         this.httpResult = httpResult;
         isProvidedResult = true;
-        this.sqlHelper = sqlHelper;
     }
 
     @Override
@@ -157,7 +155,7 @@ public class Weibo_Mentions extends Thread {
                     map.put(IS_REPOST, " ");
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
                 }
 
                 if (b.getThumbnailPic() != null) {

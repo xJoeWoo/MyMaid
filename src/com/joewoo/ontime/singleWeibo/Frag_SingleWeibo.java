@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +17,8 @@ import android.widget.TextView;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.SingleUser;
 import com.joewoo.ontime.action.Weibo_DownloadPic;
+import com.joewoo.ontime.tools.NoUnderlineURLSpan;
+import com.joewoo.ontime.tools.UserSpan;
 
 import static com.joewoo.ontime.info.Defines.BMIDDLE_PIC;
 import static com.joewoo.ontime.info.Defines.CREATED_AT;
@@ -25,6 +31,7 @@ import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS_SCREEN_NAME;
 import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS_SOURCE;
 import static com.joewoo.ontime.info.Defines.SCREEN_NAME;
 import static com.joewoo.ontime.info.Defines.SOURCE;
+import static com.joewoo.ontime.info.Defines.TAG;
 import static com.joewoo.ontime.info.Defines.TEXT;
 import static com.joewoo.ontime.info.Defines.USER_WEIBO;
 
@@ -74,7 +81,8 @@ public class Frag_SingleWeibo extends Fragment {
         tv_screen_name.setText(i.getStringExtra(SCREEN_NAME));
         tv_created_at.setText(" · " + i.getStringExtra(CREATED_AT));
 
-        tv_text.setText(i.getStringExtra(TEXT));
+        tv_text.setText(checkMentionsURL(i.getStringExtra(TEXT)));
+        tv_text.setMovementMethod(LinkMovementMethod.getInstance());
 
 //        new Weibo_CommentsShow(i.getStringExtra(WEIBO_ID), mHandler).start();
 
@@ -100,7 +108,10 @@ public class Frag_SingleWeibo extends Fragment {
                     .getStringExtra(RETWEETED_STATUS_SCREEN_NAME));
             tv_rt_created_at.setText(" · " + i
                     .getStringExtra(RETWEETED_STATUS_CREATED_AT));
-            tv_rt_text.setText(i.getStringExtra(RETWEETED_STATUS));
+
+            tv_rt_text.setText(checkMentionsURL(i.getStringExtra(RETWEETED_STATUS)));
+            tv_rt_text.setMovementMethod(LinkMovementMethod.getInstance());
+
             tv_rt_source.setText(i.getStringExtra(RETWEETED_STATUS_SOURCE));
 
 
@@ -171,8 +182,85 @@ public class Frag_SingleWeibo extends Fragment {
                 }
             });
         }
+    }
+
+    private SpannableString checkMentionsURL(String str) {
+
+        char strarray[] = str.toCharArray();
+        SpannableString ss = new SpannableString(str);
+
+        try {
+            for (int i = 0; i < str.length(); i++) {
+
+                if (strarray[i] == '@') {
+                    StringBuilder sb = new StringBuilder();
+                    for (int j = i + 1; j < str.length(); j++) {
+                        if (strarray[j] != ' ' && strarray[j] != ':'
+                                && strarray[j] != '/' && strarray[j] != '…'
+                                && strarray[j] != '。' && strarray[j] != '，'
+                                && strarray[j] != '@' && strarray[j] != '：'
+                                && strarray[j] != '\0' && strarray[j] != '（'
+                                && strarray[j] != '！' && strarray[j] != '.'
+                                && strarray[j] != ',') {
+                            sb.append(strarray[j]);
+                        } else {
+                            Log.e(TAG, "@" + sb.toString());
+
+                            ss.setSpan(new UserSpan(sb.toString(), act), i, j,
+                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                            i = j;
+                            break;
+                        }
+                    }
+                }
 
 
+                if (strarray[i] == '#') {
+                    StringBuilder sb = new StringBuilder("http://s.weibo.com/weibo/");
+                    for (int j = i + 1; j < str.length(); j++) {
+                        if (strarray[j] != '#') {
+                            sb.append(strarray[j]);
+                        } else {
+                            Log.e(TAG, "#" + sb.toString() + "#");
+
+                            ss.setSpan(new NoUnderlineURLSpan(sb.toString(), act), i, j + 1,
+                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+
+                            i = j + 1;
+                            break;
+                        }
+                    }
+                }
+
+
+                if (strarray[i] == 'h' && strarray[i + 1] == 't'
+                        && strarray[i + 2] == 't' && strarray[i + 3] == 'p'
+                        && strarray[i + 4] == ':') {
+                    StringBuilder sb = new StringBuilder("http://t.cn/");
+
+                    int j;
+                    for (j = i + 12; j < i + 19; j++) {
+                        sb.append(strarray[j]);
+                    }
+
+                    ss.setSpan(new NoUnderlineURLSpan(sb.toString(), act), i, j,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    Log.e(TAG, "HTTP URL - " + sb.toString());
+                    i = j;
+
+                    break;
+
+
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Check mentions FAILED");
+        }
+
+        strarray = null;
+        return ss;
     }
 
 //    @Override

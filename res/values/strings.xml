@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="app_name_cn">自家用女仆</string>
     <string name="app_name">MyMaid</string>
     <string name="act_post_title">发Po</string>
     <string name="act_login_title">登录</string>
@@ -61,6 +62,7 @@
 	<string name="toast_comments_fail">Acquire comments failed…</string>
 	<string name="toast_mentions_fail">Acquire mentions failed…</string>
     <string name="toast_repost_timeline_fail">Acquire reposts failed…</string>
+    <string name="toast_coming_soon">Coming soon…</string>
 	
 	<string name="menu_repost">REPOST</string>
 	<string name="menu_reply">REPLY</string>
@@ -80,22 +82,39 @@
 	<string name="menu_unread">UNREAD COUNT</string>
 	<string name="menu_coming">COMING SOON…</string>
 	<string name="menu_user_statuses">MY POSTS</string>
+    <string name="menu_unread_post_mentions">POSTS @&#160;</string>
+    <string name="menu_unread_comments_mentions">\t\tCMTS @&#160;</string>
+    <string name="menu_unread_comments">COMMENTS&#160;</string>
+
 	
 	<string name="post_send_success_part_1">SUCCESS!\nPost at -&#160;</string>
 	<string name="post_send_success_part_2">\nID -&#160;</string>
 	<string name="post_send_success_part_3">\n&gt; CLICK HERE TO CHECK THIS WEIBO &lt;</string>
 	<string name="post_send_success_part_img">\nPic -&#160;</string>
 	
-	<string name="frag_ftl_dialog_choose_account_add_account">【ADD ACCOUNT…】</string>
-	<string name="frag_ftl_dialog_choose_account_logout">【LOGOUT…】</string>
-	<string name="frag_ftl_dialog_choose_account_title">Choose Account</string>
+	<string name="frag_ftl_dialog_choose_account_add_account">ADD ACCOUNT…</string>
+	<string name="frag_ftl_dialog_choose_account_logout">LOGOUT…</string>
+	<string name="frag_ftl_dialog_choose_account_title">Accounts</string>
+
 	<string name="frag_ftl_dialog_confirm_logout_title">Logout?</string>
-	<string name="frag_ftl_dialog_confirm_logout_btn_ok">YEP</string>
-	<string name="frag_ftl_dialog_confirm_logout_btn_cancle">NOPE</string>
+	<string name="frag_ftl_dialog_confirm_logout_btn_ok">Yep</string>
+	<string name="frag_ftl_dialog_confirm_logout_btn_cancle">Nope</string>
+
+    <string name="frag_ftl_dialog_groups_title">Groups</string>
+    <string name="frag_ftl_dialog_groups_my_posts">My Posts</string>
+    <string name="frag_ftl_dialog_groups_coming_soon">Groups not available…</string>
+
+
+
+
 
     <string name="frag_single_weibo_no_comments">YEP… You\'ll be the FIRST Cuckoo Bird!</string>
     <string name="frag_single_weibo_no_reposts">Ah… Why not retweet it?</string>
-	
+
+    <string name="frag_mentions_dialog_title">Mentions</string>
+    <string name="frag_mentions_dialog_normal_mention">Posts Mentions</string>
+    <string name="frag_mentions_dialog_comment_mention">Comments Mentions</string>
+
 	<string name="error_token_out_of_date">Your authorize was out of date</string>
 	<string name="error_repeat_content">ERROR!\nRepeat content\nError -&#160;</string>
 	<string name="error_out_of_max_text_count">ERROR!\nText overflown!~\nError -&#160;</string>

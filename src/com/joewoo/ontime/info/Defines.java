@@ -44,6 +44,8 @@ public class Defines {
 	public final static int GOT_STATUSES_DESTROY_INFO_FAIL = 34;
     public final static int GOT_REPOST_TIMELINE_INFO = 35;
     public final static int GOT_REPOST_TIMELINE_INFO_FAIL = 36;
+    public final static int GOT_COMMENTS_MENTIONS_INFO = 37;
+    public final static int GOT_COMMENTS_MENTIONS_INFO_FAIL = 38;
 
 	public final static int ACT_GOT_PHOTO = 1;
 	public final static int ACT_GOT_AT = 2;
@@ -55,7 +57,7 @@ public class Defines {
 
 	public final static String KEY_AT_USER = "at_user";
 
-	public final static int SQL_VERSION = 2;
+	public final static int SQL_VERSION = 3;
 
 	public final static String EXPIRES_IN = "expires_in";
 	public final static String ACCESS_TOKEN = "access_token";

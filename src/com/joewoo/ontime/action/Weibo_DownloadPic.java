@@ -1,19 +1,6 @@
 package com.joewoo.ontime.action;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import com.joewoo.ontime.tools.RoundCorner;
-
-import static com.joewoo.ontime.info.Defines.*;
-
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -21,10 +8,21 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.joewoo.ontime.tools.RoundCorner;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+
+import static com.joewoo.ontime.info.Defines.TAG;
 
 public class Weibo_DownloadPic extends AsyncTask<String, Integer, Bitmap> {
 
@@ -103,7 +101,7 @@ public class Weibo_DownloadPic extends AsyncTask<String, Integer, Bitmap> {
                     }
                 }
             } catch (Exception e) {
-
+                e.printStackTrace();
             } finally {
                 is.close();
             }
@@ -142,21 +140,16 @@ public class Weibo_DownloadPic extends AsyncTask<String, Integer, Bitmap> {
                 if (progress[0] == 0)
                     pb.setVisibility(View.VISIBLE);
                 // Log.e(TAG, "Process - " + String.valueOf(progress[0]));
-                pb.setProgress((int) progress[0]);
+                pb.setProgress(progress[0]);
             } else if (tv != null) {
 
                 DisplayMetrics dm = new DisplayMetrics();
                 act.getWindowManager().getDefaultDisplay().getMetrics(dm);
                 float width = ((dm.widthPixels * dm.density) - 32) / 100;
 
-
-//                Log.e(TAG, "SCREEN WIDTH: " + String.valueOf(width * 100));
-
                 tv.setVisibility(View.VISIBLE);
-//                float tv_width = screenWidth / 100;
                 ViewGroup.LayoutParams lp = tv.getLayoutParams();
                 lp.width = (int) (width * progress[0]);
-//                Log.e(TAG, String.valueOf(lp.width));
                 tv.setLayoutParams(lp);
             }
         }

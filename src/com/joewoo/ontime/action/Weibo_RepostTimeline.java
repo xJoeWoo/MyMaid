@@ -54,11 +54,11 @@ public class Weibo_RepostTimeline extends Thread {
         HttpUriRequest httpGet;
         if (max_id == null) {
 
-            httpGet = new HttpGet(Weibo_URLs.REPOSTS_REPOST_TIMELINE + "?access_token="
+            httpGet = new HttpGet(Weibo_URLs.REPOST_TIMELINE + "?access_token="
                     + WeiboConstant.ACCESS_TOKEN + "&id=" + weibo_id + "&count="
                     + count);
         } else {
-            httpGet = new HttpGet(Weibo_URLs.REPOSTS_REPOST_TIMELINE + "?access_token="
+            httpGet = new HttpGet(Weibo_URLs.REPOST_TIMELINE + "?access_token="
                     + WeiboConstant.ACCESS_TOKEN + "&id=" + weibo_id
                     + "&max_id=" + max_id + "&count="
                     + count);

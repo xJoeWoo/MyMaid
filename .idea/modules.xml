@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MyMaid.iml" filepath="$PROJECT_DIR$/MyMaid.iml" />
-      <module fileurl="file://$USER_HOME$/Documents/GitHub/ActionBar-PullToRefresh/library/library.iml" filepath="$USER_HOME$/Documents/GitHub/ActionBar-PullToRefresh/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libs/ActionBar-PullToRefresh/library/library.iml" filepath="$PROJECT_DIR$/libs/ActionBar-PullToRefresh/library/library.iml" />
     </modules>
   </component>
 </project>

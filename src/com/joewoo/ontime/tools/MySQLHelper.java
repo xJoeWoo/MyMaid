@@ -5,8 +5,11 @@ import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.joewoo.ontime.info.Defines;
+
+import static com.joewoo.ontime.info.Defines.TAG_SQL;
 
 public class MySQLHelper extends SQLiteOpenHelper {
 
@@ -21,6 +24,7 @@ public class MySQLHelper extends SQLiteOpenHelper {
 	public static final String FRIENDS_TIMELINE = "friends_time_line";
 	public static final String TO_ME_COMMENTS = "comments";
 	public static final String MENTIONS = "at";
+    public static final String COMMENTS_MENTIONS = "comments_mentions";
 
 	private static final String CREATE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS " + tableName
 			+ "(_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " + UID
@@ -28,7 +32,7 @@ public class MySQLHelper extends SQLiteOpenHelper {
 			+ EXPIRES_IN + " varchar, " + SCREEN_NAME + " varchar, " + DRAFT
 			+ " varchar, " + PROFILEIMG + " blob, " + FRIENDS_TIMELINE
 			+ " varchar, " + TO_ME_COMMENTS + " varchar, " + MENTIONS
-			+ " varchar);";
+			+ " varchar, " + COMMENTS_MENTIONS + " varchar);";
 
 	public MySQLHelper(Context context, String name, CursorFactory factory,
 			int version) {
@@ -51,23 +55,15 @@ public class MySQLHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
 
-		// switch (newVersion) {
-		// case 2: {
-		// Log.e(TAG_SQL, "Version " + String.valueOf(oldVersion) + " to "
-		// + String.valueOf(newVersion));
-		// db.beginTransaction();
-		// db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + AT
-		// + " varchar;");
-		// db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN " + COMMENTS
-		// + " varchar;");
-		// db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN "
-		// + FRIENDS_TIMELINE + " varchar;");
-		// db.setTransactionSuccessful();
-		// db.endTransaction();
-		// break;
-		// }
-		// }
-
+        if(oldVersion == 2 && newVersion == 3)
+        {
+            Log.e(TAG_SQL, "Version " + String.valueOf(oldVersion) + " to " + String.valueOf(newVersion));
+            db.beginTransaction();
+            db.execSQL("ALTER TABLE " + tableName + " ADD COLUMN "
+                    + COMMENTS_MENTIONS + " varchar;");
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        }
 	}
 
 }

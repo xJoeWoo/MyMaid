@@ -146,7 +146,7 @@ public class Weibo_UserTimeLine extends Thread {
                     map.put(IS_REPOST, " ");
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
                 }
 
                 if (statuses.get(i).getThumbnailPic() != null) {

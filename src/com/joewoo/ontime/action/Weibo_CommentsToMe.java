@@ -55,12 +55,10 @@ public class Weibo_CommentsToMe extends Thread {
         this.sqlHelper = sqlHelper;
     }
 
-    public Weibo_CommentsToMe(String httpResult, MySQLHelper sqlHelper,
-                              Handler handler) {
+    public Weibo_CommentsToMe(String httpResult, Handler handler) {
         this.mHandler = handler;
         this.httpResult = httpResult;
         isProvidedResult = true;
-        this.sqlHelper = sqlHelper;
     }
 
     @Override

@@ -31,10 +31,8 @@ public class StatusesBean {
 	}
 
 	public StatusesBean getRetweetedStatus() {
-		if (retweeted_status != null)
-			return retweeted_status;
-		else
-			return null;
+
+	    return retweeted_status;
 	}
 
 	public boolean isFavorited() {

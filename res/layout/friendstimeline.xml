@@ -13,7 +13,7 @@
             android:layout_alignParentTop="true"
             android:fastScrollEnabled="true"
             android:scrollbarStyle="outsideOverlay"
-            android:background="@color/bgGrey"
+            android:overScrollMode="never"
             >
 
     </ListView>

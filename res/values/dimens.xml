@@ -4,6 +4,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="lv_retweet_rl_top_margin">22dp</dimen>
+
+    <dimen name="friends_timeline_horizontal_margin">10dp</dimen>
+    <dimen name="friends_timeline_vertical_margin">5dp</dimen>
 <!--     <dimen name="activity_horizontal_margin_ori">16dp</dimen> -->
 <!--     <dimen name="activity_vertical_margin_ori">16dp</dimen> -->
 

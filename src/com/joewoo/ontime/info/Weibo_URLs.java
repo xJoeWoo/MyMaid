@@ -30,6 +30,7 @@ public class Weibo_URLs {
     public final static String USER_TIMELINE = "https://api.weibo.com/2/statuses/user_timeline.json";
     public final static String COMMENTS_SHOW = "https://api.weibo.com/2/comments/show.json";
     public final static String STATUSES_DESTROY = "https://api.weibo.com/2/statuses/destroy.json";
-    public final static String REPOSTS_REPOST_TIMELINE = "https://api.weibo.com/2/statuses/repost_timeline.json";
+    public final static String REPOST_TIMELINE = "https://api.weibo.com/2/statuses/repost_timeline.json";
+    public final static String COMMENTS_MENTIONS = "https://api.weibo.com/2/comments/mentions.json";
 
 }

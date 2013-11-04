@@ -10,6 +10,7 @@
       <directory url="file://$USER_HOME$/Documents/GitHub/ActionBar-PullToRefresh/library/gen" includeSubdirectories="true" />
       <directory url="file://$USER_HOME$/Documents/GitHub/ActionBar-PullToRefresh/extras/actionbarcompat/gen" includeSubdirectories="true" />
       <directory url="file://$USER_HOME$/Documents/GitHub/ActionBar-PullToRefresh/samples/stock/gen" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/libs/ActionBar-PullToRefresh/library/gen" includeSubdirectories="true" />
     </excludeFromCompile>
     <resourceExtensions />
     <wildcardResourcePatterns>
