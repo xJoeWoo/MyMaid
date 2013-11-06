@@ -12,7 +12,7 @@ public class Weibo_URLs {
     public final static String USER_SHOW = "https://api.weibo.com/2/users/show.json";
 
     public final static String AUTH = "https://api.weibo.com/oauth2/authorize?client_id="
-            + Defines.APP_KEY
+            + Constants.APP_KEY
             + "&response_type=code&redirect_uri="
             + CALLBACK
             + "&display=mobile";

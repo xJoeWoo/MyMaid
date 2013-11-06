@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import com.joewoo.ontime.R;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

@@ -7,7 +7,7 @@ import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.WeiboBackBean;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
 
 import org.apache.http.HttpResponse;
@@ -23,10 +23,10 @@ import org.apache.http.util.EntityUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.joewoo.ontime.info.Defines.ACCESS_TOKEN;
-import static com.joewoo.ontime.info.Defines.GOT_UPDATE_INFO;
-import static com.joewoo.ontime.info.Defines.STATUS;
-import static com.joewoo.ontime.info.Defines.TAG;
+import static com.joewoo.ontime.info.Constants.ACCESS_TOKEN;
+import static com.joewoo.ontime.info.Constants.GOT_UPDATE_INFO;
+import static com.joewoo.ontime.info.Constants.STATUS;
+import static com.joewoo.ontime.info.Constants.TAG;
 
 public class Weibo_Update extends AsyncTask<String, Integer, String> {
 
@@ -56,7 +56,7 @@ public class Weibo_Update extends AsyncTask<String, Integer, String> {
 
         HttpPost httpRequest = new HttpPost(Weibo_URLs.UPDATE);
         List<NameValuePair> params1 = new ArrayList<NameValuePair>();
-        params1.add(new BasicNameValuePair(ACCESS_TOKEN, WeiboConstant.ACCESS_TOKEN));
+        params1.add(new BasicNameValuePair(ACCESS_TOKEN, Weibo_Constants.ACCESS_TOKEN));
         params1.add(new BasicNameValuePair(STATUS, status));
 
         try {

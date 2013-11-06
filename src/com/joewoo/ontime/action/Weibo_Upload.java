@@ -14,12 +14,12 @@ import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.WeiboBackBean;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
 import com.joewoo.ontime.tools.CustomMultipartEntity;
 import com.joewoo.ontime.tools.CustomMultipartEntity.ProgressListener;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -66,9 +66,9 @@ public class Weibo_Upload extends AsyncTask<String, Integer, String> {
         try {
             multipartContent.addPart(PIC, new FileBody(file));
             multipartContent.addPart(ACCESS_TOKEN, new StringBody(
-                    WeiboConstant.ACCESS_TOKEN));
+                    Weibo_Constants.ACCESS_TOKEN));
             multipartContent.addPart(STATUS, new StringBody(status));
-            Log.e(TAG, WeiboConstant.ACCESS_TOKEN);
+            Log.e(TAG, Weibo_Constants.ACCESS_TOKEN);
             Log.e(TAG, status);
             Log.e(TAG, file.getName());
         } catch (UnsupportedEncodingException e2) {

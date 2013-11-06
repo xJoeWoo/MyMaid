@@ -8,7 +8,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.joewoo.ontime.tools.RoundCorner;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;

@@ -2,17 +2,14 @@ package com.joewoo.ontime.tools;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcel;
-import android.text.ParcelableSpan;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.view.View;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.SingleUser;
 
-import static com.joewoo.ontime.info.Defines.SCREEN_NAME;
+import static com.joewoo.ontime.info.Constants.SCREEN_NAME;
 
 /**
  * Created by JoeWoo on 13-11-2.

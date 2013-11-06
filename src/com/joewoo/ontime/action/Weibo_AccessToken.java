@@ -1,13 +1,10 @@
 package com.joewoo.ontime.action;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -18,10 +15,10 @@ import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.WeiboBackBean;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import android.os.Handler;
 import android.util.Log;
@@ -42,7 +39,7 @@ public class Weibo_AccessToken extends Thread {
         params.add(new BasicNameValuePair("client_id", APP_KEY));
         params.add(new BasicNameValuePair("client_secret", APP_SECRET));
         params.add(new BasicNameValuePair("grant_type", "authorization_code"));
-        params.add(new BasicNameValuePair("code", WeiboConstant.AUTH_CODE));
+        params.add(new BasicNameValuePair("code", Weibo_Constants.AUTH_CODE));
         params.add(new BasicNameValuePair("redirect_uri", Weibo_URLs.CALLBACK));
         try {
             httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
@@ -52,8 +49,7 @@ public class Weibo_AccessToken extends Thread {
                 httpResult = EntityUtils.toString(httpResponse.getEntity());
                 Log.e(TAG, "GOT: " + httpResult);
 
-                Gson gson = new Gson();
-                WeiboBackBean j = gson
+                WeiboBackBean j = new Gson()
                         .fromJson(httpResult, WeiboBackBean.class);
 
                 httpClient.getConnectionManager().shutdown();

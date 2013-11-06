@@ -2,7 +2,6 @@ package com.joewoo.ontime.main;
 
 import java.util.ArrayList;
 import java.util.List;
-import static com.joewoo.ontime.info.Defines.*;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

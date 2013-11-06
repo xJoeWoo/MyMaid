@@ -1,14 +1,11 @@
 package com.joewoo.ontime.action;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -21,7 +18,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.WeiboBackBean;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
 
 public class Weibo_Repost extends Thread {
@@ -51,7 +48,7 @@ public class Weibo_Repost extends Thread {
         HttpPost httpRequest = new HttpPost(Weibo_URLs.REPOST);
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair(ACCESS_TOKEN,
-                WeiboConstant.ACCESS_TOKEN));
+                Weibo_Constants.ACCESS_TOKEN));
         params.add(new BasicNameValuePair("id", weibo_id));
         params.add(new BasicNameValuePair("status", status));
         if (is_comment) {

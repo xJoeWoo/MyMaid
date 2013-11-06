@@ -1,6 +1,6 @@
 package com.joewoo.ontime.time;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import java.util.Calendar;
 
@@ -10,9 +10,9 @@ import com.joewoo.ontime.action.Weibo_Update;
 import com.joewoo.ontime.bean.WeiboBackBean;
 import com.joewoo.ontime.bean.WeatherBean;
 import com.joewoo.ontime.info.Getup_Sentences;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.tools.Id2MidUtil;
-import com.joewoo.ontime.tools.MySQLHelper;
+import com.joewoo.ontime.tools.MyMaidSQLHelper;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -33,7 +33,7 @@ import android.widget.TextView;
 public class Getup extends Activity {
 
 	TextView tv;
-	MySQLHelper sqlHelper = new MySQLHelper(Getup.this, "MyMaid.db", null, SQL_VERSION);
+	MyMaidSQLHelper sqlHelper = new MyMaidSQLHelper(Getup.this, MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION);
 	SQLiteDatabase sql;
 	
 	@Override
@@ -52,19 +52,19 @@ public class Getup extends Activity {
 		
 		sql = sqlHelper.getWritableDatabase();
 
-		Cursor c = sql.query(sqlHelper.tableName, new String[] { sqlHelper.UID,
-				sqlHelper.ACCESS_TOKEN, 
-				sqlHelper.EXPIRES_IN},
-				sqlHelper.UID + "=?", new String[] { "3220385287" }, null, null,
+		Cursor c = sql.query(MyMaidSQLHelper.tableName, new String[] { MyMaidSQLHelper.UID,
+                MyMaidSQLHelper.ACCESS_TOKEN,
+                MyMaidSQLHelper.EXPIRES_IN},
+                MyMaidSQLHelper.UID + "=?", new String[] { "3220385287" }, null, null,
 				null);
 		
 
 		tv = (TextView) findViewById(R.id.tv_getup);
 
 		c.moveToFirst();
-		WeiboConstant.ACCESS_TOKEN = c.getString(1);
-		WeiboConstant.UID = c.getString(0);
-		WeiboConstant.EXPIRES_IN = Integer.valueOf(c.getString(2));
+		Weibo_Constants.ACCESS_TOKEN = c.getString(1);
+		Weibo_Constants.UID = c.getString(0);
+		Weibo_Constants.EXPIRES_IN = Integer.valueOf(c.getString(2));
 		
 
 		new Weather(mHandler).start();
@@ -93,7 +93,7 @@ public class Getup extends Activity {
 						public void onClick(View v) {
 							String mid = Id2MidUtil.Id2Mid(update.getId());
 							Uri link = Uri.parse("http://weibo.com/"
-									+ WeiboConstant.UID + "/" + mid);
+									+ Weibo_Constants.UID + "/" + mid);
 							startActivity(new Intent(Intent.ACTION_VIEW, link));
 						}
 					});

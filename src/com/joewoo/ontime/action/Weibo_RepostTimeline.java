@@ -4,11 +4,9 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.joewoo.ontime.bean.CommentsBean;
-import com.joewoo.ontime.bean.CommentsToMeBean;
 import com.joewoo.ontime.bean.RepostTimelineBean;
 import com.joewoo.ontime.bean.StatusesBean;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
 
 import org.apache.http.client.methods.HttpGet;
@@ -22,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 /**
  * Created by JoeWoo on 13-10-19.
@@ -55,11 +53,11 @@ public class Weibo_RepostTimeline extends Thread {
         if (max_id == null) {
 
             httpGet = new HttpGet(Weibo_URLs.REPOST_TIMELINE + "?access_token="
-                    + WeiboConstant.ACCESS_TOKEN + "&id=" + weibo_id + "&count="
+                    + Weibo_Constants.ACCESS_TOKEN + "&id=" + weibo_id + "&count="
                     + count);
         } else {
             httpGet = new HttpGet(Weibo_URLs.REPOST_TIMELINE + "?access_token="
-                    + WeiboConstant.ACCESS_TOKEN + "&id=" + weibo_id
+                    + Weibo_Constants.ACCESS_TOKEN + "&id=" + weibo_id
                     + "&max_id=" + max_id + "&count="
                     + count);
         }
@@ -80,6 +78,8 @@ public class Weibo_RepostTimeline extends Thread {
             }
 
             httpResult = baos.toString();
+            is.close();
+            baos.close();
 
             Log.e(TAG,
                     "GOT Statues length: "

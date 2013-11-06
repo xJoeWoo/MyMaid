@@ -11,17 +11,17 @@ import com.joewoo.ontime.Post;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.SingleUser;
 import com.joewoo.ontime.action.Weibo_CommentsMentions;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.singleWeibo.SingleWeibo;
 import com.joewoo.ontime.action.Weibo_Mentions;
 import com.joewoo.ontime.action.Weibo_RemindSetCount;
 import com.joewoo.ontime.action.Weibo_UnreadCount;
 import com.joewoo.ontime.bean.UnreadCountBean;
-import com.joewoo.ontime.info.WeiboConstant;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import com.joewoo.ontime.info.Weibo_AcquireCount;
-import com.joewoo.ontime.tools.MySQLHelper;
+import com.joewoo.ontime.tools.MyMaidSQLHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -53,7 +53,7 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
 
     ArrayList<HashMap<String, String>> text;
     ListView lv;
-    MySQLHelper sqlHelper;
+    MyMaidSQLHelper sqlHelper;
     SQLiteDatabase sql;
     boolean isRefreshing;
     String unreadCount;
@@ -100,15 +100,15 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        sqlHelper = new MySQLHelper(act, SQL_NAME, null, SQL_VERSION);
+        sqlHelper = new MyMaidSQLHelper(act, MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION);
         sql = sqlHelper.getReadableDatabase();
-        c = sql.query(sqlHelper.tableName, new String[]{
-                sqlHelper.MENTIONS, sqlHelper.PROFILEIMG, MySQLHelper.COMMENTS_MENTIONS}, sqlHelper.UID
-                + "=?", new String[]{WeiboConstant.UID}, null, null, null);
+        c = sql.query(MyMaidSQLHelper.tableName, new String[]{
+                MyMaidSQLHelper.MENTIONS, MyMaidSQLHelper.PROFILEIMG, MyMaidSQLHelper.COMMENTS_MENTIONS}, sqlHelper.UID
+                + "=?", new String[]{Weibo_Constants.UID}, null, null, null);
 
-        setLv(sqlHelper.MENTIONS);
+        setLv(MyMaidSQLHelper.MENTIONS);
 
-        profileImg = c.getBlob(c.getColumnIndex(sqlHelper.PROFILEIMG));
+        profileImg = c.getBlob(c.getColumnIndex(MyMaidSQLHelper.PROFILEIMG));
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -127,39 +127,8 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int arg2, long arg3) {
                 if (isNormalMention) {
-                    Intent i = new Intent();
-                    i.setClass(act, SingleWeibo.class);
-
-                    HashMap<String, String> map = text.get(arg2);
-
-                    i.putExtra(SCREEN_NAME, map.get(SCREEN_NAME));
-                    i.putExtra(CREATED_AT, map.get(CREATED_AT));
-                    i.putExtra(TEXT, map.get(TEXT));
-                    i.putExtra(PROFILE_IMAGE_URL, map.get(PROFILE_IMAGE_URL));
-                    i.putExtra(IS_REPOST, map.get(IS_REPOST));
-                    i.putExtra(RETWEETED_STATUS_SCREEN_NAME,
-                            map.get(RETWEETED_STATUS_SCREEN_NAME));
-                    i.putExtra(RETWEETED_STATUS, map.get(RETWEETED_STATUS));
-                    i.putExtra(RETWEETED_STATUS_COMMENTS_COUNT,
-                            map.get(RETWEETED_STATUS_COMMENTS_COUNT));
-                    i.putExtra(RETWEETED_STATUS_REPOSTS_COUNT,
-                            map.get(RETWEETED_STATUS_REPOSTS_COUNT));
-                    i.putExtra(RETWEETED_STATUS_SOURCE,
-                            map.get(RETWEETED_STATUS_SOURCE));
-                    i.putExtra(RETWEETED_STATUS_CREATED_AT,
-                            map.get(RETWEETED_STATUS_CREATED_AT));
-                    i.putExtra(RETWEETED_STATUS_THUMBNAIL_PIC,
-                            map.get(RETWEETED_STATUS_THUMBNAIL_PIC));
-                    i.putExtra(COMMENTS_COUNT, map.get(COMMENTS_COUNT));
-                    i.putExtra(REPOSTS_COUNT, map.get(REPOSTS_COUNT));
-                    i.putExtra(SOURCE, map.get(SOURCE));
-                    i.putExtra(WEIBO_ID, map.get(WEIBO_ID));
-                    i.putExtra(RETWEETED_STATUS_BMIDDLE_PIC,
-                            map.get(RETWEETED_STATUS_BMIDDLE_PIC));
-                    i.putExtra(BMIDDLE_PIC, map.get(BMIDDLE_PIC));
-                    i.putExtra(UID, map.get(UID));
-                    i.putExtra(RETWEETED_STATUS_UID, map.get(RETWEETED_STATUS_UID));
-
+                    Intent i = new Intent(act, SingleWeibo.class);
+                    i.putExtra(SINGLE_WEIBO_MAP, text.get(arg2));
                     startActivity(i);
                 } else {
 
@@ -223,13 +192,13 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
                         switch (i) {
                             case 0: {
                                 isNormalMention = true;
-                                setLv(sqlHelper.MENTIONS);
+                                setLv(MyMaidSQLHelper.MENTIONS);
 //                            refreshMentions();
                                 break;
                             }
                             case 1: {
                                 isNormalMention = false;
-                                setLv(sqlHelper.COMMENTS_MENTIONS);
+                                setLv(MyMaidSQLHelper.COMMENTS_MENTIONS);
 //                            refreshCommentsMentions();
                                 break;
                             }
@@ -239,7 +208,7 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
                 break;
             }
             case MENU_PROFILE_IMAGE: {
-                if (WeiboConstant.UID.equals("1665287983")) {
+                if (Weibo_Constants.UID.equals("1665287983")) {
                     Intent i = new Intent();
                     i.setClass(act, SingleUser.class);
                     i.putExtra(UID, "1893689251");
@@ -394,17 +363,17 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
 
             try {
                 if (!c.getString(c.getColumnIndex(column)).equals("")) {
-                    if (column.equals(sqlHelper.MENTIONS)) {
+                    if (column.equals(MyMaidSQLHelper.MENTIONS)) {
                         new Weibo_Mentions(
-                                c.getString(c.getColumnIndex(MySQLHelper.MENTIONS)), mHandler).start();
-                    } else if (column.equals(sqlHelper.COMMENTS_MENTIONS)) {
+                                c.getString(c.getColumnIndex(MyMaidSQLHelper.MENTIONS)), mHandler).start();
+                    } else if (column.equals(MyMaidSQLHelper.COMMENTS_MENTIONS)) {
                         new Weibo_CommentsMentions(
-                                c.getString(c.getColumnIndex(MySQLHelper.COMMENTS_MENTIONS)), mHandler).start();
+                                c.getString(c.getColumnIndex(MyMaidSQLHelper.COMMENTS_MENTIONS)), mHandler).start();
                     }
                 } else {
-                    if (column.equals(sqlHelper.MENTIONS)) {
+                    if (column.equals(MyMaidSQLHelper.MENTIONS)) {
                         refreshMentions();
-                    } else if (column.equals(sqlHelper.COMMENTS_MENTIONS)) {
+                    } else if (column.equals(MyMaidSQLHelper.COMMENTS_MENTIONS)) {
                         refreshCommentsMentions();
                     }
                 }

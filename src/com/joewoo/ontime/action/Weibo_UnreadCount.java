@@ -1,6 +1,6 @@
 package com.joewoo.ontime.action;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -8,7 +8,7 @@ import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.UnreadCountBean;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
 
 import android.os.Handler;
@@ -27,7 +27,7 @@ public class Weibo_UnreadCount extends Thread {
         Log.e(TAG, "Unread Count Thread START");
 
         HttpGet httpGet = new HttpGet(Weibo_URLs.UNREAD_COUNT + "?access_token="
-                + WeiboConstant.ACCESS_TOKEN + "&uid=" + WeiboConstant.UID);
+                + Weibo_Constants.ACCESS_TOKEN + "&uid=" + Weibo_Constants.UID);
 
         try {
             httpResult = EntityUtils.toString(new DefaultHttpClient().execute(

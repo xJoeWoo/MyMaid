@@ -20,13 +20,14 @@ import android.widget.Toast;
 
 import com.joewoo.ontime.Comment_Repost;
 import com.joewoo.ontime.R;
+import com.joewoo.ontime.SingleUser;
 import com.joewoo.ontime.action.Weibo_CommentsShow;
 import com.joewoo.ontime.info.Weibo_AcquireCount;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 
 public class Frag_SingleWeibo_Comments extends Fragment {
@@ -36,6 +37,8 @@ public class Frag_SingleWeibo_Comments extends Fragment {
     private String weibo_id;
     private ProgressBar pb;
     private TextView tv;
+
+    private ArrayList<HashMap<String, String>> text;
 
     public void showComments(String weibo_id){
         this.weibo_id = weibo_id;
@@ -61,6 +64,29 @@ public class Frag_SingleWeibo_Comments extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 
         act = getActivity();
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                                    long arg3) {
+                Intent i = new Intent(act, Comment_Repost.class);
+                i.putExtra(IS_REPLY, true);
+                i.putExtra(WEIBO_ID, text.get(arg2).get(WEIBO_ID));
+                i.putExtra(COMMENT_ID, text.get(arg2).get(COMMENT_ID));
+                startActivity(i);
+            }
+        });
+
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                           int arg2, long arg3) {
+                Intent i = new Intent(act, SingleUser.class);
+                i.putExtra(SCREEN_NAME, text.get(arg2).get(SCREEN_NAME));
+                startActivity(i);
+                return false;
+            }
+        });
 	}
 
 	@Override
@@ -89,7 +115,7 @@ public class Frag_SingleWeibo_Comments extends Fragment {
             switch (msg.what) {
                 case GOT_COMMNETS_SHOW_INFO: {
 
-                    final ArrayList<HashMap<String, String>> text = (ArrayList<HashMap<String, String>>) msg.obj;
+                    text = (ArrayList<HashMap<String, String>>) msg.obj;
 
                     String[] from = { SCREEN_NAME, TEXT };
                     int[] to = { R.id.comments_show_screen_name,

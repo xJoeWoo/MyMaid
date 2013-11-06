@@ -9,9 +9,6 @@ import android.text.style.ClickableSpan;
 import android.view.View;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.SingleUser;
-
-import static com.joewoo.ontime.info.Defines.SCREEN_NAME;
 
 /**
  * Created by JoeWoo on 13-11-2.

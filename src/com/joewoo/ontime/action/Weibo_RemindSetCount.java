@@ -1,6 +1,6 @@
 package com.joewoo.ontime.action;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.WeiboBackBean;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
 
 import android.os.AsyncTask;
@@ -26,10 +26,10 @@ public class Weibo_RemindSetCount extends AsyncTask<String, Integer, String> {
 
     private Handler mHandler;
 
-    public final static String setCommentsCount = SET_COMMENTS_COUNT;
-    public final static String setMentionsCount = SET_COMMENTS_COUNT;
-    public final static String setCommentMentionsCount = SET_COMMENTS_COUNT;
-    public final static String setFollowersCount = SET_COMMENTS_COUNT;
+    public final static String setCommentsCount = "cmt";
+    public final static String setMentionsCount = "mention_status";
+    public final static String setCommentMentionsCount = "mention_cmt";
+    public final static String setFollowersCount = "follower";
 
     public Weibo_RemindSetCount(Handler handler) {
         this.mHandler = handler;
@@ -44,7 +44,7 @@ public class Weibo_RemindSetCount extends AsyncTask<String, Integer, String> {
 
         HttpPost httpRequest = new HttpPost(Weibo_URLs.SET_REMIND_COUNT);
         List<NameValuePair> p = new ArrayList<NameValuePair>();
-        p.add(new BasicNameValuePair(ACCESS_TOKEN, WeiboConstant.ACCESS_TOKEN));
+        p.add(new BasicNameValuePair(ACCESS_TOKEN, Weibo_Constants.ACCESS_TOKEN));
         p.add(new BasicNameValuePair("type", params[0]));
 
         try {

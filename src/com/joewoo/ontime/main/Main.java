@@ -16,18 +16,16 @@ import android.widget.Toast;
 
 import com.joewoo.ontime.Login;
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.info.WeiboConstant;
-import com.joewoo.ontime.tools.MySQLHelper;
+import com.joewoo.ontime.info.Weibo_Constants;
+import com.joewoo.ontime.tools.MyMaidSQLHelper;
 
 import java.util.Locale;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 
-import static com.joewoo.ontime.info.Defines.LASTUID;
-import static com.joewoo.ontime.info.Defines.PREFERENCES;
-import static com.joewoo.ontime.info.Defines.SQL_NAME;
-import static com.joewoo.ontime.info.Defines.SQL_VERSION;
-import static com.joewoo.ontime.info.Defines.TAG;
+import static com.joewoo.ontime.info.Constants.LASTUID;
+import static com.joewoo.ontime.info.Constants.PREFERENCES;
+import static com.joewoo.ontime.info.Constants.TAG;
 
 public class Main extends FragmentActivity {
 
@@ -39,8 +37,8 @@ public class Main extends FragmentActivity {
 
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
-	MySQLHelper sqlHelper = new MySQLHelper(Main.this,
-			SQL_NAME, null, SQL_VERSION);
+	MyMaidSQLHelper sqlHelper = new MyMaidSQLHelper(Main.this,
+            MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION);
 	SQLiteDatabase sql;
 	Cursor c;
 
@@ -60,10 +58,10 @@ public class Main extends FragmentActivity {
 
 			String lastUid = preferences.getString(LASTUID, null);
 
-			c = sql.query(sqlHelper.tableName, new String[] { sqlHelper.UID,
-					sqlHelper.ACCESS_TOKEN, sqlHelper.LOCATION,
-					sqlHelper.EXPIRES_IN, sqlHelper.SCREEN_NAME,
-					sqlHelper.DRAFT }, sqlHelper.UID + "=?",
+			c = sql.query(MyMaidSQLHelper.tableName, new String[] { MyMaidSQLHelper.UID,
+                    MyMaidSQLHelper.ACCESS_TOKEN, MyMaidSQLHelper.LOCATION,
+                    MyMaidSQLHelper.EXPIRES_IN, MyMaidSQLHelper.SCREEN_NAME,
+                    MyMaidSQLHelper.DRAFT }, MyMaidSQLHelper.UID + "=?",
 					new String[] { lastUid }, null, null, null);
 
 			if (!loadConstant(c)) {
@@ -160,9 +158,9 @@ public class Main extends FragmentActivity {
 	// protected void onResume() {
 	// super.onResume();
 	// if (loadConstant(c))
-	// Log.e(TAG, "Reload WeiboConstant succeed");
+	// Log.e(TAG, "Reload Weibo_Constants succeed");
 	// else
-	// Log.e(TAG, "Reload WeiboConstant failed");
+	// Log.e(TAG, "Reload Weibo_Constants failed");
 	// }
 
 	ActionBar.TabListener tabListener = new ActionBar.TabListener() {
@@ -176,6 +174,7 @@ public class Main extends FragmentActivity {
 		@Override
 		public void onTabSelected(Tab tab, android.app.FragmentTransaction ft) {
 			mViewPager.setCurrentItem(tab.getPosition());
+//            setListViewToTop(tab.getPosition());
 		}
 
 		@Override
@@ -184,6 +183,15 @@ public class Main extends FragmentActivity {
 
 		}
 	};
+
+    public void setListViewToTop(int position){
+        switch (position){
+        case 1:{
+            mSectionsPagerAdapter.getFriendsTimeLineFrag().setListViewToTop();
+            break;
+        }
+        }
+    }
 
 	public PullToRefreshAttacher getPullToRefreshAttacher() {
 		return mPullToRefreshAttacher;
@@ -200,15 +208,15 @@ public class Main extends FragmentActivity {
 
 	private boolean loadConstant(Cursor c) {
 		if (c.moveToFirst()) {
-			WeiboConstant.UID = c.getString(c.getColumnIndex(sqlHelper.UID));
-			WeiboConstant.ACCESS_TOKEN = c.getString(c
-					.getColumnIndex(sqlHelper.ACCESS_TOKEN));
-			WeiboConstant.LOCATION = c.getString(c
-					.getColumnIndex(sqlHelper.LOCATION));
-			WeiboConstant.EXPIRES_IN = Integer.valueOf(c.getString(c
-					.getColumnIndex(sqlHelper.EXPIRES_IN)));
-			WeiboConstant.SCREEN_NAME = c.getString(c
-					.getColumnIndex(sqlHelper.SCREEN_NAME));
+			Weibo_Constants.UID = c.getString(c.getColumnIndex(MyMaidSQLHelper.UID));
+			Weibo_Constants.ACCESS_TOKEN = c.getString(c
+					.getColumnIndex(MyMaidSQLHelper.ACCESS_TOKEN));
+			Weibo_Constants.LOCATION = c.getString(c
+					.getColumnIndex(MyMaidSQLHelper.LOCATION));
+			Weibo_Constants.EXPIRES_IN = Integer.valueOf(c.getString(c
+					.getColumnIndex(MyMaidSQLHelper.EXPIRES_IN)));
+			Weibo_Constants.SCREEN_NAME = c.getString(c
+					.getColumnIndex(MyMaidSQLHelper.SCREEN_NAME));
 			return true;
 		} else
 			return false;

@@ -2,7 +2,7 @@ package com.joewoo.ontime.action;
 
 import java.io.IOException;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;

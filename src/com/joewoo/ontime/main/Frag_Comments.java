@@ -1,6 +1,6 @@
 package com.joewoo.ontime.main;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,9 +16,9 @@ import com.joewoo.ontime.action.Weibo_CommentsToMe;
 import com.joewoo.ontime.action.Weibo_RemindSetCount;
 import com.joewoo.ontime.action.Weibo_UnreadCount;
 import com.joewoo.ontime.bean.UnreadCountBean;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_AcquireCount;
-import com.joewoo.ontime.tools.MySQLHelper;
+import com.joewoo.ontime.tools.MyMaidSQLHelper;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
@@ -48,7 +48,7 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
     ArrayList<HashMap<String, String>> text;
     ListView lv;
     boolean isRefreshing;
-    MySQLHelper sqlHelper;
+    MyMaidSQLHelper sqlHelper;
     SQLiteDatabase sql;
     String unreadCount;
     private PullToRefreshAttacher mPullToRefreshAttacher;
@@ -85,18 +85,18 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        sqlHelper = new MySQLHelper(act, SQL_NAME, null, SQL_VERSION);
+        sqlHelper = new MyMaidSQLHelper(act, MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION);
         sql = sqlHelper.getReadableDatabase();
-        Cursor c = sql.query(sqlHelper.tableName, new String[]{
-                sqlHelper.TO_ME_COMMENTS, sqlHelper.PROFILEIMG}, sqlHelper.UID
-                + "=?", new String[]{WeiboConstant.UID}, null, null, null);
+        Cursor c = sql.query(MyMaidSQLHelper.tableName, new String[]{
+                MyMaidSQLHelper.TO_ME_COMMENTS, MyMaidSQLHelper.PROFILEIMG}, MyMaidSQLHelper.UID
+                + "=?", new String[]{Weibo_Constants.UID}, null, null, null);
 
         if (c != null && c.moveToFirst()) {
-            profileImg = c.getBlob(c.getColumnIndex(sqlHelper.PROFILEIMG));
+            profileImg = c.getBlob(c.getColumnIndex(MyMaidSQLHelper.PROFILEIMG));
             try {
-                if (!c.getString(c.getColumnIndex(sqlHelper.TO_ME_COMMENTS)).equals(""))
+                if (!c.getString(c.getColumnIndex(MyMaidSQLHelper.TO_ME_COMMENTS)).equals(""))
                     new Weibo_CommentsToMe(c.getString(c
-                            .getColumnIndex(sqlHelper.TO_ME_COMMENTS)), mHandler).start();
+                            .getColumnIndex(MyMaidSQLHelper.TO_ME_COMMENTS)), mHandler).start();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -110,8 +110,7 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                                     long arg3) {
-                Intent i = new Intent();
-                i.setClass(act, Comment_Repost.class);
+                Intent i = new Intent(act, Comment_Repost.class);
                 i.putExtra(IS_REPLY, true);
                 i.putExtra(WEIBO_ID, text.get(arg2).get(WEIBO_ID));
                 i.putExtra(COMMENT_ID, text.get(arg2).get(COMMENT_ID));
@@ -124,8 +123,7 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int arg2, long arg3) {
 
-                Intent i = new Intent();
-                i.setClass(act, SingleUser.class);
+                Intent i = new Intent(act, SingleUser.class);
                 i.putExtra(SCREEN_NAME, text.get(arg2).get(SCREEN_NAME));
                 startActivity(i);
 
@@ -182,7 +180,7 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
                 break;
             }
             case MENU_PROFILE_IMAGE: {
-                if (WeiboConstant.UID.equals("1665287983")) {
+                if (Weibo_Constants.UID.equals("1665287983")) {
                     Intent i = new Intent();
                     i.setClass(act, SingleUser.class);
                     i.putExtra(UID, "1739275793");

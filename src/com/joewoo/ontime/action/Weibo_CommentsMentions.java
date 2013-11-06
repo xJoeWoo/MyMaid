@@ -8,9 +8,9 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.CommentsBean;
 import com.joewoo.ontime.bean.CommentsMentionsBean;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
-import com.joewoo.ontime.tools.MySQLHelper;
+import com.joewoo.ontime.tools.MyMaidSQLHelper;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -23,31 +23,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
-import static com.joewoo.ontime.info.Defines.BMIDDLE_PIC;
-import static com.joewoo.ontime.info.Defines.COMMENTS_COUNT;
-import static com.joewoo.ontime.info.Defines.COMMENT_ID;
-import static com.joewoo.ontime.info.Defines.CREATED_AT;
-import static com.joewoo.ontime.info.Defines.GOT_COMMENTS_MENTIONS_INFO;
-import static com.joewoo.ontime.info.Defines.GOT_COMMENTS_MENTIONS_INFO_FAIL;
-import static com.joewoo.ontime.info.Defines.HAVE_PIC;
-import static com.joewoo.ontime.info.Defines.IS_REPOST;
-import static com.joewoo.ontime.info.Defines.PROFILE_IMAGE_URL;
-import static com.joewoo.ontime.info.Defines.REPOSTS_COUNT;
-import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS;
-import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS_BMIDDLE_PIC;
-import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS_COMMENTS_COUNT;
-import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS_CREATED_AT;
-import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS_REPOSTS_COUNT;
-import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS_SCREEN_NAME;
-import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS_UID;
-import static com.joewoo.ontime.info.Defines.SCREEN_NAME;
-import static com.joewoo.ontime.info.Defines.SOURCE;
-import static com.joewoo.ontime.info.Defines.STATUS_TEXT;
-import static com.joewoo.ontime.info.Defines.STATUS_USER_SCREEN_NAME;
-import static com.joewoo.ontime.info.Defines.TAG;
-import static com.joewoo.ontime.info.Defines.TAG_SQL;
-import static com.joewoo.ontime.info.Defines.TEXT;
-import static com.joewoo.ontime.info.Defines.WEIBO_ID;
+import static com.joewoo.ontime.info.Constants.COMMENTS_COUNT;
+import static com.joewoo.ontime.info.Constants.COMMENT_ID;
+import static com.joewoo.ontime.info.Constants.CREATED_AT;
+import static com.joewoo.ontime.info.Constants.GOT_COMMENTS_MENTIONS_INFO;
+import static com.joewoo.ontime.info.Constants.GOT_COMMENTS_MENTIONS_INFO_FAIL;
+import static com.joewoo.ontime.info.Constants.HAVE_PIC;
+import static com.joewoo.ontime.info.Constants.IS_REPOST;
+import static com.joewoo.ontime.info.Constants.REPOSTS_COUNT;
+import static com.joewoo.ontime.info.Constants.RETWEETED_STATUS;
+import static com.joewoo.ontime.info.Constants.RETWEETED_STATUS_BMIDDLE_PIC;
+import static com.joewoo.ontime.info.Constants.RETWEETED_STATUS_CREATED_AT;
+import static com.joewoo.ontime.info.Constants.RETWEETED_STATUS_SCREEN_NAME;
+import static com.joewoo.ontime.info.Constants.SCREEN_NAME;
+import static com.joewoo.ontime.info.Constants.SOURCE;
+import static com.joewoo.ontime.info.Constants.TAG;
+import static com.joewoo.ontime.info.Constants.TEXT;
+import static com.joewoo.ontime.info.Constants.WEIBO_ID;
 
 /**
  * Created by JoeWoo on 13-10-26.
@@ -59,7 +51,7 @@ public class Weibo_CommentsMentions extends Thread {
     private Handler mHandler;
     public boolean isProvidedResult = false;
     private String httpResult = "{ \"error_code\" : \"233\" }";
-    private MySQLHelper sqlHelper;
+    private MyMaidSQLHelper sqlHelper;
     private String max_id;
 
     public Weibo_CommentsMentions(int count, Handler handler) {
@@ -67,7 +59,7 @@ public class Weibo_CommentsMentions extends Thread {
         this.mHandler = handler;
     }
 
-    public Weibo_CommentsMentions(int count, MySQLHelper sqlHelper, Handler handler) {
+    public Weibo_CommentsMentions(int count, MyMaidSQLHelper sqlHelper, Handler handler) {
         this.count = String.valueOf(count);
         this.mHandler = handler;
         this.sqlHelper = sqlHelper;
@@ -88,11 +80,11 @@ public class Weibo_CommentsMentions extends Thread {
             if (max_id == null) {
 
                 httpGet = new HttpGet(Weibo_URLs.COMMENTS_MENTIONS + "?access_token="
-                        + WeiboConstant.ACCESS_TOKEN + "&count="
+                        + Weibo_Constants.ACCESS_TOKEN + "&count="
                         + count);
             } else {
                 httpGet = new HttpGet(Weibo_URLs.COMMENTS_MENTIONS + "?access_token="
-                        + WeiboConstant.ACCESS_TOKEN + "&max_id=" + max_id + "&count="
+                        + Weibo_Constants.ACCESS_TOKEN + "&max_id=" + max_id + "&count="
                         + count);
             }
 
@@ -113,6 +105,8 @@ public class Weibo_CommentsMentions extends Thread {
                 }
 
                 httpResult = baos.toString();
+                is.close();
+                baos.close();
 
                 Log.e(TAG,
                         "GOT Statues length: "
@@ -174,10 +168,10 @@ public class Weibo_CommentsMentions extends Thread {
                     SQLiteDatabase sql = sqlHelper.getWritableDatabase();
 
                     ContentValues cv = new ContentValues();
-                    cv.put(sqlHelper.COMMENTS_MENTIONS, httpResult);
-                    if (sql.update(sqlHelper.tableName, cv, sqlHelper.UID + "='"
-                            + WeiboConstant.UID + "'", null) != 0) {
-                        Log.e(TAG_SQL, "Saved Comments Mentions httpResult");
+                    cv.put(MyMaidSQLHelper.COMMENTS_MENTIONS, httpResult);
+                    if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"
+                            + Weibo_Constants.UID + "'", null) != 0) {
+                        Log.e(MyMaidSQLHelper.TAG_SQL, "Saved Comments Mentions httpResult");
                     }
                 }
 

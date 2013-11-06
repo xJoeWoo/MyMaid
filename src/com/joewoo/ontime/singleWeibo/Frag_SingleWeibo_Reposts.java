@@ -24,12 +24,12 @@ import com.joewoo.ontime.info.Weibo_AcquireCount;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.joewoo.ontime.info.Defines.GOT_REPOST_TIMELINE_INFO;
-import static com.joewoo.ontime.info.Defines.GOT_REPOST_TIMELINE_INFO_FAIL;
-import static com.joewoo.ontime.info.Defines.IS_COMMENT;
-import static com.joewoo.ontime.info.Defines.SCREEN_NAME;
-import static com.joewoo.ontime.info.Defines.TEXT;
-import static com.joewoo.ontime.info.Defines.WEIBO_ID;
+import static com.joewoo.ontime.info.Constants.GOT_REPOST_TIMELINE_INFO;
+import static com.joewoo.ontime.info.Constants.GOT_REPOST_TIMELINE_INFO_FAIL;
+import static com.joewoo.ontime.info.Constants.IS_COMMENT;
+import static com.joewoo.ontime.info.Constants.SCREEN_NAME;
+import static com.joewoo.ontime.info.Constants.TEXT;
+import static com.joewoo.ontime.info.Constants.WEIBO_ID;
 
 
 public class Frag_SingleWeibo_Reposts extends Fragment {

@@ -1,6 +1,6 @@
 package com.joewoo.ontime.action;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -16,7 +16,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.CommentsBean;
 import com.joewoo.ontime.bean.CommentsToMeBean;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
 
 import android.os.Handler;
@@ -51,11 +51,11 @@ public class Weibo_CommentsShow extends Thread {
         if (max_id == null) {
 
             httpGet = new HttpGet(Weibo_URLs.COMMENTS_SHOW + "?access_token="
-                    + WeiboConstant.ACCESS_TOKEN + "&id=" + weibo_id + "&count="
+                    + Weibo_Constants.ACCESS_TOKEN + "&id=" + weibo_id + "&count="
                     + count);
         } else {
             httpGet = new HttpGet(Weibo_URLs.COMMENTS_SHOW + "?access_token="
-                    + WeiboConstant.ACCESS_TOKEN + "&id=" + weibo_id
+                    + Weibo_Constants.ACCESS_TOKEN + "&id=" + weibo_id
                     + "&max_id=" + max_id + "&count="
                     + count);
         }

@@ -1,6 +1,6 @@
 package com.joewoo.ontime.info;
 
-public class WeiboConstant {
+public class Weibo_Constants {
 	
 	public static String AUTH_CODE;
 	public static String ACCESS_TOKEN;

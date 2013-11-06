@@ -1,6 +1,6 @@
 package com.joewoo.ontime.action;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -16,9 +16,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.FriendsTimelineBean;
 import com.joewoo.ontime.bean.StatusesBean;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
-import com.joewoo.ontime.tools.MySQLHelper;
+import com.joewoo.ontime.tools.MyMaidSQLHelper;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
@@ -31,7 +31,7 @@ public class Weibo_FriendsTimeLine extends Thread {
     private Handler mHandler;
     public boolean isProvidedResult = false;
     private String httpResult = "{ \"error_code\" : \"233\" }";
-    private MySQLHelper sqlHelper;
+    private MyMaidSQLHelper sqlHelper;
     private String max_id = null;
 
     public Weibo_FriendsTimeLine(int count, Handler handler) {
@@ -45,7 +45,7 @@ public class Weibo_FriendsTimeLine extends Thread {
         this.max_id = max_id;
     }
 
-    public Weibo_FriendsTimeLine(int count, MySQLHelper sqlHelper,
+    public Weibo_FriendsTimeLine(int count, MyMaidSQLHelper sqlHelper,
                                  Handler handler) {
         this.count = String.valueOf(count);
         this.mHandler = handler;
@@ -67,10 +67,10 @@ public class Weibo_FriendsTimeLine extends Thread {
 
             if (max_id == null) {
                 httpGet = new HttpGet(Weibo_URLs.FRIENDS_TIMELINE + "?access_token="
-                        + WeiboConstant.ACCESS_TOKEN + "&count=" + count);
+                        + Weibo_Constants.ACCESS_TOKEN + "&count=" + count);
             } else {
                 httpGet = new HttpGet(Weibo_URLs.FRIENDS_TIMELINE + "?access_token="
-                        + WeiboConstant.ACCESS_TOKEN + "&count=" + count
+                        + Weibo_Constants.ACCESS_TOKEN + "&count=" + count
                         + "&max_id=" + max_id);
             }
 
@@ -91,6 +91,8 @@ public class Weibo_FriendsTimeLine extends Thread {
                 }
 
                 httpResult = baos.toString();
+                is.close();
+                baos.close();
 
                 Log.e(TAG,
                         "GOT Statues length: "
@@ -192,10 +194,10 @@ public class Weibo_FriendsTimeLine extends Thread {
                 SQLiteDatabase sql = sqlHelper.getWritableDatabase();
 
                 ContentValues cv = new ContentValues();
-                cv.put(sqlHelper.FRIENDS_TIMELINE, httpResult);
-                if (sql.update(sqlHelper.tableName, cv, sqlHelper.UID + "='"
-                        + WeiboConstant.UID + "'", null) != 0) {
-                    Log.e(TAG_SQL, "Saved httpResult");
+                cv.put(MyMaidSQLHelper.FRIENDS_TIMELINE, httpResult);
+                if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"
+                        + Weibo_Constants.UID + "'", null) != 0) {
+                    Log.e(MyMaidSQLHelper.TAG_SQL, "Saved httpResult");
                 }
             }
 

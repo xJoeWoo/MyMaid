@@ -1,6 +1,6 @@
 package com.joewoo.ontime.action;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.WeiboBackBean;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
 
 import android.os.Handler;
@@ -38,7 +38,7 @@ public class Weibo_FavoritesCreate extends Thread {
         HttpPost httpRequest = new HttpPost(Weibo_URLs.FAVOURITE_CREATE);
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair(ACCESS_TOKEN,
-                WeiboConstant.ACCESS_TOKEN));
+                Weibo_Constants.ACCESS_TOKEN));
         params.add(new BasicNameValuePair("id", weibo_id));
 
         try {

@@ -1,6 +1,6 @@
 package com.joewoo.ontime;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import com.joewoo.ontime.action.Weibo_CommentCreate;
 import com.joewoo.ontime.action.Weibo_Reply;

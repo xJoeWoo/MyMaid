@@ -1,6 +1,6 @@
 package com.joewoo.ontime.action;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -16,7 +16,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.StatusesBean;
 import com.joewoo.ontime.bean.UserTimelineBean;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
 
 import android.os.Handler;
@@ -45,11 +45,11 @@ public class Weibo_UserTimeLine extends Thread {
 
         if (!isUid)
             httpGet = new HttpGet(Weibo_URLs.USER_TIMELINE + "?access_token="
-                    + WeiboConstant.ACCESS_TOKEN + "&screen_name="
+                    + Weibo_Constants.ACCESS_TOKEN + "&screen_name="
                     + screenNameOfUid + "&count=" + count);
         else
             httpGet = new HttpGet(Weibo_URLs.USER_TIMELINE + "?access_token="
-                    + WeiboConstant.ACCESS_TOKEN + "&uid=" + screenNameOfUid
+                    + Weibo_Constants.ACCESS_TOKEN + "&uid=" + screenNameOfUid
                     + "&count=" + count);
 
         httpGet.addHeader("Accept-Encoding", "gzip");
@@ -63,12 +63,14 @@ public class Weibo_UserTimeLine extends Thread {
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-            int ii = -1;
-            while ((ii = is.read()) != -1) {
-                baos.write(ii);
+            int i = -1;
+            while ((i = is.read()) != -1) {
+                baos.write(i);
             }
 
             httpResult = baos.toString();
+            is.close();
+            baos.close();
 
             Log.e(TAG,
                     "GOT Statues length: "

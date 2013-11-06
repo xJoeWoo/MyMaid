@@ -1,6 +1,6 @@
 package com.joewoo.ontime;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +31,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-@SuppressLint("NewApi")
 public class SingleUser extends Activity {
 
 	private ListView lv;
@@ -77,42 +76,8 @@ public class SingleUser extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				Intent i = new Intent();
-				i.setClass(SingleUser.this, SingleWeibo.class);
-				// i.putExtra(IS_COMMENT, true);
-				// i.putExtra(WEIBO_ID, text.get(arg2).get(WEIBO_ID));
-
-				HashMap<String, String> map = text.get(arg2);
-
-				i.putExtra(SCREEN_NAME, map.get(SCREEN_NAME));
-				i.putExtra(CREATED_AT, map.get(CREATED_AT));
-				i.putExtra(TEXT, map.get(TEXT));
-				i.putExtra(PROFILE_IMAGE_URL, map.get(PROFILE_IMAGE_URL));
-				i.putExtra(IS_REPOST, map.get(IS_REPOST));
-				i.putExtra(RETWEETED_STATUS_SCREEN_NAME,
-						map.get(RETWEETED_STATUS_SCREEN_NAME));
-				i.putExtra(RETWEETED_STATUS, map.get(RETWEETED_STATUS));
-				i.putExtra(RETWEETED_STATUS_COMMENTS_COUNT,
-						map.get(RETWEETED_STATUS_COMMENTS_COUNT));
-				i.putExtra(RETWEETED_STATUS_REPOSTS_COUNT,
-						map.get(RETWEETED_STATUS_REPOSTS_COUNT));
-				i.putExtra(RETWEETED_STATUS_SOURCE,
-						map.get(RETWEETED_STATUS_SOURCE));
-				i.putExtra(RETWEETED_STATUS_CREATED_AT,
-						map.get(RETWEETED_STATUS_CREATED_AT));
-				i.putExtra(RETWEETED_STATUS_THUMBNAIL_PIC,
-						map.get(RETWEETED_STATUS_THUMBNAIL_PIC));
-				i.putExtra(COMMENTS_COUNT, map.get(COMMENTS_COUNT));
-				i.putExtra(REPOSTS_COUNT, map.get(REPOSTS_COUNT));
-				i.putExtra(SOURCE, map.get(SOURCE));
-				i.putExtra(WEIBO_ID, map.get(WEIBO_ID));
-				i.putExtra(RETWEETED_STATUS_BMIDDLE_PIC,
-						map.get(RETWEETED_STATUS_BMIDDLE_PIC));
-				i.putExtra(BMIDDLE_PIC, map.get(BMIDDLE_PIC));
-				i.putExtra(UID, map.get(UID));
-				i.putExtra(RETWEETED_STATUS_UID, map.get(RETWEETED_STATUS_UID));
-				i.putExtra(USER_WEIBO, "yep");
-
+				Intent i = new Intent(SingleUser.this, SingleWeibo.class);
+                i.putExtra(SINGLE_WEIBO_MAP, text.get(arg2));
 				startActivity(i);
 			}
 		});

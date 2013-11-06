@@ -1,6 +1,6 @@
 package com.joewoo.ontime.main;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,12 +14,12 @@ import com.joewoo.ontime.Post;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.SingleUser;
 import com.joewoo.ontime.info.Weibo_AcquireCount;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.singleWeibo.SingleWeibo;
 import com.joewoo.ontime.action.Weibo_FriendsTimeLine;
-import com.joewoo.ontime.info.WeiboConstant;
 import com.joewoo.ontime.tools.Id2MidUtil;
 import com.joewoo.ontime.tools.MyMaidAdapter;
-import com.joewoo.ontime.tools.MySQLHelper;
+import com.joewoo.ontime.tools.MyMaidSQLHelper;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -55,7 +55,7 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 
     ArrayList<HashMap<String, String>> text;
     ListView lv;
-    MySQLHelper sqlHelper;
+    MyMaidSQLHelper sqlHelper;
     SQLiteDatabase sql;
     boolean isRefreshing = true;
     MyMaidAdapter mAdapter;
@@ -91,20 +91,20 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        sqlHelper = new MySQLHelper(act, SQL_NAME, null, SQL_VERSION);
+        sqlHelper = new MyMaidSQLHelper(act, MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION);
         sql = sqlHelper.getReadableDatabase();
-        Cursor c = sql.query(sqlHelper.tableName, new String[]{
-                sqlHelper.FRIENDS_TIMELINE, sqlHelper.PROFILEIMG},
-                sqlHelper.UID + "=?", new String[]{WeiboConstant.UID}, null,
+        Cursor c = sql.query(MyMaidSQLHelper.tableName, new String[]{
+                MyMaidSQLHelper.FRIENDS_TIMELINE, MyMaidSQLHelper.PROFILEIMG},
+                MyMaidSQLHelper.UID + "=?", new String[]{Weibo_Constants.UID}, null,
                 null, null);
 
         if (c != null && c.moveToFirst()) {
-            profileImg = c.getBlob(c.getColumnIndex(sqlHelper.PROFILEIMG));
+            profileImg = c.getBlob(c.getColumnIndex(MyMaidSQLHelper.PROFILEIMG));
             try {
                 if (!c.getString(c
-                        .getColumnIndex(sqlHelper.FRIENDS_TIMELINE)).equals(""))
+                        .getColumnIndex(MyMaidSQLHelper.FRIENDS_TIMELINE)).equals(""))
                     new Weibo_FriendsTimeLine(c.getString(c
-                            .getColumnIndex(sqlHelper.FRIENDS_TIMELINE)), mHandler).start();
+                            .getColumnIndex(MyMaidSQLHelper.FRIENDS_TIMELINE)), mHandler).start();
 
             } catch (Exception e) {
                 refreshFriendsTimeLine();
@@ -118,42 +118,8 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                                     long arg3) {
-                Intent i = new Intent();
-//				i.setClass(act, SingleWeibo.class);
-                i.setClass(act, SingleWeibo.class);
-                // i.putExtra(IS_COMMENT, true);
-                // i.putExtra(WEIBO_ID, text.get(arg2).get(WEIBO_ID));
-
-                HashMap<String, String> map = text.get(arg2);
-
-                i.putExtra(SCREEN_NAME, map.get(SCREEN_NAME));
-                i.putExtra(CREATED_AT, map.get(CREATED_AT));
-                i.putExtra(TEXT, map.get(TEXT));
-                i.putExtra(PROFILE_IMAGE_URL, map.get(PROFILE_IMAGE_URL));
-                i.putExtra(IS_REPOST, map.get(IS_REPOST));
-                i.putExtra(RETWEETED_STATUS_SCREEN_NAME,
-                        map.get(RETWEETED_STATUS_SCREEN_NAME));
-                i.putExtra(RETWEETED_STATUS, map.get(RETWEETED_STATUS));
-                i.putExtra(RETWEETED_STATUS_COMMENTS_COUNT,
-                        map.get(RETWEETED_STATUS_COMMENTS_COUNT));
-                i.putExtra(RETWEETED_STATUS_REPOSTS_COUNT,
-                        map.get(RETWEETED_STATUS_REPOSTS_COUNT));
-                i.putExtra(RETWEETED_STATUS_SOURCE,
-                        map.get(RETWEETED_STATUS_SOURCE));
-                i.putExtra(RETWEETED_STATUS_CREATED_AT,
-                        map.get(RETWEETED_STATUS_CREATED_AT));
-                i.putExtra(RETWEETED_STATUS_THUMBNAIL_PIC,
-                        map.get(RETWEETED_STATUS_THUMBNAIL_PIC));
-                i.putExtra(COMMENTS_COUNT, map.get(COMMENTS_COUNT));
-                i.putExtra(REPOSTS_COUNT, map.get(REPOSTS_COUNT));
-                i.putExtra(SOURCE, map.get(SOURCE));
-                i.putExtra(WEIBO_ID, map.get(WEIBO_ID));
-                i.putExtra(RETWEETED_STATUS_BMIDDLE_PIC,
-                        map.get(RETWEETED_STATUS_BMIDDLE_PIC));
-                i.putExtra(BMIDDLE_PIC, map.get(BMIDDLE_PIC));
-                i.putExtra(UID, map.get(UID));
-                i.putExtra(RETWEETED_STATUS_UID, map.get(RETWEETED_STATUS_UID));
-
+                Intent i = new Intent(act, SingleWeibo.class);
+                i.putExtra(SINGLE_WEIBO_MAP, text.get(arg2));
                 startActivity(i);
             }
         });
@@ -233,7 +199,7 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
         }
 
         menu.add(0, MENU_UNREAD_COUNT, 0,
-                WeiboConstant.SCREEN_NAME.toUpperCase(Locale.US))
+                Weibo_Constants.SCREEN_NAME.toUpperCase(Locale.US))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(0, MENU_POST, 0, R.string.menu_post)
@@ -259,10 +225,10 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
             }
             case MENU_PROFILE_IMAGE: {
 
-                Cursor cursor = sql.query(sqlHelper.tableName, new String[]{
-                        sqlHelper.UID, sqlHelper.SCREEN_NAME}, null, null, null,
+                Cursor cursor = sql.query(MyMaidSQLHelper.tableName, new String[]{
+                        MyMaidSQLHelper.UID, MyMaidSQLHelper.SCREEN_NAME}, null, null, null,
                         null, null);
-                Log.e(TAG_SQL, "Queried users");
+                Log.e(MyMaidSQLHelper.TAG_SQL, "Queried users");
 
                 if (cursor.getCount() > 0) {
                     final String[] singleUid = new String[cursor.getCount() + 2];
@@ -342,11 +308,11 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
                                                                 editor.commit();
 
                                                                 if (sql.delete(
-                                                                        sqlHelper.tableName,
-                                                                        sqlHelper.UID
+                                                                        MyMaidSQLHelper.tableName,
+                                                                        MyMaidSQLHelper.UID
                                                                                 + "=?",
-                                                                        new String[]{WeiboConstant.UID}) > 0) {
-                                                                    Log.e(TAG_SQL,
+                                                                        new String[]{Weibo_Constants.UID}) > 0) {
+                                                                    Log.e(MyMaidSQLHelper.TAG_SQL,
                                                                             "LOGOUT - Cleared user info");
 
                                                                     Toast.makeText(
@@ -384,7 +350,7 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
                             case 0: {
                                 Intent it = new Intent();
                                 it.setClass(act, SingleUser.class);
-                                it.putExtra(SCREEN_NAME, WeiboConstant.SCREEN_NAME);
+                                it.putExtra(SCREEN_NAME, Weibo_Constants.SCREEN_NAME);
                                 startActivity(it);
                                 break;
                             }
@@ -453,5 +419,11 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
         new Weibo_FriendsTimeLine(Weibo_AcquireCount.FRIENDS_TIMELINE_COUNT, sqlHelper, mHandler).start();
         isRefreshing = true;
         mPullToRefreshAttacher.setRefreshing(true);
+    }
+
+    public void setListViewToTop()
+    {
+        if(lv != null)
+            lv.smoothScrollToPosition(0);
     }
 }

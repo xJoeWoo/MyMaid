@@ -13,10 +13,10 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.WeiboBackBean;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 public class Weibo_UserShow extends Thread {
 
@@ -42,13 +42,13 @@ public class Weibo_UserShow extends Thread {
 
         if (screenNameOrUid == null)
             httpGet = new HttpGet(Weibo_URLs.USER_SHOW + "?access_token="
-                    + WeiboConstant.ACCESS_TOKEN + "&uid=" + WeiboConstant.UID);
+                    + Weibo_Constants.ACCESS_TOKEN + "&uid=" + Weibo_Constants.UID);
         else if (!isUid)
             httpGet = new HttpGet(Weibo_URLs.USER_SHOW + "?access_token="
-                    + WeiboConstant.ACCESS_TOKEN + "&screen_name=" + screenNameOrUid);
+                    + Weibo_Constants.ACCESS_TOKEN + "&screen_name=" + screenNameOrUid);
         else
             httpGet = new HttpGet(Weibo_URLs.USER_SHOW + "?access_token="
-                    + WeiboConstant.ACCESS_TOKEN + "&uid=" + screenNameOrUid);
+                    + Weibo_Constants.ACCESS_TOKEN + "&uid=" + screenNameOrUid);
 
         httpGet.addHeader("Accept-Encoding", "gzip");
         try {
@@ -68,6 +68,8 @@ public class Weibo_UserShow extends Thread {
             }
 
             httpResult = baos.toString();
+            is.close();
+            baos.close();
 
             Gson gson = new Gson();
             WeiboBackBean show = gson.fromJson(httpResult, WeiboBackBean.class);

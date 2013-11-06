@@ -17,11 +17,12 @@ import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.Weibo_FavoritesCreate;
 import com.joewoo.ontime.action.Weibo_StatusesDestroy;
 import com.joewoo.ontime.bean.WeiboBackBean;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 
+import java.util.HashMap;
 import java.util.Locale;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 
 /**
@@ -35,6 +36,7 @@ public class SingleWeibo extends FragmentActivity {
     private long downTime;
     private boolean isShowedComments = false;
     private boolean isShowedReposts = false;
+    HashMap<String, String> map;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,7 @@ public class SingleWeibo extends FragmentActivity {
         setContentView(R.layout.singelweibo);
 
         i = getIntent();
+        map = (HashMap<String, String>)i.getSerializableExtra(SINGLE_WEIBO_MAP);
 
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -55,8 +58,8 @@ public class SingleWeibo extends FragmentActivity {
 
         String titleRepost = getResources().getString(R.string.title_frag_single_weibo_reposts).toUpperCase(Locale.US);
         String titleComment = getResources().getString(R.string.title_frag_single_weibo_comments).toUpperCase(Locale.US);
-        String repostCount = i.getStringExtra(REPOSTS_COUNT);
-        String commentsCount = i.getStringExtra(COMMENTS_COUNT);
+        String repostCount = map.get(REPOSTS_COUNT);
+        String commentsCount = map.get(COMMENTS_COUNT);
 
         if (Locale.getDefault().getLanguage().equals("en")) {
             if (!repostCount.equals("1"))
@@ -101,7 +104,7 @@ public class SingleWeibo extends FragmentActivity {
                             case SingleWeiboPagerAdapter.FRAG_SINGLEWEIBOCOMMENTS_POS: {
 
                                 if (!isShowedComments)
-                                    mSectionsPagerAdapter.getSingleWeiboCommentsFrag().showComments(i.getStringExtra(WEIBO_ID));
+                                    mSectionsPagerAdapter.getSingleWeiboCommentsFrag().showComments(map.get(WEIBO_ID));
                                 isShowedComments = true;
 
                                 break;
@@ -109,7 +112,7 @@ public class SingleWeibo extends FragmentActivity {
                             case SingleWeiboPagerAdapter.FRAG_SINGLEWEIBOREPOSTS_POS: {
 
                                 if (!isShowedReposts)
-                                    mSectionsPagerAdapter.getSingleWeiboRepostsFrag().showReposts(i.getStringExtra(WEIBO_ID));
+                                    mSectionsPagerAdapter.getSingleWeiboRepostsFrag().showReposts(map.get(WEIBO_ID));
                                 isShowedReposts = true;
                                 break;
                             }
@@ -170,7 +173,7 @@ public class SingleWeibo extends FragmentActivity {
 
         menu.clear();
 
-        if (i.getStringExtra(SCREEN_NAME).equals(WeiboConstant.SCREEN_NAME)) {
+        if (map.get(SCREEN_NAME).equals(Weibo_Constants.SCREEN_NAME)) {
             menu.add(0, MENU_STATUSES_DESTROY, 0, R.string.menu_delete)
                     .setIcon(R.drawable.content_discard)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -202,11 +205,11 @@ public class SingleWeibo extends FragmentActivity {
             case MENU_REPOST: {
                 Intent it = new Intent();
                 it.setClass(SingleWeibo.this, Comment_Repost.class);
-                if (i.getStringExtra(IS_REPOST) != null)
-                    it.putExtra(TEXT, "//@" + i.getStringExtra(SCREEN_NAME) + ":"
-                            + i.getStringExtra(TEXT));
+                if (map.get(IS_REPOST) != null)
+                    it.putExtra(TEXT, "//@" + map.get(SCREEN_NAME) + ":"
+                            + map.get(TEXT));
                 it.putExtra(IS_REPOST, true);
-                it.putExtra(WEIBO_ID, i.getStringExtra(WEIBO_ID));
+                it.putExtra(WEIBO_ID, map.get(WEIBO_ID));
                 startActivity(it);
                 break;
             }
@@ -214,12 +217,12 @@ public class SingleWeibo extends FragmentActivity {
                 Intent it = new Intent();
                 it.setClass(SingleWeibo.this, Comment_Repost.class);
                 it.putExtra(IS_COMMENT, true);
-                it.putExtra(WEIBO_ID, i.getStringExtra(WEIBO_ID));
+                it.putExtra(WEIBO_ID, map.get(WEIBO_ID));
                 startActivity(it);
                 break;
             }
             case MENU_FAVOURITE_CREATE: {
-                new Weibo_FavoritesCreate(i.getStringExtra(WEIBO_ID), mHandler)
+                new Weibo_FavoritesCreate(map.get(WEIBO_ID), mHandler)
                         .start();
                 setProgressBarIndeterminateVisibility(true);
                 break;
@@ -231,7 +234,7 @@ public class SingleWeibo extends FragmentActivity {
                             Toast.LENGTH_SHORT).show();
                     downTime = System.currentTimeMillis();
                 } else {
-                    new Weibo_StatusesDestroy(i.getStringExtra(WEIBO_ID), mHandler)
+                    new Weibo_StatusesDestroy(map.get(WEIBO_ID), mHandler)
                             .start();
                     setProgressBarIndeterminateVisibility(true);
                 }
@@ -244,6 +247,10 @@ public class SingleWeibo extends FragmentActivity {
 
     public Intent getSingleWeiboIntent() {
         return i;
+    }
+
+    public HashMap<String, String> getSingleWeiboMap() {
+        return map;
     }
 
     ActionBar.TabListener tabListener = new ActionBar.TabListener() {

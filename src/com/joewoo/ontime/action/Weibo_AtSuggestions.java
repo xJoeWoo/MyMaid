@@ -1,12 +1,10 @@
 package com.joewoo.ontime.action;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -15,7 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.bean.AtSuggestionBean;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
 
 import android.content.Context;
@@ -40,7 +38,7 @@ public class Weibo_AtSuggestions extends Thread {
         String httpResult = "{ \"error_code\" : \"233\" }";
 
         HttpGet httpGet = new HttpGet(Weibo_URLs.AT_SUGGESTIONS + "?access_token="
-                + WeiboConstant.ACCESS_TOKEN + "&q=" + user + "&type=0");
+                + Weibo_Constants.ACCESS_TOKEN + "&q=" + user + "&type=0");
 
         try {
 

@@ -20,39 +20,42 @@ import com.joewoo.ontime.action.Weibo_DownloadPic;
 import com.joewoo.ontime.tools.NoUnderlineURLSpan;
 import com.joewoo.ontime.tools.UserSpan;
 
-import static com.joewoo.ontime.info.Defines.BMIDDLE_PIC;
-import static com.joewoo.ontime.info.Defines.CREATED_AT;
-import static com.joewoo.ontime.info.Defines.IS_REPOST;
-import static com.joewoo.ontime.info.Defines.PROFILE_IMAGE_URL;
-import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS;
-import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS_BMIDDLE_PIC;
-import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS_CREATED_AT;
-import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS_SCREEN_NAME;
-import static com.joewoo.ontime.info.Defines.RETWEETED_STATUS_SOURCE;
-import static com.joewoo.ontime.info.Defines.SCREEN_NAME;
-import static com.joewoo.ontime.info.Defines.SOURCE;
-import static com.joewoo.ontime.info.Defines.TAG;
-import static com.joewoo.ontime.info.Defines.TEXT;
-import static com.joewoo.ontime.info.Defines.USER_WEIBO;
+import java.util.HashMap;
+
+import static com.joewoo.ontime.info.Constants.BMIDDLE_PIC;
+import static com.joewoo.ontime.info.Constants.CREATED_AT;
+import static com.joewoo.ontime.info.Constants.IS_REPOST;
+import static com.joewoo.ontime.info.Constants.PROFILE_IMAGE_URL;
+import static com.joewoo.ontime.info.Constants.RETWEETED_STATUS;
+import static com.joewoo.ontime.info.Constants.RETWEETED_STATUS_BMIDDLE_PIC;
+import static com.joewoo.ontime.info.Constants.RETWEETED_STATUS_CREATED_AT;
+import static com.joewoo.ontime.info.Constants.RETWEETED_STATUS_SCREEN_NAME;
+import static com.joewoo.ontime.info.Constants.RETWEETED_STATUS_SOURCE;
+import static com.joewoo.ontime.info.Constants.SCREEN_NAME;
+import static com.joewoo.ontime.info.Constants.SOURCE;
+import static com.joewoo.ontime.info.Constants.TAG;
+import static com.joewoo.ontime.info.Constants.TEXT;
+import static com.joewoo.ontime.info.Constants.USER_WEIBO;
 
 public class Frag_SingleWeibo extends Fragment {
 
-    private Intent i;
-
+    private HashMap<String, String> map;
+    
     private Activity act;
 
-    TextView tv_screen_name;
-    TextView tv_created_at;
-    TextView tv_source;
-    TextView tv_text;
-    TextView tv_rt_rl;
-    TextView tv_rt_screen_name;
-    TextView tv_rt_text;
-    TextView tv_rt_source;
-    TextView tv_rt_created_at;
-    ImageView iv_image;
-    ImageView iv_rt_image;
-    ImageView iv_profile_image;
+    private TextView tv_screen_name;
+    private TextView tv_created_at;
+    private TextView tv_source;
+    private TextView tv_text;
+    private TextView tv_rt_rl;
+    private TextView tv_rt_screen_name;
+    private TextView tv_rt_text;
+    private TextView tv_rt_source;
+    private TextView tv_rt_created_at;
+    private ImageView iv_image;
+    private ImageView iv_rt_image;
+    private ImageView iv_profile_image;
+
     Weibo_DownloadPic dp;
 
     public Frag_SingleWeibo() {
@@ -76,20 +79,20 @@ public class Frag_SingleWeibo extends Fragment {
 
         act = getActivity();
 
-        i = ((SingleWeibo) act).getSingleWeiboIntent();
+        map = ((SingleWeibo) act).getSingleWeiboMap();
 
-        tv_screen_name.setText(i.getStringExtra(SCREEN_NAME));
-        tv_created_at.setText(" · " + i.getStringExtra(CREATED_AT));
+        tv_screen_name.setText(map.get(SCREEN_NAME));
+        tv_created_at.setText(" · " + map.get(CREATED_AT));
 
-        tv_text.setText(checkMentionsURL(i.getStringExtra(TEXT)));
+        tv_text.setText(checkMentionsURL(map.get(TEXT)));
         tv_text.setMovementMethod(LinkMovementMethod.getInstance());
 
-//        new Weibo_CommentsShow(i.getStringExtra(WEIBO_ID), mHandler).start();
+//        new Weibo_CommentsShow(map.get(WEIBO_ID), mHandler).start();
 
-        tv_source.setText(i.getStringExtra(SOURCE));
+        tv_source.setText(map.get(SOURCE));
 
 
-        if (i.getStringExtra(IS_REPOST) == null) {
+        if (map.get(IS_REPOST) == null) {
             tv_rt_rl.setVisibility(View.GONE);
             tv_rt_screen_name.setVisibility(View.GONE);
             tv_rt_created_at.setVisibility(View.GONE);
@@ -97,49 +100,49 @@ public class Frag_SingleWeibo extends Fragment {
             tv_rt_source.setVisibility(View.GONE);
             iv_rt_image.setVisibility(View.GONE);
         } else {
-            if (i.getStringExtra(RETWEETED_STATUS_BMIDDLE_PIC) == null)
+            if (map.get(RETWEETED_STATUS_BMIDDLE_PIC) == null)
                 iv_rt_image.setVisibility(View.GONE);
             else {
-                new Weibo_DownloadPic(iv_rt_image, tv_rt_rl, true, act).execute(i
-                        .getStringExtra(RETWEETED_STATUS_BMIDDLE_PIC));
+                new Weibo_DownloadPic(iv_rt_image, tv_rt_rl, true, act).execute(map
+                        .get(RETWEETED_STATUS_BMIDDLE_PIC));
 
             }
-            tv_rt_screen_name.setText(i
-                    .getStringExtra(RETWEETED_STATUS_SCREEN_NAME));
-            tv_rt_created_at.setText(" · " + i
-                    .getStringExtra(RETWEETED_STATUS_CREATED_AT));
+            tv_rt_screen_name.setText(map
+                    .get(RETWEETED_STATUS_SCREEN_NAME));
+            tv_rt_created_at.setText(" · " + map
+                    .get(RETWEETED_STATUS_CREATED_AT));
 
-            tv_rt_text.setText(checkMentionsURL(i.getStringExtra(RETWEETED_STATUS)));
+            tv_rt_text.setText(checkMentionsURL(map.get(RETWEETED_STATUS)));
             tv_rt_text.setMovementMethod(LinkMovementMethod.getInstance());
 
-            tv_rt_source.setText(i.getStringExtra(RETWEETED_STATUS_SOURCE));
+            tv_rt_source.setText(map.get(RETWEETED_STATUS_SOURCE));
 
 
-            if (i.getStringExtra(USER_WEIBO) == null) {
+            if (map.get(USER_WEIBO) == null) {
                 tv_rt_screen_name.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        jumpToRetweetedUser(i);
+                        jumpToRetweetedUser(map.get(RETWEETED_STATUS_SCREEN_NAME));
                     }
                 });
                 tv_rt_source.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        jumpToRetweetedUser(i);
+                        jumpToRetweetedUser(map.get(RETWEETED_STATUS_SCREEN_NAME));
                     }
                 });
                 tv_rt_created_at.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        jumpToRetweetedUser(i);
+                        jumpToRetweetedUser(map.get(RETWEETED_STATUS_SCREEN_NAME));
                     }
                 });
             }
 
         }
 
-        if (i.getStringExtra(BMIDDLE_PIC) == null) {
-            if (i.getStringExtra(RETWEETED_STATUS_BMIDDLE_PIC) == null) {
+        if (map.get(BMIDDLE_PIC) == null) {
+            if (map.get(RETWEETED_STATUS_BMIDDLE_PIC) == null) {
                 ViewGroup.LayoutParams lp = tv_rt_rl.getLayoutParams();
                 lp.width = 10000;
                 tv_rt_rl.setLayoutParams(lp);
@@ -148,7 +151,7 @@ public class Frag_SingleWeibo extends Fragment {
         } else {
 
             dp = new Weibo_DownloadPic(iv_image, tv_rt_rl, false, act);
-            dp.execute(i.getStringExtra(BMIDDLE_PIC));
+            dp.execute(map.get(BMIDDLE_PIC));
 
         }
 
@@ -156,29 +159,29 @@ public class Frag_SingleWeibo extends Fragment {
 
             @Override
             public void onClick(View v) {
-                new Weibo_DownloadPic(iv_profile_image).execute(i
-                        .getStringExtra(PROFILE_IMAGE_URL));
+                new Weibo_DownloadPic(iv_profile_image).execute(map
+                        .get(PROFILE_IMAGE_URL));
                 iv_profile_image.setClickable(false);
             }
         });
 
-        if (i.getStringExtra(USER_WEIBO) == null) {
+        if (map.get(USER_WEIBO) == null) {
             tv_screen_name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    jumpToSingleUser(i);
+                    jumpToSingleUser(map.get(SCREEN_NAME));
                 }
             });
             tv_created_at.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    jumpToSingleUser(i);
+                    jumpToSingleUser(map.get(SCREEN_NAME));
                 }
             });
             tv_source.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    jumpToSingleUser(i);
+                    jumpToSingleUser(map.get(SCREEN_NAME));
                 }
             });
         }
@@ -194,14 +197,14 @@ public class Frag_SingleWeibo extends Fragment {
 
                 if (strarray[i] == '@') {
                     StringBuilder sb = new StringBuilder();
-                    for (int j = i + 1; j < str.length(); j++) {
+                    for (int j = i + 1; j < str.length() + 1; j++) {
                         if (strarray[j] != ' ' && strarray[j] != ':'
                                 && strarray[j] != '/' && strarray[j] != '…'
                                 && strarray[j] != '。' && strarray[j] != '，'
                                 && strarray[j] != '@' && strarray[j] != '：'
                                 && strarray[j] != '\0' && strarray[j] != '（'
                                 && strarray[j] != '！' && strarray[j] != '.'
-                                && strarray[j] != ',') {
+                                && strarray[j] != ',' && strarray[j] != '）') {
                             sb.append(strarray[j]);
                         } else {
                             Log.e(TAG, "@" + sb.toString());
@@ -222,11 +225,10 @@ public class Frag_SingleWeibo extends Fragment {
                         if (strarray[j] != '#') {
                             sb.append(strarray[j]);
                         } else {
-                            Log.e(TAG, "#" + sb.toString() + "#");
+                            Log.e(TAG, sb.toString());
 
                             ss.setSpan(new NoUnderlineURLSpan(sb.toString(), act), i, j + 1,
                                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
 
                             i = j + 1;
                             break;
@@ -235,9 +237,8 @@ public class Frag_SingleWeibo extends Fragment {
                 }
 
 
-                if (strarray[i] == 'h' && strarray[i + 1] == 't'
-                        && strarray[i + 2] == 't' && strarray[i + 3] == 'p'
-                        && strarray[i + 4] == ':') {
+                if (strarray[i] == 'h' && strarray[i + 4] == ':'
+                        && strarray[i + 5] == '/') {
                     StringBuilder sb = new StringBuilder("http://t.cn/");
 
                     int j;
@@ -249,9 +250,6 @@ public class Frag_SingleWeibo extends Fragment {
                             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     Log.e(TAG, "HTTP URL - " + sb.toString());
                     i = j;
-
-                    break;
-
 
                 }
             }
@@ -285,18 +283,15 @@ public class Frag_SingleWeibo extends Fragment {
         iv_profile_image = (ImageView) v.findViewById(R.id.frag_single_weibo_profile_image);
     }
 
-    void jumpToSingleUser(Intent i) {
-        Intent it = new Intent();
-        it.setClass(act, SingleUser.class);
-        it.putExtra(SCREEN_NAME, i.getStringExtra(SCREEN_NAME));
+    void jumpToSingleUser(String screenName) {
+        Intent it = new Intent(act, SingleUser.class);
+        it.putExtra(SCREEN_NAME, screenName);
         startActivity(it);
     }
 
-    void jumpToRetweetedUser(Intent i) {
-        Intent it = new Intent();
-        it.setClass(act, SingleUser.class);
-        // it.putExtra(UID, i.getStringExtra(UID));
-        it.putExtra(SCREEN_NAME, i.getStringExtra(RETWEETED_STATUS_SCREEN_NAME));
+    void jumpToRetweetedUser(String retweetedScreenName) {
+        Intent it = new Intent(act, SingleUser.class);
+        it.putExtra(SCREEN_NAME, retweetedScreenName);
         startActivity(it);
     }
 

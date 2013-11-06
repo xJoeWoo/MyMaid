@@ -4,12 +4,12 @@ import com.joewoo.ontime.action.Weibo_AccessToken;
 import com.joewoo.ontime.action.Weibo_ProfileImage;
 import com.joewoo.ontime.action.Weibo_UserShow;
 import com.joewoo.ontime.bean.WeiboBackBean;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
 import com.joewoo.ontime.main.Main;
-import com.joewoo.ontime.info.WeiboConstant;
-import com.joewoo.ontime.tools.MySQLHelper;
+import com.joewoo.ontime.tools.MyMaidSQLHelper;
 
-import static com.joewoo.ontime.info.Defines.*;
+import static com.joewoo.ontime.info.Constants.*;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,8 +40,8 @@ public class Login extends Activity {
 
 	public static Login _instance = null;
 
-	private MySQLHelper sqlHelper = new MySQLHelper(Login.this, SQL_NAME, null,
-			SQL_VERSION);
+	private MyMaidSQLHelper sqlHelper = new MyMaidSQLHelper(Login.this, MyMaidSQLHelper.SQL_NAME, null,
+            MyMaidSQLHelper.SQL_VERSION);
 	private SQLiteDatabase sql;
 
 	@Override
@@ -71,13 +71,13 @@ public class Login extends Activity {
 				if (url.startsWith(Weibo_URLs.CALLBACK)) {
 					view.cancelLongPress();
 					view.stopLoading();
-					WeiboConstant.AUTH_CODE = url.substring(url.indexOf("=") + 1);
-					Log.e(TAG, "Auth Code: " + WeiboConstant.AUTH_CODE);
+					Weibo_Constants.AUTH_CODE = url.substring(url.indexOf("=") + 1);
+					Log.e(TAG, "Auth Code: " + Weibo_Constants.AUTH_CODE);
 					new Weibo_AccessToken(mHandler).start();
 				}
 //				super.onPageStarted(view, url, favicon);
 			}
-			
+
 			@Override
 			public void onPageFinished(WebView view, String url) {
 				Log.e(TAG, "onPageFinished");
@@ -85,8 +85,8 @@ public class Login extends Activity {
 //				super.onPageFinished(view, url);
 			}
 		});
-		
-		
+
+
 
 	}
 
@@ -97,14 +97,14 @@ public class Login extends Activity {
 			switch (msg.what) {
 			case GOT_ACCESS_TOKEN: {
 				WeiboBackBean token = (WeiboBackBean) msg.obj;
-				WeiboConstant.ACCESS_TOKEN = token.getAccessToken();
-				WeiboConstant.UID = token.getUid();
-				WeiboConstant.EXPIRES_IN = token.getExpiresIn();
+				Weibo_Constants.ACCESS_TOKEN = token.getAccessToken();
+				Weibo_Constants.UID = token.getUid();
+				Weibo_Constants.EXPIRES_IN = token.getExpiresIn();
 
 				// SimpleDateFormat sdf = new SimpleDateFormat("dd天 HH:MM:SS");
 				// sdf.setTimeZone(TimeZone.getTimeZone("GMT+00:00"));
 				// tv_login_code.setText("Access Token - "
-				// + WeiboConstant.ACCESS_TOKEN + "\n剩余时间 - "
+				// + Weibo_Constants.ACCESS_TOKEN + "\n剩余时间 - "
 				// + sdf.format(token.getExpiresIn() * 1000) + "\nUid - "
 				// + token.getUid());
 
@@ -118,8 +118,8 @@ public class Login extends Activity {
 			case GOT_SHOW_INFO: {
 				WeiboBackBean show = (WeiboBackBean) msg.obj;
 
-				WeiboConstant.SCREEN_NAME = show.getScreenName();
-				WeiboConstant.LOCATION = show.getLocation();
+				Weibo_Constants.SCREEN_NAME = show.getScreenName();
+				Weibo_Constants.LOCATION = show.getLocation();
 
 				new Weibo_ProfileImage(show.getProfileImageUrl(), mHandler)
 						.start();
@@ -128,64 +128,64 @@ public class Login extends Activity {
 			}
 			case GOT_PROFILEIMG_INFO: {
 
-				Cursor c = sql.query(sqlHelper.tableName, new String[] {
-						sqlHelper.UID, sqlHelper.ACCESS_TOKEN,
-						sqlHelper.LOCATION, sqlHelper.EXPIRES_IN,
-						sqlHelper.SCREEN_NAME }, sqlHelper.UID + "=?",
-						new String[] { WeiboConstant.UID }, null, null, null);
+				Cursor c = sql.query(MyMaidSQLHelper.tableName, new String[] {
+                        MyMaidSQLHelper.UID, MyMaidSQLHelper.ACCESS_TOKEN,
+						MyMaidSQLHelper.LOCATION, MyMaidSQLHelper.EXPIRES_IN,
+						MyMaidSQLHelper.SCREEN_NAME }, MyMaidSQLHelper.UID + "=?",
+						new String[] { Weibo_Constants.UID }, null, null, null);
 
 				ContentValues cv = new ContentValues();
 
-				cv.put(sqlHelper.ACCESS_TOKEN, WeiboConstant.ACCESS_TOKEN);
-				cv.put(sqlHelper.LOCATION, WeiboConstant.LOCATION);
-				cv.put(sqlHelper.SCREEN_NAME, WeiboConstant.SCREEN_NAME);
-				cv.put(sqlHelper.EXPIRES_IN, WeiboConstant.EXPIRES_IN);
-				cv.put(sqlHelper.PROFILEIMG, (byte[]) msg.obj);
+				cv.put(MyMaidSQLHelper.ACCESS_TOKEN, Weibo_Constants.ACCESS_TOKEN);
+				cv.put(MyMaidSQLHelper.LOCATION, Weibo_Constants.LOCATION);
+				cv.put(MyMaidSQLHelper.SCREEN_NAME, Weibo_Constants.SCREEN_NAME);
+				cv.put(MyMaidSQLHelper.EXPIRES_IN, Weibo_Constants.EXPIRES_IN);
+				cv.put(MyMaidSQLHelper.PROFILEIMG, (byte[]) msg.obj);
 
 				if (c.getCount() > 0)// 查询到已经存在UID（已经登录）
 				{
 
-					Log.e(TAG_SQL, "Got login info");
+					Log.e(MyMaidSQLHelper.TAG_SQL, "Got login info");
 
-					if (sql.update(sqlHelper.tableName, cv, sqlHelper.UID
-							+ "='" + WeiboConstant.UID + "'", null) != 0) {
-						Log.e(TAG_SQL, "SQL login info Updated");
+					if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID
+							+ "='" + Weibo_Constants.UID + "'", null) != 0) {
+						Log.e(MyMaidSQLHelper.TAG_SQL, "SQL login info Updated");
 					}
 
 					c.moveToFirst();
-					Log.e(TAG_SQL, sqlHelper.UID + c.getString(0));
-					Log.e(TAG_SQL, sqlHelper.ACCESS_TOKEN + c.getString(1));
-					Log.e(TAG_SQL, sqlHelper.LOCATION + c.getString(2));
-					Log.e(TAG_SQL, sqlHelper.EXPIRES_IN + c.getString(3));
-					Log.e(TAG_SQL, sqlHelper.SCREEN_NAME + c.getString(4));
+					Log.e(MyMaidSQLHelper.TAG_SQL, MyMaidSQLHelper.UID + c.getString(0));
+					Log.e(MyMaidSQLHelper.TAG_SQL, MyMaidSQLHelper.ACCESS_TOKEN + c.getString(1));
+					Log.e(MyMaidSQLHelper.TAG_SQL, MyMaidSQLHelper.LOCATION + c.getString(2));
+					Log.e(MyMaidSQLHelper.TAG_SQL, MyMaidSQLHelper.EXPIRES_IN + c.getString(3));
+					Log.e(MyMaidSQLHelper.TAG_SQL, MyMaidSQLHelper.SCREEN_NAME + c.getString(4));
 
 				} else {// 否则插入登录信息
 
-					cv.put(sqlHelper.UID, WeiboConstant.UID);
+					cv.put(MyMaidSQLHelper.UID, Weibo_Constants.UID);
 
-					sql.insert(sqlHelper.tableName, null, cv);
+					sql.insert(MyMaidSQLHelper.tableName, null, cv);
 
-					Cursor cursor = sql.query(sqlHelper.tableName, null, null,
+					Cursor cursor = sql.query(MyMaidSQLHelper.tableName, null, null,
 							null, null, null, null);
-					Log.e(TAG_SQL, "Inserted");
-					Log.e(TAG_SQL, "Display all data:");
+					Log.e(MyMaidSQLHelper.TAG_SQL, "Inserted");
+					Log.e(MyMaidSQLHelper.TAG_SQL, "Display all data:");
 					for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
 							.moveToNext()) {
-						Log.e(TAG_SQL, "No. " + cursor.getInt(0));
-						Log.e(TAG_SQL, sqlHelper.UID + cursor.getString(1));
-						Log.e(TAG_SQL,
-								sqlHelper.ACCESS_TOKEN + cursor.getString(2));
-						Log.e(TAG_SQL, sqlHelper.LOCATION + cursor.getString(3));
-						Log.e(TAG_SQL,
-								sqlHelper.EXPIRES_IN + cursor.getString(4));
-						Log.e(TAG_SQL,
-								sqlHelper.SCREEN_NAME + cursor.getString(5));
-						Log.e(TAG_SQL, LOG_DEVIDER);
+						Log.e(MyMaidSQLHelper.TAG_SQL, "No. " + cursor.getInt(0));
+						Log.e(MyMaidSQLHelper.TAG_SQL, MyMaidSQLHelper.UID + cursor.getString(1));
+						Log.e(MyMaidSQLHelper.TAG_SQL,
+								MyMaidSQLHelper.ACCESS_TOKEN + cursor.getString(2));
+						Log.e(MyMaidSQLHelper.TAG_SQL, MyMaidSQLHelper.LOCATION + cursor.getString(3));
+						Log.e(MyMaidSQLHelper.TAG_SQL,
+								MyMaidSQLHelper.EXPIRES_IN + cursor.getString(4));
+						Log.e(MyMaidSQLHelper.TAG_SQL,
+								MyMaidSQLHelper.SCREEN_NAME + cursor.getString(5));
+						Log.e(MyMaidSQLHelper.TAG_SQL, LOG_DEVIDER);
 					}
 
 				}
 
-				uidsE.putString(LASTUID, WeiboConstant.UID);
+				uidsE.putString(LASTUID, Weibo_Constants.UID);
 				uidsE.commit();
 				setProgressBarIndeterminateVisibility(false);
 //				Start._instance.finish();

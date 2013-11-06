@@ -1,12 +1,8 @@
 package com.joewoo.ontime.info;
 
-public class Defines {
+public class Constants {
 
-	public final static String SET_COMMENTS_COUNT = "cmt";
-	public final static String SET_DM_COUNT = "dm";
-	public final static String SET_MENTIONS_COUNT = "mention_status";
-	public final static String SET_COMMENT_MENTIONS_COUNT = "mention_cmt";
-	public final static String SET_FOLLOWERS_COUNT = "follower";
+    public final static String SINGLE_WEIBO_MAP = "single_weibo_hash_map";
 
 	public final static int GOT_ACCESS_TOKEN = 1;
 	public final static int GOT_ACCESS_TOKEN_FAIL = 2;
@@ -51,13 +47,9 @@ public class Defines {
 	public final static int ACT_GOT_AT = 2;
 
 	public final static String TAG = "OnTime --- ";
-	public final static String TAG_SQL = "OnTime SQL ---";
-	public final static String LOG_DEVIDER = "=========================";
-	public final static String SQL_NAME = "MyMaid.db";
+    public final static String LOG_DEVIDER = "=========================";
 
 	public final static String KEY_AT_USER = "at_user";
-
-	public final static int SQL_VERSION = 3;
 
 	public final static String EXPIRES_IN = "expires_in";
 	public final static String ACCESS_TOKEN = "access_token";

@@ -38,6 +38,5 @@ public class Id2MidUtil {
 			count++;
 		}
 		return mid;
-
 	}
 }

@@ -8,9 +8,9 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.CommentsBean;
 import com.joewoo.ontime.bean.CommentsToMeBean;
-import com.joewoo.ontime.info.WeiboConstant;
+import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
-import com.joewoo.ontime.tools.MySQLHelper;
+import com.joewoo.ontime.tools.MyMaidSQLHelper;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -23,18 +23,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
-import static com.joewoo.ontime.info.Defines.COMMENT_ID;
-import static com.joewoo.ontime.info.Defines.CREATED_AT;
-import static com.joewoo.ontime.info.Defines.GOT_COMMENTS_TO_ME_INFO;
-import static com.joewoo.ontime.info.Defines.GOT_COMMENTS_TO_ME_INFO_FAIL;
-import static com.joewoo.ontime.info.Defines.SCREEN_NAME;
-import static com.joewoo.ontime.info.Defines.SOURCE;
-import static com.joewoo.ontime.info.Defines.STATUS_TEXT;
-import static com.joewoo.ontime.info.Defines.STATUS_USER_SCREEN_NAME;
-import static com.joewoo.ontime.info.Defines.TAG;
-import static com.joewoo.ontime.info.Defines.TAG_SQL;
-import static com.joewoo.ontime.info.Defines.TEXT;
-import static com.joewoo.ontime.info.Defines.WEIBO_ID;
+import static com.joewoo.ontime.info.Constants.COMMENT_ID;
+import static com.joewoo.ontime.info.Constants.CREATED_AT;
+import static com.joewoo.ontime.info.Constants.GOT_COMMENTS_TO_ME_INFO;
+import static com.joewoo.ontime.info.Constants.GOT_COMMENTS_TO_ME_INFO_FAIL;
+import static com.joewoo.ontime.info.Constants.SCREEN_NAME;
+import static com.joewoo.ontime.info.Constants.SOURCE;
+import static com.joewoo.ontime.info.Constants.STATUS_TEXT;
+import static com.joewoo.ontime.info.Constants.STATUS_USER_SCREEN_NAME;
+import static com.joewoo.ontime.info.Constants.TAG;
+import static com.joewoo.ontime.info.Constants.TEXT;
+import static com.joewoo.ontime.info.Constants.WEIBO_ID;
 
 public class Weibo_CommentsToMe extends Thread {
 
@@ -42,14 +41,14 @@ public class Weibo_CommentsToMe extends Thread {
     private Handler mHandler;
     public boolean isProvidedResult = false;
     private String httpResult = "{ \"error_code\" : \"233\" }";
-    private MySQLHelper sqlHelper;
+    private MyMaidSQLHelper sqlHelper;
 
     public Weibo_CommentsToMe(int count, Handler handler) {
         this.count = String.valueOf(count);
         this.mHandler = handler;
     }
 
-    public Weibo_CommentsToMe(int count, MySQLHelper sqlHelper, Handler handler) {
+    public Weibo_CommentsToMe(int count, MyMaidSQLHelper sqlHelper, Handler handler) {
         this.count = String.valueOf(count);
         this.mHandler = handler;
         this.sqlHelper = sqlHelper;
@@ -68,7 +67,7 @@ public class Weibo_CommentsToMe extends Thread {
         if (!isProvidedResult) {
 
             HttpUriRequest httpGet = new HttpGet(Weibo_URLs.COMMENTS_TO_ME
-                    + "?access_token=" + WeiboConstant.ACCESS_TOKEN + "&count="
+                    + "?access_token=" + Weibo_Constants.ACCESS_TOKEN + "&count="
                     + count);
             httpGet.addHeader("Accept-Encoding", "gzip");
 
@@ -151,10 +150,10 @@ public class Weibo_CommentsToMe extends Thread {
                 SQLiteDatabase sql = sqlHelper.getWritableDatabase();
 
                 ContentValues cv = new ContentValues();
-                cv.put(sqlHelper.TO_ME_COMMENTS, httpResult);
-                if (sql.update(sqlHelper.tableName, cv, sqlHelper.UID + "='"
-                        + WeiboConstant.UID + "'", null) != 0) {
-                    Log.e(TAG_SQL, "Saved Comments httpResult");
+                cv.put(MyMaidSQLHelper.TO_ME_COMMENTS, httpResult);
+                if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"
+                        + Weibo_Constants.UID + "'", null) != 0) {
+                    Log.e(MyMaidSQLHelper.TAG_SQL, "Saved Comments httpResult");
                 }
             }
 
