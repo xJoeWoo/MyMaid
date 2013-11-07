@@ -6,8 +6,8 @@ import com.joewoo.ontime.action.Weibo_Update;
 import com.joewoo.ontime.action.Weibo_Upload;
 import com.joewoo.ontime.bean.WeiboBackBean;
 import com.joewoo.ontime.info.Weibo_Constants;
-import com.joewoo.ontime.tools.Id2MidUtil;
 import com.joewoo.ontime.tools.MyMaidSQLHelper;
+import com.joewoo.ontime.tools.MyMaidUtilities;
 
 import static com.joewoo.ontime.info.Constants.*;
 
@@ -54,6 +54,8 @@ public class Post extends Activity {
 	Animation a_out;
 	Animation a_in;
 	ProgressBar pb_post;
+
+    MyMaidUtilities mUtil = new MyMaidUtilities();
 
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
@@ -354,7 +356,7 @@ public class Post extends Activity {
 			break;
 		}
 		case MENU_POST: {
-			if (checkNetwork()) {
+			if (mUtil.isNetworkAvailable(this)) {
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(et_post.getWindowToken(), 0);
 				if (!"".equals(et_post.getText().toString().trim())) {
@@ -406,7 +408,7 @@ public class Post extends Activity {
 			break;
 		}
 		case MENU_AT: {
-			if (checkNetwork())
+			if (mUtil.isNetworkAvailable(this))
 				startActivityForResult(new Intent(Post.this, At.class),
 						ACT_GOT_AT);
 			else {
@@ -454,7 +456,7 @@ public class Post extends Activity {
 					tv_post_info.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							String mid = Id2MidUtil.Id2Mid(update.getId());
+							String mid = mUtil.Id2Mid(update.getId());
 							Uri link = Uri.parse("http://weibo.com/"
 									+ Weibo_Constants.UID + "/" + mid);
 							startActivity(new Intent(Intent.ACTION_VIEW, link));
@@ -484,7 +486,7 @@ public class Post extends Activity {
 					tv_post_info.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							String mid = Id2MidUtil.Id2Mid(upload.getId());
+							String mid = mUtil.Id2Mid(upload.getId());
 							Uri link = Uri.parse("http://weibo.com/"
 									+ Weibo_Constants.UID + "/" + mid);
 							startActivity(new Intent(Intent.ACTION_VIEW, link));
@@ -620,23 +622,6 @@ public class Post extends Activity {
 		}
 	}
 
-	public boolean checkNetwork() {
-		ConnectivityManager cManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo netInfo = cManager.getActiveNetworkInfo();
-		if (netInfo != null && netInfo.isAvailable()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public void clearWeiboConstant() {
-		Weibo_Constants.AUTH_CODE = null;
-		Weibo_Constants.ACCESS_TOKEN = null;
-		Weibo_Constants.SCREEN_NAME = null;
-		Weibo_Constants.UID = null;
-		Weibo_Constants.LOCATION = null;
-	}
 
 	public void saveSharingInfo(Intent intent, String type, String action) {
 		if (Intent.ACTION_SEND.equals(action) && type != null) {

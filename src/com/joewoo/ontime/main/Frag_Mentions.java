@@ -22,12 +22,12 @@ import static com.joewoo.ontime.info.Constants.*;
 
 import com.joewoo.ontime.info.Weibo_AcquireCount;
 import com.joewoo.ontime.tools.MyMaidSQLHelper;
+import com.joewoo.ontime.tools.MyMaidUtilities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -48,7 +48,6 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-@SuppressLint("HandlerLeak")
 public class Frag_Mentions extends Fragment implements OnRefreshListener {
 
     ArrayList<HashMap<String, String>> text;
@@ -66,17 +65,23 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
 
     @Override
     public void onRefreshStarted(View view) {
-        if (isNormalMention) {
-            Log.e(TAG, "Refresh Mentions");
-            refreshMentions();
-            new Weibo_RemindSetCount(mHandler)
-                    .execute(Weibo_RemindSetCount.setMentionsCount);
+        if (new MyMaidUtilities().isNetworkAvailable(act)) {
+            if (isNormalMention) {
+                Log.e(TAG, "Refresh Mentions");
+                refreshMentions();
+                new Weibo_RemindSetCount(mHandler)
+                        .execute(Weibo_RemindSetCount.setMentionsCount);
+            } else {
+                Log.e(TAG, "Refresh Comments Mentions");
+                refreshCommentsMentions();
+                new Weibo_RemindSetCount(mHandler)
+                        .execute(Weibo_RemindSetCount.setCommentMentionsCount);
+            }
         } else {
-            Log.e(TAG, "Refresh Comments Mentions");
-            refreshCommentsMentions();
-            new Weibo_RemindSetCount(mHandler)
-                    .execute(Weibo_RemindSetCount.setCommentMentionsCount);
+            Toast.makeText(act, R.string.toast_no_network, Toast.LENGTH_SHORT).show();
+            mPullToRefreshAttacher.setRefreshing(false);
         }
+
     }
 
     @Override

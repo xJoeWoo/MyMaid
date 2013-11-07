@@ -11,8 +11,8 @@ import com.joewoo.ontime.bean.WeiboBackBean;
 import com.joewoo.ontime.bean.WeatherBean;
 import com.joewoo.ontime.info.Getup_Sentences;
 import com.joewoo.ontime.info.Weibo_Constants;
-import com.joewoo.ontime.tools.Id2MidUtil;
 import com.joewoo.ontime.tools.MyMaidSQLHelper;
+import com.joewoo.ontime.tools.MyMaidUtilities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -91,7 +91,7 @@ public class Getup extends Activity {
 					tv.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							String mid = Id2MidUtil.Id2Mid(update.getId());
+							String mid = new MyMaidUtilities().Id2Mid(update.getId());
 							Uri link = Uri.parse("http://weibo.com/"
 									+ Weibo_Constants.UID + "/" + mid);
 							startActivity(new Intent(Intent.ACTION_VIEW, link));

@@ -18,7 +18,9 @@ import com.joewoo.ontime.action.Weibo_UnreadCount;
 import com.joewoo.ontime.bean.UnreadCountBean;
 import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_AcquireCount;
+import com.joewoo.ontime.singleWeibo.SingleWeibo;
 import com.joewoo.ontime.tools.MyMaidSQLHelper;
+import com.joewoo.ontime.tools.MyMaidUtilities;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
@@ -43,7 +45,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 @SuppressLint({"HandlerLeak", "NewApi"})
-public class Frag_Comments extends Fragment implements OnRefreshListener {
+public class Frag_CommentsToMe extends Fragment implements OnRefreshListener {
 
     ArrayList<HashMap<String, String>> text;
     ListView lv;
@@ -58,9 +60,14 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
     @Override
     public void onRefreshStarted(View view) {
         Log.e(TAG, "Refresh Comments");
-        refreshComments();
-        new Weibo_RemindSetCount(mHandler)
-                .execute(Weibo_RemindSetCount.setCommentsCount);
+        if (new MyMaidUtilities().isNetworkAvailable(act)) {
+            refreshComments();
+            new Weibo_RemindSetCount(mHandler)
+                    .execute(Weibo_RemindSetCount.setCommentsCount);
+        } else {
+            Toast.makeText(act, R.string.toast_no_network, Toast.LENGTH_SHORT).show();
+            mPullToRefreshAttacher.setRefreshing(false);
+        }
     }
 
     @Override
@@ -105,7 +112,6 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
         } else {
         }
 
-
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -122,11 +128,9 @@ public class Frag_Comments extends Fragment implements OnRefreshListener {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int arg2, long arg3) {
-
-                Intent i = new Intent(act, SingleUser.class);
-                i.putExtra(SCREEN_NAME, text.get(arg2).get(SCREEN_NAME));
+                Intent i = new Intent(act, SingleWeibo.class);
+                i.putExtra(SINGLE_WEIBO_MAP, text.get(arg2));
                 startActivity(i);
-
                 return false;
             }
         });

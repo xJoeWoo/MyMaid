@@ -6,8 +6,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.joewoo.ontime.tools.RoundCorner;
-
 import static com.joewoo.ontime.info.Constants.*;
 
 import android.graphics.Bitmap;
@@ -15,6 +13,8 @@ import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.util.Log;
+
+import com.joewoo.ontime.tools.MyMaidUtilities;
 
 public class Weibo_ProfileImage extends Thread {
 
@@ -36,9 +36,9 @@ public class Weibo_ProfileImage extends Thread {
         HttpUriRequest httpGet = new HttpGet(url);
 
         try {
-            bm = new RoundCorner(
+            bm = new MyMaidUtilities().toRoundCorner(
                     BitmapFactory.decodeStream(new DefaultHttpClient()
-                            .execute(httpGet).getEntity().getContent()), 25).getBitmap();
+                            .execute(httpGet).getEntity().getContent()), 25);
 
             Log.e(TAG, "GOT: Profile Image");
 

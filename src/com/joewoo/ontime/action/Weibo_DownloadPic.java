@@ -12,8 +12,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.joewoo.ontime.R;
-import com.joewoo.ontime.tools.RoundCorner;
+import com.joewoo.ontime.tools.MyMaidUtilities;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -115,8 +114,8 @@ public class Weibo_DownloadPic extends AsyncTask<String, Integer, Bitmap> {
                         image = BitmapFactory.decodeByteArray(imgBytes, 0,
                                 imgBytes.length);
                     } else {
-                        image = new RoundCorner(BitmapFactory.decodeByteArray(imgBytes,
-                                0, imgBytes.length), 25).getBitmap();
+                        image = new MyMaidUtilities().toRoundCorner(BitmapFactory.decodeByteArray(imgBytes,
+                                0, imgBytes.length), 25);
                     }
                 }
 
@@ -163,7 +162,9 @@ public class Weibo_DownloadPic extends AsyncTask<String, Integer, Bitmap> {
         if (!isCancelled()) {
 
             if(image != null)
+            {
                 iv.setImageBitmap(image);
+            }
             else
                 iv.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
 

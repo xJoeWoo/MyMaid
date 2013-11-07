@@ -38,7 +38,7 @@ public class UserSpan extends ClickableSpan {
         ds.setUnderlineText(false); //去掉下划线
     }
 
-    public String getScreenName(){
+    public String getScreenName() {
         return screenName;
     }
 }

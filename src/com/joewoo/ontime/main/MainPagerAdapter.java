@@ -24,7 +24,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 		// 顺序不要错
 		mFragments.add(new Frag_Mentions());
         mFragments.add(new Frag_FriendsTimeLine());
-        mFragments.add(new Frag_Comments());
+        mFragments.add(new Frag_CommentsToMe());
 	}
 
 	@Override
@@ -41,8 +41,8 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 		return (Frag_FriendsTimeLine) getItem(FRAG_FRIENDSTIMELINE_POS);
 	}
 
-	public Frag_Comments getCommentsFrag(){
-		return (Frag_Comments) getItem(FRAG_COMMENTS_POS);
+	public Frag_CommentsToMe getCommentsFrag(){
+		return (Frag_CommentsToMe) getItem(FRAG_COMMENTS_POS);
 	}
 	
 	public Frag_Mentions getMentionsFrag(){

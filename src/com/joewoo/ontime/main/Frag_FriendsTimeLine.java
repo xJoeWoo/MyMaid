@@ -17,9 +17,9 @@ import com.joewoo.ontime.info.Weibo_AcquireCount;
 import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.singleWeibo.SingleWeibo;
 import com.joewoo.ontime.action.Weibo_FriendsTimeLine;
-import com.joewoo.ontime.tools.Id2MidUtil;
 import com.joewoo.ontime.tools.MyMaidAdapter;
 import com.joewoo.ontime.tools.MyMaidSQLHelper;
+import com.joewoo.ontime.tools.MyMaidUtilities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -66,7 +66,12 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
     @Override
     public void onRefreshStarted(View view) {
         Log.e(TAG, "Refresh FriendsTimeLine");
-        refreshFriendsTimeLine();
+        if (new MyMaidUtilities().isNetworkAvailable(act)) {
+            refreshFriendsTimeLine();
+        } else {
+            Toast.makeText(act, R.string.toast_no_network, Toast.LENGTH_SHORT).show();
+            mPullToRefreshAttacher.setRefreshing(false);
+        }
     }
 
     @Override
@@ -132,11 +137,12 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
                         .parse("http://weibo.com/"
                                 + text.get(arg2).get(UID)
                                 + "/"
-                                + Id2MidUtil.Id2Mid(text.get(arg2)
+                                + new MyMaidUtilities().Id2Mid(text.get(arg2)
                                 .get(WEIBO_ID)))));
                 return false;
             }
         });
+
 
         lv.setOnScrollListener(new OnScrollListener() {
             @Override
@@ -421,9 +427,8 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
         mPullToRefreshAttacher.setRefreshing(true);
     }
 
-    public void setListViewToTop()
-    {
-        if(lv != null)
+    public void setListViewToTop() {
+        if (lv != null)
             lv.smoothScrollToPosition(0);
     }
 }

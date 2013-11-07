@@ -37,7 +37,7 @@ public class NoUnderlineURLSpan extends ClickableSpan {
         ds.setUnderlineText(false);
     }
 
-    public String getURL(){
+    public String getURL() {
         return URL;
     }
 }
