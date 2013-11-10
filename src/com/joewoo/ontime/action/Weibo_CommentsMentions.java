@@ -51,7 +51,7 @@ public class Weibo_CommentsMentions extends Thread {
     private Handler mHandler;
     public boolean isProvidedResult = false;
     private String httpResult = "{ \"error_code\" : \"233\" }";
-    private MyMaidSQLHelper sqlHelper;
+    private SQLiteDatabase sql;
     private String max_id;
 
     public Weibo_CommentsMentions(int count, Handler handler) {
@@ -59,10 +59,10 @@ public class Weibo_CommentsMentions extends Thread {
         this.mHandler = handler;
     }
 
-    public Weibo_CommentsMentions(int count, MyMaidSQLHelper sqlHelper, Handler handler) {
+    public Weibo_CommentsMentions(int count, SQLiteDatabase sql, Handler handler) {
         this.count = String.valueOf(count);
         this.mHandler = handler;
-        this.sqlHelper = sqlHelper;
+        this.sql = sql;
     }
 
     public Weibo_CommentsMentions(String httpResult, Handler handler) {
@@ -164,9 +164,7 @@ public class Weibo_CommentsMentions extends Thread {
                 mHandler.obtainMessage(GOT_COMMENTS_MENTIONS_INFO, text)
                         .sendToTarget();
 
-                if (sqlHelper != null && !isProvidedResult) {
-                    SQLiteDatabase sql = sqlHelper.getWritableDatabase();
-
+                if (sql != null && !isProvidedResult) {
                     ContentValues cv = new ContentValues();
                     cv.put(MyMaidSQLHelper.COMMENTS_MENTIONS, httpResult);
                     if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"

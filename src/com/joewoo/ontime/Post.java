@@ -55,8 +55,6 @@ public class Post extends Activity {
 	Animation a_in;
 	ProgressBar pb_post;
 
-    MyMaidUtilities mUtil = new MyMaidUtilities();
-
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
 
@@ -356,7 +354,7 @@ public class Post extends Activity {
 			break;
 		}
 		case MENU_POST: {
-			if (mUtil.isNetworkAvailable(this)) {
+			if (MyMaidUtilities.isNetworkAvailable(this)) {
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(et_post.getWindowToken(), 0);
 				if (!"".equals(et_post.getText().toString().trim())) {
@@ -408,7 +406,7 @@ public class Post extends Activity {
 			break;
 		}
 		case MENU_AT: {
-			if (mUtil.isNetworkAvailable(this))
+			if (MyMaidUtilities.isNetworkAvailable(this))
 				startActivityForResult(new Intent(Post.this, At.class),
 						ACT_GOT_AT);
 			else {
@@ -456,7 +454,7 @@ public class Post extends Activity {
 					tv_post_info.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							String mid = mUtil.Id2Mid(update.getId());
+							String mid = MyMaidUtilities.Id2Mid(update.getId());
 							Uri link = Uri.parse("http://weibo.com/"
 									+ Weibo_Constants.UID + "/" + mid);
 							startActivity(new Intent(Intent.ACTION_VIEW, link));
@@ -486,7 +484,7 @@ public class Post extends Activity {
 					tv_post_info.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							String mid = mUtil.Id2Mid(upload.getId());
+							String mid = MyMaidUtilities.Id2Mid(upload.getId());
 							Uri link = Uri.parse("http://weibo.com/"
 									+ Weibo_Constants.UID + "/" + mid);
 							startActivity(new Intent(Intent.ACTION_VIEW, link));

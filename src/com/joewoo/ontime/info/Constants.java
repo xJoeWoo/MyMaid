@@ -84,10 +84,16 @@ public class Constants {
 	public final static String RETWEETED_STATUS_HAVE_PIC = "retweeted_status_havePic";
 	public final static String IS_REPOST = "isRepost";
 	public final static String STATUS_TEXT = "status_text";
+    public final static String STATUS_SOURCE = "status_source";
 	public final static String STATUS_CREATED_AT = "status_created_at";
 	public final static String STATUS_COMMENTS_COUNT = "status_comments_count";
 	public final static String STATUS_REPOSTS_COUNT = "status_reposts_count";
 	public final static String STATUS_USER_SCREEN_NAME = "status_user_screen_name";
+    public final static String STATUS_PROFILE_IMAGE_URL = "status_profile_image";
+    public final static String STATUS_THUMBNAIL_PIC = "status_thumbnail_pic";
+    public final static String STATUS_BMIDDLE_PIC = "status_bmiddle_pic";
+    public final static String REPLY_COMMNET_TEXT = "reply_comment_text";
+    public final static String REPLY_COMMNET_USER_SCREEN_NAME = "reply_comment_user_screen_name";
 	public final static String IS_REPLY = "isReply";
 	public final static String THUMBNAIL_PIC = "thumbnail_pic";
 	public final static String BMIDDLE_PIC = "bmiddle_pic";

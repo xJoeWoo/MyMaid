@@ -36,7 +36,7 @@ public class Weibo_ProfileImage extends Thread {
         HttpUriRequest httpGet = new HttpGet(url);
 
         try {
-            bm = new MyMaidUtilities().toRoundCorner(
+            bm = MyMaidUtilities.toRoundCorner(
                     BitmapFactory.decodeStream(new DefaultHttpClient()
                             .execute(httpGet).getEntity().getContent()), 25);
 

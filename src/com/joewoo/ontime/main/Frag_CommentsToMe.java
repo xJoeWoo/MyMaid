@@ -19,6 +19,7 @@ import com.joewoo.ontime.bean.UnreadCountBean;
 import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_AcquireCount;
 import com.joewoo.ontime.singleWeibo.SingleWeibo;
+
 import com.joewoo.ontime.tools.MyMaidSQLHelper;
 import com.joewoo.ontime.tools.MyMaidUtilities;
 
@@ -60,7 +61,7 @@ public class Frag_CommentsToMe extends Fragment implements OnRefreshListener {
     @Override
     public void onRefreshStarted(View view) {
         Log.e(TAG, "Refresh Comments");
-        if (new MyMaidUtilities().isNetworkAvailable(act)) {
+        if (MyMaidUtilities.isNetworkAvailable(act)) {
             refreshComments();
             new Weibo_RemindSetCount(mHandler)
                     .execute(Weibo_RemindSetCount.setCommentsCount);
@@ -92,8 +93,7 @@ public class Frag_CommentsToMe extends Fragment implements OnRefreshListener {
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        sqlHelper = new MyMaidSQLHelper(act, MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION);
-        sql = sqlHelper.getReadableDatabase();
+        sql = ((Main) act).getSQL();
         Cursor c = sql.query(MyMaidSQLHelper.tableName, new String[]{
                 MyMaidSQLHelper.TO_ME_COMMENTS, MyMaidSQLHelper.PROFILEIMG}, MyMaidSQLHelper.UID
                 + "=?", new String[]{Weibo_Constants.UID}, null, null, null);
@@ -130,6 +130,7 @@ public class Frag_CommentsToMe extends Fragment implements OnRefreshListener {
                                            int arg2, long arg3) {
                 Intent i = new Intent(act, SingleWeibo.class);
                 i.putExtra(SINGLE_WEIBO_MAP, text.get(arg2));
+                Log.e(TAG, "+++++++++++" + text.get(arg2).get(STATUS_TEXT));
                 startActivity(i);
                 return false;
             }
@@ -214,7 +215,8 @@ public class Frag_CommentsToMe extends Fragment implements OnRefreshListener {
                     text = (ArrayList<HashMap<String, String>>) msg.obj;
 
                     String[] from = {SCREEN_NAME, TEXT, CREATED_AT, SOURCE,
-                            STATUS_USER_SCREEN_NAME, STATUS_TEXT};
+                            REPLY_COMMNET_USER_SCREEN_NAME, REPLY_COMMNET_TEXT};
+
                     int[] to = {R.id.comments_to_me_screen_name,
                             R.id.comments_to_me_text,
                             R.id.comments_to_me_created_at,
@@ -261,7 +263,7 @@ public class Frag_CommentsToMe extends Fragment implements OnRefreshListener {
     }
 
     public void refreshComments() {
-        new Weibo_CommentsToMe(Weibo_AcquireCount.COMMENTS_TO_ME_COUNT, sqlHelper, mHandler).start();
+        new Weibo_CommentsToMe(Weibo_AcquireCount.COMMENTS_TO_ME_COUNT, sql, mHandler).start();
         isRefreshing = true;
         mPullToRefreshAttacher.setRefreshing(true);
     }

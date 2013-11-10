@@ -15,6 +15,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.FriendsTimelineBean;
+import com.joewoo.ontime.bean.PicURLsBean;
 import com.joewoo.ontime.bean.StatusesBean;
 import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
@@ -31,7 +32,7 @@ public class Weibo_FriendsTimeLine extends Thread {
     private Handler mHandler;
     public boolean isProvidedResult = false;
     private String httpResult = "{ \"error_code\" : \"233\" }";
-    private MyMaidSQLHelper sqlHelper;
+    private SQLiteDatabase sql;
     private String max_id = null;
 
     public Weibo_FriendsTimeLine(int count, Handler handler) {
@@ -45,11 +46,11 @@ public class Weibo_FriendsTimeLine extends Thread {
         this.max_id = max_id;
     }
 
-    public Weibo_FriendsTimeLine(int count, MyMaidSQLHelper sqlHelper,
+    public Weibo_FriendsTimeLine(int count, SQLiteDatabase sql,
                                  Handler handler) {
         this.count = String.valueOf(count);
         this.mHandler = handler;
-        this.sqlHelper = sqlHelper;
+        this.sql = sql;
     }
 
     public Weibo_FriendsTimeLine(String httpResult, Handler handler) {
@@ -119,6 +120,8 @@ public class Weibo_FriendsTimeLine extends Thread {
 
             for (StatusesBean s : statuses) {
                 HashMap<String, String> map = new HashMap<String, String>();
+
+
                 source = s.getSource();
                 source = source.substring(source.indexOf(">") + 1,
                         source.length());
@@ -136,6 +139,16 @@ public class Weibo_FriendsTimeLine extends Thread {
                 map.put(WEIBO_ID, s.getId());
                 map.put(PROFILE_IMAGE_URL, s.getUser()
                         .getProfileImageUrl());
+
+                try {
+                    for(int i = 0; i < s.getPicURLs().size(); i++)
+                    {
+                        Log.e(TAG, String.valueOf(i)+ " : " + s.getPicURLs().get(i).getThumbnailPic());
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "Not muilt pics");
+                }
+
 
                 try {
 
@@ -171,7 +184,7 @@ public class Weibo_FriendsTimeLine extends Thread {
                     map.put(IS_REPOST, " ");
 
                 } catch (Exception e) {
-//                    e.printStackTrace();
+
                 }
 
                 if (s.getThumbnailPic() != null) {
@@ -190,9 +203,7 @@ public class Weibo_FriendsTimeLine extends Thread {
                 mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_ADD_INFO, text)
                         .sendToTarget();
 
-            if (sqlHelper != null && !isProvidedResult && max_id == null) {
-                SQLiteDatabase sql = sqlHelper.getWritableDatabase();
-
+            if (sql != null && !isProvidedResult && max_id == null) {
                 ContentValues cv = new ContentValues();
                 cv.put(MyMaidSQLHelper.FRIENDS_TIMELINE, httpResult);
                 if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"

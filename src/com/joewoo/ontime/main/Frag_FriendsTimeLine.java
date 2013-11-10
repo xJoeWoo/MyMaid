@@ -55,7 +55,6 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 
     ArrayList<HashMap<String, String>> text;
     ListView lv;
-    MyMaidSQLHelper sqlHelper;
     SQLiteDatabase sql;
     boolean isRefreshing = true;
     MyMaidAdapter mAdapter;
@@ -66,7 +65,7 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
     @Override
     public void onRefreshStarted(View view) {
         Log.e(TAG, "Refresh FriendsTimeLine");
-        if (new MyMaidUtilities().isNetworkAvailable(act)) {
+        if (MyMaidUtilities.isNetworkAvailable(act)) {
             refreshFriendsTimeLine();
         } else {
             Toast.makeText(act, R.string.toast_no_network, Toast.LENGTH_SHORT).show();
@@ -96,8 +95,7 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        sqlHelper = new MyMaidSQLHelper(act, MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION);
-        sql = sqlHelper.getReadableDatabase();
+        sql = ((Main) act).getSQL();
         Cursor c = sql.query(MyMaidSQLHelper.tableName, new String[]{
                 MyMaidSQLHelper.FRIENDS_TIMELINE, MyMaidSQLHelper.PROFILEIMG},
                 MyMaidSQLHelper.UID + "=?", new String[]{Weibo_Constants.UID}, null,
@@ -137,7 +135,7 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
                         .parse("http://weibo.com/"
                                 + text.get(arg2).get(UID)
                                 + "/"
-                                + new MyMaidUtilities().Id2Mid(text.get(arg2)
+                                + MyMaidUtilities.Id2Mid(text.get(arg2)
                                 .get(WEIBO_ID)))));
                 return false;
             }
@@ -422,7 +420,7 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
     }
 
     public void refreshFriendsTimeLine() {
-        new Weibo_FriendsTimeLine(Weibo_AcquireCount.FRIENDS_TIMELINE_COUNT, sqlHelper, mHandler).start();
+        new Weibo_FriendsTimeLine(Weibo_AcquireCount.FRIENDS_TIMELINE_COUNT, sql, mHandler).start();
         isRefreshing = true;
         mPullToRefreshAttacher.setRefreshing(true);
     }

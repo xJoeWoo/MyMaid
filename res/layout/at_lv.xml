@@ -4,7 +4,7 @@
                 android:layout_height="match_parent"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
-                android:background="@drawable/lv_item_bg">
+                android:background="@drawable/lv_singleweibo_item_bg">
 
     <TextView
             android:id="@+id/lv_tv1"
@@ -14,7 +14,6 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:gravity="center_vertical"
-
             android:textSize="18sp"/>
 
 

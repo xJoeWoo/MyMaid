@@ -27,8 +27,23 @@ import static com.joewoo.ontime.info.Constants.COMMENT_ID;
 import static com.joewoo.ontime.info.Constants.CREATED_AT;
 import static com.joewoo.ontime.info.Constants.GOT_COMMENTS_TO_ME_INFO;
 import static com.joewoo.ontime.info.Constants.GOT_COMMENTS_TO_ME_INFO_FAIL;
+import static com.joewoo.ontime.info.Constants.IS_COMMENT;
+import static com.joewoo.ontime.info.Constants.IS_REPOST;
+import static com.joewoo.ontime.info.Constants.REPLY_COMMNET_TEXT;
+import static com.joewoo.ontime.info.Constants.REPLY_COMMNET_USER_SCREEN_NAME;
+import static com.joewoo.ontime.info.Constants.RETWEETED_STATUS;
+import static com.joewoo.ontime.info.Constants.RETWEETED_STATUS_BMIDDLE_PIC;
+import static com.joewoo.ontime.info.Constants.RETWEETED_STATUS_CREATED_AT;
+import static com.joewoo.ontime.info.Constants.RETWEETED_STATUS_SCREEN_NAME;
+import static com.joewoo.ontime.info.Constants.RETWEETED_STATUS_SOURCE;
 import static com.joewoo.ontime.info.Constants.SCREEN_NAME;
 import static com.joewoo.ontime.info.Constants.SOURCE;
+import static com.joewoo.ontime.info.Constants.STATUS_PROFILE_IMAGE_URL;
+import static com.joewoo.ontime.info.Constants.STATUS_SOURCE;
+import static com.joewoo.ontime.info.Constants.STATUS_BMIDDLE_PIC;
+import static com.joewoo.ontime.info.Constants.STATUS_COMMENTS_COUNT;
+import static com.joewoo.ontime.info.Constants.STATUS_CREATED_AT;
+import static com.joewoo.ontime.info.Constants.STATUS_REPOSTS_COUNT;
 import static com.joewoo.ontime.info.Constants.STATUS_TEXT;
 import static com.joewoo.ontime.info.Constants.STATUS_USER_SCREEN_NAME;
 import static com.joewoo.ontime.info.Constants.TAG;
@@ -41,17 +56,17 @@ public class Weibo_CommentsToMe extends Thread {
     private Handler mHandler;
     public boolean isProvidedResult = false;
     private String httpResult = "{ \"error_code\" : \"233\" }";
-    private MyMaidSQLHelper sqlHelper;
+    private SQLiteDatabase sql;
 
     public Weibo_CommentsToMe(int count, Handler handler) {
         this.count = String.valueOf(count);
         this.mHandler = handler;
     }
 
-    public Weibo_CommentsToMe(int count, MyMaidSQLHelper sqlHelper, Handler handler) {
+    public Weibo_CommentsToMe(int count, SQLiteDatabase sql, Handler handler) {
         this.count = String.valueOf(count);
         this.mHandler = handler;
-        this.sqlHelper = sqlHelper;
+        this.sql = sql;
     }
 
     public Weibo_CommentsToMe(String httpResult, Handler handler) {
@@ -106,9 +121,11 @@ public class Weibo_CommentsToMe extends Thread {
             ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
 
             String source;
+            String rt_source;
 
             for (CommentsBean c : comments) {
                 HashMap<String, String> map = new HashMap<String, String>();
+
                 source = c.getSource();
                 source = source.substring(source.indexOf(">") + 1,
                         source.length());
@@ -122,23 +139,70 @@ public class Weibo_CommentsToMe extends Thread {
                 map.put(SCREEN_NAME, c.getUser().getScreenName());
                 map.put(TEXT, c.getText());
                 map.put(COMMENT_ID, c.getId());
+
                 map.put(WEIBO_ID, c.getStatus().getId());
+                map.put(STATUS_TEXT, c.getStatus().getText());
+                map.put(STATUS_USER_SCREEN_NAME, c.getStatus().getUser().getScreenName());
+                map.put(STATUS_COMMENTS_COUNT, c.getStatus().getCommentsCount());
+                map.put(STATUS_REPOSTS_COUNT, c.getStatus().getRepostsCount());
+
+                source = c.getStatus().getCreatedAt();
+                source = source.substring(source.indexOf(":") - 2,
+                        source.indexOf(":") + 3);
+                map.put(STATUS_CREATED_AT, source);
+
+                source = c.getStatus().getSource();
+                source = source.substring(source.indexOf(">") + 1,
+                        source.length());
+                source = source.substring(0, source.indexOf("<"));
+                map.put(STATUS_SOURCE , " · " + source);
+
+                map.put(STATUS_PROFILE_IMAGE_URL, c.getStatus().getUser().getProfileImageUrl());
+
+                try {
+                    rt_source = c.getStatus().getRetweetedStatus()
+                            .getSource();
+                    rt_source = rt_source.substring(rt_source.indexOf(">") + 1,
+                            rt_source.length());
+                    rt_source = rt_source.substring(0, rt_source.indexOf("<"));
+                    map.put(RETWEETED_STATUS_SOURCE, " · " + rt_source);
+                    rt_source = c.getStatus().getRetweetedStatus()
+                            .getCreatedAt();
+                    rt_source = rt_source.substring(rt_source.indexOf(":") - 2,
+                            rt_source.indexOf(":") + 3);
+                    map.put(RETWEETED_STATUS_CREATED_AT, rt_source);
+
+                    map.put(RETWEETED_STATUS_SCREEN_NAME, c.getStatus()
+                            .getRetweetedStatus().getUser().getScreenName());
+                    map.put(RETWEETED_STATUS, c.getStatus()
+                            .getRetweetedStatus().getText());
+
+                    if (c.getStatus().getRetweetedStatus().getThumbnailPic() != null) {
+                        map.put(RETWEETED_STATUS_BMIDDLE_PIC, c.getStatus()
+                                .getRetweetedStatus().getBmiddlePic());
+                    }
+                    map.put(IS_REPOST, " ");
+
+                } catch (Exception e) {
+//                    e.printStackTrace();
+                }
+
+                if(c.getStatus().getBmiddlePic() != null) {
+                    map.put(STATUS_BMIDDLE_PIC, c.getStatus().getBmiddlePic());
+                }
 
                 if (c.getReplyComment() != null) {
-                    map.put(STATUS_USER_SCREEN_NAME, c
+                    map.put(REPLY_COMMNET_USER_SCREEN_NAME, c
                             .getReplyComment().getUser().getScreenName());
-                    map.put(STATUS_TEXT, c.getReplyComment()
+                    map.put(REPLY_COMMNET_TEXT, c.getReplyComment()
                             .getText());
                 } else {
-                    map.put(STATUS_USER_SCREEN_NAME, c
+                    map.put(REPLY_COMMNET_USER_SCREEN_NAME, c
                             .getStatus().getUser().getScreenName());
-                    map.put(STATUS_TEXT, c.getStatus().getText());
+                    map.put(REPLY_COMMNET_TEXT, c.getStatus().getText());
                 }
-                // map.put(STATUS_COMMENTS_COUNT,
-                // c.getStatus()
-                // .getCommentsCount());
-                // map.put(STATUS_REPOSTS_COUNT, c.getStatus()
-                // .getRepostsCount());
+
+                map.put(IS_COMMENT, " ");
 
                 text.add(map);
             }
@@ -146,9 +210,7 @@ public class Weibo_CommentsToMe extends Thread {
             mHandler.obtainMessage(GOT_COMMENTS_TO_ME_INFO, text)
                     .sendToTarget();
 
-            if (sqlHelper != null && !isProvidedResult) {
-                SQLiteDatabase sql = sqlHelper.getWritableDatabase();
-
+            if (sql != null && !isProvidedResult) {
                 ContentValues cv = new ContentValues();
                 cv.put(MyMaidSQLHelper.TO_ME_COMMENTS, httpResult);
                 if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"

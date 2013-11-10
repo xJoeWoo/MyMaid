@@ -222,4 +222,8 @@ public class Main extends FragmentActivity {
 			return false;
 
 	}
+
+    public SQLiteDatabase getSQL(){
+        return sql;
+    }
 }

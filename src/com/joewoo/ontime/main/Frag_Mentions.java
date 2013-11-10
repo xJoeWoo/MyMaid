@@ -65,7 +65,7 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
 
     @Override
     public void onRefreshStarted(View view) {
-        if (new MyMaidUtilities().isNetworkAvailable(act)) {
+        if (MyMaidUtilities.isNetworkAvailable(act)) {
             if (isNormalMention) {
                 Log.e(TAG, "Refresh Mentions");
                 refreshMentions();
@@ -105,8 +105,7 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        sqlHelper = new MyMaidSQLHelper(act, MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION);
-        sql = sqlHelper.getReadableDatabase();
+        sql = ((Main) act).getSQL();
         c = sql.query(MyMaidSQLHelper.tableName, new String[]{
                 MyMaidSQLHelper.MENTIONS, MyMaidSQLHelper.PROFILEIMG, MyMaidSQLHelper.COMMENTS_MENTIONS}, sqlHelper.UID
                 + "=?", new String[]{Weibo_Constants.UID}, null, null, null);
@@ -351,13 +350,13 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
     }
 
     public void refreshMentions() {
-        new Weibo_Mentions(Weibo_AcquireCount.MENTIONS_COUNT, sqlHelper, mHandler).start();
+        new Weibo_Mentions(Weibo_AcquireCount.MENTIONS_COUNT, sql, mHandler).start();
         isRefreshing = true;
         mPullToRefreshAttacher.setRefreshing(true);
     }
 
     public void refreshCommentsMentions() {
-        new Weibo_CommentsMentions(Weibo_AcquireCount.COMMENTS_MENTIONS_COUNT, sqlHelper, mHandler).start();
+        new Weibo_CommentsMentions(Weibo_AcquireCount.COMMENTS_MENTIONS_COUNT, sql, mHandler).start();
         isRefreshing = true;
         mPullToRefreshAttacher.setRefreshing(true);
     }

@@ -58,8 +58,16 @@ public class SingleWeibo extends FragmentActivity {
 
         String titleRepost = getResources().getString(R.string.title_frag_single_weibo_reposts).toUpperCase(Locale.US);
         String titleComment = getResources().getString(R.string.title_frag_single_weibo_comments).toUpperCase(Locale.US);
-        String repostCount = map.get(REPOSTS_COUNT);
-        String commentsCount = map.get(COMMENTS_COUNT);
+        String repostCount;
+        String commentsCount;
+        if(map.get(IS_COMMENT) == null)
+        {
+            repostCount = map.get(REPOSTS_COUNT);
+            commentsCount = map.get(COMMENTS_COUNT);
+        } else {
+            repostCount = map.get(STATUS_REPOSTS_COUNT);
+            commentsCount = map.get(STATUS_COMMENTS_COUNT);
+        }
 
         if (Locale.getDefault().getLanguage().equals("en")) {
             if (!repostCount.equals("1"))

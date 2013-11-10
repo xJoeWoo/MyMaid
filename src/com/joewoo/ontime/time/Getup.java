@@ -91,7 +91,7 @@ public class Getup extends Activity {
 					tv.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							String mid = new MyMaidUtilities().Id2Mid(update.getId());
+							String mid = MyMaidUtilities.Id2Mid(update.getId());
 							Uri link = Uri.parse("http://weibo.com/"
 									+ Weibo_Constants.UID + "/" + mid);
 							startActivity(new Intent(Intent.ACTION_VIEW, link));

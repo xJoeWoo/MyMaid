@@ -50,17 +50,17 @@ public class Weibo_Mentions extends Thread {
     private Handler mHandler;
     public boolean isProvidedResult = false;
     private String httpResult = "{ \"error_code\" : \"233\" }";
-    private MyMaidSQLHelper sqlHelper;
+    private SQLiteDatabase sql;
 
     public Weibo_Mentions(int count, Handler handler) {
         this.count = String.valueOf(count);
         this.mHandler = handler;
     }
 
-    public Weibo_Mentions(int count, MyMaidSQLHelper sqlHelper, Handler handler) {
+    public Weibo_Mentions(int count, SQLiteDatabase sql, Handler handler) {
         this.count = String.valueOf(count);
         this.mHandler = handler;
-        this.sqlHelper = sqlHelper;
+        this.sql = sql;
     }
 
     public Weibo_Mentions(String httpResult, Handler handler) {
@@ -169,9 +169,7 @@ public class Weibo_Mentions extends Thread {
 
             mHandler.obtainMessage(GOT_MENTIONS_INFO, text).sendToTarget();
 
-            if (sqlHelper != null && !isProvidedResult) {
-                SQLiteDatabase sql = sqlHelper.getWritableDatabase();
-
+            if (sql != null && !isProvidedResult) {
                 ContentValues cv = new ContentValues();
                 cv.put(MyMaidSQLHelper.MENTIONS, httpResult);
                 if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"

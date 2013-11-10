@@ -31,7 +31,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class SingleUser extends Activity {
+public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefreshListener {
 
 	private ListView lv;
 	private ArrayList<HashMap<String, String>> text;
@@ -41,6 +41,11 @@ public class SingleUser extends Activity {
 	private String friendsCount = null;
 	private String statusesCount = null;
 	private PullToRefreshAttacher mPullToRefreshAttacher;
+
+    @Override
+    public void onRefreshStarted(View view) {
+        refreshTimeLine();
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,7 @@ public class SingleUser extends Activity {
 		lv.setDivider(null);
 		mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
 		mPullToRefreshAttacher.setRefreshing(true);
+        mPullToRefreshAttacher.addRefreshableView(lv, this);
 
 		final Intent i = getIntent();
 
@@ -62,15 +68,7 @@ public class SingleUser extends Activity {
 
 		uid = i.getStringExtra(UID);
 
-		if (uid == null) {
-			Log.e(TAG, "Screen Name: " + screenName);
-			new Weibo_UserTimeLine(false, screenName, 20, mHandler).start();
-			new Weibo_UserShow(false, screenName, mHandler).start();
-		} else {
-			Log.e(TAG, "UID: " + uid);
-			new Weibo_UserTimeLine(true, uid, 20, mHandler).start();
-			new Weibo_UserShow(true, uid, mHandler).start();
-		}
+		refreshTimeLine();
 
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -101,13 +99,10 @@ public class SingleUser extends Activity {
 				break;
 			}
 			case GOT_PROFILEIMG_INFO: {
-
 				byte[] img = (byte[]) msg.obj;
-
 				getActionBar().setLogo(
 						new BitmapDrawable(getResources(), BitmapFactory
 								.decodeByteArray(img, 0, img.length)));
-
 				break;
 			}
 			case GOT_USER_TIMELINE_INFO: {
@@ -192,4 +187,15 @@ public class SingleUser extends Activity {
 		lv.setAdapter(mAdapter);
 	}
 
+    private void refreshTimeLine(){
+        if (uid == null) {
+            Log.e(TAG, "Screen Name: " + screenName);
+            new Weibo_UserTimeLine(false, screenName, 20, mHandler).start();
+            new Weibo_UserShow(false, screenName, mHandler).start();
+        } else {
+            Log.e(TAG, "UID: " + uid);
+            new Weibo_UserTimeLine(true, uid, 20, mHandler).start();
+            new Weibo_UserShow(true, uid, mHandler).start();
+        }
+    }
 }

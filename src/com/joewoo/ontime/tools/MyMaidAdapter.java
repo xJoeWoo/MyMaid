@@ -127,15 +127,7 @@ public class MyMaidAdapter extends BaseAdapter {
 
         holder.tv_scr_name.setText(data.get(position).get(SCREEN_NAME));
 
-        // SpannableString tmp = addURLSpan(data.get(position).get(TEXT));
-        // // Log.e(TAG, "TEXT: " + data.get(position).get(TEXT));
-        // if (tmp != null)
-        // holder.tv_text.setText(tmp);
-        // else
-
         holder.tv_text.setText(data.get(position).get(TEXT));
-
-//		checkAtMentionsURL(data.get(position).get(TEXT));
 
         if (data.get(position).get(IS_REPOST) != null)
             holder.tv_rt_rl.setVisibility(View.VISIBLE);
@@ -152,10 +144,6 @@ public class MyMaidAdapter extends BaseAdapter {
 
         if (data.get(position).get(RETWEETED_STATUS) != null) {
             holder.tv_rt.setVisibility(View.VISIBLE);
-            // tmp = addURLSpan(data.get(position).get(RETWEETED_STATUS));
-            // if (tmp != null)
-            // holder.tv_rt.setText(tmp);
-            // else
 
             holder.tv_rt.setText(data.get(position).get(RETWEETED_STATUS));
         } else
@@ -163,15 +151,11 @@ public class MyMaidAdapter extends BaseAdapter {
 
         holder.tv_source.setText(data.get(position).get(SOURCE));
 
-//        Log.e(TAG, "  · " + context.getString(R.string.app_name_cn));
-//        Log.e(TAG, "SOURCE: " + data.get(position).get(SOURCE));
-
         //......Remember there's a " · " front of source
         if (data.get(position).get(SOURCE).equals(" · " + context.getString(R.string.app_name_cn))) {
             holder.tv_source.setTextColor(context.getResources().getColor(R.color.textGrey));
             holder.tv_source.setShadowLayer(20, 0, 0, context.getResources().getColor(R.color.sourcePink));
         } else {
-//            holder.tv_source.setTextColor(context.getResources().getColor(R.color.textGrey));
             holder.tv_source.setShadowLayer(0, 0, 0, 0);
         }
 
@@ -182,129 +166,5 @@ public class MyMaidAdapter extends BaseAdapter {
         holder.tv_rpos_cnt.setText(data.get(position).get(REPOSTS_COUNT));
 
         return convertView;
-    }
-
-    private SpannableString checkMentionsURL(String str) {
-
-        try {
-            char strarray[];
-            strarray = str.toCharArray();
-
-
-            for (int i = 0; i < str.length(); i++) {
-                if (strarray[i] == '@') {
-                    StringBuffer sb = new StringBuffer();
-                    for (int j = i + 1; j < i + 50; j++) {
-                        if (strarray[j] != ' ' && strarray[j] != ':' && strarray[j] != '/' && strarray[j] != '…' && strarray[j] != '。' && strarray[j] != '，' && strarray[j] != '@') {
-                            sb.append(strarray[j]);
-                        } else {
-                            Log.e(TAG, "@" + sb.toString());
-//                            i = j;
-                            return new SpannableString(sb.toString());
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "@ Failed");
-        }
-
-        return null;
-    }
-
-    public SpannableString addURLSpan(String str) {
-        try {
-            char strarray[];
-            // 处理网址
-            SpannableString ss = new SpannableString(str);
-            strarray = str.toCharArray();
-            int l = str.length() - 10;
-            for (int i = 0; i < l; i++) {
-                if (strarray[i] == 'h' && strarray[i + 1] == 't'
-                        && strarray[i + 2] == 't' && strarray[i + 3] == 'p'
-                        && strarray[i + 4] == ':' && strarray[i + 5] == '/'
-                        && strarray[i + 6] == '/') {
-                    StringBuffer sb = new StringBuffer("http://");
-                    for (int j = i + 7; true; j++) {
-                        if (strarray[j] != ' '
-                                || ((strarray[j] >= 0x4e00) && (strarray[j] <= 0x9fbb))
-                                || strarray[j] == '\0')
-                            sb.append(strarray[j]);
-                        else {
-                            Log.e(TAG, "HTTP URL - " + sb.toString());
-                            ss.setSpan(new URLSpan(sb.toString()), i, j,
-                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            i = j;
-                            break;
-                        }
-                    }
-                }
-            }
-            // 处理@
-            l = str.length();
-            StringBuffer sb = null;
-            boolean start = false;
-            int startIndex = 0;
-            for (int i = 0; i < l; i++) {
-                if (strarray[i] == '@') {
-                    start = true;
-                    sb = new StringBuffer("http://s.weibo.com/weibo/");
-                    startIndex = i;
-                } else {
-                    if (start) {
-                        if (strarray[i] == ':' || strarray[i] == ' ') {
-                            Log.e(TAG, "AT URL - " + sb.toString());
-                            ss.setSpan(new URLSpan(sb.toString()), startIndex,
-                                    i, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            ss.setSpan(
-                                    new ForegroundColorSpan(Resources
-                                            .getSystem().getColor(
-                                                    R.color.mymaidPink)),
-                                    startIndex, i + 1,
-                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            sb = null;
-                            start = false;
-                        } else {
-                            sb.append(strarray[i]);
-                        }
-                    }
-                }
-
-            }
-            // 处理话题
-            start = false;
-            startIndex = 0;
-            for (int i = 0; i < l; i++) {
-                if (strarray[i] == '#') {
-                    if (!start) {
-                        start = true;
-                        sb = new StringBuffer("http://s.weibo.com/weibo/#");
-                        startIndex = i;
-                    } else {
-                        sb.append('#');
-                        Log.e(TAG, "TOPIC URL - " + sb.toString());
-                        ss.setSpan(new URLSpan(sb.toString()), startIndex,
-                                i + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        ss.setSpan(new ForegroundColorSpan(Resources
-                                .getSystem().getColor(R.color.mymaidPink)),
-                                startIndex, i + 1,
-                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        sb = null;
-                        start = false;
-                    }
-                } else {
-                    if (start) {
-                        sb.append(strarray[i]);
-                    }
-                }
-            }
-
-            strarray = null;
-            return ss;
-        } catch (Exception e) {
-            Log.e(TAG, "Exception in adding URL span!" + e.getCause());
-        }
-        return null;
-
     }
 }

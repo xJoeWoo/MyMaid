@@ -114,7 +114,7 @@ public class Weibo_DownloadPic extends AsyncTask<String, Integer, Bitmap> {
                         image = BitmapFactory.decodeByteArray(imgBytes, 0,
                                 imgBytes.length);
                     } else {
-                        image = new MyMaidUtilities().toRoundCorner(BitmapFactory.decodeByteArray(imgBytes,
+                        image = MyMaidUtilities.toRoundCorner(BitmapFactory.decodeByteArray(imgBytes,
                                 0, imgBytes.length), 25);
                     }
                 }
