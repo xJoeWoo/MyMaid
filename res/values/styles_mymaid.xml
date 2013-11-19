@@ -21,11 +21,11 @@
 
     <style name="Theme.Mymaid" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarItemBackground">@drawable/selectable_background_mymaid</item>
-        <item name="android:popupMenuStyle">@style/PopupMenu.Mymaid</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Mymaid</item>
         <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Mymaid</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.Mymaid</item>
-        <item name="android:actionBarStyle">@style/ActionBar.Solid.Mymaid</item>
+        <!--<item name="android:actionBarStyle">@style/ActionBar.Solid.Mymaid</item>-->
+        <item name="android:actionBarStyle">@style/ActionBar.Transparent.Mymaid</item>
         <item name="android:actionModeBackground">@drawable/cab_background_top_mymaid</item>
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_mymaid</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Mymaid</item>
@@ -35,6 +35,8 @@
         <item name="android:buttonStyle">@style/ButtonMyMaid</item>
         <item name="android:imageButtonStyle">@style/ImageButtonMyMaid</item>
         <item name="android:progressBarStyleHorizontal">@style/ProgressBarMyMaid</item>
+
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
     <style name="ActionBar.Solid.Mymaid" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
@@ -45,12 +47,11 @@
     </style>
 
     <style name="ActionBar.Transparent.Mymaid" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">@drawable/ab_transparent_mymaid</item>
+        <!--<item name="android:background">@drawable/ab_transparent_mymaid</item>-->
+        <item name="android:background">@drawable/ab_transparent_mymaid_new</item>
+        <item name="android:backgroundStacked">@drawable/ab_transparent_mymaid_new</item>
+        <item name="android:backgroundSplit">@drawable/ab_transparent_mymaid_split_new</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Mymaid</item>
-    </style>
-
-    <style name="PopupMenu.Mymaid" parent="@android:style/Widget.Holo.Light.ListPopupWindow">
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_mymaid</item>	
     </style>
 
     <style name="DropDownListView.Mymaid" parent="@android:style/Widget.Holo.Light.ListView.DropDown">
@@ -63,7 +64,6 @@
 
     <style name="DropDownNav.Mymaid" parent="@android:style/Widget.Holo.Light.Spinner">
         <item name="android:background">@drawable/spinner_background_ab_mymaid</item>
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_mymaid</item>
         <item name="android:dropDownSelector">@drawable/selectable_background_mymaid</item>
     </style>
     
@@ -77,7 +77,6 @@
 
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
     <style name="Theme.Mymaid.Widget" parent="@android:style/Theme.Holo">
-        <item name="android:popupMenuStyle">@style/PopupMenu.Mymaid</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Mymaid</item>
     </style>
 

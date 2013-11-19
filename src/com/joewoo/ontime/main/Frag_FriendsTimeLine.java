@@ -13,6 +13,7 @@ import com.joewoo.ontime.Login;
 import com.joewoo.ontime.Post;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.SingleUser;
+import com.joewoo.ontime.bean.ErrorBean;
 import com.joewoo.ontime.info.Weibo_AcquireCount;
 import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.singleWeibo.SingleWeibo;
@@ -37,6 +38,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -65,12 +67,8 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
     @Override
     public void onRefreshStarted(View view) {
         Log.e(TAG, "Refresh FriendsTimeLine");
-        if (MyMaidUtilities.isNetworkAvailable(act)) {
+        if (((Main) act).checkNetwork())
             refreshFriendsTimeLine();
-        } else {
-            Toast.makeText(act, R.string.toast_no_network, Toast.LENGTH_SHORT).show();
-            mPullToRefreshAttacher.setRefreshing(false);
-        }
     }
 
     @Override
@@ -123,7 +121,8 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
                                     long arg3) {
                 Intent i = new Intent(act, SingleWeibo.class);
                 i.putExtra(SINGLE_WEIBO_MAP, text.get(arg2));
-                startActivity(i);
+                i.putExtra(MAP_POSITION, arg2);
+                startActivityForResult(i, RESULT_DESTROYED_WEIBO);
             }
         });
 
@@ -143,37 +142,56 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
 
 
         lv.setOnScrollListener(new OnScrollListener() {
+
+            int mLastFirstVisibleItem = 0;
+
             @Override
-            public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
-                // TODO Auto-generated method stub
+            public void onScroll(AbsListView view, int arg1, int arg2, int arg3) {
+
+                // 检查上下滚动
+                final int currentFirstVisibleItem = lv.getFirstVisiblePosition();
+
+                if (currentFirstVisibleItem > mLastFirstVisibleItem) {
+                    ((Main) act).setActionBarLowProfile();
+                } else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
+                    ((Main) act).setActionBarVisible();
+                }
+                mLastFirstVisibleItem = currentFirstVisibleItem;
+
+
+                // 滚到到尾刷新
+                if (view.getLastVisiblePosition() == (view.getCount() - 6)) {
+                    if (!isRefreshing) {
+                        Log.e(TAG, "到底");
+                        // 获取后会删除第一项，所以获取数+1
+                        new Weibo_FriendsTimeLine(text.get(
+                                view.getLastVisiblePosition() + 5)
+                                .get(WEIBO_ID), Weibo_AcquireCount.FRIENDS_TIMELINE_ADD_COUNT + 1, mHandler).start();
+                        isRefreshing = true;
+                        mPullToRefreshAttacher.setRefreshing(true);
+                    }
+                }
 
             }
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                switch (scrollState) {
-                    case OnScrollListener.SCROLL_STATE_IDLE: { // 已经停止
-                        if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-                            if (!isRefreshing) {
-                                Log.e(TAG, "到底");
-                                new Weibo_FriendsTimeLine(text.get(
-                                        view.getLastVisiblePosition())
-                                        .get(WEIBO_ID), Weibo_AcquireCount.FRIENDS_TIMELINE_ADD_COUNT, mHandler).start();
-                                isRefreshing = true;
-                                mPullToRefreshAttacher.setRefreshing(true);
-                            }
-                        }
-                        break;
-                    }
-                    case OnScrollListener.SCROLL_STATE_FLING: { // 开始滚动
+//                switch (scrollState) {
+//                    case OnScrollListener.SCROLL_STATE_IDLE: { // 已经停止
+//
+//                        break;
+//                    }
+//                    case OnScrollListener.SCROLL_STATE_FLING: { // 开始滚动
+//
+//                        break;
+//                    }
+//                    case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL: { // 正在滚动
+//
+//                        break;
+//                    }
+//                }
 
-                        break;
-                    }
-                    case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL: { // 正在滚动
 
-                        break;
-                    }
-                }
             }
         });
     }
@@ -345,26 +363,25 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
                 break;
             }
             case MENU_UNREAD_COUNT: {
-                String[] groups = {act.getString(R.string.frag_ftl_dialog_groups_my_posts), act.getString(R.string.frag_ftl_dialog_groups_coming_soon)};
-                new AlertDialog.Builder(act).setTitle(R.string.frag_ftl_dialog_groups_title).setItems(groups, new OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.e(TAG, String.valueOf(i));
-                        switch (i) {
-                            case 0: {
-                                Intent it = new Intent();
-                                it.setClass(act, SingleUser.class);
-                                it.putExtra(SCREEN_NAME, Weibo_Constants.SCREEN_NAME);
-                                startActivity(it);
-                                break;
-                            }
-                            case 1: {
-                                Toast.makeText(act, "TAT", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-                }).setNegativeButton(android.R.string.cancel, null).show();
-
+//                String[] groups = {act.getString(R.string.frag_ftl_dialog_groups_my_posts), act.getString(R.string.frag_ftl_dialog_groups_coming_soon)};
+//                new AlertDialog.Builder(act).setTitle(R.string.frag_ftl_dialog_groups_title).setItems(groups, new OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        Log.e(TAG, String.valueOf(i));
+//                        switch (i) {
+//                            case 0: {
+                Intent ii = new Intent(act, SingleUser.class);
+                ii.putExtra(SCREEN_NAME, Weibo_Constants.SCREEN_NAME);
+                startActivity(ii);
+//                                break;
+//                            }
+//                            case 1: {
+//                                Toast.makeText(act, "TAT", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    }
+//                }).setNegativeButton(android.R.string.cancel, null).show();
+////
 
                 break;
             }
@@ -373,9 +390,7 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
         return super.onOptionsItemSelected(item);
     }
 
-    Handler mHandler = new Handler() {
-
-        @SuppressWarnings("unchecked")
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             // act.setProgressBarIndeterminateVisibility(false);
@@ -385,22 +400,26 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
                 case GOT_FRIENDS_TIMELINE_INFO: {
                     text = (ArrayList<HashMap<String, String>>) msg.obj;
                     setListView(text);
-
                     break;
                 }
                 case GOT_FRIENDS_TIMELINE_ADD_INFO: {
-                    text.addAll((ArrayList<HashMap<String, String>>) msg.obj);
+                    ArrayList<HashMap<String, String>> tmp = (ArrayList<HashMap<String, String>>) msg.obj;
+                    tmp.remove(0);
+                    text.addAll(tmp);
                     addListView(text);
+                    tmp = null;
                     break;
                 }
                 case GOT_FRIENDS_TIMELINE_INFO_FAIL: {
-                    Toast.makeText(act,
-                            R.string.toast_user_timeline_fail, Toast.LENGTH_SHORT)
-                            .show();
-                    break;
-                }
-                case GOT_FRIENDS_TIMELINE_EXTRA_INFO: {
-
+                    if (msg.obj != null) {
+                        Toast.makeText(act,
+                                ((ErrorBean) msg.obj).getError(), Toast.LENGTH_SHORT)
+                                .show();
+                    } else {
+                        Toast.makeText(act,
+                                R.string.toast_user_timeline_fail, Toast.LENGTH_SHORT)
+                                .show();
+                    }
                     break;
                 }
             }
@@ -408,6 +427,21 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
         }
 
     };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case RESULT_DESTROYED_WEIBO: {
+                if (data != null) {
+                    int pos;
+                    if ((pos = data.getIntExtra(MAP_POSITION, -1)) != -1) {
+                        clearListView(text, pos);
+                    }
+                    break;
+                }
+            }
+        }
+    }
 
     private void setListView(ArrayList<HashMap<String, String>> arrayList) {
         mAdapter = new MyMaidAdapter(act, arrayList);
@@ -419,14 +453,15 @@ public class Frag_FriendsTimeLine extends Fragment implements OnRefreshListener 
         mAdapter.notifyDataSetChanged();
     }
 
+    private void clearListView(ArrayList<HashMap<String, String>> arrayList, int position) {
+        arrayList.remove(position);
+        mAdapter.changeItem(arrayList);
+        mAdapter.notifyDataSetChanged();
+    }
+
     public void refreshFriendsTimeLine() {
         new Weibo_FriendsTimeLine(Weibo_AcquireCount.FRIENDS_TIMELINE_COUNT, sql, mHandler).start();
         isRefreshing = true;
         mPullToRefreshAttacher.setRefreshing(true);
-    }
-
-    public void setListViewToTop() {
-        if (lv != null)
-            lv.smoothScrollToPosition(0);
     }
 }

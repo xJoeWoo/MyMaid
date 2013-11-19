@@ -11,6 +11,7 @@ import com.joewoo.ontime.Post;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.SingleUser;
 import com.joewoo.ontime.action.Weibo_CommentsMentions;
+import com.joewoo.ontime.bean.ErrorBean;
 import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.singleWeibo.SingleWeibo;
 import com.joewoo.ontime.action.Weibo_Mentions;
@@ -21,6 +22,7 @@ import com.joewoo.ontime.bean.UnreadCountBean;
 import static com.joewoo.ontime.info.Constants.*;
 
 import com.joewoo.ontime.info.Weibo_AcquireCount;
+import com.joewoo.ontime.tools.MyMaidAdapter;
 import com.joewoo.ontime.tools.MyMaidSQLHelper;
 import com.joewoo.ontime.tools.MyMaidUtilities;
 
@@ -65,21 +67,14 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
 
     @Override
     public void onRefreshStarted(View view) {
-        if (MyMaidUtilities.isNetworkAvailable(act)) {
+        if (((Main) act).checkNetwork()) {
             if (isNormalMention) {
                 Log.e(TAG, "Refresh Mentions");
                 refreshMentions();
-                new Weibo_RemindSetCount(mHandler)
-                        .execute(Weibo_RemindSetCount.setMentionsCount);
             } else {
                 Log.e(TAG, "Refresh Comments Mentions");
                 refreshCommentsMentions();
-                new Weibo_RemindSetCount(mHandler)
-                        .execute(Weibo_RemindSetCount.setCommentMentionsCount);
             }
-        } else {
-            Toast.makeText(act, R.string.toast_no_network, Toast.LENGTH_SHORT).show();
-            mPullToRefreshAttacher.setRefreshing(false);
         }
 
     }
@@ -107,7 +102,7 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
 
         sql = ((Main) act).getSQL();
         c = sql.query(MyMaidSQLHelper.tableName, new String[]{
-                MyMaidSQLHelper.MENTIONS, MyMaidSQLHelper.PROFILEIMG, MyMaidSQLHelper.COMMENTS_MENTIONS}, sqlHelper.UID
+                MyMaidSQLHelper.MENTIONS, MyMaidSQLHelper.PROFILEIMG, MyMaidSQLHelper.COMMENTS_MENTIONS}, MyMaidSQLHelper.UID
                 + "=?", new String[]{Weibo_Constants.UID}, null, null, null);
 
         setLv(MyMaidSQLHelper.MENTIONS);
@@ -215,7 +210,6 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
                 if (Weibo_Constants.UID.equals("1665287983")) {
                     Intent i = new Intent();
                     i.setClass(act, SingleUser.class);
-                    i.putExtra(UID, "1893689251");
                     i.putExtra(SCREEN_NAME, "Selley__LauChingYee");
                     startActivity(i);
                 } else {
@@ -238,15 +232,19 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
             mPullToRefreshAttacher.setRefreshComplete();
             switch (msg.what) {
                 case GOT_MENTIONS_INFO: {
-
                     text = (ArrayList<HashMap<String, String>>) msg.obj;
                     setListView(text);
-
+                    new Weibo_RemindSetCount(mHandler)
+                            .execute(Weibo_RemindSetCount.setMentionsCount);
                     break;
                 }
                 case GOT_MENTIONS_INFO_FAIL: {
-                    Toast.makeText(act, R.string.toast_mentions_fail,
-                            Toast.LENGTH_SHORT).show();
+                    if (msg.obj != null)
+                        Toast.makeText(act, ((ErrorBean) msg.obj).getError(),
+                                Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(act, R.string.toast_mentions_fail,
+                                Toast.LENGTH_SHORT).show();
                     break;
                 }
                 case GOT_UNREAD_COUNT_INFO: {
@@ -263,6 +261,8 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
                 case GOT_COMMENTS_MENTIONS_INFO: {
                     text = (ArrayList<HashMap<String, String>>) msg.obj;
                     setListView(text);
+                    new Weibo_RemindSetCount(mHandler)
+                            .execute(Weibo_RemindSetCount.setCommentMentionsCount);
                     break;
                 }
                 case GOT_COMMENTS_MENTIONS_INFO_FAIL: {
@@ -282,67 +282,8 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
     };
 
     private void setListView(ArrayList<HashMap<String, String>> arrayList) {
-
-        String[] from = {SOURCE, CREATED_AT, SCREEN_NAME, TEXT,
-                COMMENTS_COUNT, REPOSTS_COUNT, RETWEETED_STATUS_SCREEN_NAME,
-                RETWEETED_STATUS, HAVE_PIC, IS_REPOST};
-        int[] to = {R.id.mentions_source, R.id.mentions_created_at,
-                R.id.mentions_screen_name, R.id.mentions_text,
-                R.id.mentions_comments_count, R.id.mentions_reposts_count,
-                R.id.mentions_retweeted_status_screen_name,
-                R.id.mentions_retweeted_status, R.id.mentions_have_image,
-                R.id.mentions_retweeted_status_rl};
-
-        SimpleAdapter data = new SimpleAdapter(act, arrayList,
-                R.layout.mentions_lv, from, to);
-
-        SimpleAdapter.ViewBinder binder = new SimpleAdapter.ViewBinder() {
-            @Override
-            public boolean setViewValue(View view, Object data,
-                                        String textRepresentation) {
-
-                if (view.equals((TextView) view
-                        .findViewById(R.id.mentions_retweeted_status_rl))) {
-                    if (" ".equals(textRepresentation)) {
-                        view.setVisibility(View.VISIBLE);
-                    } else {
-                        view.setVisibility(View.GONE);
-                    }
-                }
-
-                if (view.equals((TextView) view
-                        .findViewById(R.id.mentions_retweeted_status_screen_name))) {
-                    if (!"".equals(textRepresentation)) {
-                        view.setVisibility(View.VISIBLE);
-                    } else {
-                        view.setVisibility(View.GONE);
-                    }
-                }
-
-                if (view.equals((TextView) view
-                        .findViewById(R.id.mentions_retweeted_status))) {
-                    if (!"".equals(textRepresentation)) {
-                        view.setVisibility(View.VISIBLE);
-                    } else {
-                        view.setVisibility(View.GONE);
-                    }
-                }
-                if (view.equals((TextView) view
-                        .findViewById(R.id.mentions_have_image))) {
-                    if (" ".equals(textRepresentation)) {
-                        view.setVisibility(View.VISIBLE);
-
-                    } else {
-                        view.setVisibility(View.GONE);
-                    }
-                }
-                return false;
-            }
-        };
-
-        data.setViewBinder(binder);
-
-        lv.setAdapter(data);
+        MyMaidAdapter adapter = new MyMaidAdapter(act, arrayList);
+        lv.setAdapter(adapter);
     }
 
     public void getUnreadMentionsCount() {
@@ -362,9 +303,7 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
     }
 
     private void setLv(String column) {
-
         if (c != null && c.moveToFirst()) {
-
             try {
                 if (!c.getString(c.getColumnIndex(column)).equals("")) {
                     if (column.equals(MyMaidSQLHelper.MENTIONS)) {
@@ -381,10 +320,9 @@ public class Frag_Mentions extends Fragment implements OnRefreshListener {
                         refreshCommentsMentions();
                     }
                 }
-
-
             } catch (Exception e) {
                 e.printStackTrace();
+                mPullToRefreshAttacher.setRefreshing(false);
             }
         } else {
 

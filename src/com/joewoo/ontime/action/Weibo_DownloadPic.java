@@ -1,6 +1,7 @@
 package com.joewoo.ontime.action;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.joewoo.ontime.info.Constants;
 import com.joewoo.ontime.tools.MyMaidUtilities;
 
 import org.apache.http.HttpEntity;
@@ -61,8 +63,7 @@ public class Weibo_DownloadPic extends AsyncTask<String, Integer, Bitmap> {
         Log.e(TAG, "Download Pic AsyncTask START");
         Log.e(TAG, "Pic URL - " + params[0]);
 
-        if(!params[0].endsWith(".gif"))
-        {
+        if (!params[0].endsWith(".gif")) {
             try {
 
                 HttpUriRequest httpGet = new HttpGet(params[0]);
@@ -107,12 +108,16 @@ public class Weibo_DownloadPic extends AsyncTask<String, Integer, Bitmap> {
                 }
                 is.close();
 
-                if(!isCancelled())  {
+                if (!isCancelled()) {
                     byte[] imgBytes = baos.toByteArray();
                     if (maxSize > 4000) {
+                        image = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length);
 
-                        image = BitmapFactory.decodeByteArray(imgBytes, 0,
-                                imgBytes.length);
+                        MyMaidUtilities.saveBitmapToPNG(image, Constants.TEMP_IMAGE_PATH, Constants.TEMP_IMAGE_NAME);
+
+                        image.recycle();
+                        image = MyMaidUtilities.decodeSampledBitmap(imgBytes, 270, 270);
+                        Log.e(TAG, "Hegiht: " + String.valueOf(image.getHeight()) + " Width: " + String.valueOf(image.getWidth()));
                     } else {
                         image = MyMaidUtilities.toRoundCorner(BitmapFactory.decodeByteArray(imgBytes,
                                 0, imgBytes.length), 25);
@@ -122,7 +127,7 @@ public class Weibo_DownloadPic extends AsyncTask<String, Integer, Bitmap> {
                 baos.close();
 
             } catch (Exception e) {
-                Log.e(TAG, "Download Pic AsyncTask FALIED");
+                Log.e(TAG, "Download Pic AsyncTask FAILED");
                 e.printStackTrace();
             }
 
@@ -161,13 +166,16 @@ public class Weibo_DownloadPic extends AsyncTask<String, Integer, Bitmap> {
     protected void onPostExecute(Bitmap bitmap) {
         if (!isCancelled()) {
 
-            if(image != null)
-            {
+            if (image != null) {
                 iv.setImageBitmap(image);
-            }
-            else
+            } else {
+                if (tv != null) {
+                    ViewGroup.LayoutParams lp = tv.getLayoutParams();
+                    lp.width = 10000;
+                    tv.setLayoutParams(lp);
+                }
                 iv.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
-
+            }
 
             if (pb != null)
                 pb.setVisibility(View.INVISIBLE);

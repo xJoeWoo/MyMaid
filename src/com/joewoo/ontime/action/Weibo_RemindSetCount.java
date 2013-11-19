@@ -69,8 +69,7 @@ public class Weibo_RemindSetCount extends AsyncTask<String, Integer, String> {
     @Override
     protected void onPostExecute(String result) {
         Log.e(TAG, result);
-        Gson gson = new Gson();
-        WeiboBackBean b = gson.fromJson(result, WeiboBackBean.class);
+        WeiboBackBean b = new Gson().fromJson(result, WeiboBackBean.class);
 
         if (b.getSetRemindCountResult() == null) {
             mHandler.sendEmptyMessage(GOT_SET_REMIND_COUNT_INFO_FAIL);

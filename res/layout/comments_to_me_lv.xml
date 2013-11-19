@@ -156,6 +156,16 @@
             android:textColor="@color/textGrey"
             android:textSize="12sp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:text=" "
+            android:id="@+id/comments_to_me_blank"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:visibility="gone"/>
+
     </RelativeLayout>
 
 </RelativeLayout>

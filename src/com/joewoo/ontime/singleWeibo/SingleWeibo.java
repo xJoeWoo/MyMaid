@@ -44,7 +44,7 @@ public class SingleWeibo extends FragmentActivity {
         setContentView(R.layout.singelweibo);
 
         i = getIntent();
-        map = (HashMap<String, String>)i.getSerializableExtra(SINGLE_WEIBO_MAP);
+        map = (HashMap<String, String>) i.getSerializableExtra(SINGLE_WEIBO_MAP);
 
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -60,8 +60,7 @@ public class SingleWeibo extends FragmentActivity {
         String titleComment = getResources().getString(R.string.title_frag_single_weibo_comments).toUpperCase(Locale.US);
         String repostCount;
         String commentsCount;
-        if(map.get(IS_COMMENT) == null)
-        {
+        if (map.get(IS_COMMENT) == null) {
             repostCount = map.get(REPOSTS_COUNT);
             commentsCount = map.get(COMMENTS_COUNT);
         } else {
@@ -110,15 +109,12 @@ public class SingleWeibo extends FragmentActivity {
                                 break;
                             }
                             case SingleWeiboPagerAdapter.FRAG_SINGLEWEIBOCOMMENTS_POS: {
-
                                 if (!isShowedComments)
                                     mSectionsPagerAdapter.getSingleWeiboCommentsFrag().showComments(map.get(WEIBO_ID));
                                 isShowedComments = true;
-
                                 break;
                             }
                             case SingleWeiboPagerAdapter.FRAG_SINGLEWEIBOREPOSTS_POS: {
-
                                 if (!isShowedReposts)
                                     mSectionsPagerAdapter.getSingleWeiboRepostsFrag().showReposts(map.get(WEIBO_ID));
                                 isShowedReposts = true;
@@ -140,34 +136,29 @@ public class SingleWeibo extends FragmentActivity {
 
             switch (msg.what) {
                 case GOT_FAVOURITE_CREATE_INFO: {
-
-                    WeiboBackBean b = (WeiboBackBean) msg.obj;
-
-                    if (b.getFavoritedTime() != null) {
-                        Toast.makeText(SingleWeibo.this,
-                                R.string.toast_add_favourite_success,
-                                Toast.LENGTH_SHORT).show();
-                        finish();
-                    } else {
-                        Toast.makeText(SingleWeibo.this,
-                                R.string.toast_add_favourite_fail,
-                                Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(SingleWeibo.this,
+                            R.string.toast_add_favourite_success,
+                            Toast.LENGTH_SHORT).show();
+                    finish();
                     break;
                 }
-                case GOT_STATUSES_DESTROY_INFO: {
-                    WeiboBackBean b = (WeiboBackBean) msg.obj;
+                case GOT_FAVOURITE_CREATE_INFO_FAIL: {
+                    Toast.makeText(SingleWeibo.this,
+                            R.string.toast_add_favourite_fail,
+                            Toast.LENGTH_SHORT).show();
+                    break;
 
-                    if (b.getId() != null) {
-                        Toast.makeText(SingleWeibo.this,
-                                R.string.toast_delete_success, Toast.LENGTH_SHORT)
-                                .show();
-                        finish();
-                    } else {
-                        Toast.makeText(SingleWeibo.this,
-                                R.string.toast_delete_fail, Toast.LENGTH_SHORT)
-                                .show();
-                    }
+                }
+                case GOT_STATUSES_DESTROY_INFO: {
+                    Toast.makeText(SingleWeibo.this, R.string.toast_delete_success, Toast.LENGTH_SHORT).show();
+                    Intent ii = new Intent();
+                    ii.putExtra(MAP_POSITION, i.getIntExtra(MAP_POSITION, -1));
+                    setResult(RESULT_OK, ii);
+                    finish();
+                    break;
+                }
+                case GOT_STATUSES_DESTROY_INFO_FAIL: {
+                    Toast.makeText(SingleWeibo.this, R.string.toast_delete_fail, Toast.LENGTH_SHORT).show();
                     break;
                 }
 

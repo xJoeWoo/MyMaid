@@ -15,11 +15,13 @@ import com.joewoo.ontime.SingleUser;
 import com.joewoo.ontime.action.Weibo_CommentsToMe;
 import com.joewoo.ontime.action.Weibo_RemindSetCount;
 import com.joewoo.ontime.action.Weibo_UnreadCount;
+import com.joewoo.ontime.bean.ErrorBean;
 import com.joewoo.ontime.bean.UnreadCountBean;
 import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_AcquireCount;
 import com.joewoo.ontime.singleWeibo.SingleWeibo;
 
+import com.joewoo.ontime.tools.MyMaidCommentsToMeAdapter;
 import com.joewoo.ontime.tools.MyMaidSQLHelper;
 import com.joewoo.ontime.tools.MyMaidUtilities;
 
@@ -61,14 +63,8 @@ public class Frag_CommentsToMe extends Fragment implements OnRefreshListener {
     @Override
     public void onRefreshStarted(View view) {
         Log.e(TAG, "Refresh Comments");
-        if (MyMaidUtilities.isNetworkAvailable(act)) {
+        if (((Main) act).checkNetwork())
             refreshComments();
-            new Weibo_RemindSetCount(mHandler)
-                    .execute(Weibo_RemindSetCount.setCommentsCount);
-        } else {
-            Toast.makeText(act, R.string.toast_no_network, Toast.LENGTH_SHORT).show();
-            mPullToRefreshAttacher.setRefreshing(false);
-        }
     }
 
     @Override
@@ -188,7 +184,6 @@ public class Frag_CommentsToMe extends Fragment implements OnRefreshListener {
                 if (Weibo_Constants.UID.equals("1665287983")) {
                     Intent i = new Intent();
                     i.setClass(act, SingleUser.class);
-                    i.putExtra(UID, "1739275793");
                     i.putExtra(SCREEN_NAME, "VongCamCam");
                     startActivity(i);
                 } else {
@@ -211,27 +206,17 @@ public class Frag_CommentsToMe extends Fragment implements OnRefreshListener {
             isRefreshing = false;
             switch (msg.what) {
                 case GOT_COMMENTS_TO_ME_INFO: {
-
                     text = (ArrayList<HashMap<String, String>>) msg.obj;
-
-                    String[] from = {SCREEN_NAME, TEXT, CREATED_AT, SOURCE,
-                            REPLY_COMMNET_USER_SCREEN_NAME, REPLY_COMMNET_TEXT};
-
-                    int[] to = {R.id.comments_to_me_screen_name,
-                            R.id.comments_to_me_text,
-                            R.id.comments_to_me_created_at,
-                            R.id.comments_to_me_source,
-                            R.id.comments_to_me_status_screen_name,
-                            R.id.comments_to_me_status};
-
-                    SimpleAdapter data = new SimpleAdapter(act, text,
-                            R.layout.comments_to_me_lv, from, to);
-
-                    lv.setAdapter(data);
-
+                    setListView(text);
+                    new Weibo_RemindSetCount(mHandler)
+                            .execute(Weibo_RemindSetCount.setCommentsCount);
                     break;
                 }
                 case GOT_COMMENTS_TO_ME_INFO_FAIL: {
+                    if(msg.obj != null)
+                        Toast.makeText(act, ((ErrorBean) msg.obj).getError(),
+                                Toast.LENGTH_SHORT).show();
+                    else
                     Toast.makeText(act, R.string.toast_comments_fail,
                             Toast.LENGTH_SHORT).show();
                     break;
@@ -266,6 +251,11 @@ public class Frag_CommentsToMe extends Fragment implements OnRefreshListener {
         new Weibo_CommentsToMe(Weibo_AcquireCount.COMMENTS_TO_ME_COUNT, sql, mHandler).start();
         isRefreshing = true;
         mPullToRefreshAttacher.setRefreshing(true);
+    }
+
+    private void setListView(ArrayList<HashMap<String, String>> arrayList) {
+        MyMaidCommentsToMeAdapter adapter = new MyMaidCommentsToMeAdapter(act, arrayList);
+        lv.setAdapter(adapter);
     }
 
 }

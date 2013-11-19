@@ -14,9 +14,11 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
+import com.joewoo.ontime.bean.ErrorBean;
 import com.joewoo.ontime.bean.WeiboBackBean;
 import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
+import com.joewoo.ontime.tools.Weibo_Errors;
 
 import android.os.Handler;
 import android.util.Log;
@@ -48,7 +50,12 @@ public class Weibo_StatusesDestroy extends Thread {
 
             Log.e(TAG, "GOT: " + httpResult);
 
-            mHandler.obtainMessage(GOT_STATUSES_DESTROY_INFO, new Gson().fromJson(httpResult, WeiboBackBean.class)).sendToTarget();
+            ErrorBean err = Weibo_Errors.getErrorBean(httpResult);
+
+            if (err == null)
+                mHandler.obtainMessage(GOT_STATUSES_DESTROY_INFO, new Gson().fromJson(httpResult, WeiboBackBean.class)).sendToTarget();
+            else
+                mHandler.sendEmptyMessage(GOT_STATUSES_DESTROY_INFO_FAIL);
 
         } catch (Exception e) {
             mHandler.sendEmptyMessage(GOT_STATUSES_DESTROY_INFO_FAIL);

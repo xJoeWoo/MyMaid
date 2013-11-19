@@ -1,8 +1,18 @@
 package com.joewoo.ontime.info;
 
+import android.content.Context;
+import android.os.Environment;
+
 public class Constants {
 
+    public final static int RESULT_DESTROYED_WEIBO = 2;
+
     public final static String SINGLE_WEIBO_MAP = "single_weibo_hash_map";
+    public final static String MAP_POSITION = "map_position";
+
+//    public final static String TEMP_IMAGE_PATH = "/data/data/com.joewoo.ontime/";
+    public final static String TEMP_IMAGE_NAME = "tmp.png";
+    public final static String TEMP_IMAGE_PATH = Environment.getExternalStorageDirectory() + "/Android/com.joewoo.ontime/";
 
 	public final static int GOT_ACCESS_TOKEN = 1;
 	public final static int GOT_ACCESS_TOKEN_FAIL = 2;
@@ -27,7 +37,7 @@ public class Constants {
 	public final static int GOT_MENTIONS_INFO_FAIL = 21;
 	public final static int GOT_REPLY_INFO = 22;
 	public final static int GOT_UNREAD_COUNT_INFO = 23;
-	public final static int GOT_FRIENDS_TIMELINE_EXTRA_INFO = 24;
+//	public final static int GOT_FRIENDS_TIMELINE_EXTRA_INFO = 24;
 	public final static int GOT_SET_REMIND_COUNT_INFO = 25;
 	public final static int GOT_SET_REMIND_COUNT_INFO_FAIL = 26;
 	public final static int GOT_USER_TIMELINE_INFO = 27;
@@ -42,6 +52,7 @@ public class Constants {
     public final static int GOT_REPOST_TIMELINE_INFO_FAIL = 36;
     public final static int GOT_COMMENTS_MENTIONS_INFO = 37;
     public final static int GOT_COMMENTS_MENTIONS_INFO_FAIL = 38;
+    public final static int GOT_FAVOURITE_CREATE_INFO_FAIL = 39;
 
 	public final static int ACT_GOT_PHOTO = 1;
 	public final static int ACT_GOT_AT = 2;
@@ -102,6 +113,7 @@ public class Constants {
 	public final static String IS_FRAG_POST = "isFragPost";
 	public final static String PROFILE_IMAGE = "profile_image";
 	public final static String USER_WEIBO = "user_weibo";
+    public final static String BLANK = "blank";
 	
 	public final static String PROFILE_IMAGE_URL = "profile_image_url";
 

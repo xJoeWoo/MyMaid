@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import static com.joewoo.ontime.info.Constants.BLANK;
 import static com.joewoo.ontime.info.Constants.COMMENTS_COUNT;
 import static com.joewoo.ontime.info.Constants.COMMENT_ID;
 import static com.joewoo.ontime.info.Constants.CREATED_AT;
@@ -71,7 +72,7 @@ public class Weibo_CommentsMentions extends Thread {
         isProvidedResult = true;
     }
 
-    public void run(){
+    public void run() {
         Log.e(TAG, "Comments Mentions Thread START");
 
         if (!isProvidedResult) {
@@ -115,69 +116,75 @@ public class Weibo_CommentsMentions extends Thread {
 
             } catch (Exception e) {
                 e.printStackTrace();
+                return;
             }
         }
 
-            try {
-                Log.e(TAG, httpResult);
+        try {
+            Log.e(TAG, httpResult);
 
-                List<CommentsBean> comments = new Gson().fromJson(httpResult,
-                        CommentsMentionsBean.class).getComments();
+            List<CommentsBean> comments = new Gson().fromJson(httpResult,
+                    CommentsMentionsBean.class).getComments();
 
-                ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
+            ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
 
-                String source;
-                for (CommentsBean c : comments) {
-                    HashMap<String, String> map = new HashMap<String, String>();
-                    source = c.getSource();
-                    source = source.substring(source.indexOf(">") + 1,
-                            source.length());
-                    source = source.substring(0, source.indexOf("<"));
-                    map.put(SOURCE, " · " + source);
-                    source = c.getCreatedAt();
-                    source = source.substring(source.indexOf(":") - 2,
-                            source.indexOf(":") + 3);
-                    map.put(CREATED_AT, source);
-                    // map.put(UID, c.getUser().getId());
-                    map.put(SCREEN_NAME, c.getUser().getScreenName());
-                    map.put(TEXT, c.getText());
-                    map.put(COMMENT_ID, c.getId());
+            HashMap<String, String> hm = new HashMap<String, String>();
+            hm.put(BLANK, " ");
+            text.add(hm);
+            hm = null;
 
-                    map.put(WEIBO_ID, c.getStatus().getId());
+            String source;
+            for (CommentsBean c : comments) {
+                HashMap<String, String> map = new HashMap<String, String>();
+                source = c.getSource();
+                source = source.substring(source.indexOf(">") + 1,
+                        source.length());
+                source = source.substring(0, source.indexOf("<"));
+                map.put(SOURCE, " · " + source);
+                source = c.getCreatedAt();
+                source = source.substring(source.indexOf(":") - 2,
+                        source.indexOf(":") + 3);
+                map.put(CREATED_AT, source);
+                // map.put(UID, c.getUser().getId());
+                map.put(SCREEN_NAME, c.getUser().getScreenName());
+                map.put(TEXT, c.getText());
+                map.put(COMMENT_ID, c.getId());
 
-                    map.put(COMMENTS_COUNT, c.getStatus().getCommentsCount());
-                    map.put(REPOSTS_COUNT, c.getStatus().getRepostsCount());
-                    map.put(RETWEETED_STATUS_SCREEN_NAME, c.getStatus().getUser().getScreenName());
-                    map.put(RETWEETED_STATUS, c.getStatus().getText());
-                    map.put(RETWEETED_STATUS_CREATED_AT, c.getStatus().getCreatedAt());
+                map.put(WEIBO_ID, c.getStatus().getId());
 
-                    map.put(IS_REPOST, " ");
+                map.put(COMMENTS_COUNT, c.getStatus().getCommentsCount());
+                map.put(REPOSTS_COUNT, c.getStatus().getRepostsCount());
+                map.put(RETWEETED_STATUS_SCREEN_NAME, c.getStatus().getUser().getScreenName());
+                map.put(RETWEETED_STATUS, c.getStatus().getText());
+                map.put(RETWEETED_STATUS_CREATED_AT, c.getStatus().getCreatedAt());
 
-                        if (c.getStatus().getThumbnailPic() != null) {
-                            map.put(HAVE_PIC, " ");
-                            map.put(RETWEETED_STATUS_BMIDDLE_PIC, c.getStatus().getBmiddlePic());
-                        }
+                map.put(IS_REPOST, " ");
 
-                    text.add(map);
+                if (c.getStatus().getThumbnailPic() != null) {
+                    map.put(HAVE_PIC, " ");
+                    map.put(RETWEETED_STATUS_BMIDDLE_PIC, c.getStatus().getBmiddlePic());
                 }
 
-                mHandler.obtainMessage(GOT_COMMENTS_MENTIONS_INFO, text)
-                        .sendToTarget();
-
-                if (sql != null && !isProvidedResult) {
-                    ContentValues cv = new ContentValues();
-                    cv.put(MyMaidSQLHelper.COMMENTS_MENTIONS, httpResult);
-                    if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"
-                            + Weibo_Constants.UID + "'", null) != 0) {
-                        Log.e(MyMaidSQLHelper.TAG_SQL, "Saved Comments Mentions httpResult");
-                    }
-                }
-
-            } catch (Exception e) {
-                mHandler.sendEmptyMessage(GOT_COMMENTS_MENTIONS_INFO_FAIL);
-                e.printStackTrace();
+                text.add(map);
             }
+
+            mHandler.obtainMessage(GOT_COMMENTS_MENTIONS_INFO, text)
+                    .sendToTarget();
+
+            if (sql != null && !isProvidedResult) {
+                ContentValues cv = new ContentValues();
+                cv.put(MyMaidSQLHelper.COMMENTS_MENTIONS, httpResult);
+                if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"
+                        + Weibo_Constants.UID + "'", null) != 0) {
+                    Log.e(MyMaidSQLHelper.TAG_SQL, "Saved Comments Mentions httpResult");
+                }
+            }
+
+        } catch (Exception e) {
+            mHandler.sendEmptyMessage(GOT_COMMENTS_MENTIONS_INFO_FAIL);
+            e.printStackTrace();
         }
+    }
 
 
 }

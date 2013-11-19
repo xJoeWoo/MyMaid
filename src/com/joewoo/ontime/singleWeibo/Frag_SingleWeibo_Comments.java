@@ -51,9 +51,9 @@ public class Frag_SingleWeibo_Comments extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_singleweibo_comments_reposts, container, false);
 
-        lv = (ListView)v.findViewById(R.id.frag_single_weibo_comments_lv);
-        pb = (ProgressBar)v.findViewById(R.id.frag_single_weibo_comments_pb);
-        tv = (TextView)v.findViewById(R.id.frag_single_weibo_comments_tv);
+        lv = (ListView)v.findViewById(R.id.lv_single_weibo_comments);
+        pb = (ProgressBar)v.findViewById(R.id.pb_single_weibo_comments);
+        tv = (TextView)v.findViewById(R.id.tv_single_weibo_comments);
 
         return v;
 

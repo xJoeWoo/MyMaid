@@ -8,9 +8,11 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.joewoo.ontime.bean.CommentsBean;
 import com.joewoo.ontime.bean.CommentsToMeBean;
+import com.joewoo.ontime.bean.ErrorBean;
 import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
 import com.joewoo.ontime.tools.MyMaidSQLHelper;
+import com.joewoo.ontime.tools.Weibo_Errors;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -23,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import static com.joewoo.ontime.info.Constants.BLANK;
 import static com.joewoo.ontime.info.Constants.COMMENT_ID;
 import static com.joewoo.ontime.info.Constants.CREATED_AT;
 import static com.joewoo.ontime.info.Constants.GOT_COMMENTS_TO_ME_INFO;
@@ -110,15 +113,24 @@ public class Weibo_CommentsToMe extends Thread {
                 Log.e(TAG, httpResult);
 
             } catch (Exception e) {
+                mHandler.sendEmptyMessage(GOT_COMMENTS_TO_ME_INFO_FAIL);
                 e.printStackTrace();
+                return;
             }
         }
 
-        try {
+        ErrorBean err = Weibo_Errors.getErrorBean(httpResult);
+
+        if (err == null) {
             List<CommentsBean> comments = new Gson().fromJson(httpResult,
                     CommentsToMeBean.class).getComments();
 
             ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
+
+            HashMap<String, String> hm = new HashMap<String, String>();
+            hm.put(BLANK, " ");
+            text.add(hm);
+            hm = null;
 
             String source;
             String rt_source;
@@ -155,7 +167,7 @@ public class Weibo_CommentsToMe extends Thread {
                 source = source.substring(source.indexOf(">") + 1,
                         source.length());
                 source = source.substring(0, source.indexOf("<"));
-                map.put(STATUS_SOURCE , " · " + source);
+                map.put(STATUS_SOURCE, " · " + source);
 
                 map.put(STATUS_PROFILE_IMAGE_URL, c.getStatus().getUser().getProfileImageUrl());
 
@@ -187,7 +199,7 @@ public class Weibo_CommentsToMe extends Thread {
 //                    e.printStackTrace();
                 }
 
-                if(c.getStatus().getBmiddlePic() != null) {
+                if (c.getStatus().getBmiddlePic() != null) {
                     map.put(STATUS_BMIDDLE_PIC, c.getStatus().getBmiddlePic());
                 }
 
@@ -219,10 +231,8 @@ public class Weibo_CommentsToMe extends Thread {
                 }
             }
 
-        } catch (Exception e) {
-            mHandler.sendEmptyMessage(GOT_COMMENTS_TO_ME_INFO_FAIL);
-            Log.e(TAG, "Comments To Me Thread FAILED");
-            e.printStackTrace();
+        } else {
+            mHandler.obtainMessage(GOT_COMMENTS_TO_ME_INFO_FAIL, err).sendToTarget();
         }
     }
 }

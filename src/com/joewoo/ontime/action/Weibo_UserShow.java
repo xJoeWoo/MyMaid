@@ -12,9 +12,11 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.joewoo.ontime.bean.ErrorBean;
 import com.joewoo.ontime.bean.WeiboBackBean;
 import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
+import com.joewoo.ontime.tools.Weibo_Errors;
 
 import static com.joewoo.ontime.info.Constants.*;
 
@@ -28,7 +30,7 @@ public class Weibo_UserShow extends Thread {
         this.mHandler = handler;
     }
 
-    public Weibo_UserShow(boolean isUid, String screenNameOrUid, Handler handler) {
+    public Weibo_UserShow(String screenNameOrUid, Handler handler) {
         this.isUid = isUid;
         this.screenNameOrUid = screenNameOrUid;
         this.mHandler = handler;
@@ -70,16 +72,20 @@ public class Weibo_UserShow extends Thread {
             httpResult = baos.toString();
             is.close();
             baos.close();
-
-            Gson gson = new Gson();
-            WeiboBackBean show = gson.fromJson(httpResult, WeiboBackBean.class);
-
-            mHandler.obtainMessage(GOT_SHOW_INFO, show).sendToTarget();
-
         } catch (Exception e) {
-            mHandler.obtainMessage(GOT_SHOW_INFO_FAIL, httpResult)
-                    .sendToTarget();
+            mHandler.sendEmptyMessage(GOT_SHOW_INFO_FAIL);
             e.printStackTrace();
         }
+
+        ErrorBean err = Weibo_Errors.getErrorBean(httpResult);
+
+        if (err == null) {
+            mHandler.obtainMessage(GOT_SHOW_INFO, new Gson().fromJson(httpResult, WeiboBackBean.class))
+                    .sendToTarget();
+        } else {
+            mHandler.obtainMessage(GOT_SHOW_INFO_FAIL, err).sendToTarget();
+        }
+
+
     }
 }

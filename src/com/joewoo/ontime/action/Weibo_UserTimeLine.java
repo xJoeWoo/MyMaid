@@ -14,10 +14,12 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.google.gson.Gson;
+import com.joewoo.ontime.bean.ErrorBean;
 import com.joewoo.ontime.bean.StatusesBean;
 import com.joewoo.ontime.bean.UserTimelineBean;
 import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
+import com.joewoo.ontime.tools.Weibo_Errors;
 
 import android.os.Handler;
 import android.util.Log;
@@ -26,31 +28,40 @@ public class Weibo_UserTimeLine extends Thread {
 
     private String count;
     private Handler mHandler;
-    private String screenNameOfUid;
-    private boolean isUid;
+    private String screenName;
+    private String max_id;
 
-    public Weibo_UserTimeLine(boolean isUid, String screenNameOfUid, int count,
+    public Weibo_UserTimeLine(String screenName, int count,
                               Handler handler) {
-        this.isUid = isUid;
-        this.screenNameOfUid = screenNameOfUid;
+        this.screenName = screenName;
         this.count = String.valueOf(count);
         this.mHandler = handler;
     }
+
+    public Weibo_UserTimeLine(String screenName, int count, String max_id, Handler handler) {
+        this.screenName = screenName;
+        this.count = String.valueOf(count);
+        this.mHandler = handler;
+        this.max_id = max_id;
+    }
+
 
     public void run() {
         Log.e(TAG, "User Time Line Thread START");
         String httpResult = "{ \"error_code\" : \"233\" }";
 
         HttpUriRequest httpGet;
+        Log.e(TAG, screenName);
 
-        if (!isUid)
+        if (max_id == null)
             httpGet = new HttpGet(Weibo_URLs.USER_TIMELINE + "?access_token="
                     + Weibo_Constants.ACCESS_TOKEN + "&screen_name="
-                    + screenNameOfUid + "&count=" + count);
+                    + screenName + "&count=" + count);
         else
             httpGet = new HttpGet(Weibo_URLs.USER_TIMELINE + "?access_token="
-                    + Weibo_Constants.ACCESS_TOKEN + "&uid=" + screenNameOfUid
-                    + "&count=" + count);
+                    + Weibo_Constants.ACCESS_TOKEN + "&screen_name="
+                    + screenName + "&count=" + count + "&max_id=" + max_id);
+
 
         httpGet.addHeader("Accept-Encoding", "gzip");
 
@@ -81,13 +92,23 @@ public class Weibo_UserTimeLine extends Thread {
             Log.e(TAG, "User Timeline Thread Network Failed");
             e.printStackTrace();
             mHandler.sendEmptyMessage(GOT_USER_TIMELINE_INFO_FAIL);
+            return;
         }
 
-        try {
+        ErrorBean err = Weibo_Errors.getErrorBean(httpResult);
+
+        if (err == null) {
+
             UserTimelineBean timeline = new Gson().fromJson(httpResult,
                     UserTimelineBean.class);
 
             ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
+
+            if (max_id == null) {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put(BLANK, " ");
+                text.add(map);
+            }
 
             List<StatusesBean> statuses = timeline.getStatuses();
 
@@ -159,11 +180,8 @@ public class Weibo_UserTimeLine extends Thread {
             }
 
             mHandler.obtainMessage(GOT_USER_TIMELINE_INFO, text).sendToTarget();
-
-        } catch (Exception e) {
-            mHandler.sendEmptyMessage(GOT_USER_TIMELINE_INFO_FAIL);
-            e.printStackTrace();
+        } else {
+            mHandler.obtainMessage(GOT_USER_TIMELINE_INFO_FAIL, err).sendToTarget();
         }
-
     }
 }

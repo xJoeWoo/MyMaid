@@ -22,6 +22,4 @@
         android:drawable="@drawable/btn_cab_done_pressed_mymaid" />
     <item android:state_focused="true" android:state_enabled="true"
         android:drawable="@drawable/btn_cab_done_focused_mymaid" />
-    <item android:state_enabled="true"
-        android:drawable="@drawable/btn_cab_done_default_mymaid" />
 </selector>

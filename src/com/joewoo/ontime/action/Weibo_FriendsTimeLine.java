@@ -14,12 +14,14 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.google.gson.Gson;
+import com.joewoo.ontime.bean.ErrorBean;
 import com.joewoo.ontime.bean.FriendsTimelineBean;
 import com.joewoo.ontime.bean.PicURLsBean;
 import com.joewoo.ontime.bean.StatusesBean;
 import com.joewoo.ontime.info.Weibo_Constants;
 import com.joewoo.ontime.info.Weibo_URLs;
 import com.joewoo.ontime.tools.MyMaidSQLHelper;
+import com.joewoo.ontime.tools.Weibo_Errors;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
@@ -101,17 +103,26 @@ public class Weibo_FriendsTimeLine extends Thread {
                 // Log.e(TAG, httpResult);
 
             } catch (Exception e) {
-                Log.e(TAG, "Friends Timeline Thread Network Problem");
+                mHandler.sendEmptyMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL);
                 e.printStackTrace();
+                return;
             }
         }
 
-        try {
+        ErrorBean err = Weibo_Errors.getErrorBean(httpResult);
 
+        if (err == null) {
             FriendsTimelineBean timeline = new Gson().fromJson(httpResult,
                     FriendsTimelineBean.class);
 
             ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
+
+            if (max_id == null) {
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put(BLANK, " ");
+                text.add(map);
+                map = null;
+            }
 
             List<StatusesBean> statuses = timeline.getStatuses();
 
@@ -141,9 +152,8 @@ public class Weibo_FriendsTimeLine extends Thread {
                         .getProfileImageUrl());
 
                 try {
-                    for(int i = 0; i < s.getPicURLs().size(); i++)
-                    {
-                        Log.e(TAG, String.valueOf(i)+ " : " + s.getPicURLs().get(i).getThumbnailPic());
+                    for (int i = 0; i < s.getPicURLs().size(); i++) {
+                        Log.e(TAG, String.valueOf(i) + " : " + s.getPicURLs().get(i).getThumbnailPic());
                     }
                 } catch (Exception e) {
                     Log.e(TAG, "Not muilt pics");
@@ -211,12 +221,10 @@ public class Weibo_FriendsTimeLine extends Thread {
                     Log.e(MyMaidSQLHelper.TAG_SQL, "Saved httpResult");
                 }
             }
-
-        } catch (Exception e) {
-            mHandler.sendEmptyMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL);
-            Log.e(TAG, "Friends Timeline Thread FAILED");
-            e.printStackTrace();
+        } else {
+            mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL, err);
         }
+
 
     }
 }
