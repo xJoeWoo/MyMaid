@@ -85,6 +85,8 @@
     <string name="menu_unread_post_mentions">POSTS @&#160;</string>
     <string name="menu_unread_comments_mentions">\t\tCMTS @&#160;</string>
     <string name="menu_unread_comments">COMMENTS&#160;</string>
+    <string name="menu_copy_text">COPY</string>
+
 
 	
 	<string name="post_send_success_part_1">SUCCESS!\nPost at -&#160;</string>
@@ -118,7 +120,19 @@
 	<string name="error_token_out_of_date">Your authorize was out of date</string>
 	<string name="error_repeat_content">ERROR!\nRepeat content\nError -&#160;</string>
 	<string name="error_out_of_max_text_count">ERROR!\nText overflown!~\nError -&#160;</string>
-	
+
+    <string name="error_token_problem">Token expired</string>
+    <string name="error_auth_fail">Auth faild</string>
+    <string name="error_user_passwork_error">Username or password error</string>
+    <string name="error_user_not_exist">User does not exists</string>
+    <string name="error_img_too_large">Image size too large</string>
+    <string name="error_content_is_null">Content is null</string>
+    <string name="error_text_too_long">Text too long</string>
+    <string name="error_repeat_content">Repeat content</string>
+    <string name="error_update_success_but_wait">Update success, please wait 1~2 minutes</string>
+    <string name="error_comment_not_exist">Target weibo comment does not exist</string>
+    <string name="error_unknown">&lt;(ll°д°ll)&gt;! Unknown error</string>
+
 	<!-- <string name=""></string>
 	<string name=""></string>
 	<string name=""></string> -->

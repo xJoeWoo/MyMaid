@@ -114,7 +114,18 @@
 	<string name="error_token_out_of_date">身份认证过期…请重新登录</string>
 	<string name="error_repeat_content">ERROR!\n不能重复发同一个Po哦\nError -&#160;</string>
 	<string name="error_out_of_max_text_count">ERROR!\n目测超字数了…缩句吧~\nError -&#160;</string>
-	
+
+    <string name="error_token_problem">授权过期…</string>
+    <string name="error_auth_fail">认证失败…</string>
+    <string name="error_user_passwork_error">用户名或密码错误…</string>
+    <string name="error_user_not_exist">用户不存在…</string>
+    <string name="error_img_too_large">图片太大…</string>
+    <string name="error_content_is_null">内容为空…</string>
+    <string name="error_text_too_long">文字太长…</string>
+    <string name="error_repeat_content">内容与上一条重复…</string>
+    <string name="error_update_success_but_wait">发布成功，请稍后1~2分钟…</string>
+    <string name="error_comment_not_exist">评论不存在…</string>
+    <string name="error_unknown">&lt;(ll°д°ll)&gt;! 未知错误</string>
 	<!-- <string name=""></string>
 	<string name=""></string>
 	<string name=""></string> -->

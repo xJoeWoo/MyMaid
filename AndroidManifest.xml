@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.joewoo.ontime"
-    android:versionCode="23"
+    android:versionCode="25"
     android:versionName="0.76.131120" >
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,9 +16,10 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Mymaid" >
+        android:theme="@style/Theme.Mymaid"
+        android:name=".support.util.GlobalContext">
 
-        <activity android:name=".main.Main"
+        <activity android:name=".ui.maintimeline.MainTimelineActivity"
             android:label="@string/app_name"
             android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
@@ -36,12 +37,12 @@
             <!--</intent-filter>-->
 		<!--</activity>-->
         
-        <activity android:name=".Login" android:label="@string/title_act_login" /> 
-        <activity android:name=".At" android:label="\@" /> 
-        <activity android:name=".Comment_Repost" android:label="@string/title_act_comment" /> 
-        <activity android:name=".SingleUser" android:label="@string/title_act_single_user" />
+        <activity android:name=".ui.Login" android:label="@string/title_act_login" />
+        <activity android:name=".ui.At" android:label="\@" />
+        <activity android:name=".ui.CommentRepost" android:label="@string/title_act_comment" />
+        <activity android:name=".ui.SingleUser" android:label="@string/title_act_single_user" />
 
-        <activity android:name=".Post" 
+        <activity android:name=".ui.Post"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -55,7 +56,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".singleWeibo.SingleWeibo"
+        <activity android:name=".ui.singleweibo.SingleWeiboActivity"
             android:uiOptions="splitActionBarWhenNarrow" android:label="@string/title_act_single_weibo"/>
 
 

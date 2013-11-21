@@ -2,7 +2,7 @@ package com.joewoo.ontime.action;
 
 import java.io.IOException;
 
-import static com.joewoo.ontime.info.Constants.*;
+import static com.joewoo.ontime.support.info.Defines.*;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -14,7 +14,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
-import com.joewoo.ontime.bean.WeatherBean;
+import com.joewoo.ontime.support.bean.WeatherBean;
 
 import android.os.Handler;
 import android.util.Log;

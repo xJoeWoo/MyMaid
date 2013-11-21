@@ -6,13 +6,13 @@
 
     <!--     <main -->
     <!--         android:id="@+id/fg_friends_timeline" -->
-    <!--         android:name=".main.Frag_FriendsTimeLine" -->
+    <!--         android:name=".main.FriendsTimeLineFragment" -->
     <!--         android:layout_width="match_parent" -->
     <!--         android:layout_height="match_parent" /> -->
 
     <!--     <main -->
     <!--         android:id="@+id/fg_comments" -->
-    <!--         android:name=".main.Frag_SingleWeibo_Comments" -->
+    <!--         android:name=".main.SingleWeiboCommentsFragment" -->
     <!--         android:layout_width="match_parent" -->
     <!--         android:layout_height="match_parent" /> -->
 
