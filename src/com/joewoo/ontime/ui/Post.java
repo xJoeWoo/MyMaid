@@ -33,9 +33,9 @@ import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.statuses.StatusesUpdate;
 import com.joewoo.ontime.action.statuses.StatusesUpload;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
-import com.joewoo.ontime.support.info.Constants;
 import com.joewoo.ontime.support.net.NetworkStatus;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
+import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.util.IDtoMID;
 
 import java.io.File;
@@ -123,16 +123,12 @@ public class Post extends Activity {
 
 					Log.e(TAG, "4");
 
-					Constants.UID = c.getString(c
-							.getColumnIndex(MyMaidSQLHelper.UID));
-					Constants.ACCESS_TOKEN = c.getString(c
-							.getColumnIndex(MyMaidSQLHelper.ACCESS_TOKEN));
-					Constants.LOCATION = c.getString(c
-							.getColumnIndex(MyMaidSQLHelper.LOCATION));
-					Constants.EXPIRES_IN = Integer.valueOf(c.getString(c
-							.getColumnIndex(MyMaidSQLHelper.EXPIRES_IN)));
-					Constants.SCREEN_NAME = c.getString(c
-							.getColumnIndex(MyMaidSQLHelper.SCREEN_NAME));
+					GlobalContext.setUID(c.getString(c
+                            .getColumnIndex(MyMaidSQLHelper.UID)));
+					GlobalContext.setAccessToken(c.getString(c
+							.getColumnIndex(MyMaidSQLHelper.ACCESS_TOKEN)));
+					GlobalContext.setScreenName(c.getString(c
+							.getColumnIndex(MyMaidSQLHelper.SCREEN_NAME)));
 
 					byte[] profileImg = c.getBlob(c
 							.getColumnIndex(MyMaidSQLHelper.PROFILEIMG));
@@ -140,10 +136,6 @@ public class Post extends Activity {
 							new BitmapDrawable(getResources(), BitmapFactory
 									.decodeByteArray(profileImg, 0,
 											profileImg.length)));
-
-					Log.e(TAG, "Constants: " + Constants.ACCESS_TOKEN
-							+ Constants.SCREEN_NAME + Constants.UID
-							+ Constants.LOCATION);
 
 					if ((draft = c.getString(c.getColumnIndex(MyMaidSQLHelper.DRAFT))) != null) {
 						Log.e(TAG, "5");
@@ -156,16 +148,13 @@ public class Post extends Activity {
 
 					Log.e(TAG, "6");
 
-					if (Constants.PICPATH != null
-							|| Constants.WORDS != null) {
-						Log.e(TAG, Constants.PICPATH + Constants.WORDS);
-						if (Constants.PICPATH != null) {
-							picFile = new File(Constants.PICPATH);
+
+						if (GlobalContext.getPicPath() != null) {
+							picFile = new File(GlobalContext.getPicPath());
 							rfBar();
-						} else if (Constants.WORDS != null) {
-							et_post.setText(Constants.WORDS);
+						} else if (GlobalContext.getWords() != null) {
+							et_post.setText(GlobalContext.getWords());
 						}
-					}
 
 					Log.e(TAG, "7");
 					if (Intent.ACTION_SEND.equals(action) && type != null) {// 分享到此Activity
@@ -200,20 +189,9 @@ public class Post extends Activity {
 					} else {// 登录到此Activity
 
 						Log.e(TAG, "11");
-						if (Constants.SCREEN_NAME != null
-								&& Constants.LOCATION != null) {
-							Log.e(TAG, "12");
-//							Toast.makeText(
-//									Post.this,
-//									getResources().getString(
-//											R.string.toast_post_welcome_part_1)
-//											+ Constants.LOCATION
-//											+ getResources()
-//													.getString(
-//															R.string.toast_post_welcome_part_2)
-//											+ Constants.SCREEN_NAME,
-//									Toast.LENGTH_LONG).show();
-						}
+
+						Log.e(TAG, "12");
+
 					}
 				} else {// 没有查询到数据库信息
 					Log.e(TAG, "17");
@@ -235,13 +213,13 @@ public class Post extends Activity {
 			Log.e(TAG, "20");
 			getActionBar()
 					.setLogo(
-							new BitmapDrawable(getResources(), BitmapFactory
-									.decodeByteArray(profileImg, 0,
-											profileImg.length)));
+                            new BitmapDrawable(getResources(), BitmapFactory
+                                    .decodeByteArray(profileImg, 0,
+                                            profileImg.length)));
 			Log.e(TAG, "21");
 			Cursor c = sql.query(MyMaidSQLHelper.tableName,
 					new String[] { MyMaidSQLHelper.DRAFT }, MyMaidSQLHelper.UID + "=?",
-					new String[] { Constants.UID }, null, null, null);
+					new String[] { GlobalContext.getUID() }, null, null, null);
 			Log.e(TAG, "22");
 			if (c.moveToFirst()) {
 				if ((draft = c.getString(c.getColumnIndex(MyMaidSQLHelper.DRAFT))) != null) {
@@ -273,7 +251,7 @@ public class Post extends Activity {
 		});
 
 		setTitle(R.string.title_act_post);
-		getActionBar().setSubtitle(Constants.SCREEN_NAME);
+		getActionBar().setSubtitle(GlobalContext.getScreenName());
 
 		a_out = AnimationUtils.loadAnimation(Post.this, R.anim.alpha_out);
 		a_in = AnimationUtils.loadAnimation(Post.this, R.anim.alpha_in);
@@ -473,7 +451,7 @@ public class Post extends Activity {
 						public void onClick(View v) {
 							String mid = IDtoMID.Id2Mid(update.getId());
 							Uri link = Uri.parse("http://weibo.com/"
-									+ Constants.UID + "/" + mid);
+									+ GlobalContext.getUID() + "/" + mid);
 							startActivity(new Intent(Intent.ACTION_VIEW, link));
 						}
 					});
@@ -503,7 +481,7 @@ public class Post extends Activity {
 						public void onClick(View v) {
 							String mid = IDtoMID.Id2Mid(upload.getId());
 							Uri link = Uri.parse("http://weibo.com/"
-									+ Constants.UID + "/" + mid);
+									+ GlobalContext.getUID() + "/" + mid);
 							startActivity(new Intent(Intent.ACTION_VIEW, link));
 						}
 					});
@@ -559,7 +537,7 @@ public class Post extends Activity {
 			ContentValues cv = new ContentValues();
 			cv.put(MyMaidSQLHelper.DRAFT, draft);
 			if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"
-					+ Constants.UID + "'", null) != 0) {
+					+ GlobalContext.getUID() + "'", null) != 0) {
 				Log.e(MyMaidSQLHelper.TAG_SQL, "Saved draft: " + draft);
 			}
 		}
@@ -569,7 +547,7 @@ public class Post extends Activity {
 		ContentValues cv = new ContentValues();
 		cv.put(MyMaidSQLHelper.DRAFT, "");
 		if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"
-				+ Constants.UID + "'", null) != 0) {
+				+ GlobalContext.getUID() + "'", null) != 0) {
 			Log.e(MyMaidSQLHelper.TAG_SQL, "Cleared draft");
 		}
 	}
@@ -643,11 +621,11 @@ public class Post extends Activity {
 			Log.e(TAG, "14");
 			if ("text/plain".equals(type)) { // 传入文件为文字
 				Log.e(TAG, "15 TEXT");
-				Constants.WORDS = intent.getStringExtra(Intent.EXTRA_TEXT);
+				GlobalContext.setWords(intent.getStringExtra(Intent.EXTRA_TEXT));
 			} else if (type.startsWith("image/")) { // 传入文件为图片
 				Log.e(TAG, "16 PHOTO");
-				Constants.PICPATH = (String) getFilePath((Uri) intent
-						.getParcelableExtra(Intent.EXTRA_STREAM));
+				GlobalContext.setPicPath(getFilePath((Uri) intent
+						.getParcelableExtra(Intent.EXTRA_STREAM)));
 			}
 		}
 

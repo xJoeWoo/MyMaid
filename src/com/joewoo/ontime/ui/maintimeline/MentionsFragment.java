@@ -11,11 +11,11 @@ import com.joewoo.ontime.action.comments.CommentsMentions;
 import com.joewoo.ontime.action.statuses.StatusesMentions;
 import com.joewoo.ontime.support.adapter.listview.MyMaidAdapter;
 import com.joewoo.ontime.support.info.AcquireCount;
+import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.ui.CommentRepost;
 import com.joewoo.ontime.ui.Post;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.ui.SingleUser;
-import com.joewoo.ontime.support.info.Constants;
 import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
 import com.joewoo.ontime.support.bean.UnreadCountBean;
 
@@ -88,14 +88,14 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
 
         act = (MainTimelineActivity) getActivity();
 
-        mPullToRefreshAttacher = (act)
+        mPullToRefreshAttacher = act
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        sql = (act).getSQL();
+        sql = act.getSQL();
         c = sql.query(MyMaidSQLHelper.tableName, new String[]{
                 MyMaidSQLHelper.MENTIONS, MyMaidSQLHelper.PROFILEIMG, MyMaidSQLHelper.COMMENTS_MENTIONS}, MyMaidSQLHelper.UID
-                + "=?", new String[]{Constants.UID}, null, null, null);
+                + "=?", new String[]{GlobalContext.getUID()}, null, null, null);
 
         setLv(MyMaidSQLHelper.MENTIONS);
 
@@ -199,7 +199,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                 break;
             }
             case MENU_PROFILE_IMAGE: {
-                if (Constants.UID.equals("1665287983")) {
+                if (GlobalContext.getUID().equals("1665287983")) {
                     Intent i = new Intent();
                     i.setClass(act, SingleUser.class);
                     i.putExtra(SCREEN_NAME, "Selley__LauChingYee");

@@ -16,8 +16,8 @@ import org.apache.http.util.EntityUtils;
 import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
-import com.joewoo.ontime.support.info.Constants;
 import com.joewoo.ontime.support.error.ErrorCheck;
+import com.joewoo.ontime.support.util.GlobalContext;
 
 import android.os.Handler;
 import android.util.Log;
@@ -34,12 +34,12 @@ public class FavoritesCreate extends Thread {
 
     public void run() {
         Log.e(TAG, "Favourite Create Thread START");
-        String httpResult = "{ \"error_code\" : \"233\" }";
+        String httpResult;
 
         HttpPost httpRequest = new HttpPost(URLHelper.FAVOURITE_CREATE);
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair(ACCESS_TOKEN,
-                Constants.ACCESS_TOKEN));
+                GlobalContext.getAccessToken()));
         params.add(new BasicNameValuePair("id", weibo_id));
 
         try {

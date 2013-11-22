@@ -25,8 +25,8 @@ import com.joewoo.ontime.action.remind.RemindUnreadCount;
 import com.joewoo.ontime.support.adapter.listview.MyMaidCommentsToMeAdapter;
 import com.joewoo.ontime.support.bean.UnreadCountBean;
 import com.joewoo.ontime.support.info.AcquireCount;
-import com.joewoo.ontime.support.info.Constants;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
+import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.ui.CommentRepost;
 import com.joewoo.ontime.ui.Post;
 import com.joewoo.ontime.ui.SingleUser;
@@ -97,7 +97,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
         sql = (act).getSQL();
         Cursor c = sql.query(MyMaidSQLHelper.tableName, new String[]{
                 MyMaidSQLHelper.TO_ME_COMMENTS, MyMaidSQLHelper.PROFILEIMG}, MyMaidSQLHelper.UID
-                + "=?", new String[]{Constants.UID}, null, null, null);
+                + "=?", new String[]{GlobalContext.getUID()}, null, null, null);
 
         if (c != null && c.moveToFirst()) {
             profileImg = c.getBlob(c.getColumnIndex(MyMaidSQLHelper.PROFILEIMG));
@@ -184,7 +184,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
                 break;
             }
             case MENU_PROFILE_IMAGE: {
-                if (Constants.UID.equals("1665287983")) {
+                if (GlobalContext.getUID().equals("1665287983")) {
                     Intent i = new Intent();
                     i.setClass(act, SingleUser.class);
                     i.putExtra(SCREEN_NAME, "VongCamCam");

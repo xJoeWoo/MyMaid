@@ -10,9 +10,9 @@ import com.joewoo.ontime.action.remind.RemindSetCount;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.CommentsBean;
 import com.joewoo.ontime.support.bean.CommentsToMeBean;
-import com.joewoo.ontime.support.info.Constants;
 import com.joewoo.ontime.support.error.ErrorCheck;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
+import com.joewoo.ontime.support.util.GlobalContext;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -58,7 +58,7 @@ public class CommentsToMe extends Thread {
     private String count;
     private Handler mHandler;
     public boolean isProvidedResult = false;
-    private String httpResult = "{ \"error_code\" : \"233\" }";
+    private String httpResult;
     private SQLiteDatabase sql;
 
     public CommentsToMe(int count, Handler handler) {
@@ -85,7 +85,7 @@ public class CommentsToMe extends Thread {
         if (!isProvidedResult) {
 
             HttpUriRequest httpGet = new HttpGet(URLHelper.COMMENTS_TO_ME
-                    + "?access_token=" + Constants.ACCESS_TOKEN + "&count="
+                    + "?access_token=" + GlobalContext.getAccessToken() + "&count="
                     + count);
             httpGet.addHeader("Accept-Encoding", "gzip");
 
@@ -228,7 +228,7 @@ public class CommentsToMe extends Thread {
                 ContentValues cv = new ContentValues();
                 cv.put(MyMaidSQLHelper.TO_ME_COMMENTS, httpResult);
                 if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"
-                        + Constants.UID + "'", null) != 0) {
+                        + GlobalContext.getUID() + "'", null) != 0) {
                     Log.e(MyMaidSQLHelper.TAG_SQL, "Saved Comments httpResult");
                 }
             }

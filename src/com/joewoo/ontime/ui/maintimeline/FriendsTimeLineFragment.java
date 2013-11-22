@@ -12,12 +12,12 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefres
 import com.joewoo.ontime.action.statuses.StatusesFriendsTimeLine;
 import com.joewoo.ontime.support.adapter.listview.MyMaidAdapter;
 import com.joewoo.ontime.support.info.AcquireCount;
+import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.util.IDtoMID;
 import com.joewoo.ontime.ui.Login;
 import com.joewoo.ontime.ui.Post;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.ui.SingleUser;
-import com.joewoo.ontime.support.info.Constants;
 import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 
@@ -89,10 +89,10 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        sql = (act).getSQL();
+        sql = act.getSQL();
         Cursor c = sql.query(MyMaidSQLHelper.tableName, new String[]{
                 MyMaidSQLHelper.FRIENDS_TIMELINE, MyMaidSQLHelper.PROFILEIMG},
-                MyMaidSQLHelper.UID + "=?", new String[]{Constants.UID}, null,
+                MyMaidSQLHelper.UID + "=?", new String[]{GlobalContext.getUID()}, null,
                 null, null);
 
         if (c != null && c.moveToFirst()) {
@@ -148,22 +148,22 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                 final int currentFirstVisibleItem = lv.getFirstVisiblePosition();
 
                 if (currentFirstVisibleItem > mLastFirstVisibleItem) {
-                    (act).setActionBarLowProfile();
+                    act.setActionBarLowProfile();
                 } else if (currentFirstVisibleItem < mLastFirstVisibleItem) {
-                    (act).setActionBarVisible();
+                    act.setActionBarVisible();
                 }
                 mLastFirstVisibleItem = currentFirstVisibleItem;
 
 
                 // 滚到到尾刷新
                 if (view.getLastVisiblePosition() == (view.getCount() - 6)) {
-                    if (act.isRefreshing()) {
+                    if (!act.isRefreshing()) {
                         Log.e(TAG, "到底");
                         // 获取后会删除第一项，所以获取数+1
                         new StatusesFriendsTimeLine(text.get(
                                 view.getLastVisiblePosition() + 5)
                                 .get(WEIBO_ID), AcquireCount.FRIENDS_TIMELINE_ADD_COUNT + 1, mHandler).start();
-                        (act).setRefreshing(true);
+                        act.setRefreshing(true);
                         mPullToRefreshAttacher.setRefreshing(true);
                     }
                 }
@@ -217,7 +217,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
         }
 
         menu.add(0, MENU_UNREAD_COUNT, 0,
-                Constants.SCREEN_NAME.toUpperCase(Locale.US))
+                GlobalContext.getScreenName().toUpperCase(Locale.US))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(0, MENU_POST, 0, R.string.menu_post)
@@ -329,7 +329,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                                                                         MyMaidSQLHelper.tableName,
                                                                         MyMaidSQLHelper.UID
                                                                                 + "=?",
-                                                                        new String[]{Constants.UID}) > 0) {
+                                                                        new String[]{GlobalContext.getUID()}) > 0) {
                                                                     Log.e(MyMaidSQLHelper.TAG_SQL,
                                                                             "LOGOUT - Cleared user info");
 
@@ -367,7 +367,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
 //                        switch (i) {
 //                            case 0: {
                 Intent ii = new Intent(act, SingleUser.class);
-                ii.putExtra(SCREEN_NAME, Constants.SCREEN_NAME);
+                ii.putExtra(SCREEN_NAME, GlobalContext.getScreenName());
                 startActivity(ii);
 //                                break;
 //                            }

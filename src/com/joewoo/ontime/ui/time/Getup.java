@@ -1,6 +1,5 @@
 package com.joewoo.ontime.ui.time;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,9 +19,9 @@ import com.joewoo.ontime.action.Weather;
 import com.joewoo.ontime.action.statuses.StatusesUpdate;
 import com.joewoo.ontime.support.bean.WeatherBean;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
-import com.joewoo.ontime.support.info.Constants;
 import com.joewoo.ontime.support.info.GetupSentences;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
+import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.util.IDtoMID;
 
 import java.util.Calendar;
@@ -31,7 +30,6 @@ import static com.joewoo.ontime.support.info.Defines.GOT_UPDATE_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_WEATHER_INFO;
 import static com.joewoo.ontime.support.info.Defines.dayNames;
 
-@SuppressLint("HandlerLeak")
 public class Getup extends Activity {
 
 	TextView tv;
@@ -55,8 +53,7 @@ public class Getup extends Activity {
 		sql = sqlHelper.getWritableDatabase();
 
 		Cursor c = sql.query(MyMaidSQLHelper.tableName, new String[] { MyMaidSQLHelper.UID,
-                MyMaidSQLHelper.ACCESS_TOKEN,
-                MyMaidSQLHelper.EXPIRES_IN},
+                MyMaidSQLHelper.ACCESS_TOKEN},
                 MyMaidSQLHelper.UID + "=?", new String[] { "3220385287" }, null, null,
 				null);
 		
@@ -64,9 +61,8 @@ public class Getup extends Activity {
 		tv = (TextView) findViewById(R.id.tv_getup);
 
 		c.moveToFirst();
-		Constants.ACCESS_TOKEN = c.getString(1);
-		Constants.UID = c.getString(0);
-		Constants.EXPIRES_IN = Integer.valueOf(c.getString(2));
+		GlobalContext.setAccessToken(c.getString(c.getColumnIndex(MyMaidSQLHelper.ACCESS_TOKEN)));
+		GlobalContext.setUID(c.getString(c.getColumnIndex(MyMaidSQLHelper.UID)));
 		
 
 		new Weather(mHandler).start();
@@ -95,7 +91,7 @@ public class Getup extends Activity {
 						public void onClick(View v) {
 							String mid = IDtoMID.Id2Mid(update.getId());
 							Uri link = Uri.parse("http://weibo.com/"
-									+ Constants.UID + "/" + mid);
+									+ GlobalContext.getUID() + "/" + mid);
 							startActivity(new Intent(Intent.ACTION_VIEW, link));
 						}
 					});

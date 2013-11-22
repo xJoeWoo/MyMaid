@@ -15,9 +15,9 @@ import org.apache.http.util.EntityUtils;
 import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
-import com.joewoo.ontime.support.info.Constants;
 import com.joewoo.ontime.support.net.CustomMultipartEntity;
 import com.joewoo.ontime.support.net.CustomMultipartEntity.ProgressListener;
+import com.joewoo.ontime.support.util.GlobalContext;
 
 import static com.joewoo.ontime.support.info.Defines.*;
 
@@ -49,7 +49,7 @@ public class StatusesUpload extends AsyncTask<String, Integer, String> {
     @Override
     protected String doInBackground(String... params) {
         Log.e(TAG, "StatusesUpload Weibo Thread START");
-        String httpResult = "{ \"error_code\" : \"233\" }";
+        String httpResult = null;
 
         HttpClient httpClient = new DefaultHttpClient();
         HttpContext httpContext = new BasicHttpContext();
@@ -66,9 +66,9 @@ public class StatusesUpload extends AsyncTask<String, Integer, String> {
         try {
             multipartContent.addPart(PIC, new FileBody(file));
             multipartContent.addPart(ACCESS_TOKEN, new StringBody(
-                    Constants.ACCESS_TOKEN));
+                    GlobalContext.getAccessToken()));
             multipartContent.addPart(STATUS, new StringBody(status));
-            Log.e(TAG, Constants.ACCESS_TOKEN);
+            Log.e(TAG, GlobalContext.getAccessToken());
             Log.e(TAG, status);
             Log.e(TAG, file.getName());
         } catch (UnsupportedEncodingException e2) {

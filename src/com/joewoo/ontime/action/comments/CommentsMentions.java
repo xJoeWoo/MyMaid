@@ -10,8 +10,8 @@ import com.joewoo.ontime.action.remind.RemindSetCount;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.CommentsBean;
 import com.joewoo.ontime.support.bean.CommentsMentionsBean;
-import com.joewoo.ontime.support.info.Constants;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
+import com.joewoo.ontime.support.util.GlobalContext;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -52,7 +52,7 @@ public class CommentsMentions extends Thread {
     private String count;
     private Handler mHandler;
     public boolean isProvidedResult = false;
-    private String httpResult = "{ \"error_code\" : \"233\" }";
+    private String httpResult;
     private SQLiteDatabase sql;
     private String max_id;
 
@@ -82,11 +82,11 @@ public class CommentsMentions extends Thread {
             if (max_id == null) {
 
                 httpGet = new HttpGet(URLHelper.COMMENTS_MENTIONS + "?access_token="
-                        + Constants.ACCESS_TOKEN + "&count="
+                        + GlobalContext.getAccessToken() + "&count="
                         + count);
             } else {
                 httpGet = new HttpGet(URLHelper.COMMENTS_MENTIONS + "?access_token="
-                        + Constants.ACCESS_TOKEN + "&max_id=" + max_id + "&count="
+                        + GlobalContext.getAccessToken() + "&max_id=" + max_id + "&count="
                         + count);
             }
 
@@ -180,7 +180,7 @@ public class CommentsMentions extends Thread {
                 ContentValues cv = new ContentValues();
                 cv.put(MyMaidSQLHelper.COMMENTS_MENTIONS, httpResult);
                 if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"
-                        + Constants.UID + "'", null) != 0) {
+                        + GlobalContext.getUID() + "'", null) != 0) {
                     Log.e(MyMaidSQLHelper.TAG_SQL, "Saved Comments StatusesMentions httpResult");
                 }
             }

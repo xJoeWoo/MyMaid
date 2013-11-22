@@ -16,7 +16,7 @@ import org.apache.http.util.EntityUtils;
 import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
-import com.joewoo.ontime.support.info.Constants;
+import com.joewoo.ontime.support.util.GlobalContext;
 
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -40,11 +40,11 @@ public class RemindSetCount extends AsyncTask<String, Integer, String> {
 
         Log.e(TAG, "Set Remind Count AsycnTask start");
         Log.e(TAG, "type: " + params[0]);
-        String httpResult = "{ \"error_code\" : \"233\" }";
+        String httpResult = null;
 
         HttpPost httpRequest = new HttpPost(URLHelper.SET_REMIND_COUNT);
         List<NameValuePair> p = new ArrayList<NameValuePair>();
-        p.add(new BasicNameValuePair(ACCESS_TOKEN, Constants.ACCESS_TOKEN));
+        p.add(new BasicNameValuePair(ACCESS_TOKEN, GlobalContext.getAccessToken()));
         p.add(new BasicNameValuePair("type", params[0]));
 
         try {

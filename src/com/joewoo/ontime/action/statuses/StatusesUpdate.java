@@ -8,7 +8,7 @@ import android.widget.ProgressBar;
 import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
-import com.joewoo.ontime.support.info.Constants;
+import com.joewoo.ontime.support.util.GlobalContext;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -52,11 +52,11 @@ public class StatusesUpdate extends AsyncTask<String, Integer, String> {
     @Override
     protected String doInBackground(String... params) {
         Log.e(TAG, "StatusesUpdate Weibo Thread START");
-        String httpResult = "{ \"error_code\":\"233\",\"error\":\"新浪抽风了，没有信息返回\"}";
+        String httpResult = null;
 
         HttpPost httpRequest = new HttpPost(URLHelper.UPDATE);
         List<NameValuePair> params1 = new ArrayList<NameValuePair>();
-        params1.add(new BasicNameValuePair(ACCESS_TOKEN, Constants.ACCESS_TOKEN));
+        params1.add(new BasicNameValuePair(ACCESS_TOKEN, GlobalContext.getAccessToken()));
         params1.add(new BasicNameValuePair(STATUS, status));
 
         try {

@@ -15,9 +15,9 @@ import android.widget.Toast;
 import com.joewoo.ontime.action.favorites.FavoritesCreate;
 import com.joewoo.ontime.action.statuses.StatusesDestroy;
 import com.joewoo.ontime.support.adapter.pager.SingleWeiboPagerAdapter;
+import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.ui.CommentRepost;
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.support.info.Constants;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -172,7 +172,7 @@ public class SingleWeiboActivity extends FragmentActivity {
 
         menu.clear();
 
-        if (map.get(SCREEN_NAME).equals(Constants.SCREEN_NAME)) {
+        if (map.get(SCREEN_NAME).equals(GlobalContext.getScreenName())) {
             menu.add(0, MENU_STATUSES_DESTROY, 0, R.string.menu_delete)
                     .setIcon(R.drawable.content_discard)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);

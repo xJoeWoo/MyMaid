@@ -14,7 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.AtSuggestionBean;
-import com.joewoo.ontime.support.info.Constants;
+import com.joewoo.ontime.support.util.GlobalContext;
 
 import android.content.Context;
 import android.os.Handler;
@@ -35,10 +35,10 @@ public class SuggestionsAt extends Thread {
 
     public void run() {
         Log.e(TAG, "At User Suggestions Thread START");
-        String httpResult = "{ \"error_code\" : \"233\" }";
+        String httpResult;
 
         HttpGet httpGet = new HttpGet(URLHelper.AT_SUGGESTIONS + "?access_token="
-                + Constants.ACCESS_TOKEN + "&q=" + user + "&type=0");
+                + GlobalContext.getAccessToken() + "&q=" + user + "&type=0");
 
         try {
 

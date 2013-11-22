@@ -9,6 +9,12 @@ import android.content.Context;
 public class GlobalContext extends Application{
 
     private static GlobalContext globalContext;
+    private static String AUTH_CODE;
+    private static String ACCESS_TOKEN;
+    private static String UID;
+    private static String SCREEN_NAME;
+    private static String PIC_PATH;
+    private static String WORDS;
 
     @Override
     public void onCreate() {
@@ -23,4 +29,55 @@ public class GlobalContext extends Application{
     public static Context getAppContext() {
         return globalContext.getApplicationContext();
     }
+
+    public static String getAuthCode() {
+        return AUTH_CODE;
+    }
+
+    public static void setAuthCode(String authCode) {
+        AUTH_CODE = authCode;
+    }
+
+    public static String getAccessToken() {
+        return ACCESS_TOKEN;
+    }
+
+    public static void setAccessToken(String accessToken) {
+        ACCESS_TOKEN = accessToken;
+    }
+
+    public static String getUID() {
+        return UID;
+    }
+
+    public static void setUID(String UID) {
+        GlobalContext.UID = UID;
+    }
+
+    public static String getScreenName() {
+        return SCREEN_NAME;
+    }
+
+    public static void setScreenName(String screenName) {
+        SCREEN_NAME = screenName;
+    }
+
+    public static String getPicPath() {
+        return PIC_PATH;
+    }
+
+    public static void setPicPath(String picPath) {
+        PIC_PATH = picPath;
+    }
+
+    public static String getWords() {
+        return WORDS;
+    }
+
+    public static void setWords(String words) {
+        WORDS = words;
+    }
+
+
+
 }

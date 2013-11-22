@@ -14,8 +14,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
-import com.joewoo.ontime.support.info.Constants;
 import com.joewoo.ontime.support.error.ErrorCheck;
+import com.joewoo.ontime.support.util.GlobalContext;
 
 import static com.joewoo.ontime.support.info.Defines.*;
 
@@ -37,19 +37,19 @@ public class UserShow extends Thread {
 
     public void run() {
         Log.e(TAG, "Show User Info Thread START");
-        String httpResult = "{ \"error_code\" : \"233\" }";
+        String httpResult = null;
 
         HttpUriRequest httpGet;
 
         if (screenNameOrUid == null)
             httpGet = new HttpGet(URLHelper.USER_SHOW + "?access_token="
-                    + Constants.ACCESS_TOKEN + "&uid=" + Constants.UID);
+                    + GlobalContext.getAccessToken() + "&uid=" + GlobalContext.getUID());
         else if (!isUid)
             httpGet = new HttpGet(URLHelper.USER_SHOW + "?access_token="
-                    + Constants.ACCESS_TOKEN + "&screen_name=" + screenNameOrUid);
+                    + GlobalContext.getAccessToken() + "&screen_name=" + screenNameOrUid);
         else
             httpGet = new HttpGet(URLHelper.USER_SHOW + "?access_token="
-                    + Constants.ACCESS_TOKEN + "&uid=" + screenNameOrUid);
+                    + GlobalContext.getAccessToken() + "&uid=" + screenNameOrUid);
 
         httpGet.addHeader("Accept-Encoding", "gzip");
         try {

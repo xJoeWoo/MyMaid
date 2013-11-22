@@ -46,7 +46,7 @@ public class WeiboBackBean {
 		return expires_in;
 	}
 
-	public String getUid() {
+	public String getUID() {
 		return uid;
 	}
 

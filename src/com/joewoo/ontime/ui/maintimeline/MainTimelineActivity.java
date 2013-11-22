@@ -15,9 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.joewoo.ontime.support.info.Constants;
 import com.joewoo.ontime.support.net.NetworkStatus;
 import com.joewoo.ontime.support.adapter.pager.MainPagerAdapter;
+import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.ui.Login;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
@@ -206,15 +206,11 @@ public class MainTimelineActivity extends FragmentActivity {
 
     private boolean loadConstant(Cursor c) {
         if (c.moveToFirst()) {
-            Constants.UID = c.getString(c.getColumnIndex(MyMaidSQLHelper.UID));
-            Constants.ACCESS_TOKEN = c.getString(c
-                    .getColumnIndex(MyMaidSQLHelper.ACCESS_TOKEN));
-            Constants.LOCATION = c.getString(c
-                    .getColumnIndex(MyMaidSQLHelper.LOCATION));
-            Constants.EXPIRES_IN = Integer.valueOf(c.getString(c
-                    .getColumnIndex(MyMaidSQLHelper.EXPIRES_IN)));
-            Constants.SCREEN_NAME = c.getString(c
-                    .getColumnIndex(MyMaidSQLHelper.SCREEN_NAME));
+            GlobalContext.setUID(c.getString(c.getColumnIndex(MyMaidSQLHelper.UID)));
+            GlobalContext.setAccessToken(c.getString(c
+                    .getColumnIndex(MyMaidSQLHelper.ACCESS_TOKEN)));
+            GlobalContext.setScreenName(c.getString(c
+                    .getColumnIndex(MyMaidSQLHelper.SCREEN_NAME)));
             return true;
         } else
             return false;

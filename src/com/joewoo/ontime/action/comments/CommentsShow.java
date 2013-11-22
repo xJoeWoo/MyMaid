@@ -17,7 +17,7 @@ import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.CommentsBean;
 import com.joewoo.ontime.support.bean.CommentsToMeBean;
-import com.joewoo.ontime.support.info.Constants;
+import com.joewoo.ontime.support.util.GlobalContext;
 
 import android.os.Handler;
 import android.util.Log;
@@ -44,18 +44,18 @@ public class CommentsShow extends Thread {
 
     public void run() {
 
-        String httpResult = "{ \"error_code\" : \"233\" }";
+        String httpResult = null;
         Log.e(TAG, "Comments Show Thread START");
 
         HttpUriRequest httpGet;
         if (max_id == null) {
 
             httpGet = new HttpGet(URLHelper.COMMENTS_SHOW + "?access_token="
-                    + Constants.ACCESS_TOKEN + "&id=" + weibo_id + "&count="
+                    + GlobalContext.getAccessToken() + "&id=" + weibo_id + "&count="
                     + count);
         } else {
             httpGet = new HttpGet(URLHelper.COMMENTS_SHOW + "?access_token="
-                    + Constants.ACCESS_TOKEN + "&id=" + weibo_id
+                    + GlobalContext.getAccessToken() + "&id=" + weibo_id
                     + "&max_id=" + max_id + "&count="
                     + count);
         }

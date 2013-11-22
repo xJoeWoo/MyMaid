@@ -19,7 +19,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
-import com.joewoo.ontime.support.info.Constants;
+import com.joewoo.ontime.support.util.GlobalContext;
 
 public class StatusesRepost extends Thread {
     private String weibo_id;
@@ -43,12 +43,12 @@ public class StatusesRepost extends Thread {
 
     public void run() {
         Log.e(TAG, "StatusesRepost Thread START");
-        String httpResult = "{ \"error_code\" : \"233\" }";
+        String httpResult;
 
         HttpPost httpRequest = new HttpPost(URLHelper.REPOST);
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair(ACCESS_TOKEN,
-                Constants.ACCESS_TOKEN));
+                GlobalContext.getAccessToken()));
         params.add(new BasicNameValuePair("id", weibo_id));
         params.add(new BasicNameValuePair("status", status));
         if (is_comment) {

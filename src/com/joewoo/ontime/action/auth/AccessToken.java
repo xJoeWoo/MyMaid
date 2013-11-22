@@ -16,7 +16,7 @@ import org.apache.http.util.EntityUtils;
 import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
-import com.joewoo.ontime.support.info.Constants;
+import com.joewoo.ontime.support.util.GlobalContext;
 
 import static com.joewoo.ontime.support.info.Defines.*;
 
@@ -39,7 +39,7 @@ public class AccessToken extends Thread {
         params.add(new BasicNameValuePair("client_id", APP_KEY));
         params.add(new BasicNameValuePair("client_secret", APP_SECRET));
         params.add(new BasicNameValuePair("grant_type", "authorization_code"));
-        params.add(new BasicNameValuePair("code", Constants.AUTH_CODE));
+        params.add(new BasicNameValuePair("code", GlobalContext.getAuthCode()));
         params.add(new BasicNameValuePair("redirect_uri", URLHelper.CALLBACK));
         try {
             httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));

@@ -17,8 +17,8 @@ import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.bean.UserTimelineBean;
-import com.joewoo.ontime.support.info.Constants;
 import com.joewoo.ontime.support.error.ErrorCheck;
+import com.joewoo.ontime.support.util.GlobalContext;
 
 import android.os.Handler;
 import android.util.Log;
@@ -47,18 +47,18 @@ public class StatusesUserTimeLine extends Thread {
 
     public void run() {
         Log.e(TAG, "User Time Line Thread START");
-        String httpResult = "{ \"error_code\" : \"233\" }";
+        String httpResult;
 
         HttpUriRequest httpGet;
         Log.e(TAG, screenName);
 
         if (max_id == null)
             httpGet = new HttpGet(URLHelper.USER_TIMELINE + "?access_token="
-                    + Constants.ACCESS_TOKEN + "&screen_name="
+                    + GlobalContext.getAccessToken() + "&screen_name="
                     + screenName + "&count=" + count);
         else
             httpGet = new HttpGet(URLHelper.USER_TIMELINE + "?access_token="
-                    + Constants.ACCESS_TOKEN + "&screen_name="
+                    + GlobalContext.getAccessToken() + "&screen_name="
                     + screenName + "&count=" + count + "&max_id=" + max_id);
 
 

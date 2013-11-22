@@ -17,9 +17,9 @@ import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.FriendsTimelineBean;
 import com.joewoo.ontime.support.bean.StatusesBean;
-import com.joewoo.ontime.support.info.Constants;
 import com.joewoo.ontime.support.error.ErrorCheck;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
+import com.joewoo.ontime.support.util.GlobalContext;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
@@ -31,7 +31,7 @@ public class StatusesFriendsTimeLine extends Thread {
     private String count;
     private Handler mHandler;
     public boolean isProvidedResult = false;
-    private String httpResult = "{ \"error_code\" : \"233\" }";
+    private String httpResult;
     private SQLiteDatabase sql;
     private String max_id = null;
 
@@ -68,10 +68,10 @@ public class StatusesFriendsTimeLine extends Thread {
 
             if (max_id == null) {
                 httpGet = new HttpGet(URLHelper.FRIENDS_TIMELINE + "?access_token="
-                        + Constants.ACCESS_TOKEN + "&count=" + count);
+                        + GlobalContext.getAccessToken() + "&count=" + count);
             } else {
                 httpGet = new HttpGet(URLHelper.FRIENDS_TIMELINE + "?access_token="
-                        + Constants.ACCESS_TOKEN + "&count=" + count
+                        + GlobalContext.getAccessToken() + "&count=" + count
                         + "&max_id=" + max_id);
             }
 
@@ -213,7 +213,7 @@ public class StatusesFriendsTimeLine extends Thread {
                 ContentValues cv = new ContentValues();
                 cv.put(MyMaidSQLHelper.FRIENDS_TIMELINE, httpResult);
                 if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"
-                        + Constants.UID + "'", null) != 0) {
+                        + GlobalContext.getUID() + "'", null) != 0) {
                     Log.e(MyMaidSQLHelper.TAG_SQL, "Saved httpResult");
                 }
             }
