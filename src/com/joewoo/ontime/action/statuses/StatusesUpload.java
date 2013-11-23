@@ -1,22 +1,12 @@
 package com.joewoo.ontime.action.statuses;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
+import java.util.HashMap;
 
 import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
-import com.joewoo.ontime.support.net.CustomMultipartEntity;
-import com.joewoo.ontime.support.net.CustomMultipartEntity.ProgressListener;
+import com.joewoo.ontime.support.image.ImageUploadHelper;
+import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
 
 import static com.joewoo.ontime.support.info.Defines.*;
@@ -26,18 +16,17 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.ProgressBar;
 
-public class StatusesUpload extends AsyncTask<String, Integer, String> {
+public class StatusesUpload extends AsyncTask<String, Integer, String> implements ImageUploadHelper.ProgressListener {
 
     private String status;
-    private File file;
+    private String filePath;
     private ProgressBar pb;
-    private long totalSize;
     private Handler mHandler;
 
-    public StatusesUpload(String status, File file, ProgressBar pb,
+    public StatusesUpload(String status, String filePath, ProgressBar pb,
                           Handler handler) {
         this.status = status;
-        this.file = file;
+        this.filePath = filePath;
         this.pb = pb;
         this.mHandler = handler;
     }
@@ -48,44 +37,22 @@ public class StatusesUpload extends AsyncTask<String, Integer, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        Log.e(TAG, "StatusesUpload Weibo Thread START");
-        String httpResult = null;
-
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpContext httpContext = new BasicHttpContext();
-        HttpPost httpPost = new HttpPost(URLHelper.UPLOAD);
-
-        CustomMultipartEntity multipartContent = new CustomMultipartEntity(
-                new ProgressListener() {
-                    @Override
-                    public void transferred(long num) {
-                        publishProgress((int) ((num / (float) totalSize) * 100));
-                    }
-                });
-
+        Log.e(TAG, "Statuses Upload Weibo Thread START");
         try {
-            multipartContent.addPart(PIC, new FileBody(file));
-            multipartContent.addPart(ACCESS_TOKEN, new StringBody(
-                    GlobalContext.getAccessToken()));
-            multipartContent.addPart(STATUS, new StringBody(status));
-            Log.e(TAG, GlobalContext.getAccessToken());
-            Log.e(TAG, status);
-            Log.e(TAG, file.getName());
-        } catch (UnsupportedEncodingException e2) {
-            e2.printStackTrace();
-        }
-        totalSize = multipartContent.getContentLength();
+            HashMap<String, String> hm = new HashMap<String, String>();
 
-        try {
+            hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+            hm.put(STATUS, status);
 
-            httpPost.setEntity(multipartContent);
-            httpResult = EntityUtils.toString(httpClient.execute(httpPost,
-                    httpContext).getEntity());
+            return new HttpUtility().executeUploadImageTask(URLHelper.UPLOAD, hm
+                    , filePath, PIC, this);
+
 
         } catch (Exception e) {
             e.printStackTrace();
+            mHandler.sendEmptyMessage(GOT_UPLOAD_INFO_FAIL);
+            return null;
         }
-        return httpResult;
     }
 
     @Override
@@ -102,4 +69,13 @@ public class StatusesUpload extends AsyncTask<String, Integer, String> {
         mHandler.obtainMessage(GOT_UPLOAD_INFO, j).sendToTarget();
     }
 
+    @Override
+    public void uploadProgress(int data, int contentLength) {
+        publishProgress((int) (((float) data / (float) contentLength) * 100) + 1);
+    }
+
+    @Override
+    public void waitResponse() {
+
+    }
 }

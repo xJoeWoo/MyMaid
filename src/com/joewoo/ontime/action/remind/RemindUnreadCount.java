@@ -1,18 +1,21 @@
 package com.joewoo.ontime.action.remind;
 
-import static com.joewoo.ontime.support.info.Defines.*;
-
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
+import android.os.Handler;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.UnreadCountBean;
+import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
 
-import android.os.Handler;
-import android.util.Log;
+import java.util.HashMap;
+
+import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
+import static com.joewoo.ontime.support.info.Defines.GOT_UNREAD_COUNT_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_UNREAD_COUNT_INFO_FAIL;
+import static com.joewoo.ontime.support.info.Defines.TAG;
+import static com.joewoo.ontime.support.info.Defines.UID;
 
 public class RemindUnreadCount extends Thread {
 
@@ -25,15 +28,15 @@ public class RemindUnreadCount extends Thread {
 
     public void run() {
         Log.e(TAG, "Unread Count Thread START");
-
-        HttpGet httpGet = new HttpGet(URLHelper.UNREAD_COUNT + "?access_token="
-                + GlobalContext.getAccessToken() + "&uid=" + GlobalContext.getUID());
-
         try {
-            httpResult = EntityUtils.toString(new DefaultHttpClient().execute(
-                    httpGet).getEntity());
 
-            Log.e(TAG, "GOT: " + httpResult);
+            HashMap<String, String> hm = new HashMap<String, String>();
+            hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+            hm.put(UID, GlobalContext.getUID());
+
+            httpResult = new HttpUtility().executeGetTask(URLHelper.UNREAD_COUNT, hm);
+
+            hm = null;
 
             UnreadCountBean b = new Gson().fromJson(httpResult,
                     UnreadCountBean.class);

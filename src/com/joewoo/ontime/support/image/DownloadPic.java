@@ -1,4 +1,4 @@
-package com.joewoo.ontime.support.net;
+package com.joewoo.ontime.support.image;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -8,14 +8,18 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.image.BitmapRoundCorner;
 import com.joewoo.ontime.support.image.BitmapSaveAsFile;
 import com.joewoo.ontime.support.image.BitmapScale;
 import com.joewoo.ontime.support.info.Defines;
+import com.joewoo.ontime.support.net.HttpUtility;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -27,14 +31,14 @@ import java.io.InputStream;
 
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
-public class DownloadPic extends AsyncTask<String, Integer, Bitmap> {
+public class DownloadPic extends AsyncTask<String, Integer, Bitmap> implements ImageDownloadHelper.ProgressListener{
 
     private ImageView iv;
-    private Bitmap image;
     private ProgressBar pb;
     private TextView tv;
     private boolean isRepost = false;
     private Activity act;
+    private Animation fromBottom;
 
     public DownloadPic(ImageView iv, ProgressBar pb) {
         this.iv = iv;
@@ -56,6 +60,7 @@ public class DownloadPic extends AsyncTask<String, Integer, Bitmap> {
     @Override
     protected void onPreExecute() {
         // Toast.makeText(activity, "开始下载图片…", Toast.LENGTH_SHORT).show();
+        fromBottom = AnimationUtils.loadAnimation(act, R.anim.up_from_bottom);
     }
 
     @Override
@@ -64,55 +69,17 @@ public class DownloadPic extends AsyncTask<String, Integer, Bitmap> {
         Log.e(TAG, "Download Pic AsyncTask START");
         Log.e(TAG, "Pic URL - " + params[0]);
 
+        Bitmap image = null;
+
         if (!params[0].endsWith(".gif")) {
             try {
 
-                HttpUriRequest httpGet = new HttpGet(params[0]);
-
-                HttpEntity httpResponse = new DefaultHttpClient().execute(httpGet)
-                        .getEntity();
-
-                // Log.e(TAG, "2");
-
-                publishProgress(0);
-
-                InputStream is = httpResponse.getContent();
-
-                long maxSize = httpResponse.getContentLength();
-                Log.e(TAG, "MaxSize - " + String.valueOf(maxSize));
-                float nowSize = 0;
-
-                // Log.e(TAG, "3");
-
-                // Log.e(TAG, "4");
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-                byte[] buffer = new byte[1024];
-                int len = -1;
-
-                try {
-                    while ((len = is.read(buffer)) != -1) {
-                        if (!isCancelled()) {
-                            baos.write(buffer, 0, len);
-                            baos.flush();
-                            nowSize += len;
-//						Log.e(TAG, String.valueOf(nowSize));
-                            publishProgress((int) ((nowSize / (float) maxSize) * 100));
-                        } else {
-                            is.close();
-                            break;
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                is.close();
+                byte[] imgBytes  = new HttpUtility().executeDownloadImageTask(params[0], this);
 
                 if (!isCancelled()) {
-                    byte[] imgBytes = baos.toByteArray();
-                    if (maxSize > 4000) {
-                        image = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length);
+//                    byte[] imgBytes = baos.toByteArray();
+                    image = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length);
+                    if (imgBytes.length > 4000) {
 
                         BitmapSaveAsFile.save(image, BitmapSaveAsFile.SAVE_AS_PNG, Defines.TEMP_IMAGE_PATH, Defines.TEMP_IMAGE_NAME);
 
@@ -120,12 +87,9 @@ public class DownloadPic extends AsyncTask<String, Integer, Bitmap> {
                         image = BitmapScale.scaleBitmapFromArray(imgBytes, 256, 256);
                         Log.e(TAG, "Hegiht: " + String.valueOf(image.getHeight()) + " Width: " + String.valueOf(image.getWidth()));
                     } else {
-                        image = BitmapRoundCorner.toRoundCorner(BitmapFactory.decodeByteArray(imgBytes,
-                                0, imgBytes.length), 25);
+                        image = BitmapRoundCorner.toRoundCorner(image, 25);
                     }
                 }
-
-                baos.close();
 
             } catch (Exception e) {
                 Log.e(TAG, "Download Pic AsyncTask FAILED");
@@ -166,9 +130,8 @@ public class DownloadPic extends AsyncTask<String, Integer, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         if (!isCancelled()) {
-
-            if (image != null) {
-                iv.setImageBitmap(image);
+            if (bitmap != null) {
+                iv.setImageBitmap(bitmap);
             } else {
                 if (tv != null) {
                     ViewGroup.LayoutParams lp = tv.getLayoutParams();
@@ -178,13 +141,20 @@ public class DownloadPic extends AsyncTask<String, Integer, Bitmap> {
                 iv.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
             }
 
+            iv.startAnimation(fromBottom);
+
             if (pb != null)
                 pb.setVisibility(View.INVISIBLE);
             if (tv != null && !isRepost)
                 tv.setVisibility(View.GONE);
         }
-        image = null;
+        bitmap = null;
     }
 
+
+    @Override
+    public void downloadProgress(int transferred, int contentLength) {
+        publishProgress(((int)((float)transferred/(float)contentLength) * 100) + 1);
+    }
 
 }

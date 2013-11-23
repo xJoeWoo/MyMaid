@@ -118,9 +118,9 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int arg2, long arg3) {
 //                if (isNormalMention) {
-                    Intent i = new Intent(act, SingleWeiboActivity.class);
-                    i.putExtra(SINGLE_WEIBO_MAP, text.get(arg2));
-                    startActivity(i);
+                Intent i = new Intent(act, SingleWeiboActivity.class);
+                i.putExtra(SINGLE_WEIBO_MAP, text.get(arg2));
+                startActivity(i);
 //                } else {
 //
 //                }
@@ -279,41 +279,38 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
     }
 
     public void refreshMentions() {
-        new StatusesMentions(AcquireCount.MENTIONS_COUNT, sql, mHandler).start();
+        new StatusesMentions(sql, mHandler).start();
         act.setRefreshing(true);
         mPullToRefreshAttacher.setRefreshing(true);
     }
 
     public void refreshCommentsMentions() {
-        new CommentsMentions(AcquireCount.COMMENTS_MENTIONS_COUNT, sql, mHandler).start();
+        new CommentsMentions(sql, mHandler).start();
         act.setRefreshing(true);
         mPullToRefreshAttacher.setRefreshing(true);
     }
 
     private void setLv(String column) {
         if (c != null && c.moveToFirst()) {
-            try {
-                if (!c.getString(c.getColumnIndex(column)).equals("")) {
-                    if (column.equals(MyMaidSQLHelper.MENTIONS)) {
-                        new StatusesMentions(
-                                c.getString(c.getColumnIndex(MyMaidSQLHelper.MENTIONS)), mHandler).start();
-                    } else if (column.equals(MyMaidSQLHelper.COMMENTS_MENTIONS)) {
-                        new CommentsMentions(
-                                c.getString(c.getColumnIndex(MyMaidSQLHelper.COMMENTS_MENTIONS)), mHandler).start();
-                    }
-                } else {
-                    if (column.equals(MyMaidSQLHelper.MENTIONS)) {
-                        refreshMentions();
-                    } else if (column.equals(MyMaidSQLHelper.COMMENTS_MENTIONS)) {
-                        refreshCommentsMentions();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                mPullToRefreshAttacher.setRefreshing(false);
-            }
-        } else {
 
+            if (c.getString(c.getColumnIndex(column)) != null) {
+                if (column.equals(MyMaidSQLHelper.MENTIONS)) {
+                    new StatusesMentions(true,
+                            c.getString(c.getColumnIndex(MyMaidSQLHelper.MENTIONS)), mHandler).start();
+                } else if (column.equals(MyMaidSQLHelper.COMMENTS_MENTIONS)) {
+                    new CommentsMentions(true,
+                            c.getString(c.getColumnIndex(MyMaidSQLHelper.COMMENTS_MENTIONS)), mHandler).start();
+                }
+            } else {
+                if (column.equals(MyMaidSQLHelper.MENTIONS)) {
+                    refreshMentions();
+                } else if (column.equals(MyMaidSQLHelper.COMMENTS_MENTIONS)) {
+                    refreshCommentsMentions();
+                }
+            }
+
+        } else {
+            mPullToRefreshAttacher.setRefreshing(false);
         }
 
     }

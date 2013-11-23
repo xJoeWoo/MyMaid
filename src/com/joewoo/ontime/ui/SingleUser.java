@@ -121,10 +121,8 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
                 }
                 case GOT_SHOW_INFO_FAIL: {
                     if (msg.obj != null) {
-                        Log.e(TAG, "FAIL");
                         Toast.makeText(SingleUser.this, (String) msg.obj, Toast.LENGTH_SHORT)
                                 .show();
-                        finish();
                     } else {
                         Toast.makeText(SingleUser.this, R.string.toast_user_timeline_fail, Toast.LENGTH_SHORT).show();
                     }
@@ -224,7 +222,7 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
 
     private void refreshTimeLine() {
             Log.e(TAG, "Screen Name: " + screenName);
-            new StatusesUserTimeLine(screenName, AcquireCount.SINGLE_USER_TIMELINE_COUNT, mHandler).start();
+            new StatusesUserTimeLine(screenName, mHandler).start();
             new UserShow(screenName, mHandler).start();
     }
 }

@@ -17,6 +17,8 @@ import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.CommentsBean;
 import com.joewoo.ontime.support.bean.CommentsToMeBean;
+import com.joewoo.ontime.support.info.AcquireCount;
+import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
 
 import android.os.Handler;
@@ -27,65 +29,42 @@ public class CommentsShow extends Thread {
     private Handler mHandler;
     private String weibo_id;
     private String max_id;
-    private String count;
 
-    public CommentsShow(int count, String weibo_id, Handler handler) {
+    public CommentsShow(String weibo_id, Handler handler) {
         this.mHandler = handler;
         this.weibo_id = weibo_id;
-        this.count = String.valueOf(count);
     }
 
-    public CommentsShow(int count, String weibo_id, String max_id, Handler handler) {
+    public CommentsShow(String weibo_id, String max_id, Handler handler) {
         this.mHandler = handler;
         this.weibo_id = weibo_id;
         this.max_id = max_id;
-        this.count = String.valueOf(count);
     }
 
     public void run() {
 
         String httpResult = null;
         Log.e(TAG, "Comments Show Thread START");
+        try{
+            HashMap<String, String> hm = new HashMap<String, String>();
+            hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+            hm.put(WEIBO_ID, weibo_id);
 
-        HttpUriRequest httpGet;
-        if (max_id == null) {
-
-            httpGet = new HttpGet(URLHelper.COMMENTS_SHOW + "?access_token="
-                    + GlobalContext.getAccessToken() + "&id=" + weibo_id + "&count="
-                    + count);
-        } else {
-            httpGet = new HttpGet(URLHelper.COMMENTS_SHOW + "?access_token="
-                    + GlobalContext.getAccessToken() + "&id=" + weibo_id
-                    + "&max_id=" + max_id + "&count="
-                    + count);
-        }
-        httpGet.addHeader("Accept-Encoding", "gzip");
-
-        try {
-
-            InputStream is = new DefaultHttpClient().execute(httpGet)
-                    .getEntity().getContent();
-
-            is = new GZIPInputStream(is);
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-            int i = -1;
-            while ((i = is.read()) != -1) {
-                baos.write(i);
+            if(max_id == null) {
+                hm.put(COUNT, AcquireCount.COMMENTS_SHOW_COUNT);
+            } else {
+                hm.put(COUNT, AcquireCount.COMMENTS_SHOW_ADD_COUNT);
+                hm.put(MAX_ID, max_id);
             }
 
-            httpResult = baos.toString();
-            is.close();
-            baos.close();
+            httpResult = new HttpUtility().executeGetTask(URLHelper.COMMENTS_SHOW, hm);
 
-            Log.e(TAG,
-                    "GOT Statues length: "
-                            + String.valueOf(httpResult.length()));
-            Log.e(TAG, httpResult);
+            hm = null;
+
         } catch (Exception e) {
             mHandler.sendEmptyMessage(GOT_COMMNETS_SHOW_INFO_FAIL);
             e.printStackTrace();
+            return;
         }
 
         try {

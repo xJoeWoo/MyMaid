@@ -5,12 +5,16 @@ package com.joewoo.ontime.support.info;
  * OOOOOH I HAVE GRADE 3 IN SENIOR HIGH!!!
  */
 public class AcquireCount {
-    public final static int FRIENDS_TIMELINE_COUNT = 50;
-    public final static int FRIENDS_TIMELINE_ADD_COUNT = 25;
-    public final static int MENTIONS_COUNT = 25;
-    public final static int COMMENTS_TO_ME_COUNT = 25;
-    public final static int COMMENTS_SHOW_COUNT = 50;
-    public final static int REPOSTS_TIMELINE_COUNT = 50;
-    public final static int COMMENTS_MENTIONS_COUNT = 25;
-    public final static int SINGLE_USER_TIMELINE_COUNT = 25;
+    public final static String FRIENDS_TIMELINE_COUNT = "50";
+    public final static String FRIENDS_TIMELINE_ADD_COUNT = "26";
+    public final static String MENTIONS_COUNT = "25";
+    public final static String COMMENTS_TO_ME_COUNT = "25";
+    public final static String COMMENTS_SHOW_COUNT = "50";
+    public final static String COMMENTS_SHOW_ADD_COUNT = "26";
+    public final static String REPOSTS_TIMELINE_COUNT = "50";
+    public final static String REPOSTS_TIMELINE_ADD_COUNT = "26";
+    public final static String COMMENTS_MENTIONS_COUNT = "25";
+    public final static String COMMENTS_MENTIONS_ADD_COUNT = "26";
+    public final static String USER_TIMELINE_COUNT = "50";
+    public final static String USER_TIMELINE_ADD_COUNT = "26";
 }

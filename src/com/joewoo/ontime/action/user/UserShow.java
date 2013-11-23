@@ -1,13 +1,5 @@
 package com.joewoo.ontime.action.user;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.zip.GZIPInputStream;
-
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.os.Handler;
 import android.util.Log;
 
@@ -15,66 +7,52 @@ import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
 import com.joewoo.ontime.support.error.ErrorCheck;
+import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
 
-import static com.joewoo.ontime.support.info.Defines.*;
+import java.util.HashMap;
+
+import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
+import static com.joewoo.ontime.support.info.Defines.GOT_SHOW_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_SHOW_INFO_FAIL;
+import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
+import static com.joewoo.ontime.support.info.Defines.TAG;
+import static com.joewoo.ontime.support.info.Defines.UID;
 
 public class UserShow extends Thread {
 
     private Handler mHandler;
-    private String screenNameOrUid = null;
-    private boolean isUid = false;
+    private String screenName = null;
 
     public UserShow(Handler handler) {
         this.mHandler = handler;
     }
 
-    public UserShow(String screenNameOrUid, Handler handler) {
-        this.isUid = isUid;
-        this.screenNameOrUid = screenNameOrUid;
+    public UserShow(String screenName, Handler handler) {
+        this.screenName = screenName;
         this.mHandler = handler;
     }
 
     public void run() {
         Log.e(TAG, "Show User Info Thread START");
-        String httpResult = null;
+        String httpResult;
 
-        HttpUriRequest httpGet;
-
-        if (screenNameOrUid == null)
-            httpGet = new HttpGet(URLHelper.USER_SHOW + "?access_token="
-                    + GlobalContext.getAccessToken() + "&uid=" + GlobalContext.getUID());
-        else if (!isUid)
-            httpGet = new HttpGet(URLHelper.USER_SHOW + "?access_token="
-                    + GlobalContext.getAccessToken() + "&screen_name=" + screenNameOrUid);
-        else
-            httpGet = new HttpGet(URLHelper.USER_SHOW + "?access_token="
-                    + GlobalContext.getAccessToken() + "&uid=" + screenNameOrUid);
-
-        httpGet.addHeader("Accept-Encoding", "gzip");
         try {
-            // HttpResponse httpResponse = new DefaultHttpClient()
-            // .execute(httpGet);
+            HashMap<String, String> hm = new HashMap<String, String>();
+            hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+            if(screenName != null)
+                hm.put(SCREEN_NAME, screenName);
+            else
+                hm.put(UID, GlobalContext.getUID());
 
-            InputStream is = new DefaultHttpClient().execute(httpGet)
-                    .getEntity().getContent();
+            httpResult = new HttpUtility().executeGetTask(URLHelper.USER_SHOW, hm);
 
-            is = new GZIPInputStream(is);
+            hm = null;
 
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-            int i = -1;
-            while ((i = is.read()) != -1) {
-                baos.write(i);
-            }
-
-            httpResult = baos.toString();
-            Log.e(TAG, httpResult);
-            is.close();
-            baos.close();
         } catch (Exception e) {
             mHandler.sendEmptyMessage(GOT_SHOW_INFO_FAIL);
             e.printStackTrace();
+            return;
         }
 
         if (ErrorCheck.getError(httpResult) == null) {

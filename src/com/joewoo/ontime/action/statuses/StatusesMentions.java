@@ -6,28 +6,25 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.joewoo.ontime.action.remind.RemindSetCount;
 import com.joewoo.ontime.action.URLHelper;
+import com.joewoo.ontime.action.remind.RemindSetCount;
 import com.joewoo.ontime.support.bean.MentionsBean;
 import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.error.ErrorCheck;
+import com.joewoo.ontime.support.info.AcquireCount;
+import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
 
+import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
 import static com.joewoo.ontime.support.info.Defines.BLANK;
 import static com.joewoo.ontime.support.info.Defines.BMIDDLE_PIC;
 import static com.joewoo.ontime.support.info.Defines.COMMENTS_COUNT;
+import static com.joewoo.ontime.support.info.Defines.COUNT;
 import static com.joewoo.ontime.support.info.Defines.CREATED_AT;
 import static com.joewoo.ontime.support.info.Defines.GOT_MENTIONS_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_MENTIONS_INFO_FAIL;
@@ -53,27 +50,20 @@ import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
 public class StatusesMentions extends Thread {
 
-    private String count;
     private Handler mHandler;
     public boolean isProvidedResult = false;
     private String httpResult;
     private SQLiteDatabase sql;
 
-    public StatusesMentions(int count, Handler handler) {
-        this.count = String.valueOf(count);
-        this.mHandler = handler;
-    }
-
-    public StatusesMentions(int count, SQLiteDatabase sql, Handler handler) {
-        this.count = String.valueOf(count);
+    public StatusesMentions(SQLiteDatabase sql, Handler handler) {
         this.mHandler = handler;
         this.sql = sql;
     }
 
-    public StatusesMentions(String httpResult, Handler handler) {
+    public StatusesMentions(boolean isProvided, String httpResult, Handler handler) {
         this.mHandler = handler;
         this.httpResult = httpResult;
-        isProvidedResult = true;
+        isProvidedResult = isProvided;
     }
 
     @Override
@@ -81,35 +71,43 @@ public class StatusesMentions extends Thread {
         Log.e(TAG, "StatusesMentions Thread START");
 
         if (!isProvidedResult) {
-
-            HttpUriRequest httpGet = new HttpGet(URLHelper.MENTIONS
-                    + "?access_token=" + GlobalContext.getAccessToken() + "&count="
-                    + count);
-            httpGet.addHeader("Accept-Encoding", "gzip");
+//
+//            HttpUriRequest httpGet = new HttpGet(URLHelper.MENTIONS
+//                    + "?access_token=" + GlobalContext.getAccessToken() + "&count="
+//                    + count);
+//            httpGet.addHeader("Accept-Encoding", "gzip");
+//
+//            try {
+//
+//                InputStream is = new DefaultHttpClient().execute(httpGet)
+//                        .getEntity().getContent();
+//
+//                is = new GZIPInputStream(is);
+//
+//                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//
+//                int i = -1;
+//                while ((i = is.read()) != -1) {
+//                    baos.write(i);
+//                }
+//
+//                httpResult = baos.toString();
+//                is.close();
+//                baos.close();
+//
+//                Log.e(TAG,
+//                        "GOT Statues length: "
+//                                + String.valueOf(httpResult.length()));
+//                Log.e(TAG, httpResult);
 
             try {
+                HashMap<String, String> hm = new HashMap<String, String>();
+                hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+                hm.put(COUNT, AcquireCount.MENTIONS_COUNT);
 
-                InputStream is = new DefaultHttpClient().execute(httpGet)
-                        .getEntity().getContent();
+                httpResult = new HttpUtility().executeGetTask(URLHelper.MENTIONS, hm);
 
-                is = new GZIPInputStream(is);
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-                int i = -1;
-                while ((i = is.read()) != -1) {
-                    baos.write(i);
-                }
-
-                httpResult = baos.toString();
-                is.close();
-                baos.close();
-
-                Log.e(TAG,
-                        "GOT Statues length: "
-                                + String.valueOf(httpResult.length()));
-                Log.e(TAG, httpResult);
-
+                hm = null;
             } catch (Exception e) {
                 mHandler.sendEmptyMessage(GOT_MENTIONS_INFO_FAIL);
                 e.printStackTrace();

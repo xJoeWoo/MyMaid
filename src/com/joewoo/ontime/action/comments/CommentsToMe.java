@@ -6,27 +6,24 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.joewoo.ontime.action.remind.RemindSetCount;
 import com.joewoo.ontime.action.URLHelper;
+import com.joewoo.ontime.action.remind.RemindSetCount;
 import com.joewoo.ontime.support.bean.CommentsBean;
 import com.joewoo.ontime.support.bean.CommentsToMeBean;
 import com.joewoo.ontime.support.error.ErrorCheck;
+import com.joewoo.ontime.support.info.AcquireCount;
+import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
 
+import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
 import static com.joewoo.ontime.support.info.Defines.BLANK;
 import static com.joewoo.ontime.support.info.Defines.COMMENT_ID;
+import static com.joewoo.ontime.support.info.Defines.COUNT;
 import static com.joewoo.ontime.support.info.Defines.CREATED_AT;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_TO_ME_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_TO_ME_INFO_FAIL;
@@ -41,12 +38,12 @@ import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SCREEN_NAM
 import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SOURCE;
 import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
 import static com.joewoo.ontime.support.info.Defines.SOURCE;
-import static com.joewoo.ontime.support.info.Defines.STATUS_PROFILE_IMAGE_URL;
-import static com.joewoo.ontime.support.info.Defines.STATUS_SOURCE;
 import static com.joewoo.ontime.support.info.Defines.STATUS_BMIDDLE_PIC;
 import static com.joewoo.ontime.support.info.Defines.STATUS_COMMENTS_COUNT;
 import static com.joewoo.ontime.support.info.Defines.STATUS_CREATED_AT;
+import static com.joewoo.ontime.support.info.Defines.STATUS_PROFILE_IMAGE_URL;
 import static com.joewoo.ontime.support.info.Defines.STATUS_REPOSTS_COUNT;
+import static com.joewoo.ontime.support.info.Defines.STATUS_SOURCE;
 import static com.joewoo.ontime.support.info.Defines.STATUS_TEXT;
 import static com.joewoo.ontime.support.info.Defines.STATUS_USER_SCREEN_NAME;
 import static com.joewoo.ontime.support.info.Defines.TAG;
@@ -55,27 +52,20 @@ import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
 public class CommentsToMe extends Thread {
 
-    private String count;
     private Handler mHandler;
     public boolean isProvidedResult = false;
     private String httpResult;
     private SQLiteDatabase sql;
 
-    public CommentsToMe(int count, Handler handler) {
-        this.count = String.valueOf(count);
-        this.mHandler = handler;
-    }
-
-    public CommentsToMe(int count, SQLiteDatabase sql, Handler handler) {
-        this.count = String.valueOf(count);
+    public CommentsToMe(SQLiteDatabase sql, Handler handler) {
         this.mHandler = handler;
         this.sql = sql;
     }
 
-    public CommentsToMe(String httpResult, Handler handler) {
+    public CommentsToMe(boolean isProvided, String httpResult, Handler handler) {
         this.mHandler = handler;
         this.httpResult = httpResult;
-        isProvidedResult = true;
+        isProvidedResult = isProvided;
     }
 
     @Override
@@ -83,35 +73,14 @@ public class CommentsToMe extends Thread {
         Log.e(TAG, "Comments To Me Thread START");
 
         if (!isProvidedResult) {
-
-            HttpUriRequest httpGet = new HttpGet(URLHelper.COMMENTS_TO_ME
-                    + "?access_token=" + GlobalContext.getAccessToken() + "&count="
-                    + count);
-            httpGet.addHeader("Accept-Encoding", "gzip");
-
             try {
+                HashMap<String, String> hm = new HashMap<String, String>();
+                hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+                hm.put(COUNT, AcquireCount.COMMENTS_TO_ME_COUNT);
 
-                InputStream is = new DefaultHttpClient().execute(httpGet)
-                        .getEntity().getContent();
+                httpResult = new HttpUtility().executeGetTask(URLHelper.COMMENTS_TO_ME, hm);
 
-                is = new GZIPInputStream(is);
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-                int i = -1;
-                while ((i = is.read()) != -1) {
-                    baos.write(i);
-                }
-
-                httpResult = baos.toString();
-                is.close();
-                baos.close();
-
-                Log.e(TAG,
-                        "GOT Statues length: "
-                                + String.valueOf(httpResult.length()));
-                Log.e(TAG, httpResult);
-
+                hm = null;
             } catch (Exception e) {
                 mHandler.sendEmptyMessage(GOT_COMMENTS_TO_ME_INFO_FAIL);
                 e.printStackTrace();

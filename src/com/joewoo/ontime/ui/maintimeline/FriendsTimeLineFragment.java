@@ -1,33 +1,12 @@
 package com.joewoo.ontime.ui.maintimeline;
 
-import static com.joewoo.ontime.support.info.Defines.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
-
-import com.joewoo.ontime.action.statuses.StatusesFriendsTimeLine;
-import com.joewoo.ontime.support.adapter.listview.MyMaidAdapter;
-import com.joewoo.ontime.support.info.AcquireCount;
-import com.joewoo.ontime.support.util.GlobalContext;
-import com.joewoo.ontime.support.util.IDtoMID;
-import com.joewoo.ontime.ui.Login;
-import com.joewoo.ontime.ui.Post;
-import com.joewoo.ontime.R;
-import com.joewoo.ontime.ui.SingleUser;
-import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
-import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
@@ -48,6 +27,43 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.joewoo.ontime.R;
+import com.joewoo.ontime.action.statuses.StatusesFriendsTimeLine;
+import com.joewoo.ontime.support.adapter.listview.MyMaidAdapter;
+import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
+import com.joewoo.ontime.support.util.GlobalContext;
+import com.joewoo.ontime.support.util.IDtoMID;
+import com.joewoo.ontime.ui.Login;
+import com.joewoo.ontime.ui.Post;
+import com.joewoo.ontime.ui.SingleUser;
+import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
+
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
+
+import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_ADD_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_INFO_FAIL;
+import static com.joewoo.ontime.support.info.Defines.IS_FRAG_POST;
+import static com.joewoo.ontime.support.info.Defines.LASTUID;
+import static com.joewoo.ontime.support.info.Defines.LOG_DEVIDER;
+import static com.joewoo.ontime.support.info.Defines.MAP_POSITION;
+import static com.joewoo.ontime.support.info.Defines.MENU_POST;
+import static com.joewoo.ontime.support.info.Defines.MENU_PROFILE_IMAGE;
+import static com.joewoo.ontime.support.info.Defines.MENU_UNREAD_COUNT;
+import static com.joewoo.ontime.support.info.Defines.PREFERENCES;
+import static com.joewoo.ontime.support.info.Defines.PROFILE_IMAGE;
+import static com.joewoo.ontime.support.info.Defines.RESULT_DESTROYED_WEIBO;
+import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
+import static com.joewoo.ontime.support.info.Defines.SINGLE_WEIBO_MAP;
+import static com.joewoo.ontime.support.info.Defines.TAG;
+import static com.joewoo.ontime.support.info.Defines.UID;
+import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
 @SuppressLint("HandlerLeak")
 public class FriendsTimeLineFragment extends Fragment implements OnRefreshListener {
@@ -100,7 +116,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
             try {
                 if (!c.getString(c
                         .getColumnIndex(MyMaidSQLHelper.FRIENDS_TIMELINE)).equals(""))
-                    new StatusesFriendsTimeLine(c.getString(c
+                    new StatusesFriendsTimeLine(true, c.getString(c
                             .getColumnIndex(MyMaidSQLHelper.FRIENDS_TIMELINE)), mHandler).start();
 
             } catch (Exception e) {
@@ -162,7 +178,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                         // 获取后会删除第一项，所以获取数+1
                         new StatusesFriendsTimeLine(text.get(
                                 view.getLastVisiblePosition() + 5)
-                                .get(WEIBO_ID), AcquireCount.FRIENDS_TIMELINE_ADD_COUNT + 1, mHandler).start();
+                                .get(WEIBO_ID), mHandler).start();
                         act.setRefreshing(true);
                         mPullToRefreshAttacher.setRefreshing(true);
                     }
@@ -456,7 +472,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
     }
 
     public void refreshFriendsTimeLine() {
-        new StatusesFriendsTimeLine(AcquireCount.FRIENDS_TIMELINE_COUNT, sql, mHandler).start();
+        new StatusesFriendsTimeLine(sql, mHandler).start();
         act.setRefreshing(true);
         mPullToRefreshAttacher.setRefreshing(true);
     }

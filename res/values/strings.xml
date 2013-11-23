@@ -3,22 +3,9 @@
 
     <string name="app_name_cn">自家用女仆</string>
     <string name="app_name">MyMaid</string>
-    <string name="act_post_title">发Po</string>
-    <string name="act_login_title">登录</string>
-    <string name="action_settings">设定</string>
-    <string name="action_search">搜索关注用户</string>
-    <string name="action_at">\@人</string>
-    <string name="action_access_token">Access Token</string>
-    <string name="action_post">马上发Po</string>
-    <string name="action_letters">清除文字</string>
-    <string name="action_add_emotion">添加表情</string>
-    <string name="action_add_topic">#添加话题#</string>
-    <string name="action_add">贴上图片</string>
-    <string name="action_added">删除图片</string>
-    <string name="action_logout">注销</string>
-    <string name="action_clear_draft">清除草稿</string>
-    <string name="menu_favourite_create">收藏</string>
-    <string name="hello_world">Hello world!</string>
+
+    <string name="action_search">Search friends</string>
+
     <string name="et_post_hint">Tell her your Mind…</string>
 	
     <string name="title_frag_friends_timeline">Timeline</string>
@@ -87,8 +74,6 @@
     <string name="menu_unread_comments">COMMENTS&#160;</string>
     <string name="menu_copy_text">COPY</string>
 
-
-	
 	<string name="post_send_success_part_1">SUCCESS!\nPost at -&#160;</string>
 	<string name="post_send_success_part_2">\nID -&#160;</string>
 	<string name="post_send_success_part_3">\n&gt; CLICK HERE TO CHECK THIS WEIBO &lt;</string>
@@ -105,10 +90,6 @@
     <string name="frag_ftl_dialog_groups_title">Groups</string>
     <string name="frag_ftl_dialog_groups_my_posts">My Posts</string>
     <string name="frag_ftl_dialog_groups_coming_soon">Groups not available…</string>
-
-
-
-
 
     <string name="frag_single_weibo_no_comments">YEP… You\'ll be the FIRST Cuckoo Bird!</string>
     <string name="frag_single_weibo_no_reposts">Ah… Why not retweet it?</string>

@@ -7,20 +7,24 @@ import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.RepostTimelineBean;
 import com.joewoo.ontime.support.bean.StatusesBean;
+import com.joewoo.ontime.support.info.AcquireCount;
+import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
 
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
 
-import static com.joewoo.ontime.support.info.Defines.*;
+import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
+import static com.joewoo.ontime.support.info.Defines.COUNT;
+import static com.joewoo.ontime.support.info.Defines.GOT_REPOST_TIMELINE_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_REPOST_TIMELINE_INFO_FAIL;
+import static com.joewoo.ontime.support.info.Defines.MAX_ID;
+import static com.joewoo.ontime.support.info.Defines.REPOST_WEIBO_ID;
+import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
+import static com.joewoo.ontime.support.info.Defines.TAG;
+import static com.joewoo.ontime.support.info.Defines.TEXT;
+import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
 /**
  * Created by JoeWoo on 13-10-19.
@@ -30,64 +34,42 @@ public class StatusesRepostTimeline extends Thread {
     private Handler mHandler;
     private String weibo_id;
     private String max_id;
-    private String count;
 
-    public StatusesRepostTimeline(int count, String weibo_id, Handler handler) {
+    public StatusesRepostTimeline(String weibo_id, Handler handler) {
         this.weibo_id = weibo_id;
         this.mHandler = handler;
-        this.count = String.valueOf(count);
     }
 
-    public StatusesRepostTimeline(int count, String weibo_id, String max_id, Handler handler) {
+    public StatusesRepostTimeline(String weibo_id, String max_id, Handler handler) {
         this.weibo_id = weibo_id;
         this.mHandler = handler;
         this.max_id = max_id;
-        this.count = String.valueOf(count);
     }
 
     public void run() {
         String httpResult = null;
         Log.e(TAG, "Reposts Timeline Thread Start");
-
-        HttpUriRequest httpGet;
-        if (max_id == null) {
-
-            httpGet = new HttpGet(URLHelper.REPOST_TIMELINE + "?access_token="
-                    + GlobalContext.getAccessToken() + "&id=" + weibo_id + "&count="
-                    + count);
-        } else {
-            httpGet = new HttpGet(URLHelper.REPOST_TIMELINE + "?access_token="
-                    + GlobalContext.getAccessToken() + "&id=" + weibo_id
-                    + "&max_id=" + max_id + "&count="
-                    + count);
-        }
-        httpGet.addHeader("Accept-Encoding", "gzip");
-
         try {
 
-            InputStream is = new DefaultHttpClient().execute(httpGet)
-                    .getEntity().getContent();
+            HashMap<String, String> hm = new HashMap<String, String>();
+            hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+            hm.put(WEIBO_ID, weibo_id);
 
-            is = new GZIPInputStream(is);
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-            int i = -1;
-            while ((i = is.read()) != -1) {
-                baos.write(i);
+            if(max_id == null) {
+                hm.put(COUNT, AcquireCount.REPOSTS_TIMELINE_COUNT);
+            } else {
+                hm.put(COUNT, AcquireCount.REPOSTS_TIMELINE_ADD_COUNT);
+                hm.put(MAX_ID, max_id);
             }
 
-            httpResult = baos.toString();
-            is.close();
-            baos.close();
+            httpResult = new HttpUtility().executeGetTask(URLHelper.REPOST_TIMELINE, hm);
 
-            Log.e(TAG,
-                    "GOT Statues length: "
-                            + String.valueOf(httpResult.length()));
-            Log.e(TAG, httpResult);
+            hm = null;
+
         } catch (Exception e) {
             mHandler.sendEmptyMessage(GOT_REPOST_TIMELINE_INFO_FAIL);
             e.printStackTrace();
+            return;
         }
 
         try {

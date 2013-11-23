@@ -18,6 +18,8 @@ import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.FriendsTimelineBean;
 import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.error.ErrorCheck;
+import com.joewoo.ontime.support.info.AcquireCount;
+import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 
@@ -28,35 +30,27 @@ import android.util.Log;
 
 public class StatusesFriendsTimeLine extends Thread {
 
-    private String count;
     private Handler mHandler;
     public boolean isProvidedResult = false;
     private String httpResult;
     private SQLiteDatabase sql;
     private String max_id = null;
 
-    public StatusesFriendsTimeLine(int count, Handler handler) {
-        this.count = String.valueOf(count);
-        this.mHandler = handler;
-    }
-
-    public StatusesFriendsTimeLine(String max_id, int count, Handler handler) {
-        this.count = String.valueOf(count);
+    public StatusesFriendsTimeLine(String max_id, Handler handler) {
         this.mHandler = handler;
         this.max_id = max_id;
     }
 
-    public StatusesFriendsTimeLine(int count, SQLiteDatabase sql,
+    public StatusesFriendsTimeLine(SQLiteDatabase sql,
                                    Handler handler) {
-        this.count = String.valueOf(count);
         this.mHandler = handler;
         this.sql = sql;
     }
 
-    public StatusesFriendsTimeLine(String httpResult, Handler handler) {
+    public StatusesFriendsTimeLine(boolean isProvided, String httpResult, Handler handler) {
         this.mHandler = handler;
         this.httpResult = httpResult;
-        isProvidedResult = true;
+        this.isProvidedResult = isProvided;
     }
 
     @Override
@@ -64,41 +58,20 @@ public class StatusesFriendsTimeLine extends Thread {
         Log.e(TAG, "Friends TimeLine Thread START");
 
         if (!isProvidedResult) {
-            HttpUriRequest httpGet;
-
-            if (max_id == null) {
-                httpGet = new HttpGet(URLHelper.FRIENDS_TIMELINE + "?access_token="
-                        + GlobalContext.getAccessToken() + "&count=" + count);
-            } else {
-                httpGet = new HttpGet(URLHelper.FRIENDS_TIMELINE + "?access_token="
-                        + GlobalContext.getAccessToken() + "&count=" + count
-                        + "&max_id=" + max_id);
-            }
-
-            httpGet.addHeader("Accept-Encoding", "gzip");
-
             try {
+                HashMap<String, String> hm = new HashMap<String, String>();
+                hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
 
-                InputStream is = new DefaultHttpClient().execute(httpGet)
-                        .getEntity().getContent();
-
-                is = new GZIPInputStream(is);
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-                int i = -1;
-                while ((i = is.read()) != -1) {
-                    baos.write(i);
+                if(max_id == null) {
+                    hm.put(COUNT, AcquireCount.FRIENDS_TIMELINE_COUNT);
+                } else {
+                    hm.put(COUNT, AcquireCount.FRIENDS_TIMELINE_ADD_COUNT);
+                    hm.put(MAX_ID, max_id);
                 }
 
-                httpResult = baos.toString();
-                is.close();
-                baos.close();
+                httpResult = new HttpUtility().executeGetTask(URLHelper.FRIENDS_TIMELINE, hm);
 
-                Log.e(TAG,
-                        "GOT Statues length: "
-                                + String.valueOf(httpResult.length()));
-                // Log.e(TAG, httpResult);
+                hm = null;
 
             } catch (Exception e) {
                 mHandler.sendEmptyMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL);

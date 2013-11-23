@@ -36,7 +36,7 @@ public class SingleWeiboActivity extends FragmentActivity {
     private long downTime;
     private boolean isShowedComments = false;
     private boolean isShowedReposts = false;
-    HashMap<String, String> map;
+    private HashMap<String, String> map;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,9 +143,12 @@ public class SingleWeiboActivity extends FragmentActivity {
                     break;
                 }
                 case GOT_FAVOURITE_CREATE_INFO_FAIL: {
-                    Toast.makeText(SingleWeiboActivity.this,
-                            R.string.toast_add_favourite_fail,
-                            Toast.LENGTH_SHORT).show();
+                    if (msg.obj != null)
+                        Toast.makeText(SingleWeiboActivity.this,
+                                (String) msg.obj,
+                                Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(SingleWeiboActivity.this, R.string.toast_add_favourite_fail, Toast.LENGTH_SHORT).show();
                     break;
 
                 }
@@ -158,7 +161,12 @@ public class SingleWeiboActivity extends FragmentActivity {
                     break;
                 }
                 case GOT_STATUSES_DESTROY_INFO_FAIL: {
-                    Toast.makeText(SingleWeiboActivity.this, R.string.toast_delete_fail, Toast.LENGTH_SHORT).show();
+                    if (msg.obj != null)
+                        Toast.makeText(SingleWeiboActivity.this,
+                                (String) msg.obj,
+                                Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(SingleWeiboActivity.this, R.string.toast_delete_fail, Toast.LENGTH_SHORT).show();
                     break;
                 }
 
@@ -242,10 +250,6 @@ public class SingleWeiboActivity extends FragmentActivity {
             }
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public Intent getSingleWeiboIntent() {
-        return i;
     }
 
     public HashMap<String, String> getSingleWeiboMap() {

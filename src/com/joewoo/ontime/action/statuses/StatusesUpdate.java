@@ -3,25 +3,14 @@ package com.joewoo.ontime.action.statuses;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
+import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
 import static com.joewoo.ontime.support.info.Defines.GOT_UPDATE_INFO;
@@ -32,13 +21,6 @@ public class StatusesUpdate extends AsyncTask<String, Integer, String> {
 
     private String status;
     private Handler mHandler;
-//	private ProgressBar pb;
-
-    public StatusesUpdate(String status, ProgressBar pb, Handler handler) {
-        this.status = status;
-        this.mHandler = handler;
-//		this.pb = pb;
-    }
 
     public StatusesUpdate(String status, Handler handler) {
         this.status = status;
@@ -54,20 +36,15 @@ public class StatusesUpdate extends AsyncTask<String, Integer, String> {
         Log.e(TAG, "StatusesUpdate Weibo Thread START");
         String httpResult = null;
 
-        HttpPost httpRequest = new HttpPost(URLHelper.UPDATE);
-        List<NameValuePair> params1 = new ArrayList<NameValuePair>();
-        params1.add(new BasicNameValuePair(ACCESS_TOKEN, GlobalContext.getAccessToken()));
-        params1.add(new BasicNameValuePair(STATUS, status));
-
         try {
-            httpRequest.setEntity(new UrlEncodedFormEntity(params1, HTTP.UTF_8));
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpResponse httpResponse = httpClient.execute(httpRequest);
-            if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                httpResult = EntityUtils.toString(httpResponse.getEntity());
-                Log.e(TAG, httpResult);
+            HashMap<String, String> hm = new HashMap<String, String>();
+            hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+            hm.put(STATUS, status);
 
-            }
+            httpResult = new HttpUtility().executePostTask(URLHelper.UPDATE, hm);
+
+            hm = null;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -77,7 +54,7 @@ public class StatusesUpdate extends AsyncTask<String, Integer, String> {
 
     @Override
     protected void onProgressUpdate(Integer... progress) {
-//		pb.setProgress((int) (progress[0]));
+
     }
 
     @Override

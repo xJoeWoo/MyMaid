@@ -38,8 +38,6 @@ import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.util.IDtoMID;
 
-import java.io.File;
-
 import static com.joewoo.ontime.support.info.Defines.ACT_GOT_AT;
 import static com.joewoo.ontime.support.info.Defines.ACT_GOT_PHOTO;
 import static com.joewoo.ontime.support.info.Defines.DRAFT;
@@ -62,7 +60,7 @@ import static com.joewoo.ontime.support.info.Defines.TAG;
 public class Post extends Activity {
 
 	EditText et_post;
-	File picFile;
+	String filePath;
 	TextView tv_post_info;
 	long downTime = 0;
 	String draft;
@@ -150,7 +148,7 @@ public class Post extends Activity {
 
 
 						if (GlobalContext.getPicPath() != null) {
-							picFile = new File(GlobalContext.getPicPath());
+							filePath = GlobalContext.getPicPath();
 							rfBar();
 						} else if (GlobalContext.getWords() != null) {
 							et_post.setText(GlobalContext.getWords());
@@ -180,8 +178,7 @@ public class Post extends Activity {
 							Uri uri = (Uri) intent
 									.getParcelableExtra(Intent.EXTRA_STREAM);
 							if (uri != null) {
-								String picPath = getFilePath(uri);
-								picFile = new File(picPath);
+								filePath = getFilePath(uri);
 							}
 							rfBar();
 						}
@@ -272,7 +269,7 @@ public class Post extends Activity {
 				String.valueOf(140 - et_post.getText().length()))
 				.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-		if (picFile != null) {
+		if (filePath != null) {
 			menu.add(0, MENU_ADD, 0, R.string.menu_image_clear)
 					.setIcon(R.drawable.content_picture_ok)
 					.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -330,7 +327,7 @@ public class Post extends Activity {
 			break;
 		}
 		case MENU_ADD: {
-			if (picFile == null) {
+			if (filePath == null) {
 				Intent intent = new Intent();
 				intent.setType("image/*");
 				intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -342,7 +339,7 @@ public class Post extends Activity {
 							Toast.LENGTH_SHORT).show();
 					downTime = System.currentTimeMillis();
 				} else {
-					picFile = null;
+					filePath = null;
 				}
 			}
 			rfBar();
@@ -353,13 +350,12 @@ public class Post extends Activity {
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(et_post.getWindowToken(), 0);
 				if (!"".equals(et_post.getText().toString().trim())) {
-					if (picFile != null)
+					if (filePath != null)
 
-						new StatusesUpload(et_post.getText().toString(), picFile,
+						new StatusesUpload(et_post.getText().toString(), filePath,
 								pb_post, mHandler).execute();
 					else
-						new StatusesUpdate(et_post.getText().toString(), pb_post,
-								mHandler).execute();
+						new StatusesUpdate(et_post.getText().toString(), mHandler).execute();
 
 					setProgressBarIndeterminateVisibility(true);
 					sending = true;
@@ -503,7 +499,7 @@ public class Post extends Activity {
 				break;
 			}
 			case ACT_GOT_PHOTO: {
-				picFile = new File(getFilePath(data.getData()));
+				filePath = getFilePath(data.getData());
 				rfBar();
 				break;
 			}
@@ -520,10 +516,10 @@ public class Post extends Activity {
 				null, null);
 		cursor.moveToFirst();
 		int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-		String picPath = cursor.getString(columnIndex);
+		String filePath = cursor.getString(columnIndex);
 		cursor.close();
-		Log.e(TAG, "File Path: " + picPath);
-		return picPath;
+		Log.e(TAG, "File Path: " + filePath);
+		return filePath;
 	}
 
 	private void jumpToLogin() {

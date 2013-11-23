@@ -41,7 +41,7 @@ public class SingleWeiboRepostsFragment extends Fragment {
 
     public void showReposts(String weibo_id){
         this.weibo_id = weibo_id;
-        new StatusesRepostTimeline(AcquireCount.REPOSTS_TIMELINE_COUNT, weibo_id, mHandler).start();
+        new StatusesRepostTimeline(weibo_id, mHandler).start();
     }
 
     Handler mHandler = new Handler() {

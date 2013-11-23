@@ -3,6 +3,7 @@ package com.joewoo.ontime.action.statuses;
 import static com.joewoo.ontime.support.info.Defines.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -19,13 +20,15 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
+import com.joewoo.ontime.support.error.ErrorCheck;
+import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
 
 public class StatusesRepost extends Thread {
     private String weibo_id;
     private Handler mHandler;
     private String status;
-    private boolean is_comment = false;
+    private boolean isComment = false;
 
     public StatusesRepost(String status, String weibo_id, Handler handler) {
         this.weibo_id = weibo_id;
@@ -33,38 +36,39 @@ public class StatusesRepost extends Thread {
         this.status = status;
     }
 
-    public StatusesRepost(String comment, String weibo_id, boolean is_comment,
+    public StatusesRepost(String comment, String weibo_id, boolean isComment,
                           Handler handler) {
         this.weibo_id = weibo_id;
         this.mHandler = handler;
         this.status = comment;
-        this.is_comment = is_comment;
+        this.isComment = isComment;
     }
 
     public void run() {
         Log.e(TAG, "StatusesRepost Thread START");
         String httpResult;
 
-        HttpPost httpRequest = new HttpPost(URLHelper.REPOST);
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair(ACCESS_TOKEN,
-                GlobalContext.getAccessToken()));
-        params.add(new BasicNameValuePair("id", weibo_id));
-        params.add(new BasicNameValuePair("status", status));
-        if (is_comment) {
-            params.add(new BasicNameValuePair("is_comment", "1"));
-        }
         try {
-            httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+            HashMap<String, String> hm = new HashMap<String, String>();
+            hm.put(WEIBO_ID, weibo_id);
+            hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+            hm.put(STATUS, status);
+            if(isComment)
+                hm.put("is_comment", "1");
 
-            httpResult = EntityUtils.toString(new DefaultHttpClient()
-                    .execute(httpRequest).getEntity());
-            Log.e(TAG, "GOT: " + httpResult);
+            httpResult = new HttpUtility().executePostTask(URLHelper.REPOST, hm);
 
-            mHandler.obtainMessage(GOT_REPOST_INFO, new Gson().fromJson(httpResult, WeiboBackBean.class)).sendToTarget();
+            hm = null;
 
         } catch (Exception e) {
             e.printStackTrace();
+            mHandler.sendEmptyMessage(GOT_REPOST_INFO_FAIL);
+            return;
         }
+
+        if(ErrorCheck.getError(httpResult) == null)
+            mHandler.sendEmptyMessage(GOT_REPOST_INFO);
+        else
+            mHandler.obtainMessage(GOT_REPOST_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();
     }
 }

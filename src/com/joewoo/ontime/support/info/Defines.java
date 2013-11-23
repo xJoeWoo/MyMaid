@@ -9,9 +9,8 @@ public class Defines {
     public final static String SINGLE_WEIBO_MAP = "single_weibo_hash_map";
     public final static String MAP_POSITION = "map_position";
 
-//    public final static String TEMP_IMAGE_PATH = "/data/data/com.joewoo.ontime/";
     public final static String TEMP_IMAGE_NAME = "tmp.png";
-    public final static String TEMP_IMAGE_PATH = Environment.getExternalStorageDirectory() + "/Android/com.joewoo.ontime/";
+    public final static String TEMP_IMAGE_PATH = Environment.getExternalStorageDirectory() + "/Android/data/com.joewoo.ontime/";
 
 	public final static int GOT_ACCESS_TOKEN = 1;
 	public final static int GOT_ACCESS_TOKEN_FAIL = 2;
@@ -52,6 +51,10 @@ public class Defines {
     public final static int GOT_COMMENTS_MENTIONS_INFO = 37;
     public final static int GOT_COMMENTS_MENTIONS_INFO_FAIL = 38;
     public final static int GOT_FAVOURITE_CREATE_INFO_FAIL = 39;
+    public final static int GOT_COMMENT_CREATE_INFO_FAIL = 40;
+    public final static int GOT_REPOST_INFO_FAIL = 41;
+    public final static int GOT_REPLY_INFO_FAIL = 42;
+
 
 	public final static int ACT_GOT_PHOTO = 1;
 	public final static int ACT_GOT_AT = 2;
@@ -63,6 +66,8 @@ public class Defines {
 
 	public final static String EXPIRES_IN = "expires_in";
 	public final static String ACCESS_TOKEN = "access_token";
+    public final static String COUNT = "count";
+    public final static String MAX_ID = "max_id";
 	public final static String STATUS = "status";
 	public final static String PIC = "pic";
 	public final static String AUTH_CODE = "auth_code";
@@ -86,7 +91,7 @@ public class Defines {
 	public final static String RETWEETED_STATUS_ORIGINAL_PIC = "retweeted_status_original_pic";
 	public final static String RETWEETED_STATUS_PIC_URLS = "retweeted_status_pic_urls";
 	public final static String RETWEETED_STATUS_SOURCE = "retweeted_status_source";
-	public final static String WEIBO_ID = "weibo_id";
+	public final static String WEIBO_ID = "id";
     public final static String REPOST_WEIBO_ID = "repost_weibo_id";
 	public final static String COMMENT_ID = "comment_id";
 	public final static String IS_COMMENT = "isComment";
@@ -150,9 +155,4 @@ public class Defines {
 
 	public final static int CONNECT_TIMEOUT = 5000;
 	public final static int READ_TIMEOUT = 5000;
-
-    public final static String APP_KEY = "462564571";
-    public final static String APP_SECRET = "f08ee7c15ba9afced27b3b916126f5ac";
-
-
 }

@@ -1,25 +1,20 @@
 package com.joewoo.ontime.action.comments;
 
-import static com.joewoo.ontime.support.info.Defines.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-
-import com.google.gson.Gson;
-import com.joewoo.ontime.action.URLHelper;
-import com.joewoo.ontime.support.bean.WeiboBackBean;
-import com.joewoo.ontime.support.util.GlobalContext;
-
 import android.os.Handler;
 import android.util.Log;
+
+import com.joewoo.ontime.action.URLHelper;
+import com.joewoo.ontime.support.error.ErrorCheck;
+import com.joewoo.ontime.support.net.HttpUtility;
+import com.joewoo.ontime.support.util.GlobalContext;
+
+import java.util.HashMap;
+
+import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
+import static com.joewoo.ontime.support.info.Defines.GOT_REPLY_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_REPLY_INFO_FAIL;
+import static com.joewoo.ontime.support.info.Defines.TAG;
+import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
 public class CommentsReply extends Thread {
 
@@ -47,32 +42,33 @@ public class CommentsReply extends Thread {
     }
 
     public void run() {
-        Log.e(TAG, "Comment CommentsReply Thread START");
+        Log.e(TAG, "Comment Reply Thread START");
         String httpResult;
 
-        HttpPost httpRequest = new HttpPost(URLHelper.REPLY);
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair(ACCESS_TOKEN,
-                GlobalContext.getAccessToken()));
-        params.add(new BasicNameValuePair("id", weibo_id));
-        params.add(new BasicNameValuePair("comment", comment));
-        params.add(new BasicNameValuePair("cid", comment_id));
-        if (comment_ori) {
-            params.add(new BasicNameValuePair("comment_ori", "1"));
-        }
         try {
-            httpRequest.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+            HashMap<String, String> hm = new HashMap<String, String>();
+            hm.put(WEIBO_ID, weibo_id);
+            hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+            hm.put("comment", comment);
+            hm.put("cid", comment_id);
 
-            httpResult = EntityUtils.toString(new DefaultHttpClient()
-                    .execute(httpRequest).getEntity());
-            Log.e(TAG, "GOT: " + httpResult);
+            if(comment_ori)
+                hm.put("comment_ori", "1");
 
+            httpResult = new HttpUtility().executePostTask(URLHelper.REPLY, hm);
 
-            mHandler.obtainMessage(GOT_REPLY_INFO, new Gson().fromJson(httpResult, WeiboBackBean.class)).sendToTarget();
+            hm = null;
 
         } catch (Exception e) {
             e.printStackTrace();
+            mHandler.sendEmptyMessage(GOT_REPLY_INFO_FAIL);
+            return;
         }
+
+        if(ErrorCheck.getError(httpResult) == null)
+            mHandler.sendEmptyMessage(GOT_REPLY_INFO);
+        else
+            mHandler.obtainMessage(GOT_REPLY_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();
     }
 
 }

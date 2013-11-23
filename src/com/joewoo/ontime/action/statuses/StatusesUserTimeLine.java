@@ -1,45 +1,63 @@
 package com.joewoo.ontime.action.statuses;
 
-import static com.joewoo.ontime.support.info.Defines.*;
-
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.zip.GZIPInputStream;
-
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
+import android.os.Handler;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.bean.UserTimelineBean;
 import com.joewoo.ontime.support.error.ErrorCheck;
+import com.joewoo.ontime.support.info.AcquireCount;
+import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
 
-import android.os.Handler;
-import android.util.Log;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
+import static com.joewoo.ontime.support.info.Defines.BLANK;
+import static com.joewoo.ontime.support.info.Defines.BMIDDLE_PIC;
+import static com.joewoo.ontime.support.info.Defines.COMMENTS_COUNT;
+import static com.joewoo.ontime.support.info.Defines.COUNT;
+import static com.joewoo.ontime.support.info.Defines.CREATED_AT;
+import static com.joewoo.ontime.support.info.Defines.GOT_USER_TIMELINE_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_USER_TIMELINE_INFO_FAIL;
+import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
+import static com.joewoo.ontime.support.info.Defines.MAX_ID;
+import static com.joewoo.ontime.support.info.Defines.PROFILE_IMAGE_URL;
+import static com.joewoo.ontime.support.info.Defines.REPOSTS_COUNT;
+import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS;
+import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_BMIDDLE_PIC;
+import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_COMMENTS_COUNT;
+import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_CREATED_AT;
+import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_REPOSTS_COUNT;
+import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SCREEN_NAME;
+import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SOURCE;
+import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_THUMBNAIL_PIC;
+import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_UID;
+import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
+import static com.joewoo.ontime.support.info.Defines.SOURCE;
+import static com.joewoo.ontime.support.info.Defines.TAG;
+import static com.joewoo.ontime.support.info.Defines.TEXT;
+import static com.joewoo.ontime.support.info.Defines.THUMBNAIL_PIC;
+import static com.joewoo.ontime.support.info.Defines.UID;
+import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
 public class StatusesUserTimeLine extends Thread {
 
-    private String count;
     private Handler mHandler;
     private String screenName;
     private String max_id;
 
-    public StatusesUserTimeLine(String screenName, int count,
-                                Handler handler) {
+    public StatusesUserTimeLine(String screenName, Handler handler) {
         this.screenName = screenName;
-        this.count = String.valueOf(count);
         this.mHandler = handler;
     }
 
-    public StatusesUserTimeLine(String screenName, int count, String max_id, Handler handler) {
+    public StatusesUserTimeLine(String screenName, String max_id, Handler handler) {
         this.screenName = screenName;
-        this.count = String.valueOf(count);
         this.mHandler = handler;
         this.max_id = max_id;
     }
@@ -49,46 +67,22 @@ public class StatusesUserTimeLine extends Thread {
         Log.e(TAG, "User Time Line Thread START");
         String httpResult;
 
-        HttpUriRequest httpGet;
-        Log.e(TAG, screenName);
-
-        if (max_id == null)
-            httpGet = new HttpGet(URLHelper.USER_TIMELINE + "?access_token="
-                    + GlobalContext.getAccessToken() + "&screen_name="
-                    + screenName + "&count=" + count);
-        else
-            httpGet = new HttpGet(URLHelper.USER_TIMELINE + "?access_token="
-                    + GlobalContext.getAccessToken() + "&screen_name="
-                    + screenName + "&count=" + count + "&max_id=" + max_id);
-
-
-        httpGet.addHeader("Accept-Encoding", "gzip");
-
         try {
+            HashMap<String, String> hm = new HashMap<String, String>();
+            hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+            hm.put(SCREEN_NAME, screenName);
 
-            InputStream is = new DefaultHttpClient().execute(httpGet)
-                    .getEntity().getContent();
-
-            is = new GZIPInputStream(is);
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-            int i = -1;
-            while ((i = is.read()) != -1) {
-                baos.write(i);
+            if(max_id == null) {
+                hm.put(COUNT, AcquireCount.USER_TIMELINE_COUNT);
+            } else {
+                hm.put(COUNT, AcquireCount.USER_TIMELINE_ADD_COUNT);
+                hm.put(MAX_ID, max_id);
             }
 
-            httpResult = baos.toString();
-            is.close();
-            baos.close();
+            httpResult = new HttpUtility().executeGetTask(URLHelper.USER_TIMELINE, hm);
 
-            Log.e(TAG,
-                    "GOT Statues length: "
-                            + String.valueOf(httpResult.length()));
-            Log.e(TAG, httpResult);
-
+            hm = null;
         } catch (Exception e) {
-            Log.e(TAG, "User Timeline Thread Network Failed");
             e.printStackTrace();
             mHandler.sendEmptyMessage(GOT_USER_TIMELINE_INFO_FAIL);
             return;

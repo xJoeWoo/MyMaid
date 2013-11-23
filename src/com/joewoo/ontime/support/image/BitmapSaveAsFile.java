@@ -27,9 +27,14 @@ public class BitmapSaveAsFile {
     private static boolean toSave(Bitmap bitmap, int saveAsWhat, int quality, String filePath, String fileName) {
         try {
             File f = new File(filePath);
-            if (!f.exists()) {
+            if (!f.exists())
                 f.mkdirs();
-            }
+
+            File nomedia = new File(filePath, ".nomedia");
+            if(!nomedia.exists())
+                nomedia.createNewFile();
+            nomedia = null;
+
             f = new File(filePath, fileName);
             OutputStream fOut = new FileOutputStream(f);
             switch (saveAsWhat) {

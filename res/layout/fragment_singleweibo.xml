@@ -1,160 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:paddingTop="?android:attr/actionBarSize"
-                android:paddingBottom="?android:attr/actionBarSize">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingTop="?android:attr/actionBarSize"
+    android:paddingBottom="?android:attr/actionBarSize">
 
     <ScrollView
-            android:id="@+id/frag_single_weibo_sv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        android:id="@+id/frag_single_weibo_sv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <RelativeLayout
-                android:id="@+id/relativeLayout1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_horizontal_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+            android:id="@+id/relativeLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/activity_horizontal_margin"
+            android:paddingBottom="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin">
 
             <ImageView
-                    android:id="@+id/frag_single_weibo_profile_image"
-                    android:layout_width="33dp"
-                    android:layout_height="33dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:src="@android:drawable/ic_menu_close_clear_cancel"
-                    android:adjustViewBounds="true"/>
+                android:id="@+id/frag_single_weibo_profile_image"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:adjustViewBounds="true" />
 
             <!--android:src="@android:drawable/ic_menu_close_clear_cancel"-->
 
             <TextView
-                    android:id="@+id/frag_single_weibo_screen_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="5dp"
-                    android:layout_toRightOf="@+id/frag_single_weibo_profile_image"
-                    android:paddingLeft="8dp"
-                    android:text="用户名"
-                    android:textSize="17sp"
-                    android:textStyle="bold"/>
+                android:id="@+id/frag_single_weibo_screen_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/frag_single_weibo_profile_image"
+                android:paddingLeft="8dp"
+                android:text="用户名"
+                android:textSize="17sp"
+                android:textStyle="bold" />
 
             <TextView
-                    android:id="@+id/frag_single_weibo_created_at"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="16:12"
-                    android:textColor="@color/textGrey"
-                    android:textSize="13sp"
-                    android:layout_alignBottom="@+id/frag_single_weibo_screen_name"
-                    android:layout_toRightOf="@+id/frag_single_weibo_screen_name"/>
+                android:id="@+id/frag_single_weibo_created_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="16:12"
+                android:textColor="@color/textGrey"
+                android:textSize="13sp"
+                android:layout_alignBottom="@+id/frag_single_weibo_screen_name"
+                android:layout_toRightOf="@+id/frag_single_weibo_screen_name" />
 
             <TextView
-                    android:id="@+id/frag_single_weibo_source"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="来源"
-                    android:textColor="@color/textGrey"
-                    android:textSize="13sp"
-                    android:layout_alignBaseline="@+id/frag_single_weibo_created_at"
-                    android:layout_alignBottom="@+id/frag_single_weibo_created_at"
-                    android:layout_toRightOf="@+id/frag_single_weibo_created_at"
-                    android:layout_alignParentRight="true"/>
+                android:id="@+id/frag_single_weibo_source"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="来源"
+                android:textColor="@color/textGrey"
+                android:textSize="13sp"
+                android:layout_alignBaseline="@+id/frag_single_weibo_created_at"
+                android:layout_alignBottom="@+id/frag_single_weibo_created_at"
+                android:layout_toRightOf="@+id/frag_single_weibo_created_at"
+                android:layout_alignParentRight="true" />
 
             <TextView
-                    android:id="@+id/frag_single_weibo_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/frag_single_weibo_profile_image"
-                    android:layout_marginTop="8dp"
-                    android:lineSpacingExtra="5dp"
-                    android:text="正文正文正文正文"
-                    android:textSize="16sp"/>
+                android:id="@+id/frag_single_weibo_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/frag_single_weibo_profile_image"
+                android:layout_marginTop="8dp"
+                android:lineSpacingExtra="5dp"
+                android:text="正文正文正文正文"
+                android:textSize="16sp" />
 
             <TextView
-                    android:id="@+id/frag_single_weibo_retweeted_status_rl"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_below="@+id/frag_single_weibo_text"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/text_bg_3"/>
+                android:id="@+id/frag_single_weibo_retweeted_status_rl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/frag_single_weibo_text"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/text_bg_3" />
 
             <TextView
-                    android:id="@+id/frag_single_weibo_retweeted_status_screen_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_below="@+id/frag_single_weibo_text"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="@dimen/lv_retweet_rl_top_margin"
-                    android:text="用户名"
-                    android:textSize="16sp"
-                    android:textStyle="bold"/>
+                android:id="@+id/frag_single_weibo_retweeted_status_screen_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/frag_single_weibo_text"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="@dimen/lv_retweet_rl_top_margin"
+                android:text="用户名"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
-                    android:id="@+id/frag_single_weibo_retweeted_status_created_at"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="17:25"
-                    android:textColor="@color/textGrey"
-                    android:textSize="13sp"
-                    android:layout_alignBottom="@+id/frag_single_weibo_retweeted_status_screen_name"
-                    android:layout_toRightOf="@+id/frag_single_weibo_retweeted_status_screen_name"/>
+                android:id="@+id/frag_single_weibo_retweeted_status_created_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="17:25"
+                android:textColor="@color/textGrey"
+                android:textSize="13sp"
+                android:layout_alignBottom="@+id/frag_single_weibo_retweeted_status_screen_name"
+                android:layout_toRightOf="@+id/frag_single_weibo_retweeted_status_screen_name" />
 
             <TextView
-                    android:id="@+id/frag_single_weibo_retweeted_status_source"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="来源"
-                    android:textColor="@color/textGrey"
-                    android:textSize="13sp"
-                    android:layout_alignBaseline="@+id/frag_single_weibo_retweeted_status_created_at"
-                    android:layout_toRightOf="@+id/frag_single_weibo_retweeted_status_created_at"/>
+                android:id="@+id/frag_single_weibo_retweeted_status_source"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="来源"
+                android:textColor="@color/textGrey"
+                android:textSize="13sp"
+                android:layout_alignBaseline="@+id/frag_single_weibo_retweeted_status_created_at"
+                android:layout_toRightOf="@+id/frag_single_weibo_retweeted_status_created_at" />
 
             <TextView
-                    android:id="@+id/frag_single_weibo_retweeted_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/frag_single_weibo_retweeted_status_created_at"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="8dp"
-                    android:lineSpacingExtra="4dp"
-                    android:text="评论微博原文 "
-                    android:textSize="16sp"/>
+                android:id="@+id/frag_single_weibo_retweeted_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/frag_single_weibo_retweeted_status_created_at"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="8dp"
+                android:lineSpacingExtra="4dp"
+                android:text="评论微博原文 "
+                android:textSize="16sp" />
 
             <ImageView
-                    android:id="@+id/frag_single_weibo_retweeted_status_weibo_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/frag_single_weibo_retweeted_status"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="8dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:adjustViewBounds="true"/>
+                android:id="@+id/frag_single_weibo_retweeted_status_weibo_image"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_below="@+id/frag_single_weibo_retweeted_status"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:layout_alignParentBottom="true"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:adjustViewBounds="true" />
 
 
             <ImageView
-                    android:id="@+id/frag_single_weibo_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/frag_single_weibo_text"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="8dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:adjustViewBounds="true"/>
+                android:id="@+id/frag_single_weibo_image"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_below="@+id/frag_single_weibo_text"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:layout_alignParentBottom="true"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:adjustViewBounds="true" />
 
         </RelativeLayout>
     </ScrollView>
-
 </RelativeLayout>

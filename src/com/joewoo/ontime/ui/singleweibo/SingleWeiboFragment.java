@@ -11,11 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.joewoo.ontime.R;
+import com.joewoo.ontime.support.image.DownloadPic;
 import com.joewoo.ontime.support.menu.CopyTextContextualMenu;
-import com.joewoo.ontime.support.net.DownloadPic;
 import com.joewoo.ontime.support.util.CheckMentionsURLTopic;
 import com.joewoo.ontime.ui.SingleUser;
 
@@ -66,6 +65,7 @@ public class SingleWeiboFragment extends Fragment {
 
     private DownloadPic dp;
 
+
     public SingleWeiboFragment() {
     }
 
@@ -84,6 +84,7 @@ public class SingleWeiboFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
 
         act = (SingleWeiboActivity) getActivity();
 

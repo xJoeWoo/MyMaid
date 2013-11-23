@@ -102,7 +102,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
         if (c != null && c.moveToFirst()) {
             profileImg = c.getBlob(c.getColumnIndex(MyMaidSQLHelper.PROFILEIMG));
             try {
-                    new CommentsToMe(c.getString(c
+                    new CommentsToMe(true, c.getString(c
                             .getColumnIndex(MyMaidSQLHelper.TO_ME_COMMENTS)), mHandler).start();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -246,7 +246,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
     }
 
     public void refreshComments() {
-        new CommentsToMe(AcquireCount.COMMENTS_TO_ME_COUNT, sql, mHandler).start();
+        new CommentsToMe(sql, mHandler).start();
         act.setRefreshing(true);
         mPullToRefreshAttacher.setRefreshing(true);
     }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -224,7 +225,15 @@ public class MainTimelineActivity extends FragmentActivity {
     public void setActionBarLowProfile() {
         if (getActionBar().isShowing()) {
             getActionBar().hide();
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+            switch(Build.VERSION.SDK_INT) {
+                case Build.VERSION_CODES.KITKAT:
+                    getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE);
+                    break;
+
+                default:
+                    getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+                    break;
+            }
         }
     }
 

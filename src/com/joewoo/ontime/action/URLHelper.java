@@ -1,6 +1,7 @@
 package com.joewoo.ontime.action;
 
 import com.joewoo.ontime.support.info.Defines;
+import com.joewoo.ontime.support.util.GlobalContext;
 
 /**
  * Created by JoeWoo on 13-10-19.
@@ -14,7 +15,7 @@ public class URLHelper {
     public final static String USER_SHOW = "https://api.weibo.com/2/users/show.json";
 
     public final static String AUTH = "https://api.weibo.com/oauth2/authorize?client_id="
-            + Defines.APP_KEY
+            + GlobalContext.APP_SECRET
             + "&response_type=code&redirect_uri="
             + CALLBACK
             + "&display=mobile";

@@ -47,7 +47,7 @@ public class SingleWeiboCommentsFragment extends Fragment {
 
     public void showComments(String weibo_id){
         this.weibo_id = weibo_id;
-        new CommentsShow(AcquireCount.COMMENTS_SHOW_COUNT, weibo_id, mHandler).start();
+        new CommentsShow(weibo_id, mHandler).start();
     }
 
 	@Override
