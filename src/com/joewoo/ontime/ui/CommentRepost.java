@@ -38,11 +38,20 @@ public class CommentRepost extends Activity {
     boolean isRepost;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.from_left_in, R.anim.out);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.comment);
+
+        overridePendingTransition(R.anim.from_left_in, R.anim.out);
+
         setProgressBarIndeterminateVisibility(false);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setDisplayShowTitleEnabled(true);
@@ -156,7 +165,7 @@ public class CommentRepost extends Activity {
 
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
-                if (!"".equals(et.getText().toString().trim())) {
+                if (et.getText() != null && !et.getText().toString().trim().equals("")) {
                     sending = true;
                     rfBar(); // 刷新ActionBar
 
@@ -214,22 +223,19 @@ public class CommentRepost extends Activity {
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-
             sending = false;
             setProgressBarIndeterminateVisibility(false);
             rfBar(); // 刷新ActionBar
-            WeiboBackBean b = (WeiboBackBean) msg.obj;
-
             switch (msg.what) {
                 case GOT_COMMENT_CREATE_INFO: {
-                    Toast.makeText(CommentRepost.this, R.string.toast_comment_fail,
+                    Toast.makeText(CommentRepost.this, R.string.toast_comment_success,
                             Toast.LENGTH_SHORT).show();
                     finish();
 
                     break;
                 }
                 case GOT_REPOST_INFO: {
-                    Toast.makeText(CommentRepost.this, R.string.toast_repost_fail,
+                    Toast.makeText(CommentRepost.this, R.string.toast_repost_success,
                             Toast.LENGTH_SHORT).show();
                     finish();
                     break;

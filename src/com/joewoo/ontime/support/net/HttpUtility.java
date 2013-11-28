@@ -1,10 +1,6 @@
 package com.joewoo.ontime.support.net;
 
-import android.graphics.Bitmap;
-import android.webkit.DownloadListener;
-
-import com.joewoo.ontime.support.image.ImageDownloadHelper;
-import com.joewoo.ontime.support.image.ImageUploadHelper;
+import android.os.AsyncTask;
 
 import java.util.Map;
 
@@ -21,12 +17,12 @@ public class HttpUtility {
         return new JavaHttpUtility().doPost(urlStr, param);
     }
 
-    public String executeUploadImageTask(String urlStr, Map<String, String> param, String path, String imageParamName, ImageUploadHelper.ProgressListener listener) throws Exception {
+    public String executeUploadImageTask(String urlStr, Map<String, String> param, String path, String imageParamName, ImageNetworkListener.UploadProgressListener listener) throws Exception {
         return new JavaHttpUtility().doUploadFile(urlStr, param, path, imageParamName, listener);
     }
 
-    public byte[] executeDownloadImageTask(String urlStr, ImageDownloadHelper.ProgressListener listener) throws Exception {
-        return new JavaHttpUtility().doDownloadImage(urlStr, listener);
+    public byte[] executeDownloadImageTask(String urlStr, ImageNetworkListener.DownloadProgressListener listener, AsyncTask asyncTask) throws Exception {
+        return new JavaHttpUtility().doDownloadImage(urlStr, listener, asyncTask);
     }
 
 }

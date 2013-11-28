@@ -1,6 +1,5 @@
 package com.joewoo.ontime.action.statuses;
 
-import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.util.Log;
@@ -55,75 +54,35 @@ public class StatusesMentions extends Thread {
     private String httpResult;
     private SQLiteDatabase sql;
 
-    public StatusesMentions(SQLiteDatabase sql, Handler handler) {
+    public StatusesMentions(boolean isProvided, SQLiteDatabase sql, Handler handler) {
         this.mHandler = handler;
         this.sql = sql;
-    }
-
-    public StatusesMentions(boolean isProvided, String httpResult, Handler handler) {
-        this.mHandler = handler;
-        this.httpResult = httpResult;
-        isProvidedResult = isProvided;
+        this.isProvidedResult = isProvided;
     }
 
     @Override
     public void run() {
         Log.e(TAG, "StatusesMentions Thread START");
 
+
         if (!isProvidedResult) {
-//
-//            HttpUriRequest httpGet = new HttpGet(URLHelper.MENTIONS
-//                    + "?access_token=" + GlobalContext.getAccessToken() + "&count="
-//                    + count);
-//            httpGet.addHeader("Accept-Encoding", "gzip");
-//
-//            try {
-//
-//                InputStream is = new DefaultHttpClient().execute(httpGet)
-//                        .getEntity().getContent();
-//
-//                is = new GZIPInputStream(is);
-//
-//                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//
-//                int i = -1;
-//                while ((i = is.read()) != -1) {
-//                    baos.write(i);
-//                }
-//
-//                httpResult = baos.toString();
-//                is.close();
-//                baos.close();
-//
-//                Log.e(TAG,
-//                        "GOT Statues length: "
-//                                + String.valueOf(httpResult.length()));
-//                Log.e(TAG, httpResult);
-
-            try {
-                HashMap<String, String> hm = new HashMap<String, String>();
-                hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
-                hm.put(COUNT, AcquireCount.MENTIONS_COUNT);
-
-                httpResult = new HttpUtility().executeGetTask(URLHelper.MENTIONS, hm);
-
-                hm = null;
-            } catch (Exception e) {
-                mHandler.sendEmptyMessage(GOT_MENTIONS_INFO_FAIL);
-                e.printStackTrace();
+            if (!fresh())
                 return;
-            }
+        } else {
+            httpResult = MyMaidSQLHelper.getOneString(MyMaidSQLHelper.MENTIONS, sql);
+            if(httpResult == null)
+                if(!fresh())
+                    return;
         }
+
+        sql = null;
 
         if (ErrorCheck.getError(httpResult) == null) {
 
-            MentionsBean mentions = new Gson().fromJson(httpResult,
-                    MentionsBean.class);
-
-            List<StatusesBean> statuses = mentions.getStatuses();
+            List<StatusesBean> statuses = new Gson().fromJson(httpResult,
+                    MentionsBean.class).getStatuses();
 
             ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
-
 
             HashMap<String, String> hm = new HashMap<String, String>();
             hm.put(BLANK, " ");
@@ -206,18 +165,29 @@ public class StatusesMentions extends Thread {
                 new RemindSetCount(mHandler)
                         .execute(RemindSetCount.setMentionsCount);
 
-            if (sql != null && !isProvidedResult) {
-                ContentValues cv = new ContentValues();
-                cv.put(MyMaidSQLHelper.MENTIONS, httpResult);
-                if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"
-                        + GlobalContext.getUID() + "'", null) != 0) {
-                    Log.e(MyMaidSQLHelper.TAG_SQL, "Saved StatusesMentions httpResult");
-                }
-            }
         } else {
             mHandler.obtainMessage(GOT_MENTIONS_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();
         }
+    }
 
+    private boolean fresh() {
+        try {
+            HashMap<String, String> hm = new HashMap<String, String>();
+            hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+            hm.put(COUNT, AcquireCount.MENTIONS_COUNT);
 
+            httpResult = new HttpUtility().executeGetTask(URLHelper.MENTIONS, hm);
+
+            hm = null;
+
+            MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.MENTIONS, httpResult, sql);
+
+            return true;
+
+        } catch (Exception e) {
+            mHandler.sendEmptyMessage(GOT_MENTIONS_INFO_FAIL);
+            e.printStackTrace();
+            return false;
+        }
     }
 }

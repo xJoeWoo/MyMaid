@@ -1,6 +1,5 @@
 package com.joewoo.ontime.action.comments;
 
-import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.util.Log;
@@ -52,14 +51,9 @@ public class CommentsMentions extends Thread {
     private SQLiteDatabase sql;
     private String max_id;
 
-    public CommentsMentions(SQLiteDatabase sql, Handler handler) {
+    public CommentsMentions(boolean isProvided, SQLiteDatabase sql, Handler handler) {
         this.mHandler = handler;
         this.sql = sql;
-    }
-
-    public CommentsMentions(boolean isProvided, String httpResult, Handler handler) {
-        this.mHandler = handler;
-        this.httpResult = httpResult;
         this.isProvidedResult = isProvided;
     }
 
@@ -67,26 +61,13 @@ public class CommentsMentions extends Thread {
         Log.e(TAG, "Comments StatusesMentions Thread START");
 
         if (!isProvidedResult) {
-            try {
-                HashMap<String, String> hm = new HashMap<String, String>();
-                hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
-
-                if (max_id == null) {
-                    hm.put(COUNT, AcquireCount.COMMENTS_MENTIONS_COUNT);
-                } else {
-                    hm.put(COUNT, AcquireCount.COMMENTS_MENTIONS_ADD_COUNT);
-                    hm.put(MAX_ID, max_id);
-                }
-
-                httpResult = new HttpUtility().executeGetTask(URLHelper.COMMENTS_MENTIONS, hm);
-
-                hm = null;
-
-            } catch (Exception e) {
-                mHandler.sendEmptyMessage(GOT_COMMENTS_MENTIONS_INFO_FAIL);
-                e.printStackTrace();
+            if (!fresh())
                 return;
-            }
+        } else {
+            httpResult = MyMaidSQLHelper.getOneString(MyMaidSQLHelper.COMMENTS_MENTIONS, sql);
+            if(httpResult == null)
+                if(!fresh())
+                    return;
         }
 
         try {
@@ -140,18 +121,11 @@ public class CommentsMentions extends Thread {
             mHandler.obtainMessage(GOT_COMMENTS_MENTIONS_INFO, text)
                     .sendToTarget();
 
+            comments = null;
+
             if (!isProvidedResult)
                 new RemindSetCount(mHandler)
                         .execute(RemindSetCount.setCommentMentionsCount);
-
-            if (sql != null && !isProvidedResult) {
-                ContentValues cv = new ContentValues();
-                cv.put(MyMaidSQLHelper.COMMENTS_MENTIONS, httpResult);
-                if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"
-                        + GlobalContext.getUID() + "'", null) != 0) {
-                    Log.e(MyMaidSQLHelper.TAG_SQL, "Saved Comments StatusesMentions httpResult");
-                }
-            }
 
         } catch (Exception e) {
             mHandler.sendEmptyMessage(GOT_COMMENTS_MENTIONS_INFO_FAIL);
@@ -159,5 +133,30 @@ public class CommentsMentions extends Thread {
         }
     }
 
+    private boolean fresh() {
+        try {
+            HashMap<String, String> hm = new HashMap<String, String>();
+            hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+
+            if (max_id == null) {
+                hm.put(COUNT, AcquireCount.COMMENTS_MENTIONS_COUNT);
+            } else {
+                hm.put(COUNT, AcquireCount.COMMENTS_MENTIONS_ADD_COUNT);
+                hm.put(MAX_ID, max_id);
+            }
+
+            httpResult = new HttpUtility().executeGetTask(URLHelper.COMMENTS_MENTIONS, hm);
+
+            hm = null;
+
+            MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.COMMENTS_MENTIONS, httpResult, sql);
+
+            return true;
+        } catch (Exception e) {
+            mHandler.sendEmptyMessage(GOT_COMMENTS_MENTIONS_INFO_FAIL);
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 }

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
-import com.joewoo.ontime.support.image.ImageUploadHelper;
+import com.joewoo.ontime.support.net.ImageNetworkListener;
 import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
 
@@ -16,7 +16,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.ProgressBar;
 
-public class StatusesUpload extends AsyncTask<String, Integer, String> implements ImageUploadHelper.ProgressListener {
+public class StatusesUpload extends AsyncTask<String, Integer, String> implements ImageNetworkListener.UploadProgressListener {
 
     private String status;
     private String filePath;

@@ -38,10 +38,19 @@ public class SingleWeiboActivity extends FragmentActivity {
     private boolean isShowedReposts = false;
     private HashMap<String, String> map;
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.from_left_in, R.anim.out);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.singelweibo);
+
+        overridePendingTransition(R.anim.from_left_in, R.anim.out);
 
         i = getIntent();
         map = (HashMap<String, String>) i.getSerializableExtra(SINGLE_WEIBO_MAP);

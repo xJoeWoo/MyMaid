@@ -1,6 +1,5 @@
 package com.joewoo.ontime.ui.maintimeline;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,9 +7,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +25,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.joewoo.ontime.R;
+import com.joewoo.ontime.action.friendships.FriendsIDs;
 import com.joewoo.ontime.action.statuses.StatusesFriendsTimeLine;
 import com.joewoo.ontime.support.adapter.listview.MyMaidAdapter;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
@@ -46,6 +43,7 @@ import java.util.Locale;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
 
+import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_IDS_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_INFO_FAIL;
@@ -65,21 +63,19 @@ import static com.joewoo.ontime.support.info.Defines.TAG;
 import static com.joewoo.ontime.support.info.Defines.UID;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
-@SuppressLint("HandlerLeak")
+
 public class FriendsTimeLineFragment extends Fragment implements OnRefreshListener {
 
     ArrayList<HashMap<String, String>> text;
     ListView lv;
-    SQLiteDatabase sql;
     MyMaidAdapter mAdapter;
     private PullToRefreshAttacher mPullToRefreshAttacher;
-    byte[] profileImg;
     private MainTimelineActivity act;
 
     @Override
     public void onRefreshStarted(View view) {
         Log.e(TAG, "Refresh StatusesFriendsTimeLine");
-        if ((act).checkNetwork())
+        if (act.checkNetwork())
             refreshFriendsTimeLine();
     }
 
@@ -105,27 +101,8 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        sql = act.getSQL();
-        Cursor c = sql.query(MyMaidSQLHelper.tableName, new String[]{
-                MyMaidSQLHelper.FRIENDS_TIMELINE, MyMaidSQLHelper.PROFILEIMG},
-                MyMaidSQLHelper.UID + "=?", new String[]{GlobalContext.getUID()}, null,
-                null, null);
 
-        if (c != null && c.moveToFirst()) {
-            profileImg = c.getBlob(c.getColumnIndex(MyMaidSQLHelper.PROFILEIMG));
-            try {
-                if (!c.getString(c
-                        .getColumnIndex(MyMaidSQLHelper.FRIENDS_TIMELINE)).equals(""))
-                    new StatusesFriendsTimeLine(true, c.getString(c
-                            .getColumnIndex(MyMaidSQLHelper.FRIENDS_TIMELINE)), mHandler).start();
-
-            } catch (Exception e) {
-                refreshFriendsTimeLine();
-            }
-        } else {
-
-        }
-
+        new FriendsIDs(true, GlobalContext.getScreenName(), act.getSQL(), mHandler).start();
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -222,10 +199,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
 
         try {
             menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_user_statuses)
-                    .setIcon(
-                            new BitmapDrawable(getResources(), BitmapFactory
-                                    .decodeByteArray(profileImg, 0,
-                                            profileImg.length)))
+                    .setIcon(act.getProfileImage())
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         } catch (Exception e) {
             Log.e(TAG, "Profile image length: (Timeline) ERROR!");
@@ -253,13 +227,13 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                 Intent i = new Intent();
                 i.setClass(act, Post.class);
                 i.putExtra(IS_FRAG_POST, true);
-                i.putExtra(PROFILE_IMAGE, profileImg);
+                i.putExtra(PROFILE_IMAGE, act.getProfileImgBytes());
                 startActivity(i);
                 break;
             }
             case MENU_PROFILE_IMAGE: {
 
-                Cursor cursor = sql.query(MyMaidSQLHelper.tableName, new String[]{
+                Cursor cursor = act.getSQL().query(MyMaidSQLHelper.tableName, new String[]{
                         MyMaidSQLHelper.UID, MyMaidSQLHelper.SCREEN_NAME}, null, null, null,
                         null, null);
                 Log.e(MyMaidSQLHelper.TAG_SQL, "Queried users");
@@ -341,7 +315,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                                                                         LASTUID, "");
                                                                 editor.commit();
 
-                                                                if (sql.delete(
+                                                                if (act.getSQL().delete(
                                                                         MyMaidSQLHelper.tableName,
                                                                         MyMaidSQLHelper.UID
                                                                                 + "=?",
@@ -382,9 +356,11 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
 //                        Log.e(TAG, String.valueOf(i));
 //                        switch (i) {
 //                            case 0: {
-                Intent ii = new Intent(act, SingleUser.class);
-                ii.putExtra(SCREEN_NAME, GlobalContext.getScreenName());
-                startActivity(ii);
+                if(act.checkNetwork()) {
+                    Intent ii = new Intent(act, SingleUser.class);
+                    ii.putExtra(SCREEN_NAME, GlobalContext.getScreenName());
+                    startActivity(ii);
+                }
 //                                break;
 //                            }
 //                            case 1: {
@@ -409,6 +385,10 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
             mPullToRefreshAttacher.setRefreshComplete();
             (act).setRefreshing(false);
             switch (msg.what) {
+                case GOT_FRIENDS_IDS_INFO: {
+                    new StatusesFriendsTimeLine(true, act.getSQL(), mHandler).start();
+                    break;
+                }
                 case GOT_FRIENDS_TIMELINE_INFO: {
                     text = (ArrayList<HashMap<String, String>>) msg.obj;
                     setListView(text);
@@ -472,7 +452,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
     }
 
     public void refreshFriendsTimeLine() {
-        new StatusesFriendsTimeLine(sql, mHandler).start();
+        new StatusesFriendsTimeLine(false, act.getSQL(), mHandler).start();
         act.setRefreshing(true);
         mPullToRefreshAttacher.setRefreshing(true);
     }

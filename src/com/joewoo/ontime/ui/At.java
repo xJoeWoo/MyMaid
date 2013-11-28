@@ -86,7 +86,7 @@ public class At extends Activity {
                 String user = searchView.getQuery().toString().trim();
                 if (!"".equals(user)) {
                     Log.e(TAG, user);
-                    new SuggestionsAt(user, mHandler).start();
+                    new SuggestionsAt(user, mHandler, At.this).start();
                     pb.setVisibility(View.VISIBLE);
                 }
                 return false;

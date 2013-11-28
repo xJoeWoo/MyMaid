@@ -1,10 +1,6 @@
 package com.joewoo.ontime.ui.maintimeline;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,8 +20,6 @@ import com.joewoo.ontime.action.comments.CommentsToMe;
 import com.joewoo.ontime.action.remind.RemindUnreadCount;
 import com.joewoo.ontime.support.adapter.listview.MyMaidCommentsToMeAdapter;
 import com.joewoo.ontime.support.bean.UnreadCountBean;
-import com.joewoo.ontime.support.info.AcquireCount;
-import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.ui.CommentRepost;
 import com.joewoo.ontime.ui.Post;
@@ -59,10 +53,8 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
 
     ArrayList<HashMap<String, String>> text;
     ListView lv;
-    SQLiteDatabase sql;
     String unreadCount;
     private PullToRefreshAttacher mPullToRefreshAttacher;
-    byte[] profileImg;
     private MainTimelineActivity act;
 
     @Override
@@ -94,22 +86,8 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        sql = (act).getSQL();
-        Cursor c = sql.query(MyMaidSQLHelper.tableName, new String[]{
-                MyMaidSQLHelper.TO_ME_COMMENTS, MyMaidSQLHelper.PROFILEIMG}, MyMaidSQLHelper.UID
-                + "=?", new String[]{GlobalContext.getUID()}, null, null, null);
+        new CommentsToMe(true, act.getSQL(), mHandler).start();
 
-        if (c != null && c.moveToFirst()) {
-            profileImg = c.getBlob(c.getColumnIndex(MyMaidSQLHelper.PROFILEIMG));
-            try {
-                    new CommentsToMe(true, c.getString(c
-                            .getColumnIndex(MyMaidSQLHelper.TO_ME_COMMENTS)), mHandler).start();
-            } catch (Exception e) {
-                e.printStackTrace();
-                refreshComments();
-            }
-        } else {
-        }
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -142,10 +120,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
 
         try {
             menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_coming)
-                    .setIcon(
-                            new BitmapDrawable(getResources(), BitmapFactory
-                                    .decodeByteArray(profileImg, 0,
-                                            profileImg.length)))
+                    .setIcon(act.getProfileImage())
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -175,7 +150,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
                 Intent i = new Intent();
                 i.setClass(act, Post.class);
                 i.putExtra(IS_FRAG_POST, true);
-                i.putExtra(PROFILE_IMAGE, profileImg);
+                i.putExtra(PROFILE_IMAGE, act.getProfileImgBytes());
                 startActivity(i);
                 break;
             }
@@ -211,12 +186,12 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
                     break;
                 }
                 case GOT_COMMENTS_TO_ME_INFO_FAIL: {
-                    if(msg.obj != null)
+                    if (msg.obj != null)
                         Toast.makeText(act, (String) msg.obj,
                                 Toast.LENGTH_SHORT).show();
                     else
-                    Toast.makeText(act, R.string.toast_comments_fail,
-                            Toast.LENGTH_SHORT).show();
+                        Toast.makeText(act, R.string.toast_comments_fail,
+                                Toast.LENGTH_SHORT).show();
                     break;
                 }
                 case GOT_UNREAD_COUNT_INFO: {
@@ -246,7 +221,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
     }
 
     public void refreshComments() {
-        new CommentsToMe(sql, mHandler).start();
+        new CommentsToMe(false, act.getSQL(), mHandler).start();
         act.setRefreshing(true);
         mPullToRefreshAttacher.setRefreshing(true);
     }

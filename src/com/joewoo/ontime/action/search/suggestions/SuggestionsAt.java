@@ -1,5 +1,6 @@
 package com.joewoo.ontime.action.search.suggestions;
 
+import android.app.Activity;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -24,10 +25,12 @@ public class SuggestionsAt extends Thread {
 
     private String user;
     private Handler mHandler;
+    private Activity act;
 
-    public SuggestionsAt(String user, Handler handler) {
+    public SuggestionsAt(String user, Handler handler, Activity act) {
         this.user = user;
         this.mHandler = handler;
+        this.act = act;
     }
 
     public void run() {
@@ -52,7 +55,7 @@ public class SuggestionsAt extends Thread {
                     listType);
 
             ArrayAdapter<AtSuggestionBean> files = new ArrayAdapter<AtSuggestionBean>(
-                    GlobalContext.getAppContext(), R.layout.at_lv, R.id.lv_tv1, events);
+                    act, R.layout.at_lv, R.id.lv_tv1, events);
 
             mHandler.obtainMessage(GOT_AT_SUGGESTIONS_INFO, files)
                     .sendToTarget();

@@ -1,39 +1,12 @@
 package com.joewoo.ontime.ui.maintimeline;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
-
-import com.joewoo.ontime.action.remind.RemindUnreadCount;
-import com.joewoo.ontime.action.comments.CommentsMentions;
-import com.joewoo.ontime.action.statuses.StatusesMentions;
-import com.joewoo.ontime.support.adapter.listview.MyMaidAdapter;
-import com.joewoo.ontime.support.info.AcquireCount;
-import com.joewoo.ontime.support.util.GlobalContext;
-import com.joewoo.ontime.ui.CommentRepost;
-import com.joewoo.ontime.ui.Post;
-import com.joewoo.ontime.R;
-import com.joewoo.ontime.ui.SingleUser;
-import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
-import com.joewoo.ontime.support.bean.UnreadCountBean;
-
-import static com.joewoo.ontime.support.info.Defines.*;
-
-import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.support.v4.app.Fragment;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,18 +17,50 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.joewoo.ontime.R;
+import com.joewoo.ontime.action.comments.CommentsMentions;
+import com.joewoo.ontime.action.remind.RemindUnreadCount;
+import com.joewoo.ontime.action.statuses.StatusesMentions;
+import com.joewoo.ontime.support.adapter.listview.MyMaidAdapter;
+import com.joewoo.ontime.support.bean.UnreadCountBean;
+import com.joewoo.ontime.support.util.GlobalContext;
+import com.joewoo.ontime.ui.CommentRepost;
+import com.joewoo.ontime.ui.Post;
+import com.joewoo.ontime.ui.SingleUser;
+import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
+
+import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_MENTIONS_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_MENTIONS_INFO_FAIL;
+import static com.joewoo.ontime.support.info.Defines.GOT_MENTIONS_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_MENTIONS_INFO_FAIL;
+import static com.joewoo.ontime.support.info.Defines.GOT_SET_REMIND_COUNT_INFO_FAIL;
+import static com.joewoo.ontime.support.info.Defines.GOT_UNREAD_COUNT_INFO;
+import static com.joewoo.ontime.support.info.Defines.IS_COMMENT;
+import static com.joewoo.ontime.support.info.Defines.IS_FRAG_POST;
+import static com.joewoo.ontime.support.info.Defines.MENU_POST;
+import static com.joewoo.ontime.support.info.Defines.MENU_PROFILE_IMAGE;
+import static com.joewoo.ontime.support.info.Defines.MENU_UNREAD_COUNT;
+import static com.joewoo.ontime.support.info.Defines.PROFILE_IMAGE;
+import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
+import static com.joewoo.ontime.support.info.Defines.SINGLE_WEIBO_MAP;
+import static com.joewoo.ontime.support.info.Defines.TAG;
+import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
+
 public class MentionsFragment extends Fragment implements OnRefreshListener {
 
     ArrayList<HashMap<String, String>> text;
     ListView lv;
-    SQLiteDatabase sql;
     String unreadCount;
     String unreadCommentMentionsCount;
     private PullToRefreshAttacher mPullToRefreshAttacher;
-    byte[] profileImg;
     private MainTimelineActivity act;
     private boolean isNormalMention = true;
-    private Cursor c;
 
     @Override
     public void onRefreshStarted(View view) {
@@ -92,14 +97,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        sql = act.getSQL();
-        c = sql.query(MyMaidSQLHelper.tableName, new String[]{
-                MyMaidSQLHelper.MENTIONS, MyMaidSQLHelper.PROFILEIMG, MyMaidSQLHelper.COMMENTS_MENTIONS}, MyMaidSQLHelper.UID
-                + "=?", new String[]{GlobalContext.getUID()}, null, null, null);
-
-        setLv(MyMaidSQLHelper.MENTIONS);
-
-        profileImg = c.getBlob(c.getColumnIndex(MyMaidSQLHelper.PROFILEIMG));
+        new StatusesMentions(true, act.getSQL(), mHandler).start();
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -136,10 +134,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
 
         try {
             menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_coming)
-                    .setIcon(
-                            new BitmapDrawable(getResources(), BitmapFactory
-                                    .decodeByteArray(profileImg, 0,
-                                            profileImg.length)))
+                    .setIcon(act.getProfileImage())
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -169,7 +164,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                 Intent i = new Intent();
                 i.setClass(act, Post.class);
                 i.putExtra(IS_FRAG_POST, true);
-                i.putExtra(PROFILE_IMAGE, profileImg);
+                i.putExtra(PROFILE_IMAGE, act.getProfileImgBytes());
                 startActivity(i);
                 break;
             }
@@ -183,14 +178,12 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                         switch (i) {
                             case 0: {
                                 isNormalMention = true;
-                                setLv(MyMaidSQLHelper.MENTIONS);
-//                            refreshMentions();
+                                new StatusesMentions(true, act.getSQL(), mHandler).start();
                                 break;
                             }
                             case 1: {
                                 isNormalMention = false;
-                                setLv(MyMaidSQLHelper.COMMENTS_MENTIONS);
-//                            refreshCommentsMentions();
+                                new CommentsMentions(true, act.getSQL(), mHandler).start();
                                 break;
                             }
                         }
@@ -279,40 +272,15 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
     }
 
     public void refreshMentions() {
-        new StatusesMentions(sql, mHandler).start();
+        new StatusesMentions(false, act.getSQL(), mHandler).start();
         act.setRefreshing(true);
         mPullToRefreshAttacher.setRefreshing(true);
     }
 
     public void refreshCommentsMentions() {
-        new CommentsMentions(sql, mHandler).start();
+        new CommentsMentions(false, act.getSQL(), mHandler).start();
         act.setRefreshing(true);
         mPullToRefreshAttacher.setRefreshing(true);
-    }
-
-    private void setLv(String column) {
-        if (c != null && c.moveToFirst()) {
-
-            if (c.getString(c.getColumnIndex(column)) != null) {
-                if (column.equals(MyMaidSQLHelper.MENTIONS)) {
-                    new StatusesMentions(true,
-                            c.getString(c.getColumnIndex(MyMaidSQLHelper.MENTIONS)), mHandler).start();
-                } else if (column.equals(MyMaidSQLHelper.COMMENTS_MENTIONS)) {
-                    new CommentsMentions(true,
-                            c.getString(c.getColumnIndex(MyMaidSQLHelper.COMMENTS_MENTIONS)), mHandler).start();
-                }
-            } else {
-                if (column.equals(MyMaidSQLHelper.MENTIONS)) {
-                    refreshMentions();
-                } else if (column.equals(MyMaidSQLHelper.COMMENTS_MENTIONS)) {
-                    refreshCommentsMentions();
-                }
-            }
-
-        } else {
-            mPullToRefreshAttacher.setRefreshing(false);
-        }
-
     }
 
 }

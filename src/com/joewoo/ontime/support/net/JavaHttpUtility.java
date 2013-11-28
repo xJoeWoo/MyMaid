@@ -1,11 +1,7 @@
 package com.joewoo.ontime.support.net;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.util.Log;
-
-import com.joewoo.ontime.support.image.ImageDownloadHelper;
-import com.joewoo.ontime.support.image.ImageUploadHelper;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -40,7 +36,7 @@ public class JavaHttpUtility {
     public static final int DOWNLOAD_CONNECT_TIMEOUT = 5 * 1000;
     public static final int DOWNLOAD_READ_TIMEOUT = 5 * 1000;
 
-    public byte[] doDownloadImage(String urlStr, ImageDownloadHelper.ProgressListener downloadListener) throws Exception{
+    public byte[] doDownloadImage(String urlStr, ImageNetworkListener.DownloadProgressListener downloadListener, AsyncTask asyncTask) throws Exception{
 
         InputStream in = null;
         ByteArrayOutputStream baos = null;
@@ -69,12 +65,11 @@ public class JavaHttpUtility {
             in = new BufferedInputStream(conn.getInputStream());
             baos = new ByteArrayOutputStream();
 
-            final Thread thread = Thread.currentThread();
             byte[] buffer = new byte[1024];
             
             while ((byteread = in.read(buffer)) != -1) {
                 
-                if (thread.isInterrupted()) {
+                if (asyncTask.isCancelled()) {
                     throw new Exception();
                 }
 
@@ -100,7 +95,7 @@ public class JavaHttpUtility {
         return imgBytes;
     }
 
-    public String doUploadFile(String urlStr, Map<String, String> param, String path, String imageParamName, final ImageUploadHelper.ProgressListener listener) throws Exception {
+    public String doUploadFile(String urlStr, Map<String, String> param, String path, String imageParamName, final ImageNetworkListener.UploadProgressListener listener) throws Exception {
         String BOUNDARYSTR = getBoundry();
 
         File targetFile = new File(path);

@@ -2,6 +2,7 @@ package com.joewoo.ontime.ui.singleweibo;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.LinkMovementMethod;
@@ -13,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.support.image.DownloadPic;
+import com.joewoo.ontime.support.net.DownloadPic;
 import com.joewoo.ontime.support.menu.CopyTextContextualMenu;
 import com.joewoo.ontime.support.util.CheckMentionsURLTopic;
 import com.joewoo.ontime.ui.SingleUser;
@@ -65,26 +66,37 @@ public class SingleWeiboFragment extends Fragment {
 
     private DownloadPic dp;
 
-
     public SingleWeiboFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//		setHasOptionsMenu(true);
-
         View v = inflater.inflate(R.layout.fragment_singleweibo, container, false);
-
         findViews(v);
-
         return v;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (dp != null && dp.getStatus() == AsyncTask.Status.RUNNING) {
+            dp.cancel(true);
+        }
+
+
+//        if(iv_image.getDrawable() != null)
+//            ((BitmapDrawable)iv_image.getDrawable()).getBitmap().recycle();
+//
+//        if(iv_rt_image.getDrawable() != null)
+//            ((BitmapDrawable)iv_rt_image.getDrawable()).getBitmap().recycle();
+
+        Log.e(TAG, "OnDestroy");
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
 
         act = (SingleWeiboActivity) getActivity();
 
@@ -266,8 +278,7 @@ public class SingleWeiboFragment extends Fragment {
     }
 
     private void setImage() {
-        if(iv_rt_image.getVisibility() == View.VISIBLE)
-        {
+        if (iv_rt_image.getVisibility() == View.VISIBLE) {
             iv_rt_image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -275,8 +286,7 @@ public class SingleWeiboFragment extends Fragment {
                 }
             });
         }
-        if(iv_image.getVisibility() == View.VISIBLE)
-        {
+        if (iv_image.getVisibility() == View.VISIBLE) {
             iv_image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -287,7 +297,7 @@ public class SingleWeiboFragment extends Fragment {
     }
 
     private void setLongClickCopyText() {
-        if(tv_text.getText() != null) {
+        if (tv_text.getText() != null) {
             tv_text.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -296,7 +306,7 @@ public class SingleWeiboFragment extends Fragment {
                 }
             });
         }
-        if(tv_rt_text.getText() != null) {
+        if (tv_rt_text.getText() != null) {
             tv_rt_text.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {

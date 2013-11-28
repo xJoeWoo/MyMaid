@@ -16,13 +16,20 @@ public class GlobalContext extends Application{
     private static String PIC_PATH;
     private static String WORDS;
 
-    public final static String APP_KEY = "462564571";
-    public final static String APP_SECRET = "f08ee7c15ba9afced27b3b916126f5ac";
+    private static long[] FRIENDS_IDS;
 
     @Override
     public void onCreate() {
         super.onCreate();
         globalContext = this;
+    }
+
+    public static long[] getFriendsIDs() {
+        return FRIENDS_IDS;
+    }
+
+    public static void setFriendsIDs(long[] friendsIDs) {
+        GlobalContext.FRIENDS_IDS = friendsIDs;
     }
 
     public static GlobalContext getInstance() {

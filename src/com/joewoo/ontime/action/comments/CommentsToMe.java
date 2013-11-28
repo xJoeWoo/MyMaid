@@ -56,16 +56,16 @@ public class CommentsToMe extends Thread {
     public boolean isProvidedResult = false;
     private String httpResult;
     private SQLiteDatabase sql;
+//
+//    public CommentsToMe(SQLiteDatabase sql, Handler handler) {
+//        this.mHandler = handler;
+//        this.sql = sql;
+//    }
 
-    public CommentsToMe(SQLiteDatabase sql, Handler handler) {
+    public CommentsToMe(boolean isProvided, SQLiteDatabase sql, Handler handler) {
         this.mHandler = handler;
         this.sql = sql;
-    }
-
-    public CommentsToMe(boolean isProvided, String httpResult, Handler handler) {
-        this.mHandler = handler;
-        this.httpResult = httpResult;
-        isProvidedResult = isProvided;
+        this.isProvidedResult = isProvided;
     }
 
     @Override
@@ -73,20 +73,16 @@ public class CommentsToMe extends Thread {
         Log.e(TAG, "Comments To Me Thread START");
 
         if (!isProvidedResult) {
-            try {
-                HashMap<String, String> hm = new HashMap<String, String>();
-                hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
-                hm.put(COUNT, AcquireCount.COMMENTS_TO_ME_COUNT);
-
-                httpResult = new HttpUtility().executeGetTask(URLHelper.COMMENTS_TO_ME, hm);
-
-                hm = null;
-            } catch (Exception e) {
-                mHandler.sendEmptyMessage(GOT_COMMENTS_TO_ME_INFO_FAIL);
-                e.printStackTrace();
+            if (!fresh())
                 return;
-            }
+        } else {
+            httpResult = MyMaidSQLHelper.getOneString(MyMaidSQLHelper.COMMENTS_TO_ME, sql);
+            if(httpResult == null)
+                if(!fresh())
+                    return;
         }
+
+        sql = null;
 
         if (ErrorCheck.getError(httpResult) == null) {
             List<CommentsBean> comments = new Gson().fromJson(httpResult,
@@ -193,17 +189,28 @@ public class CommentsToMe extends Thread {
                 new RemindSetCount(mHandler)
                         .execute(RemindSetCount.setCommentsCount);
 
-            if (sql != null && !isProvidedResult) {
-                ContentValues cv = new ContentValues();
-                cv.put(MyMaidSQLHelper.TO_ME_COMMENTS, httpResult);
-                if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"
-                        + GlobalContext.getUID() + "'", null) != 0) {
-                    Log.e(MyMaidSQLHelper.TAG_SQL, "Saved Comments httpResult");
-                }
-            }
-
         } else {
             mHandler.obtainMessage(GOT_COMMENTS_TO_ME_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();
+        }
+    }
+
+    private boolean fresh() {
+        try {
+            HashMap<String, String> hm = new HashMap<String, String>();
+            hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+            hm.put(COUNT, AcquireCount.COMMENTS_TO_ME_COUNT);
+
+            httpResult = new HttpUtility().executeGetTask(URLHelper.COMMENTS_TO_ME, hm);
+
+            hm = null;
+
+            MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.COMMENTS_TO_ME, httpResult, sql);
+
+            return true;
+        } catch (Exception e) {
+            mHandler.sendEmptyMessage(GOT_COMMENTS_TO_ME_INFO_FAIL);
+            e.printStackTrace();
+            return false;
         }
     }
 }

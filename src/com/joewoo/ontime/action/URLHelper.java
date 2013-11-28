@@ -15,10 +15,11 @@ public class URLHelper {
     public final static String USER_SHOW = "https://api.weibo.com/2/users/show.json";
 
     public final static String AUTH = "https://api.weibo.com/oauth2/authorize?client_id="
-            + GlobalContext.APP_SECRET
+            + Defines.APP_KEY
             + "&response_type=code&redirect_uri="
             + CALLBACK
             + "&display=mobile";
+
     public final static String AT_SUGGESTIONS = "https://api.weibo.com/2/search/suggestions/at_users.json";
     public final static String TOKEN = "https://api.weibo.com/oauth2/access_token";
     public final static String FRIENDS_TIMELINE = "https://api.weibo.com/2/statuses/friends_timeline.json";
@@ -35,5 +36,5 @@ public class URLHelper {
     public final static String STATUSES_DESTROY = "https://api.weibo.com/2/statuses/destroy.json";
     public final static String REPOST_TIMELINE = "https://api.weibo.com/2/statuses/repost_timeline.json";
     public final static String COMMENTS_MENTIONS = "https://api.weibo.com/2/comments/mentions.json";
-
+    public final static String FRIENDS_IDS = "https://api.weibo.com/2/friendships/friends/ids.json";
 }

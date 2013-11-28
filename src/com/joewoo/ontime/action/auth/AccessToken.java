@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
+import com.joewoo.ontime.support.info.Defines;
 import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
 
@@ -28,8 +29,8 @@ public class AccessToken extends Thread {
 
         try {
             HashMap<String, String> hm = new HashMap<String, String>();
-            hm.put("client_id", GlobalContext.APP_KEY);
-            hm.put("client_secret", GlobalContext.APP_SECRET);
+            hm.put("client_id", Defines.APP_KEY);
+            hm.put("client_secret", Defines.APP_SECRET);
             hm.put("grant_type", "authorization_code");
             hm.put("code", GlobalContext.getAuthCode());
             hm.put("redirect_uri", URLHelper.CALLBACK);

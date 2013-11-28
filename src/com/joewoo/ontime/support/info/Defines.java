@@ -4,6 +4,9 @@ import android.os.Environment;
 
 public class Defines {
 
+    public final static String APP_KEY = "462564571";
+    public final static String APP_SECRET = "f08ee7c15ba9afced27b3b916126f5ac";
+
     public final static int RESULT_DESTROYED_WEIBO = 2;
 
     public final static String SINGLE_WEIBO_MAP = "single_weibo_hash_map";
@@ -54,6 +57,8 @@ public class Defines {
     public final static int GOT_COMMENT_CREATE_INFO_FAIL = 40;
     public final static int GOT_REPOST_INFO_FAIL = 41;
     public final static int GOT_REPLY_INFO_FAIL = 42;
+    public final static int GOT_FRIENDS_IDS_INFO = 43;
+    public final static int GOT_FRIENDS_IDS_INFO_FAIL = 44;
 
 
 	public final static int ACT_GOT_PHOTO = 1;

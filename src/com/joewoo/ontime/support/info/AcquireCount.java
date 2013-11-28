@@ -17,4 +17,6 @@ public class AcquireCount {
     public final static String COMMENTS_MENTIONS_ADD_COUNT = "26";
     public final static String USER_TIMELINE_COUNT = "50";
     public final static String USER_TIMELINE_ADD_COUNT = "26";
+    public final static String FRIENDS_IDS_COUNT = "1000";
+
 }
