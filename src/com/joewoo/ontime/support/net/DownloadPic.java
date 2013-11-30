@@ -15,12 +15,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.support.image.BitmapRoundCorner;
 import com.joewoo.ontime.support.image.BitmapSaveAsFile;
 import com.joewoo.ontime.support.image.BitmapScale;
 import com.joewoo.ontime.support.info.Defines;
-import com.joewoo.ontime.support.net.HttpUtility;
-import com.joewoo.ontime.support.net.ImageNetworkListener;
 
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
@@ -53,7 +50,8 @@ public class DownloadPic extends AsyncTask<String, Integer, Bitmap> implements I
     @Override
     protected void onPreExecute() {
         // Toast.makeText(activity, "开始下载图片…", Toast.LENGTH_SHORT).show();
-        fromBottom = AnimationUtils.loadAnimation(act, R.anim.in);
+        if (fromBottom == null)
+            fromBottom = AnimationUtils.loadAnimation(act, R.anim.in);
     }
 
     @Override
@@ -69,20 +67,18 @@ public class DownloadPic extends AsyncTask<String, Integer, Bitmap> implements I
 
                 byte[] imgBytes = new HttpUtility().executeDownloadImageTask(params[0], this, this);
 
-
-//
                 image = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length);
-                if (imgBytes.length > 4000) {
 
-                    BitmapSaveAsFile.save(image, BitmapSaveAsFile.SAVE_AS_PNG, Defines.TEMP_IMAGE_PATH, Defines.TEMP_IMAGE_NAME);
 
-                    image.recycle();
-                    image = BitmapScale.scaleBitmapFromArray(imgBytes, 256, 256);
-                    Log.e(TAG, "Hegiht: " + String.valueOf(image.getHeight()) + " Width: " + String.valueOf(image.getWidth()));
-                } else {
-                    image = BitmapRoundCorner.toRoundCorner(image, 25);
+                BitmapSaveAsFile.save(image, BitmapSaveAsFile.SAVE_AS_PNG, Defines.TEMP_IMAGE_PATH, Defines.TEMP_IMAGE_NAME);
 
-                }
+                image = BitmapScale.resizeBitmap(image, 400, 400);
+
+//                    image = Bitmap.createScaledBitmap(image, 256, 256, true);
+//                    image.recycle();
+//                    image = BitmapScale.scaleBitmapFromArray(imgBytes, 128, 128);
+//                    Log.e(TAG, "Hegiht: " + String.valueOf(image.getHeight()) + " Width: " + String.valueOf(image.getWidth()));
+
 
             } catch (Exception e) {
                 Log.e(TAG, "Download Pic AsyncTask FAILED");
@@ -147,7 +143,7 @@ public class DownloadPic extends AsyncTask<String, Integer, Bitmap> implements I
 
     @Override
     public void downloadProgress(int transferred, int contentLength) {
-        publishProgress(((int) ((float) transferred / (float) contentLength) * 100) + 1);
+        publishProgress((int) (((double) transferred / (double) contentLength) * 100));
     }
 
 }

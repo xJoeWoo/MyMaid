@@ -14,6 +14,7 @@ import com.joewoo.ontime.support.info.AcquireCount;
 import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
+import com.joewoo.ontime.support.util.TimeFormat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,19 +91,13 @@ public class StatusesMentions extends Thread {
             hm = null;
 
             String source;
-            String rt_source;
 
             for (StatusesBean s : statuses) {
                 HashMap<String, String> map = new HashMap<String, String>();
                 source = s.getSource();
-                source = source.substring(source.indexOf(">") + 1,
-                        source.length());
-                source = source.substring(0, source.indexOf("<"));
-                map.put(SOURCE, " · " + source);
-                source = s.getCreatedAt();
-                source = source.substring(source.indexOf(":") - 2,
-                        source.indexOf(":") + 3);
-                map.put(CREATED_AT, source);
+                map.put(SOURCE, " · " + source.substring(source.indexOf(">") + 1,
+                        source.indexOf("</a>")));
+                map.put(CREATED_AT, TimeFormat.parse(s.getCreatedAt()));
                 map.put(SCREEN_NAME, s.getUser().getScreenName());
                 map.put(TEXT, s.getText());
                 map.put(WEIBO_ID, s.getId());
@@ -116,18 +111,11 @@ public class StatusesMentions extends Thread {
                 try {
                     map.put(RETWEETED_STATUS_UID, s
                             .getRetweetedStatus().getUser().getId());
-                    rt_source = s.getRetweetedStatus()
+                    source = s.getRetweetedStatus()
                             .getSource();
-                    rt_source = rt_source.substring(rt_source.indexOf(">") + 1,
-                            rt_source.length());
-                    rt_source = rt_source.substring(0, rt_source.indexOf("<"));
-                    map.put(RETWEETED_STATUS_SOURCE, " · " + rt_source);
-                    rt_source = s.getRetweetedStatus()
-                            .getCreatedAt();
-                    rt_source = rt_source.substring(rt_source.indexOf(":") - 2,
-                            rt_source.indexOf(":") + 3);
-                    map.put(RETWEETED_STATUS_CREATED_AT, rt_source);
-
+                    map.put(RETWEETED_STATUS_SOURCE, " · " + source.substring(source.indexOf(">") + 1,
+                            source.indexOf("</a>")));
+                    map.put(RETWEETED_STATUS_CREATED_AT, TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
                     map.put(RETWEETED_STATUS_UID, s
                             .getRetweetedStatus().getUser().getId());
                     map.put(RETWEETED_STATUS_SCREEN_NAME, s

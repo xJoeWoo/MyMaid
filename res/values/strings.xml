@@ -114,6 +114,10 @@
     <string name="error_comment_not_exist">Target weibo comment does not exist</string>
     <string name="error_unknown">&lt;(ll°д°ll)&gt;! Unknown error</string>
 
+    <string name="time_yesterday">Yesterday ·&#160;</string>
+    <string name="time_2_days_ago">2 days ago ·&#160;</string>
+    <string name="time_3_days_ago">3 days ago ·&#160;</string>
+
 	<!-- <string name=""></string>
 	<string name=""></string>
 	<string name=""></string> -->

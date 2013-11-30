@@ -13,6 +13,7 @@ import com.joewoo.ontime.support.info.AcquireCount;
 import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
+import com.joewoo.ontime.support.util.TimeFormat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS;
 import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_BMIDDLE_PIC;
 import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_CREATED_AT;
 import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SCREEN_NAME;
+import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SOURCE;
 import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
 import static com.joewoo.ontime.support.info.Defines.SOURCE;
 import static com.joewoo.ontime.support.info.Defines.TAG;
@@ -84,17 +86,14 @@ public class CommentsMentions extends Thread {
             hm = null;
 
             String source;
+
             for (CommentsBean c : comments) {
                 HashMap<String, String> map = new HashMap<String, String>();
+
                 source = c.getSource();
-                source = source.substring(source.indexOf(">") + 1,
-                        source.length());
-                source = source.substring(0, source.indexOf("<"));
-                map.put(SOURCE, " · " + source);
-                source = c.getCreatedAt();
-                source = source.substring(source.indexOf(":") - 2,
-                        source.indexOf(":") + 3);
-                map.put(CREATED_AT, source);
+                map.put(SOURCE, " · " + source.substring(source.indexOf(">") + 1,
+                        source.indexOf("</a>")));
+                map.put(CREATED_AT, TimeFormat.parse(c.getCreatedAt()));
                 // map.put(UID, c.getUser().getId());
                 map.put(SCREEN_NAME, c.getUser().getScreenName());
                 map.put(TEXT, c.getText());
@@ -104,9 +103,13 @@ public class CommentsMentions extends Thread {
 
                 map.put(COMMENTS_COUNT, c.getStatus().getCommentsCount());
                 map.put(REPOSTS_COUNT, c.getStatus().getRepostsCount());
+
+                source = c.getStatus().getSource();
+                map.put(RETWEETED_STATUS_SOURCE, " · " + source.substring(source.indexOf(">") + 1,
+                        source.indexOf("</a>")));
                 map.put(RETWEETED_STATUS_SCREEN_NAME, c.getStatus().getUser().getScreenName());
                 map.put(RETWEETED_STATUS, c.getStatus().getText());
-                map.put(RETWEETED_STATUS_CREATED_AT, c.getStatus().getCreatedAt());
+                map.put(RETWEETED_STATUS_CREATED_AT, TimeFormat.parse(c.getStatus().getCreatedAt()));
 
                 map.put(IS_REPOST, " ");
 

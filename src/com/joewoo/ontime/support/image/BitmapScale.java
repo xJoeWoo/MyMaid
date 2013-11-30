@@ -2,11 +2,38 @@ package com.joewoo.ontime.support.image;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 /**
  * Created by JoeWoo on 13-11-21.
  */
 public class BitmapScale {
+
+    public static Bitmap resizeBitmap(Bitmap bitmap, int maxWidth, int maxHeight) {
+
+        int originWidth  = bitmap.getWidth();
+        int originHeight = bitmap.getHeight();
+
+        // no need to resize
+        if (originWidth < maxWidth && originHeight < maxHeight) {
+            return bitmap;
+        }
+
+        // 若图片过宽, 则保持长宽比缩放图片
+        if (originWidth > maxWidth) {
+            int width = maxWidth;
+
+            double i = originWidth * 1.0 / maxWidth;
+            int height = (int) Math.floor(originHeight / i);
+
+            bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
+        }
+
+//        Log.i(TAG, width + " width");
+//        Log.i(TAG, height + " height");
+
+        return bitmap;
+    }
 
     public static Bitmap scaleBitmapFromArray(byte[] bytes, int reqWidth, int reqHeight) {
         // 第一次解析将inJustDecodeBounds设置为true，来获取图片大小

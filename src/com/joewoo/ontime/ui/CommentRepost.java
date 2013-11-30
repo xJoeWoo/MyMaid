@@ -177,7 +177,7 @@ public class CommentRepost extends Activity {
                                 mHandler).start();
                     else if (isReply)
                         new CommentsReply(et.getText().toString(), weibo_id,
-                                comment_id, mHandler).start();
+                                comment_id, false, mHandler).start();
 
                     setProgressBarIndeterminateVisibility(true);
 

@@ -1,6 +1,5 @@
 package com.joewoo.ontime.action.comments;
 
-import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.util.Log;
@@ -15,6 +14,7 @@ import com.joewoo.ontime.support.info.AcquireCount;
 import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
+import com.joewoo.ontime.support.util.TimeFormat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,11 +56,6 @@ public class CommentsToMe extends Thread {
     public boolean isProvidedResult = false;
     private String httpResult;
     private SQLiteDatabase sql;
-//
-//    public CommentsToMe(SQLiteDatabase sql, Handler handler) {
-//        this.mHandler = handler;
-//        this.sql = sql;
-//    }
 
     public CommentsToMe(boolean isProvided, SQLiteDatabase sql, Handler handler) {
         this.mHandler = handler;
@@ -96,20 +91,14 @@ public class CommentsToMe extends Thread {
             hm = null;
 
             String source;
-            String rt_source;
 
             for (CommentsBean c : comments) {
                 HashMap<String, String> map = new HashMap<String, String>();
 
                 source = c.getSource();
-                source = source.substring(source.indexOf(">") + 1,
-                        source.length());
-                source = source.substring(0, source.indexOf("<"));
-                map.put(SOURCE, " · " + source);
-                source = c.getCreatedAt();
-                source = source.substring(source.indexOf(":") - 2,
-                        source.indexOf(":") + 3);
-                map.put(CREATED_AT, source);
+                map.put(SOURCE, " · " + source.substring(source.indexOf(">") + 1,
+                        source.indexOf("</a>")));
+                map.put(CREATED_AT, TimeFormat.parse(c.getCreatedAt()));
                 // map.put(UID, c.getUser().getId());
                 map.put(SCREEN_NAME, c.getUser().getScreenName());
                 map.put(TEXT, c.getText());
@@ -120,32 +109,21 @@ public class CommentsToMe extends Thread {
                 map.put(STATUS_USER_SCREEN_NAME, c.getStatus().getUser().getScreenName());
                 map.put(STATUS_COMMENTS_COUNT, c.getStatus().getCommentsCount());
                 map.put(STATUS_REPOSTS_COUNT, c.getStatus().getRepostsCount());
-
-                source = c.getStatus().getCreatedAt();
-                source = source.substring(source.indexOf(":") - 2,
-                        source.indexOf(":") + 3);
-                map.put(STATUS_CREATED_AT, source);
+                map.put(STATUS_CREATED_AT, TimeFormat.parse(c.getStatus().getCreatedAt()));
 
                 source = c.getStatus().getSource();
-                source = source.substring(source.indexOf(">") + 1,
-                        source.length());
-                source = source.substring(0, source.indexOf("<"));
-                map.put(STATUS_SOURCE, " · " + source);
+                map.put(STATUS_SOURCE, " · " + source.substring(source.indexOf(">") + 1,
+                        source.indexOf("</a>")));
 
                 map.put(STATUS_PROFILE_IMAGE_URL, c.getStatus().getUser().getProfileImageUrl());
 
                 try {
-                    rt_source = c.getStatus().getRetweetedStatus()
+                    source = c.getStatus().getRetweetedStatus()
                             .getSource();
-                    rt_source = rt_source.substring(rt_source.indexOf(">") + 1,
-                            rt_source.length());
-                    rt_source = rt_source.substring(0, rt_source.indexOf("<"));
-                    map.put(RETWEETED_STATUS_SOURCE, " · " + rt_source);
-                    rt_source = c.getStatus().getRetweetedStatus()
-                            .getCreatedAt();
-                    rt_source = rt_source.substring(rt_source.indexOf(":") - 2,
-                            rt_source.indexOf(":") + 3);
-                    map.put(RETWEETED_STATUS_CREATED_AT, rt_source);
+
+                    map.put(RETWEETED_STATUS_SOURCE, " · " + source.substring(source.indexOf(">") + 1,
+                            source.indexOf("</a>")));
+                    map.put(RETWEETED_STATUS_CREATED_AT, TimeFormat.parse(c.getStatus().getRetweetedStatus().getCreatedAt()));
 
                     map.put(RETWEETED_STATUS_SCREEN_NAME, c.getStatus()
                             .getRetweetedStatus().getUser().getScreenName());

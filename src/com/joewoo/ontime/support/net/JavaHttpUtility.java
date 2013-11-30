@@ -59,6 +59,7 @@ public class JavaHttpUtility {
             conn.connect();
 
             int bytetotal = conn.getContentLength();
+            Log.e(TAG, "Image to download size: " + String.valueOf(bytetotal));
             int bytesum = 0;
             int byteread = 0;
 
@@ -69,7 +70,7 @@ public class JavaHttpUtility {
             
             while ((byteread = in.read(buffer)) != -1) {
                 
-                if (asyncTask.isCancelled()) {
+                if (asyncTask != null && asyncTask.isCancelled()) {
                     throw new Exception();
                 }
 

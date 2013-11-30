@@ -92,6 +92,7 @@ public class CommentsShow extends Thread {
                 map.put(COMMENT_ID, c.getId());
 
                 text.add(map);
+
             }
 
             mHandler.obtainMessage(GOT_COMMNETS_SHOW_INFO, text)

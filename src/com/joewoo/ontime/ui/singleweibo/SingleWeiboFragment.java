@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.net.DownloadPic;
 import com.joewoo.ontime.support.menu.CopyTextContextualMenu;
+import com.joewoo.ontime.support.net.DownloadUserProfileImage;
 import com.joewoo.ontime.support.util.CheckMentionsURLTopic;
 import com.joewoo.ontime.ui.SingleUser;
 
@@ -201,7 +202,7 @@ public class SingleWeiboFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                new DownloadPic(iv_profile_image).execute(map
+                new DownloadUserProfileImage(iv_profile_image).execute(map
                         .get(PROFILE_IMAGE_URL));
                 iv_profile_image.setClickable(false);
             }

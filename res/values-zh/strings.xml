@@ -112,6 +112,11 @@
     <string name="error_update_success_but_wait">发布成功，请稍后1~2分钟…</string>
     <string name="error_comment_not_exist">评论不存在…</string>
     <string name="error_unknown">&lt;(ll°д°ll)&gt;! 未知错误</string>
+
+    <string name="time_yesterday">昨天 ·&#160;</string>
+    <string name="time_2_days_ago">前天 ·&#160;</string>
+    <string name="time_3_days_ago">大前天 ·&#160;</string>
+
 	<!-- <string name=""></string>
 	<string name=""></string>
 	<string name=""></string> -->

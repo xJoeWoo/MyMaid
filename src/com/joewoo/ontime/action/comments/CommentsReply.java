@@ -24,14 +24,6 @@ public class CommentsReply extends Thread {
     private Handler mHandler;
     private boolean comment_ori;
 
-    public CommentsReply(String comment, String weibo_id, String comment_id,
-                         Handler handler) {
-        this.comment = comment;
-        this.weibo_id = weibo_id;
-        this.comment_id = comment_id;
-        this.mHandler = handler;
-    }
-
     public CommentsReply(String comment, String weibo_id, String comment_id, boolean comment_ori,
                          Handler handler) {
         this.comment = comment;

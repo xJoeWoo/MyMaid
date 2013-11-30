@@ -71,12 +71,18 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
     MyMaidAdapter mAdapter;
     private PullToRefreshAttacher mPullToRefreshAttacher;
     private MainTimelineActivity act;
+    private boolean freshedFriendsIDs = false;
 
     @Override
     public void onRefreshStarted(View view) {
         Log.e(TAG, "Refresh StatusesFriendsTimeLine");
-        if (act.checkNetwork())
+        if (act.checkNetwork()) {
             refreshFriendsTimeLine();
+            if(!freshedFriendsIDs) {
+                new FriendsIDs(false, GlobalContext.getScreenName(), act.getSQL(), mHandler).start();
+                freshedFriendsIDs = true;
+            }
+        }
     }
 
     @Override

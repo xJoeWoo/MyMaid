@@ -11,6 +11,7 @@ import com.joewoo.ontime.support.error.ErrorCheck;
 import com.joewoo.ontime.support.info.AcquireCount;
 import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
+import com.joewoo.ontime.support.util.TimeFormat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,9 +91,6 @@ public class StatusesUserTimeLine extends Thread {
 
         if (ErrorCheck.getError(httpResult) == null) {
 
-            UserTimelineBean timeline = new Gson().fromJson(httpResult,
-                    UserTimelineBean.class);
-
             ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
 
             if (max_id == null) {
@@ -101,60 +99,49 @@ public class StatusesUserTimeLine extends Thread {
                 text.add(map);
             }
 
-            List<StatusesBean> statuses = timeline.getStatuses();
+            List<StatusesBean> statuses = new Gson().fromJson(httpResult, UserTimelineBean.class).getStatuses();
 
             String source;
-            String rt_source;
 
-            for (int i = 0; i < statuses.size(); i++) {
-                HashMap<String, String> map = new HashMap<String, String>();
-                source = statuses.get(i).getSource();
-                source = source.substring(source.indexOf(">") + 1,
-                        source.length());
-                source = source.substring(0, source.indexOf("<"));
-                map.put(SOURCE, " · " + source);
-                source = statuses.get(i).getCreatedAt();
-                source = source.substring(source.indexOf(":") - 2,
-                        source.indexOf(":") + 3);
-                map.put(CREATED_AT, source);
-                map.put(UID, statuses.get(i).getUser().getId());
-                map.put(SCREEN_NAME, statuses.get(i).getUser().getScreenName());
-                map.put(TEXT, statuses.get(i).getText());
-                map.put(COMMENTS_COUNT, statuses.get(i).getCommentsCount());
-                map.put(REPOSTS_COUNT, statuses.get(i).getRepostsCount());
-                map.put(WEIBO_ID, statuses.get(i).getId());
-                map.put(PROFILE_IMAGE_URL, statuses.get(i).getUser()
+
+            for (StatusesBean s : statuses) {
+                HashMap<String, String> map = new HashMap<>();
+                source = s.getSource();
+
+                map.put(SOURCE, " · " + source.substring(source.indexOf(">") + 1,
+                        source.indexOf("</a>")));
+                map.put(CREATED_AT, TimeFormat.parse(s.getCreatedAt()));
+                map.put(UID, s.getUser().getId());
+                map.put(SCREEN_NAME, s.getUser().getScreenName());
+                map.put(TEXT, s.getText());
+                map.put(COMMENTS_COUNT, s.getCommentsCount());
+                map.put(REPOSTS_COUNT, s.getRepostsCount());
+                map.put(WEIBO_ID, s.getId());
+                map.put(PROFILE_IMAGE_URL, s.getUser()
                         .getProfileImageUrl());
 
                 try {
 
-                    map.put(RETWEETED_STATUS_UID, statuses.get(i)
+                    map.put(RETWEETED_STATUS_UID, s
                             .getRetweetedStatus().getUser().getId());
-                    rt_source = statuses.get(i).getRetweetedStatus()
+                    source = s.getRetweetedStatus()
                             .getSource();
-                    rt_source = rt_source.substring(rt_source.indexOf(">") + 1,
-                            rt_source.length());
-                    rt_source = rt_source.substring(0, rt_source.indexOf("<"));
-                    map.put(RETWEETED_STATUS_SOURCE, " · " + rt_source);
-                    rt_source = statuses.get(i).getRetweetedStatus()
-                            .getCreatedAt();
-                    rt_source = rt_source.substring(rt_source.indexOf(":") - 2,
-                            rt_source.indexOf(":") + 3);
-                    map.put(RETWEETED_STATUS_CREATED_AT, rt_source);
-
-                    map.put(RETWEETED_STATUS_COMMENTS_COUNT, statuses.get(i)
+                    map.put(RETWEETED_STATUS_SOURCE, " · " + source.substring(source.indexOf(">") + 1,
+                            source.indexOf("</a>")));
+                    map.put(RETWEETED_STATUS_CREATED_AT, TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
+                    map.put(RETWEETED_STATUS_COMMENTS_COUNT, s
                             .getRetweetedStatus().getCommentsCount());
-                    map.put(RETWEETED_STATUS_REPOSTS_COUNT, statuses.get(i)
+                    map.put(RETWEETED_STATUS_REPOSTS_COUNT, s
                             .getRetweetedStatus().getRepostsCount());
-                    map.put(RETWEETED_STATUS_SCREEN_NAME, statuses.get(i)
+                    map.put(RETWEETED_STATUS_SCREEN_NAME, s
                             .getRetweetedStatus().getUser().getScreenName());
-                    map.put(RETWEETED_STATUS, statuses.get(i)
+                    map.put(RETWEETED_STATUS, s
                             .getRetweetedStatus().getText());
 
-                    if (statuses.get(i).getRetweetedStatus().getThumbnailPic() != null) {
-                        map.put(RETWEETED_STATUS_THUMBNAIL_PIC, statuses.get(i)
+                    if (s.getRetweetedStatus().getThumbnailPic() != null) {
+                        map.put(RETWEETED_STATUS_THUMBNAIL_PIC, s
                                 .getRetweetedStatus().getThumbnailPic());
-                        map.put(RETWEETED_STATUS_BMIDDLE_PIC, statuses.get(i)
+                        map.put(RETWEETED_STATUS_BMIDDLE_PIC, s
                                 .getRetweetedStatus().getBmiddlePic());
                     }
                     map.put(IS_REPOST, " ");
@@ -163,9 +150,9 @@ public class StatusesUserTimeLine extends Thread {
 //                    e.printStackTrace();
                 }
 
-                if (statuses.get(i).getThumbnailPic() != null) {
-                    map.put(THUMBNAIL_PIC, statuses.get(i).getThumbnailPic());
-                    map.put(BMIDDLE_PIC, statuses.get(i).getBmiddlePic());
+                if (s.getThumbnailPic() != null) {
+                    map.put(THUMBNAIL_PIC, s.getThumbnailPic());
+                    map.put(BMIDDLE_PIC, s.getBmiddlePic());
                 }
                 text.add(map);
             }
