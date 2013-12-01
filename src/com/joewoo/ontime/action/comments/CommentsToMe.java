@@ -29,6 +29,7 @@ import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_TO_ME_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_TO_ME_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.IS_COMMENT;
 import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
+import static com.joewoo.ontime.support.info.Defines.PIC_URLS;
 import static com.joewoo.ontime.support.info.Defines.REPLY_COMMNET_TEXT;
 import static com.joewoo.ontime.support.info.Defines.REPLY_COMMNET_USER_SCREEN_NAME;
 import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS;
@@ -111,6 +112,9 @@ public class CommentsToMe extends Thread {
                 map.put(STATUS_REPOSTS_COUNT, c.getStatus().getRepostsCount());
                 map.put(STATUS_CREATED_AT, TimeFormat.parse(c.getStatus().getCreatedAt()));
 
+                if(c.getStatus().getPicURLs() != null && c.getStatus().getPicURLs().size() > 1)
+                    map.put(PIC_URLS, " ");
+
                 source = c.getStatus().getSource();
                 map.put(STATUS_SOURCE, " · " + source.substring(source.indexOf(">") + 1,
                         source.indexOf("</a>")));
@@ -129,6 +133,9 @@ public class CommentsToMe extends Thread {
                             .getRetweetedStatus().getUser().getScreenName());
                     map.put(RETWEETED_STATUS, c.getStatus()
                             .getRetweetedStatus().getText());
+
+                    if(c.getStatus().getRetweetedStatus().getPicURLs() != null && c.getStatus().getRetweetedStatus().getPicURLs().size() > 1)
+                        map.put(PIC_URLS, " ");
 
                     if (c.getStatus().getRetweetedStatus().getThumbnailPic() != null) {
                         map.put(RETWEETED_STATUS_BMIDDLE_PIC, c.getStatus()

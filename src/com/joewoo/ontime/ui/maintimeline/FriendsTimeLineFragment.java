@@ -79,7 +79,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
         if (act.checkNetwork()) {
             refreshFriendsTimeLine();
             if(!freshedFriendsIDs) {
-                new FriendsIDs(false, GlobalContext.getScreenName(), act.getSQL(), mHandler).start();
+                new FriendsIDs(false, GlobalContext.getScreenName(), act.getSQL(), null).start();
                 freshedFriendsIDs = true;
             }
         }

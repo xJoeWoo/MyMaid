@@ -18,6 +18,7 @@ import static com.joewoo.ontime.support.info.Defines.BLANK;
 import static com.joewoo.ontime.support.info.Defines.COMMENTS_COUNT;
 import static com.joewoo.ontime.support.info.Defines.CREATED_AT;
 import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
+import static com.joewoo.ontime.support.info.Defines.PIC_URLS;
 import static com.joewoo.ontime.support.info.Defines.REPOSTS_COUNT;
 import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS;
 import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SCREEN_NAME;
@@ -145,32 +146,33 @@ public class MyMaidAdapter extends BaseAdapter {
             holder.tv_blank.setVisibility(View.GONE);
             holder.tv_scr_name.setVisibility(View.VISIBLE);
             holder.tv_text.setVisibility(View.VISIBLE);
-//            holder.tv_rt_rl.setVisibility(View.VISIBLE);
-//            holder.tv_rt_scr_name.setVisibility(View.VISIBLE);
-//            holder.tv_rt.setVisibility(View.VISIBLE);
+            holder.tv_rt_rl.setVisibility(View.VISIBLE);
+            holder.tv_rt_scr_name.setVisibility(View.VISIBLE);
+            holder.tv_rt.setVisibility(View.VISIBLE);
             holder.tv_source.setVisibility(View.VISIBLE);
             holder.tv_crt_at.setVisibility(View.VISIBLE);
             holder.tv_cmt_cnt.setVisibility(View.VISIBLE);
             holder.tv_rpos_cnt.setVisibility(View.VISIBLE);
             holder.tv_img.setVisibility(View.VISIBLE);
 
+
             if (data.get(position).get(THUMBNAIL_PIC) != null
-                    || data.get(position).get(RETWEETED_STATUS_THUMBNAIL_PIC) != null)
-                holder.tv_img.setVisibility(View.VISIBLE);
-            else
+                    || data.get(position).get(RETWEETED_STATUS_THUMBNAIL_PIC) != null) {
+                if(data.get(position).get(PIC_URLS) == null)
+                    holder.tv_img.setBackgroundResource(R.drawable.image_dark);
+                else
+                    holder.tv_img.setBackgroundResource(R.drawable.muilt_image);
+            } else
                 holder.tv_img.setVisibility(View.GONE);
 
             holder.tv_scr_name.setText(data.get(position).get(SCREEN_NAME));
 
             holder.tv_text.setText(data.get(position).get(TEXT));
 
-            if (data.get(position).get(IS_REPOST) != null)
-                holder.tv_rt_rl.setVisibility(View.VISIBLE);
-            else
+            if (data.get(position).get(IS_REPOST) == null)
                 holder.tv_rt_rl.setVisibility(View.GONE);
 
             if (data.get(position).get(RETWEETED_STATUS_SCREEN_NAME) != null) {
-                holder.tv_rt_scr_name.setVisibility(View.VISIBLE);
                 holder.tv_rt_scr_name.setText(data.get(position).get(
                         RETWEETED_STATUS_SCREEN_NAME));
             } else {
@@ -178,8 +180,6 @@ public class MyMaidAdapter extends BaseAdapter {
             }
 
             if (data.get(position).get(RETWEETED_STATUS) != null) {
-                holder.tv_rt.setVisibility(View.VISIBLE);
-
                 holder.tv_rt.setText(data.get(position).get(RETWEETED_STATUS));
             } else
                 holder.tv_rt.setVisibility(View.GONE);

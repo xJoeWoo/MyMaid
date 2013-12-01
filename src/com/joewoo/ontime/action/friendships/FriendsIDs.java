@@ -33,7 +33,7 @@ public class FriendsIDs extends Thread {
     private SQLiteDatabase sql = null;
     private boolean isProvided = false;
     private String httpResult;
-    private Handler mHandler;
+    private Handler mHandler = null;
 
     public FriendsIDs(boolean isProvided, String screenName, SQLiteDatabase sql, Handler handler) {
         this.screenName = screenName;
@@ -71,7 +71,8 @@ public class FriendsIDs extends Thread {
             GlobalContext.setFriendsIDs(ids);
             ids = null;
             f = null;
-            mHandler.sendEmptyMessage(GOT_FRIENDS_IDS_INFO);
+            if(mHandler != null)
+                mHandler.sendEmptyMessage(GOT_FRIENDS_IDS_INFO);
         }
 
 
@@ -100,7 +101,8 @@ public class FriendsIDs extends Thread {
         } catch (Exception e) {
             Log.e(TAG, "Friends IDs FAILED");
             e.printStackTrace();
-            mHandler.sendEmptyMessage(GOT_FRIENDS_IDS_INFO_FAIL);
+            if(mHandler != null)
+                mHandler.sendEmptyMessage(GOT_FRIENDS_IDS_INFO_FAIL);
         }
     }
 

@@ -188,9 +188,11 @@
                 android:layout_height="14dp"
                 android:layout_alignTop="@+id/friendstimeline_screen_name"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/image_dark"
+
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="4dp"/>
+
+        <!--android:background="@drawable/image_dark"-->
 
         <TextView
             android:layout_width="wrap_content"

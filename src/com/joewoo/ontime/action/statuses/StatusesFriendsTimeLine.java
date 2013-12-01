@@ -30,6 +30,7 @@ import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
 import static com.joewoo.ontime.support.info.Defines.MAX_ID;
+import static com.joewoo.ontime.support.info.Defines.PIC_URLS;
 import static com.joewoo.ontime.support.info.Defines.PROFILE_IMAGE_URL;
 import static com.joewoo.ontime.support.info.Defines.REPOSTS_COUNT;
 import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS;
@@ -144,13 +145,8 @@ public class StatusesFriendsTimeLine extends Thread {
                 map.put(PROFILE_IMAGE_URL, s.getUser()
                         .getProfileImageUrl());
 
-//                try {
-//                    for (int i = 0; i < s.getPicURLs().size(); i++) {
-//                        Log.e(TAG, String.valueOf(i) + " : " + s.getPicURLs().get(i).getThumbnailPic());
-//                    }
-//                } catch (Exception e) {
-//                    Log.e(TAG, "Not muilt pics");
-//                }
+                if(s.getPicURLs() != null && s.getPicURLs().size() > 1)
+                    map.put(PIC_URLS, " ");
 
 
                 try {
@@ -174,6 +170,9 @@ public class StatusesFriendsTimeLine extends Thread {
                             .getRetweetedStatus().getUser().getScreenName());
                     map.put(RETWEETED_STATUS, s
                             .getRetweetedStatus().getText());
+
+                    if(s.getRetweetedStatus().getPicURLs() != null && s.getRetweetedStatus().getPicURLs().size() > 1)
+                        map.put(PIC_URLS, " ");
 
                     if (s.getRetweetedStatus().getThumbnailPic() != null) {
                         map.put(RETWEETED_STATUS_THUMBNAIL_PIC, s

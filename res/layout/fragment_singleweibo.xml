@@ -26,7 +26,7 @@
                 android:layout_height="33dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:src="@drawable/ic_launcher"
                 android:adjustViewBounds="true" />
 
             <!--android:src="@android:drawable/ic_menu_close_clear_cancel"-->

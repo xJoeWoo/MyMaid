@@ -18,6 +18,7 @@ import com.joewoo.ontime.support.net.DownloadPic;
 import com.joewoo.ontime.support.menu.CopyTextContextualMenu;
 import com.joewoo.ontime.support.net.DownloadUserProfileImage;
 import com.joewoo.ontime.support.util.CheckMentionsURLTopic;
+import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.ui.SingleUser;
 
 import java.io.File;
@@ -127,7 +128,12 @@ public class SingleWeiboFragment extends Fragment {
         tv_text.setText(CheckMentionsURLTopic.getSpannableString(map.get(STATUS_TEXT), act));
         tv_text.setMovementMethod(LinkMovementMethod.getInstance());
 
+
         tv_source.setText(map.get(STATUS_SOURCE));
+        if (map.get(STATUS_SOURCE).equals(" · " + getString(R.string.app_name_cn))) {
+            tv_source.setTextColor(getResources().getColor(R.color.textGrey));
+            tv_source.setShadowLayer(20, 0, 0, getResources().getColor(R.color.sourcePink));
+        }
 
         if (map.get(STATUS_BMIDDLE_PIC) == null) {
             if (map.get(RETWEETED_STATUS_BMIDDLE_PIC) == null) {
@@ -183,6 +189,11 @@ public class SingleWeiboFragment extends Fragment {
         tv_text.setMovementMethod(LinkMovementMethod.getInstance());
 
         tv_source.setText(map.get(SOURCE));
+        if (map.get(SOURCE).equals(" · " + getString(R.string.app_name_cn))) {
+            tv_source.setTextColor(getResources().getColor(R.color.textGrey));
+            tv_source.setShadowLayer(20, 0, 0, getResources().getColor(R.color.sourcePink));
+        }
+
 
         if (map.get(BMIDDLE_PIC) == null) {
             if (map.get(RETWEETED_STATUS_BMIDDLE_PIC) == null) {
@@ -254,7 +265,10 @@ public class SingleWeiboFragment extends Fragment {
             tv_rt_text.setMovementMethod(LinkMovementMethod.getInstance());
 
             tv_rt_source.setText(map.get(RETWEETED_STATUS_SOURCE));
-
+            if (map.get(RETWEETED_STATUS_SOURCE).equals(" · " + getString(R.string.app_name_cn))) {
+                tv_rt_source.setTextColor(getResources().getColor(R.color.textGrey));
+                tv_rt_source.setShadowLayer(20, 0, 0, getResources().getColor(R.color.sourcePink));
+            }
 
             tv_rt_screen_name.setOnClickListener(new View.OnClickListener() {
                 @Override

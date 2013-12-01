@@ -29,6 +29,7 @@ import static com.joewoo.ontime.support.info.Defines.CREATED_AT;
 import static com.joewoo.ontime.support.info.Defines.GOT_MENTIONS_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_MENTIONS_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
+import static com.joewoo.ontime.support.info.Defines.PIC_URLS;
 import static com.joewoo.ontime.support.info.Defines.PROFILE_IMAGE_URL;
 import static com.joewoo.ontime.support.info.Defines.REPOSTS_COUNT;
 import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS;
@@ -107,6 +108,8 @@ public class StatusesMentions extends Thread {
                 map.put(PROFILE_IMAGE_URL, s.getUser()
                         .getProfileImageUrl());
 
+                if(s.getPicURLs() != null && s.getPicURLs().size() > 1)
+                    map.put(PIC_URLS, " ");
 
                 try {
                     map.put(RETWEETED_STATUS_UID, s
@@ -126,6 +129,9 @@ public class StatusesMentions extends Thread {
                             .getRetweetedStatus().getCommentsCount());
                     map.put(RETWEETED_STATUS_REPOSTS_COUNT, s
                             .getRetweetedStatus().getRepostsCount());
+
+                    if(s.getRetweetedStatus().getPicURLs() != null && s.getRetweetedStatus().getPicURLs().size() > 1)
+                        map.put(PIC_URLS, " ");
 
                     if (s.getRetweetedStatus().getThumbnailPic() != null) {
                         map.put(RETWEETED_STATUS_THUMBNAIL_PIC, s

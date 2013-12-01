@@ -27,7 +27,6 @@ import static com.joewoo.ontime.support.info.Defines.COUNT;
 import static com.joewoo.ontime.support.info.Defines.CREATED_AT;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_MENTIONS_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_MENTIONS_INFO_FAIL;
-import static com.joewoo.ontime.support.info.Defines.HAVE_PIC;
 import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
 import static com.joewoo.ontime.support.info.Defines.MAX_ID;
 import static com.joewoo.ontime.support.info.Defines.REPOSTS_COUNT;
@@ -47,6 +46,7 @@ import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
  * OOOOOH I HAVE GRADE 3 IN SENIOR HIGH!!!
  */
 public class CommentsMentions extends Thread {
+
     private Handler mHandler;
     public boolean isProvidedResult = false;
     private String httpResult;
@@ -114,7 +114,6 @@ public class CommentsMentions extends Thread {
                 map.put(IS_REPOST, " ");
 
                 if (c.getStatus().getThumbnailPic() != null) {
-                    map.put(HAVE_PIC, " ");
                     map.put(RETWEETED_STATUS_BMIDDLE_PIC, c.getStatus().getBmiddlePic());
                 }
 

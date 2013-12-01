@@ -151,8 +151,6 @@ public class MyMaidCommentsToMeAdapter extends BaseAdapter {
 
         }
 
-
-
         return convertView;
     }
 }
