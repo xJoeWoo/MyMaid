@@ -57,7 +57,6 @@ public class StatusesFriendsTimeLine extends Thread {
     private String httpResult;
     private SQLiteDatabase sql;
     private String max_id = null;
-    private int index = -1;
 
     public StatusesFriendsTimeLine(String max_id, Handler handler) {
         this.mHandler = handler;
@@ -74,141 +73,164 @@ public class StatusesFriendsTimeLine extends Thread {
     public void run() {
         Log.e(TAG, "Friends TimeLine Thread START");
 
-        if (!isProvidedResult) {
-            if (!fresh())
-                return;
-        } else {
-            httpResult = MyMaidSQLHelper.getOneString(MyMaidSQLHelper.FRIENDS_TIMELINE, sql);
+        try {
 
-            if(httpResult == null)
-                if(!fresh())
+            if (!isProvidedResult) {
+                if (!fresh())
                     return;
-        }
+            } else {
+                httpResult = MyMaidSQLHelper.getOneString(MyMaidSQLHelper.FRIENDS_TIMELINE, sql);
 
-        sql = null;
-
-        if (ErrorCheck.getError(httpResult) == null) {
-
-            ArrayList<HashMap<String, String>> text = new ArrayList<>();
-
-            if (max_id == null) {
-                HashMap<String, String> map = new HashMap<>();
-                map.put(BLANK, " ");
-                text.add(map);
-                map = null;
+                if (httpResult == null)
+                    if (!fresh())
+                        return;
             }
 
-            List<StatusesBean> statuses = new Gson().fromJson(httpResult,
-                    FriendsTimelineBean.class).getStatuses();
+            sql = null;
 
-            String source;
+            if (ErrorCheck.getError(httpResult) == null) {
 
+                ArrayList<HashMap<String, String>> text = new ArrayList<>();
 
-            for (StatusesBean s : statuses) {
-
-                index++;
-//                Log.e(TAG, String.valueOf(index));
-
-                if (index == 2 && GlobalContext.getFriendsIDs() != null) {
-                    boolean isAd = true;
-                    long thisUserID = Long.valueOf(s.getUser().getId());
-                    long[] ids = GlobalContext.getFriendsIDs();
-                    for (long id : ids) {
-                        if (thisUserID == id) {
-                            isAd = false;
-                            break;
-                        }
-                    }
-                    ids = null;
-                    if (isAd) {
-                        Log.e(TAG, "HAAAAAAAA! CAUGHT AN AD!!!!");
-                        continue;
-                    }
+                if (max_id == null) {
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(BLANK, " ");
+                    text.add(map);
+                    map = null;
                 }
 
-                HashMap<String, String> map = new HashMap<>();
+                FriendsTimelineBean f = new Gson().fromJson(httpResult,
+                        FriendsTimelineBean.class);
+
+                List<StatusesBean> statuses = f.getStatuses();
+
+                String[] adIDs = new String[f.getAd().size()];
+                for (int i = 0; i < f.getAd().size(); i++) {
+                    adIDs[i] = f.getAd().get(i).getId();
+                    Log.e(TAG, "Ad: " + adIDs[i]);
+                }
+
+                String source;
+//                int index = 0;
+
+                outer:
+                for (StatusesBean s : statuses) {
+
+//                    index++;
+////                Log.e(TAG, String.valueOf(index));
+//
+//                if (index == 3 && GlobalContext.getFriendsIDs() != null) {
+//                    boolean isAd = true;
+//                    long thisUserID = Long.valueOf(s.getUser().getId());
+//                    long[] ids = GlobalContext.getFriendsIDs();
+//                    for (long id : ids) {
+//                        if (thisUserID == id) {
+//                            isAd = false;
+//                            break;
+//                        }
+//                    }
+//                    ids = null;
+//                    if (isAd) {
+//                        Log.e(TAG, "HAAAAAAAA! CAUGHT AN AD!!!!");
+//                        continue;
+//                    }
+//                }
+
+                    for (String adID : adIDs)
+                        if (s.getId().equals(adID)) {
+                            Log.e(TAG, "HAAAAAAAA! CAUGHT AN AD!!!!");
+                            continue outer;
+                        }
 
 
-                source = s.getSource();
+                    HashMap<String, String> map = new HashMap<>();
 
-                map.put(SOURCE, " · " + source.substring(source.indexOf(">") + 1,
-                        source.indexOf("</a>")));
+                    source = s.getSource();
 
-                map.put(CREATED_AT, TimeFormat.parse(s.getCreatedAt()));
-
-                map.put(UID, s.getUser().getId());
-                map.put(SCREEN_NAME, s.getUser().getScreenName());
-                map.put(TEXT, s.getText());
-                map.put(COMMENTS_COUNT, s.getCommentsCount());
-                map.put(REPOSTS_COUNT, s.getRepostsCount());
-                map.put(WEIBO_ID, s.getId());
-                map.put(PROFILE_IMAGE_URL, s.getUser()
-                        .getProfileImageUrl());
-
-                if(s.getPicURLs() != null && s.getPicURLs().size() > 1)
-                    map.put(PIC_URLS, " ");
-
-
-                try {
-
-                    map.put(RETWEETED_STATUS_UID, s
-                            .getRetweetedStatus().getUser().getId());
-
-                    source = s.getRetweetedStatus()
-                            .getSource();
-
-                    map.put(RETWEETED_STATUS_SOURCE, " · " + source.substring(source.indexOf(">") + 1,
+                    map.put(SOURCE, " · " + source.substring(source.indexOf(">") + 1,
                             source.indexOf("</a>")));
 
-                    map.put(RETWEETED_STATUS_CREATED_AT, TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
+                    map.put(CREATED_AT, TimeFormat.parse(s.getCreatedAt()));
 
-                    map.put(RETWEETED_STATUS_COMMENTS_COUNT, s
-                            .getRetweetedStatus().getCommentsCount());
-                    map.put(RETWEETED_STATUS_REPOSTS_COUNT, s
-                            .getRetweetedStatus().getRepostsCount());
-                    map.put(RETWEETED_STATUS_SCREEN_NAME, s
-                            .getRetweetedStatus().getUser().getScreenName());
-                    map.put(RETWEETED_STATUS, s
-                            .getRetweetedStatus().getText());
+                    map.put(UID, s.getUser().getId());
+                    map.put(SCREEN_NAME, s.getUser().getScreenName());
+                    map.put(TEXT, s.getText());
+                    map.put(COMMENTS_COUNT, s.getCommentsCount());
+                    map.put(REPOSTS_COUNT, s.getRepostsCount());
+                    map.put(WEIBO_ID, s.getId());
+                    map.put(PROFILE_IMAGE_URL, s.getUser()
+                            .getProfileImageUrl());
 
-                    if(s.getRetweetedStatus().getPicURLs() != null && s.getRetweetedStatus().getPicURLs().size() > 1)
+                    if (s.getPicURLs() != null && s.getPicURLs().size() > 1)
                         map.put(PIC_URLS, " ");
 
-                    if (s.getRetweetedStatus().getThumbnailPic() != null) {
-                        map.put(RETWEETED_STATUS_THUMBNAIL_PIC, s
-                                .getRetweetedStatus().getThumbnailPic());
-                        map.put(RETWEETED_STATUS_BMIDDLE_PIC, s
-                                .getRetweetedStatus().getBmiddlePic());
+
+                    try {
+
+                        map.put(RETWEETED_STATUS_UID, s
+                                .getRetweetedStatus().getUser().getId());
+
+                        source = s.getRetweetedStatus()
+                                .getSource();
+
+                        map.put(RETWEETED_STATUS_SOURCE, " · " + source.substring(source.indexOf(">") + 1,
+                                source.indexOf("</a>")));
+
+                        map.put(RETWEETED_STATUS_CREATED_AT, TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
+
+                        map.put(RETWEETED_STATUS_COMMENTS_COUNT, s
+                                .getRetweetedStatus().getCommentsCount());
+                        map.put(RETWEETED_STATUS_REPOSTS_COUNT, s
+                                .getRetweetedStatus().getRepostsCount());
+                        map.put(RETWEETED_STATUS_SCREEN_NAME, s
+                                .getRetweetedStatus().getUser().getScreenName());
+                        map.put(RETWEETED_STATUS, s
+                                .getRetweetedStatus().getText());
+
+                        if (s.getRetweetedStatus().getPicURLs() != null && s.getRetweetedStatus().getPicURLs().size() > 1)
+                            map.put(PIC_URLS, " ");
+
+                        if (s.getRetweetedStatus().getThumbnailPic() != null) {
+                            map.put(RETWEETED_STATUS_THUMBNAIL_PIC, s
+                                    .getRetweetedStatus().getThumbnailPic());
+                            map.put(RETWEETED_STATUS_BMIDDLE_PIC, s
+                                    .getRetweetedStatus().getBmiddlePic());
+                        }
+                        map.put(IS_REPOST, " ");
+
+                    } catch (Exception e) {
+
                     }
-                    map.put(IS_REPOST, " ");
 
-                } catch (Exception e) {
+                    if (s.getThumbnailPic() != null) {
+                        map.put(THUMBNAIL_PIC, s.getThumbnailPic());
+                        map.put(BMIDDLE_PIC, s.getBmiddlePic());
+                    }
 
+                    text.add(map);
                 }
 
-                if (s.getThumbnailPic() != null) {
-                    map.put(THUMBNAIL_PIC, s.getThumbnailPic());
-                    map.put(BMIDDLE_PIC, s.getBmiddlePic());
-                }
+                statuses = null;
+                f = null;
+                adIDs = null;
+                source = null;
 
-                text.add(map);
+
+                if (max_id == null)
+                    mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO, text)
+                            .sendToTarget();
+                else
+                    mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_ADD_INFO, text)
+                            .sendToTarget();
+
+
+            } else {
+                mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL, ErrorCheck.getError(httpResult));
             }
-
-            statuses = null;
-
-
-            if (max_id == null)
-                mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO, text)
-                        .sendToTarget();
-            else
-                mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_ADD_INFO, text)
-                        .sendToTarget();
-
-
-        } else {
-            mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL, ErrorCheck.getError(httpResult));
+        } catch (Exception e) {
+            e.printStackTrace();
+            mHandler.sendEmptyMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL);
         }
-
 
     }
 

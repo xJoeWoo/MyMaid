@@ -1,14 +1,10 @@
 package com.joewoo.ontime.support.util;
 
-import android.util.Log;
-
 import com.joewoo.ontime.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
-import static com.joewoo.ontime.support.info.Defines.TAG;
 
 /**
  * Created by JoeWoo on 13-11-29.
@@ -31,9 +27,6 @@ public class TimeFormat {
 
             c.setTime(format.parse(GMTTime));
             int statusDay = c.get(Calendar.DAY_OF_YEAR);
-
-            Log.e(TAG, "current: " + String.valueOf(currentDay));
-            Log.e(TAG, "status: " + String.valueOf(statusDay));
 
             if(currentDay - statusDay < 1) {
                 return GMTTime.substring(11, 16);
