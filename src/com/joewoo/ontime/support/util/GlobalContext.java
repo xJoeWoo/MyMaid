@@ -6,7 +6,7 @@ import android.content.Context;
 /**
  * Created by JoeWoo on 13-11-21.
  */
-public class GlobalContext extends Application{
+public final class GlobalContext extends Application{
 
     private static GlobalContext globalContext;
     private static String AUTH_CODE;

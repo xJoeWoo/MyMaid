@@ -74,79 +74,84 @@ public class MainTimelineActivity extends FragmentActivity {
                     MyMaidSQLHelper.ACCESS_TOKEN, MyMaidSQLHelper.SCREEN_NAME,
                     MyMaidSQLHelper.DRAFT, MyMaidSQLHelper.PROFILEIMG}, MyMaidSQLHelper.UID + "=?",
                     new String[]{lastUid}, null, null, null);
-            c.moveToFirst();
 
-            if (!setGlobalContext(c)) {
-                Toast.makeText(MainTimelineActivity.this,
-                        R.string.toast_login_acquired, Toast.LENGTH_LONG)
-                        .show();
-                jumpToLogin();
-            }
+            if (c.moveToFirst() && c.getCount() > 0) {
 
-            profileImgBytes = c.getBlob(c.getColumnIndex(MyMaidSQLHelper.PROFILEIMG));
-            profileImg = new BitmapDrawable(getResources(), BitmapFactory
-                    .decodeByteArray(profileImgBytes, 0, profileImgBytes.length));
+                if (!setGlobalContext(c)) {
+                    Toast.makeText(MainTimelineActivity.this,
+                            R.string.toast_login_acquired, Toast.LENGTH_LONG)
+                            .show();
+                    jumpToLogin();
+                }
 
-            mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
+                profileImgBytes = c.getBlob(c.getColumnIndex(MyMaidSQLHelper.PROFILEIMG));
+                profileImg = new BitmapDrawable(getResources(), BitmapFactory
+                        .decodeByteArray(profileImgBytes, 0, profileImgBytes.length));
 
-            final ActionBar actionBar = getActionBar();
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-            // actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayShowHomeEnabled(false);
+                mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
 
-            mViewPager = (ViewPager) findViewById(R.id.pager);
-            mViewPager.setOffscreenPageLimit(3);
+                final ActionBar actionBar = getActionBar();
+                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+                // actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setDisplayShowTitleEnabled(false);
+                actionBar.setDisplayShowHomeEnabled(false);
 
-            actionBar.addTab(actionBar.newTab()
-                    .setText(getString(R.string.title_frag_atme).toUpperCase(Locale.US))
-                    .setTabListener(tabListener));
-            actionBar.addTab(actionBar.newTab()
-                    .setText(getString(R.string.title_frag_friends_timeline).toUpperCase(Locale.US))
-                    .setTabListener(tabListener));
-            actionBar.addTab(actionBar.newTab()
-                    .setText(getString(R.string.title_frag_comments_to_me).toUpperCase(Locale.US))
-                    .setTabListener(tabListener));
+                mViewPager = (ViewPager) findViewById(R.id.pager);
+                mViewPager.setOffscreenPageLimit(3);
 
-            mSectionsPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
-            mViewPager.setAdapter(mSectionsPagerAdapter);
+                actionBar.addTab(actionBar.newTab()
+                        .setText(getString(R.string.title_frag_atme).toUpperCase(Locale.US))
+                        .setTabListener(tabListener));
+                actionBar.addTab(actionBar.newTab()
+                        .setText(getString(R.string.title_frag_friends_timeline).toUpperCase(Locale.US))
+                        .setTabListener(tabListener));
+                actionBar.addTab(actionBar.newTab()
+                        .setText(getString(R.string.title_frag_comments_to_me).toUpperCase(Locale.US))
+                        .setTabListener(tabListener));
+
+                mSectionsPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
+                mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
-            mViewPager
-                    .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-                        @Override
-                        public void onPageSelected(int arg0) {
-                            actionBar.setSelectedNavigationItem(arg0);
-                            Log.e(TAG, "Page: " + String.valueOf(arg0));
-                            switch (arg0) {
-                                case MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS: {
+                mViewPager
+                        .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+                            @Override
+                            public void onPageSelected(int arg0) {
+                                actionBar.setSelectedNavigationItem(arg0);
+                                Log.e(TAG, "Page: " + String.valueOf(arg0));
+                                switch (arg0) {
+                                    case MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS: {
 
-                                    break;
-                                }
-                                case MainPagerAdapter.FRAG_COMMENTS_POS: {
-                                    if (!gotCommentsUnread) {
-                                        mSectionsPagerAdapter.getCommentsFrag()
-                                                .getUnreadCommentsCount();
-                                        gotCommentsUnread = true;
+                                        break;
                                     }
-                                    setActionBarVisible();
-                                    break;
-                                }
-                                case MainPagerAdapter.FRAG_MENTIONS_POS: {
-                                    if (!gotMentionsUnread) {
-                                        mSectionsPagerAdapter.getMentionsFrag()
-                                                .getUnreadMentionsCount();
-                                        gotMentionsUnread = true;
+                                    case MainPagerAdapter.FRAG_COMMENTS_POS: {
+                                        if (!gotCommentsUnread) {
+                                            mSectionsPagerAdapter.getCommentsFrag()
+                                                    .getUnreadCommentsCount();
+                                            gotCommentsUnread = true;
+                                        }
+                                        setActionBarVisible();
+                                        break;
                                     }
-                                    setActionBarVisible();
-                                    break;
+                                    case MainPagerAdapter.FRAG_MENTIONS_POS: {
+                                        if (!gotMentionsUnread) {
+                                            mSectionsPagerAdapter.getMentionsFrag()
+                                                    .getUnreadMentionsCount();
+                                            gotMentionsUnread = true;
+                                        }
+                                        setActionBarVisible();
+                                        break;
+                                    }
                                 }
                             }
-                        }
-                    });
+                        });
 
-            mViewPager.setCurrentItem(MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS);
-
+                mViewPager.setCurrentItem(MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS);
+            } else { // 数据库没有信息
+                Toast.makeText(MainTimelineActivity.this,
+                        R.string.toast_login_acquired, Toast.LENGTH_LONG).show();
+                jumpToLogin();
+            }
         } else {// 不存在配置文件，需要登录
             Toast.makeText(MainTimelineActivity.this,
                     R.string.toast_login_acquired, Toast.LENGTH_LONG).show();

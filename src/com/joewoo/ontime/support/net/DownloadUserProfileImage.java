@@ -10,7 +10,7 @@ import com.joewoo.ontime.support.image.BitmapRoundCorner;
 
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
-public class DownloadUserProfileImage extends AsyncTask<String, Integer, Bitmap> {
+public final class DownloadUserProfileImage extends AsyncTask<String, Integer, Bitmap> {
 
     private ImageView iv;
 

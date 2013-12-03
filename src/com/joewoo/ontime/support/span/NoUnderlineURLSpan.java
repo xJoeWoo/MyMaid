@@ -14,7 +14,7 @@ import com.joewoo.ontime.R;
  * Created by JoeWoo on 13-11-2.
  */
 
-public class NoUnderlineURLSpan extends ClickableSpan {
+public final class NoUnderlineURLSpan extends ClickableSpan {
 
     private String URL;
     private Context context;

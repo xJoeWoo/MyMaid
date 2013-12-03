@@ -21,7 +21,7 @@ import com.joewoo.ontime.support.info.Defines;
 
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
-public class DownloadPic extends AsyncTask<String, Integer, Bitmap> implements ImageNetworkListener.DownloadProgressListener {
+public final class DownloadPic extends AsyncTask<String, Integer, Bitmap> implements ImageNetworkListener.DownloadProgressListener {
 
     private ImageView iv;
     private ProgressBar pb;

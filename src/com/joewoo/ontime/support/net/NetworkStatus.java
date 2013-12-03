@@ -9,7 +9,7 @@ import com.joewoo.ontime.support.util.GlobalContext;
 /**
  * Created by JoeWoo on 13-11-21.
  */
-public class NetworkStatus {
+public final class NetworkStatus {
 
     public static final int NETWORK_AVAILABLE = 1;
     public static final int NETWORK_NOT_AVAILABLE = 0;

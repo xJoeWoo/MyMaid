@@ -15,7 +15,7 @@ import static com.joewoo.ontime.support.info.Defines.MENU_COPY_TEXT;
 /**
  * Created by JoeWoo on 13-11-21.
  */
-public class CopyTextContextualMenu implements ActionMode.Callback {
+public final class CopyTextContextualMenu implements ActionMode.Callback {
 
     public static final String CLIPBOARD_LABLE = "mymaid";
     private String toCopy;

@@ -15,7 +15,7 @@ import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
  * Created by JoeWoo on 13-11-2.
  */
 
-public class UserSpan extends ClickableSpan {
+public final class UserSpan extends ClickableSpan {
 
     private String screenName;
     private Context context;

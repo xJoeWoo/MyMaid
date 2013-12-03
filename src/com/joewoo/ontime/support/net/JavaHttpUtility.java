@@ -25,7 +25,7 @@ import static com.joewoo.ontime.support.info.Defines.TAG;
 /**
  * Created by JoeWoo on 13-11-23.
  */
-public class JavaHttpUtility {
+public final class JavaHttpUtility {
 
     public static final int CONNECT_TIMEOUT = 5 * 1000;
     public static final int READ_TIMEOUT = 5 * 1000;

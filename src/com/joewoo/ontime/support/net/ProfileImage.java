@@ -16,7 +16,7 @@ import android.util.Log;
 
 import com.joewoo.ontime.support.image.BitmapRoundCorner;
 
-public class ProfileImage extends Thread {
+public final class ProfileImage extends Thread {
 
     private String url;
     private Handler mHandler;
