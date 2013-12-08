@@ -24,6 +24,10 @@ public final class GlobalContext extends Application{
         globalContext = this;
     }
 
+    public static String getResString(int resId) {
+        return getAppContext().getString(resId);
+    }
+
     public static long[] getFriendsIDs() {
         return FRIENDS_IDS;
     }
@@ -87,7 +91,5 @@ public final class GlobalContext extends Application{
     public static void setWords(String words) {
         WORDS = words;
     }
-
-
 
 }

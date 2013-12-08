@@ -12,7 +12,6 @@ import com.joewoo.ontime.support.util.GlobalContext;
 import java.util.HashMap;
 
 import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
-import static com.joewoo.ontime.support.info.Defines.GOT_FAVOURITE_CREATE_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.GOT_STATUSES_DESTROY_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_STATUSES_DESTROY_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.TAG;
@@ -21,11 +20,11 @@ import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 public class StatusesDestroy extends Thread {
 
     private Handler mHandler;
-    private String weibo_id;
+    private String weiboID;
 
-    public StatusesDestroy(String weibo_id, Handler handler) {
+    public StatusesDestroy(String weiboID, Handler handler) {
         this.mHandler = handler;
-        this.weibo_id = weibo_id;
+        this.weiboID = weiboID;
     }
 
     public void run() {
@@ -33,8 +32,9 @@ public class StatusesDestroy extends Thread {
         String httpResult;
 
         try {
-            HashMap<String, String> hm = new HashMap<String, String>();
-            hm.put(WEIBO_ID, weibo_id);
+            HashMap<String, String> hm = new HashMap<>();
+            hm.put(WEIBO_ID, weiboID);
+            Log.e(TAG, "Destroy status ID: " + weiboID);
             hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
 
             httpResult = new HttpUtility().executePostTask(URLHelper.STATUSES_DESTROY, hm);

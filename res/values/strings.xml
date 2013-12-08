@@ -103,7 +103,7 @@
     <string name="comment_repost_repost">Repost</string>
 
 	<string name="error_token_out_of_date">Your authorize was out of date</string>
-	<string name="error_repeat_content">ERROR!\nRepeat content\nError -&#160;</string>
+	<!--<string name="error_repeat_content">ERROR!\nRepeat content\nError -&#160;</string>-->
 	<string name="error_out_of_max_text_count">ERROR!\nText overflown!~\nError -&#160;</string>
 
     <string name="error_token_problem">Token expired</string>
@@ -116,6 +116,8 @@
     <string name="error_repeat_content">Repeat content</string>
     <string name="error_update_success_but_wait">Update success, please wait 1~2 minutes</string>
     <string name="error_comment_not_exist">Target weibo comment does not exist</string>
+    <string name="error_weibo_not_exist">Target weibo does not exist</string>
+    <string name="error_in_block">You\'re in block</string>
     <string name="error_unknown">&lt;(ll°д°ll)&gt;! Unknown error</string>
 
     <string name="time_yesterday">Yesterday ·&#160;</string>

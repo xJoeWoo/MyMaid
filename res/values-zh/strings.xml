@@ -101,7 +101,7 @@
     <string name="comment_repost_repost">转发</string>
 	
 	<string name="error_token_out_of_date">身份认证过期…请重新登录</string>
-	<string name="error_repeat_content">ERROR!\n不能重复发同一个Po哦\nError -&#160;</string>
+	<!--<string name="error_repeat_content">ERROR!\n不能重复发同一个Po哦\nError -&#160;</string>-->
 	<string name="error_out_of_max_text_count">ERROR!\n目测超字数了…缩句吧~\nError -&#160;</string>
 
     <string name="error_token_problem">授权过期…</string>
@@ -114,6 +114,8 @@
     <string name="error_repeat_content">内容与上一条重复…</string>
     <string name="error_update_success_but_wait">发布成功，请稍后1~2分钟…</string>
     <string name="error_comment_not_exist">评论不存在…</string>
+    <string name="error_weibo_not_exist">微博不存在…</string>
+    <string name="error_in_block">被博主拉黑…</string>
     <string name="error_unknown">&lt;(ll°д°ll)&gt;! 未知错误</string>
 
     <string name="time_yesterday">昨天 ·&#160;</string>

@@ -30,8 +30,6 @@ public final class TimeFormat {
             Calendar c = Calendar.getInstance();
             c.setTime(format.parse(GMTTime));
             int statusDay = c.get(Calendar.DAY_OF_YEAR);
-            c = null;
-
 //            Log.e(TAG, "Status day: " + String.valueOf(statusDay));
 
             if(currentDay - statusDay < 1) {

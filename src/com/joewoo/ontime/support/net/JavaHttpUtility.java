@@ -223,6 +223,7 @@ public final class JavaHttpUtility {
 
             conn.connect();
 
+
             return handleResponse(conn);
         } catch (Exception e) {
             e.printStackTrace();
@@ -268,7 +269,14 @@ public final class JavaHttpUtility {
         BufferedReader br = null;
 
         try {
-            is = conn.getInputStream();
+
+            Log.e(TAG, "http code: " + String.valueOf(conn.getResponseCode()));
+
+            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK)
+                is = conn.getInputStream();
+            else
+                is = conn.getErrorStream();
+
 
             String content_encode = conn.getContentEncoding();
 
