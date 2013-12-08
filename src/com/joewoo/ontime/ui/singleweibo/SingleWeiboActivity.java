@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.joewoo.ontime.action.favorites.FavoritesCreate;
 import com.joewoo.ontime.action.statuses.StatusesDestroy;
+import com.joewoo.ontime.action.statuses.StatusesShow;
 import com.joewoo.ontime.support.adapter.pager.SingleWeiboPagerAdapter;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.ui.CommentRepost;
@@ -37,11 +38,18 @@ public class SingleWeiboActivity extends FragmentActivity {
     private boolean isShowedComments = false;
     private boolean isShowedReposts = false;
     private HashMap<String, String> map;
+    private ActionBar actionBar;
+    private String titleRepost;
+    private String titleComment;
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.from_left_in, R.anim.out);
+
+    public void setSingleWeiboFragment() {
+        if(map.size() > 3) {
+            setSingleWeibo(false);
+        } else {
+            mSectionsPagerAdapter.getSingleWeiboFrag().setViewHide();
+            new StatusesShow(map.get(WEIBO_ID), mHandler).start();
+        }
     }
 
     @Override
@@ -50,12 +58,10 @@ public class SingleWeiboActivity extends FragmentActivity {
 
         setContentView(R.layout.singelweibo);
 
-        overridePendingTransition(R.anim.from_left_in, R.anim.out);
-
         i = getIntent();
         map = (HashMap<String, String>) i.getSerializableExtra(SINGLE_WEIBO_MAP);
 
-        final ActionBar actionBar = getActionBar();
+        actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         // actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
@@ -64,29 +70,11 @@ public class SingleWeiboActivity extends FragmentActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setOffscreenPageLimit(3);
 
-
-        String titleRepost = getResources().getString(R.string.title_frag_single_weibo_reposts).toUpperCase(Locale.US);
-        String titleComment = getResources().getString(R.string.title_frag_single_weibo_comments).toUpperCase(Locale.US);
-        String repostCount;
-        String commentsCount;
-        if (map.get(IS_COMMENT) == null) {
-            repostCount = map.get(REPOSTS_COUNT);
-            commentsCount = map.get(COMMENTS_COUNT);
-        } else {
-            repostCount = map.get(STATUS_REPOSTS_COUNT);
-            commentsCount = map.get(STATUS_COMMENTS_COUNT);
-        }
-
-        if (Locale.getDefault().getLanguage().equals("en")) {
-            if (!repostCount.equals("1"))
-                titleRepost = titleRepost + "S";
-
-            if (!commentsCount.equals("1"))
-                titleComment = titleComment + "S";
-        }
+        titleRepost = getResources().getString(R.string.title_frag_single_weibo_reposts).toUpperCase(Locale.US);
+        titleComment = getResources().getString(R.string.title_frag_single_weibo_comments).toUpperCase(Locale.US);
 
         actionBar.addTab(actionBar.newTab()
-                .setText(repostCount + " " + titleRepost)
+                .setText(titleRepost)
                 .setTabListener(tabListener));
 
         actionBar.addTab(actionBar.newTab()
@@ -94,14 +82,8 @@ public class SingleWeiboActivity extends FragmentActivity {
                 .setTabListener(tabListener));
 
         actionBar.addTab(actionBar.newTab()
-                .setText(commentsCount + " " + titleComment)
+                .setText(titleComment)
                 .setTabListener(tabListener));
-
-        titleRepost = null;
-        titleComment = null;
-        repostCount = null;
-        commentsCount = null;
-
 
         mSectionsPagerAdapter = new SingleWeiboPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mSectionsPagerAdapter);
@@ -134,9 +116,11 @@ public class SingleWeiboActivity extends FragmentActivity {
                 });
 
         mViewPager.setCurrentItem(SingleWeiboPagerAdapter.FRAG_SINGLEWEIBO_POS);
+
     }
 
-    Handler mHandler = new Handler() {
+
+    private Handler mHandler = new Handler() {
         @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
@@ -144,38 +128,31 @@ public class SingleWeiboActivity extends FragmentActivity {
             setProgressBarIndeterminateVisibility(false);
 
             switch (msg.what) {
+                case GOT_STATUSES_SHOW_INFO: {
+                    map = (HashMap<String, String>) msg.obj;
+                    setSingleWeibo(true);
+                    break;
+                }
+
+                case GOT_STATUSES_DESTROY_INFO: {
+                    Intent ii = new Intent();
+                    ii.putExtra(MAP_POSITION, i.getIntExtra(MAP_POSITION, -1));
+                    setResult(RESULT_OK, ii);
+                }
                 case GOT_FAVOURITE_CREATE_INFO: {
                     Toast.makeText(SingleWeiboActivity.this,
-                            R.string.toast_add_favourite_success,
+                            (String) msg.obj,
                             Toast.LENGTH_SHORT).show();
                     finish();
                     break;
                 }
-                case GOT_FAVOURITE_CREATE_INFO_FAIL: {
-                    if (msg.obj != null)
-                        Toast.makeText(SingleWeiboActivity.this,
-                                (String) msg.obj,
-                                Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(SingleWeiboActivity.this, R.string.toast_add_favourite_fail, Toast.LENGTH_SHORT).show();
-                    break;
 
-                }
-                case GOT_STATUSES_DESTROY_INFO: {
-                    Toast.makeText(SingleWeiboActivity.this, R.string.toast_delete_success, Toast.LENGTH_SHORT).show();
-                    Intent ii = new Intent();
-                    ii.putExtra(MAP_POSITION, i.getIntExtra(MAP_POSITION, -1));
-                    setResult(RESULT_OK, ii);
-                    finish();
-                    break;
-                }
+                case GOT_STATUSES_SHOW_INFO_FAIL:
+                case GOT_FAVOURITE_CREATE_INFO_FAIL:
                 case GOT_STATUSES_DESTROY_INFO_FAIL: {
-                    if (msg.obj != null)
                         Toast.makeText(SingleWeiboActivity.this,
                                 (String) msg.obj,
                                 Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(SingleWeiboActivity.this, R.string.toast_delete_fail, Toast.LENGTH_SHORT).show();
                     break;
                 }
 
@@ -189,7 +166,7 @@ public class SingleWeiboActivity extends FragmentActivity {
 
         menu.clear();
 
-        if (map.get(SCREEN_NAME).equals(GlobalContext.getScreenName())) {
+        if (map.get(SCREEN_NAME) != null && map.get(SCREEN_NAME).equals(GlobalContext.getScreenName())) {
             menu.add(0, MENU_STATUSES_DESTROY, 0, R.string.menu_delete)
                     .setIcon(R.drawable.content_discard)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -265,7 +242,37 @@ public class SingleWeiboActivity extends FragmentActivity {
         return map;
     }
 
-    ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+    private void setSingleWeibo(boolean withAnim) {
+        String repostCount;
+        String commentsCount;
+
+        repostCount = map.get(REPOSTS_COUNT) + " ";
+        commentsCount = map.get(COMMENTS_COUNT) + " ";
+
+        if (Locale.getDefault().getLanguage().equals("en")) {
+            if (!repostCount.equals("1"))
+                titleRepost += "S";
+            if (!commentsCount.equals("1"))
+                titleComment += "S";
+        }
+
+        actionBar.getTabAt(0).setText(repostCount + titleRepost);
+        actionBar.getTabAt(2).setText(commentsCount + titleComment);
+
+        if(withAnim)
+            mSectionsPagerAdapter.getSingleWeiboFrag().setSingleWeiboWithAnim(map);
+        else
+            mSectionsPagerAdapter.getSingleWeiboFrag().setSingleWeibo(map);
+
+        titleRepost = null;
+        titleComment = null;
+        repostCount = null;
+        commentsCount = null;
+
+        invalidateOptionsMenu();
+    }
+
+    private ActionBar.TabListener tabListener = new ActionBar.TabListener() {
 
         @Override
         public void onTabReselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {

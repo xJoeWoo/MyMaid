@@ -1,7 +1,5 @@
 package com.joewoo.ontime.support.net;
 
-import android.os.AsyncTask;
-
 import java.util.Map;
 
 /**
@@ -21,8 +19,8 @@ public final class HttpUtility {
         return new JavaHttpUtility().doUploadFile(urlStr, param, path, imageParamName, listener);
     }
 
-    public byte[] executeDownloadImageTask(String urlStr, ImageNetworkListener.DownloadProgressListener listener, AsyncTask asyncTask) throws Exception {
-        return new JavaHttpUtility().doDownloadImage(urlStr, listener, asyncTask);
+    public byte[] executeDownloadImageTask(String urlStr, ImageNetworkListener.DownloadProgressListener listener) throws Exception {
+        return new JavaHttpUtility().doDownloadImage(urlStr, listener);
     }
 
 }

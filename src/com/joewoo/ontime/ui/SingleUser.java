@@ -8,6 +8,7 @@ import java.util.HashMap;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 
 import com.joewoo.ontime.R;
+import com.joewoo.ontime.action.statuses.StatusesFriendsTimeLine;
 import com.joewoo.ontime.action.statuses.StatusesUserTimeLine;
 import com.joewoo.ontime.support.adapter.listview.MyMaidAdapter;
 import com.joewoo.ontime.support.net.ProfileImage;
@@ -28,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -83,6 +85,25 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
                 hm = null;
             }
         });
+
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                // 滚到到尾刷新
+                if (view.getLastVisiblePosition() == (view.getCount() - 6)) {
+                    Log.e(TAG, "到底");
+                    // 获取后会删除第一项，所以获取数+1
+                    new StatusesUserTimeLine(screenName, text.get(
+                            view.getLastVisiblePosition() + 5)
+                            .get(WEIBO_ID), mHandler).start();
+                    mPullToRefreshAttacher.setRefreshing(true);
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+        });
     }
 
     private Handler mHandler = new Handler() {
@@ -109,29 +130,35 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
                     break;
                 }
                 case GOT_USER_TIMELINE_INFO: {
-
                     text = (ArrayList<HashMap<String, String>>) msg.obj;
                     setListView(text);
                     mPullToRefreshAttacher.setRefreshing(false);
                     break;
                 }
+                case GOT_USER_TIMELINE_ADD_INFO: {
+                    ArrayList<HashMap<String, String>> tmp = (ArrayList<HashMap<String, String>>) msg.obj;
+                    tmp.remove(0);
+                    text.addAll(tmp);
+                    addListView(text);
+                    tmp = null;
+                    mPullToRefreshAttacher.setRefreshing(false);
+                    break;
+                }
                 case GOT_USER_TIMELINE_INFO_FAIL: {
+                    Toast.makeText(SingleUser.this, (String) msg.obj, Toast.LENGTH_SHORT)
+                            .show();
                     mPullToRefreshAttacher.setRefreshing(false);
                     break;
                 }
                 case GOT_SHOW_INFO_FAIL: {
-                    if (msg.obj != null) {
                         Toast.makeText(SingleUser.this, (String) msg.obj, Toast.LENGTH_SHORT)
                                 .show();
-                    } else {
-                        Toast.makeText(SingleUser.this, R.string.toast_user_timeline_fail, Toast.LENGTH_SHORT).show();
-                    }
                     mPullToRefreshAttacher.setRefreshing(false);
                     finish();
                     break;
                 }
             }
-            rfBar();
+            invalidateOptionsMenu();
         }
     };
 
@@ -205,24 +232,25 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
         lv = (ListView) findViewById(R.id.lv_single_user);
     }
 
-    private void rfBar() {
-        invalidateOptionsMenu();
-    }
-
     private void setListView(ArrayList<HashMap<String, String>> arrayList) {
         mAdapter = new MyMaidAdapter(arrayList, this);
         lv.setAdapter(mAdapter);
     }
 
+    private void addListView(ArrayList<HashMap<String, String>> arrayList) {
+        mAdapter.setData(arrayList);
+        mAdapter.notifyDataSetChanged();
+    }
+
     private void clearListViewItem(ArrayList<HashMap<String, String>> arrayList, int position) {
         arrayList.remove(position);
-        mAdapter.changeItem(arrayList);
+        mAdapter.setData(arrayList);
         mAdapter.notifyDataSetChanged();
     }
 
     private void refreshTimeLine() {
-            Log.e(TAG, "Screen Name: " + screenName);
-            new StatusesUserTimeLine(screenName, mHandler).start();
-            new UserShow(screenName, mHandler).start();
+        Log.e(TAG, "Screen Name: " + screenName);
+        new StatusesUserTimeLine(screenName, mHandler).start();
+        new UserShow(screenName, mHandler).start();
     }
 }

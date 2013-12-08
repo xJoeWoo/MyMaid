@@ -105,9 +105,10 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int arg2, long arg3) {
+                HashMap<String, String> hm = new HashMap<>();
+                hm.put(WEIBO_ID, text.get(arg2).get(WEIBO_ID));
                 Intent i = new Intent(act, SingleWeiboActivity.class);
-                i.putExtra(SINGLE_WEIBO_MAP, text.get(arg2));
-                Log.e(TAG, "+++++++++++" + text.get(arg2).get(STATUS_TEXT));
+                i.putExtra(SINGLE_WEIBO_MAP, hm);
                 startActivity(i);
                 return false;
             }
@@ -174,7 +175,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
         return super.onOptionsItemSelected(item);
     }
 
-    Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             mPullToRefreshAttacher.setRefreshing(false);
@@ -186,11 +187,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
                     break;
                 }
                 case GOT_COMMENTS_TO_ME_INFO_FAIL: {
-                    if (msg.obj != null)
                         Toast.makeText(act, (String) msg.obj,
-                                Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(act, R.string.toast_comments_fail,
                                 Toast.LENGTH_SHORT).show();
                     break;
                 }

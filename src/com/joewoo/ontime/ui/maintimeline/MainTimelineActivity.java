@@ -59,8 +59,6 @@ public class MainTimelineActivity extends FragmentActivity {
 
         Log.e(TAG, "MyMaid START!");
 
-        overridePendingTransition(R.anim.from_left_in, R.anim.out);
-
         sql = new MyMaidSQLHelper(MainTimelineActivity.this,
                 MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION).getWritableDatabase();
         preferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);

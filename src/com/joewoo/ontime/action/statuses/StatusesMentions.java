@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.action.remind.RemindSetCount;
 import com.joewoo.ontime.support.bean.MentionsBean;
@@ -179,7 +180,7 @@ public class StatusesMentions extends Thread {
             return true;
 
         } catch (Exception e) {
-            mHandler.sendEmptyMessage(GOT_MENTIONS_INFO_FAIL);
+            mHandler.obtainMessage(GOT_MENTIONS_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_mentions_fail)).sendToTarget();
             e.printStackTrace();
             return false;
         }

@@ -28,7 +28,7 @@ public final class DownloadUserProfileImage extends AsyncTask<String, Integer, B
 
             try {
 
-                byte[] imgBytes = new HttpUtility().executeDownloadImageTask(params[0], null, null);
+                byte[] imgBytes = new HttpUtility().executeDownloadImageTask(params[0], null);
 
                 image = BitmapRoundCorner.toRoundCorner(BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length), 25);
 

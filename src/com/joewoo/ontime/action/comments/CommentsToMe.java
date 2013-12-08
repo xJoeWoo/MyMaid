@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.action.remind.RemindSetCount;
 import com.joewoo.ontime.support.bean.CommentsBean;
@@ -193,7 +194,7 @@ public class CommentsToMe extends Thread {
 
             return true;
         } catch (Exception e) {
-            mHandler.sendEmptyMessage(GOT_COMMENTS_TO_ME_INFO_FAIL);
+            mHandler.obtainMessage(GOT_COMMENTS_TO_ME_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_comments_fail)).sendToTarget();
             e.printStackTrace();
             return false;
         }

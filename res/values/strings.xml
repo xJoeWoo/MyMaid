@@ -50,6 +50,8 @@
 	<string name="toast_mentions_fail">Acquire mentions failed…</string>
     <string name="toast_repost_timeline_fail">Acquire reposts failed…</string>
     <string name="toast_coming_soon">Coming soon…</string>
+    <string name="toast_statuses_show_fail">Acquire post failed…</string>
+
 	
 	<string name="menu_repost">REPOST</string>
 	<string name="menu_reply">REPLY</string>
@@ -97,6 +99,8 @@
     <string name="frag_mentions_dialog_title">Mentions</string>
     <string name="frag_mentions_dialog_normal_mention">Posts Mentions</string>
     <string name="frag_mentions_dialog_comment_mention">Comments Mentions</string>
+
+    <string name="comment_repost_repost">Repost</string>
 
 	<string name="error_token_out_of_date">Your authorize was out of date</string>
 	<string name="error_repeat_content">ERROR!\nRepeat content\nError -&#160;</string>

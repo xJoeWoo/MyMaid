@@ -2,6 +2,9 @@ package com.joewoo.ontime.support.image;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.ThumbnailUtils;
 import android.util.Log;
 
 /**
@@ -14,10 +17,8 @@ public class BitmapScale {
         int originWidth  = bitmap.getWidth();
         int originHeight = bitmap.getHeight();
 
-        // no need to resize
-        if (originWidth < maxWidth && originHeight < maxHeight) {
+        if(originHeight < 4000 && originWidth < 4000)
             return bitmap;
-        }
 
         // 若图片过宽, 则保持长宽比缩放图片
         if (originWidth > maxWidth) {

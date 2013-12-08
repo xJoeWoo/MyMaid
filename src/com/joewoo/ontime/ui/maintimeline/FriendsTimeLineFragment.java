@@ -71,17 +71,17 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
     MyMaidAdapter mAdapter;
     private PullToRefreshAttacher mPullToRefreshAttacher;
     private MainTimelineActivity act;
-    private boolean freshedFriendsIDs = false;
+//    private boolean freshedFriendsIDs = false;
 
     @Override
     public void onRefreshStarted(View view) {
         Log.e(TAG, "Refresh StatusesFriendsTimeLine");
         if (act.checkNetwork()) {
             refreshFriendsTimeLine();
-            if(!freshedFriendsIDs) {
-                new FriendsIDs(false, GlobalContext.getScreenName(), act.getSQL(), null).start();
-                freshedFriendsIDs = true;
-            }
+//            if(!freshedFriendsIDs) {
+//                new FriendsIDs(false, GlobalContext.getScreenName(), act.getSQL(), null).start();
+//                freshedFriendsIDs = true;
+//            }
         }
     }
 
@@ -107,8 +107,9 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
+        new StatusesFriendsTimeLine(true, act.getSQL(), mHandler).start();
 
-        new FriendsIDs(true, GlobalContext.getScreenName(), act.getSQL(), mHandler).start();
+//        new FriendsIDs(true, GlobalContext.getScreenName(), act.getSQL(), mHandler).start();
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -137,9 +138,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
 
 
         lv.setOnScrollListener(new OnScrollListener() {
-
             int mLastFirstVisibleItem = 0;
-
             @Override
             public void onScroll(AbsListView view, int arg1, int arg2, int arg3) {
 
@@ -173,20 +172,15 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 //                switch (scrollState) {
 //                    case OnScrollListener.SCROLL_STATE_IDLE: { // 已经停止
-//
 //                        break;
 //                    }
 //                    case OnScrollListener.SCROLL_STATE_FLING: { // 开始滚动
-//
 //                        break;
 //                    }
 //                    case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL: { // 正在滚动
-//
 //                        break;
 //                    }
 //                }
-
-
             }
         });
     }
@@ -195,13 +189,6 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
     public void onPrepareOptionsMenu(Menu menu) {
 
         menu.clear();
-
-        // menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_user_statuses)
-        // .setIcon(
-        // new BitmapDrawable(getResources(), BitmapFactory
-        // .decodeByteArray(profileImg, 0,
-        // profileImg.length)))
-        // .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         try {
             menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_user_statuses)
@@ -391,10 +378,10 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
             mPullToRefreshAttacher.setRefreshComplete();
             (act).setRefreshing(false);
             switch (msg.what) {
-                case GOT_FRIENDS_IDS_INFO: {
-                    new StatusesFriendsTimeLine(true, act.getSQL(), mHandler).start();
-                    break;
-                }
+//                case GOT_FRIENDS_IDS_INFO: {
+//                    new StatusesFriendsTimeLine(true, act.getSQL(), mHandler).start();
+//                    break;
+//                }
                 case GOT_FRIENDS_TIMELINE_INFO: {
                     text = (ArrayList<HashMap<String, String>>) msg.obj;
                     setListView(text);
@@ -409,15 +396,9 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                     break;
                 }
                 case GOT_FRIENDS_TIMELINE_INFO_FAIL: {
-                    if (msg.obj != null) {
                         Toast.makeText(act,
                                 (String) msg.obj, Toast.LENGTH_SHORT)
                                 .show();
-                    } else {
-                        Toast.makeText(act,
-                                R.string.toast_user_timeline_fail, Toast.LENGTH_SHORT)
-                                .show();
-                    }
                     break;
                 }
             }
@@ -447,13 +428,13 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
     }
 
     private void addListView(ArrayList<HashMap<String, String>> arrayList) {
-        mAdapter.addItem(arrayList);
+        mAdapter.setData(arrayList);
         mAdapter.notifyDataSetChanged();
     }
 
     private void clearListViewItem(ArrayList<HashMap<String, String>> arrayList, int position) {
         arrayList.remove(position);
-        mAdapter.changeItem(arrayList);
+        mAdapter.setData(arrayList);
         mAdapter.notifyDataSetChanged();
     }
 

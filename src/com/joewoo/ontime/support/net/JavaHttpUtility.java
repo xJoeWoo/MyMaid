@@ -1,6 +1,5 @@
 package com.joewoo.ontime.support.net;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -36,7 +35,7 @@ public final class JavaHttpUtility {
     public static final int DOWNLOAD_CONNECT_TIMEOUT = 5 * 1000;
     public static final int DOWNLOAD_READ_TIMEOUT = 5 * 1000;
 
-    public byte[] doDownloadImage(String urlStr, ImageNetworkListener.DownloadProgressListener downloadListener, AsyncTask asyncTask) throws Exception{
+    public byte[] doDownloadImage(String urlStr, ImageNetworkListener.DownloadProgressListener downloadListener) throws Exception{
 
         InputStream in = null;
         ByteArrayOutputStream baos = null;
@@ -67,12 +66,17 @@ public final class JavaHttpUtility {
             baos = new ByteArrayOutputStream();
 
             byte[] buffer = new byte[1024];
-            
+
+            Thread currentThread = Thread.currentThread();
+
             while ((byteread = in.read(buffer)) != -1) {
                 
-                if (asyncTask != null && asyncTask.isCancelled()) {
+                if (currentThread.isInterrupted()) {
+                    Log.e(TAG, "Cancelled");
                     throw new Exception();
                 }
+
+                Log.e(TAG, String.valueOf(bytesum));
 
                 bytesum += byteread;
                 baos.write(buffer, 0, byteread);

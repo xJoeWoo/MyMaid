@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
 import com.joewoo.ontime.support.error.ErrorCheck;
@@ -62,12 +63,12 @@ public class StatusesRepost extends Thread {
 
         } catch (Exception e) {
             e.printStackTrace();
-            mHandler.sendEmptyMessage(GOT_REPOST_INFO_FAIL);
+            mHandler.obtainMessage(GOT_REPOST_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_repost_fail)).sendToTarget();
             return;
         }
 
         if(ErrorCheck.getError(httpResult) == null)
-            mHandler.sendEmptyMessage(GOT_REPOST_INFO);
+            mHandler.obtainMessage(GOT_REPOST_INFO, GlobalContext.getAppContext().getString(R.string.toast_repost_success)).sendToTarget();
         else
             mHandler.obtainMessage(GOT_REPOST_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();
     }

@@ -37,4 +37,5 @@ public class URLHelper {
     public final static String REPOST_TIMELINE = "https://api.weibo.com/2/statuses/repost_timeline.json";
     public final static String COMMENTS_MENTIONS = "https://api.weibo.com/2/comments/mentions.json";
     public final static String FRIENDS_IDS = "https://api.weibo.com/2/friendships/friends/ids.json";
+    public final static String STATUSES_SHOW = "https://api.weibo.com/2/statuses/show.json";
 }

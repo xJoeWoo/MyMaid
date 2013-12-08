@@ -10,7 +10,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.joewoo.ontime.R;
@@ -65,6 +69,11 @@ public class SingleWeiboFragment extends Fragment {
     private ImageView iv_image;
     private ImageView iv_rt_image;
     private ImageView iv_profile_image;
+    private ProgressBar pb;
+    private ScrollView sv;
+
+    private Animation in;
+    private Animation out;
 
     private DownloadPic dp;
 
@@ -80,107 +89,38 @@ public class SingleWeiboFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (dp != null && dp.getStatus() == AsyncTask.Status.RUNNING) {
-            dp.cancel(true);
-        }
-
-
-//        if(iv_image.getDrawable() != null)
-//            ((BitmapDrawable)iv_image.getDrawable()).getBitmap().recycle();
-//
-//        if(iv_rt_image.getDrawable() != null)
-//            ((BitmapDrawable)iv_rt_image.getDrawable()).getBitmap().recycle();
-
-        Log.e(TAG, "OnDestroy");
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         act = (SingleWeiboActivity) getActivity();
+        act.setSingleWeiboFragment();
 
-        map = act.getSingleWeiboMap();
-
-        if (map.get(IS_COMMENT) == null) {
-            Log.e(TAG, "Normal Single Weibo");
-            setNormalSingleWeibo();
-        } else {
-            Log.e(TAG, "Comment Single Weibo");
-            setCommentsToMeSingleWeibo();
-        }
-
-        setRetweetedStatus();
-
-        setImage();
-
-        setLongClickCopyText();
-    }
-
-
-    private void setCommentsToMeSingleWeibo() {
-
-        tv_screen_name.setText(map.get(STATUS_USER_SCREEN_NAME));
-        tv_created_at.setText(" · " + map.get(STATUS_CREATED_AT));
-
-        tv_text.setText(CheckMentionsURLTopic.getSpannableString(map.get(STATUS_TEXT), act));
-        tv_text.setMovementMethod(LinkMovementMethod.getInstance());
-
-
-        tv_source.setText(map.get(STATUS_SOURCE));
-        if (map.get(STATUS_SOURCE).equals(" · " + getString(R.string.app_name_cn))) {
-            tv_source.setTextColor(getResources().getColor(R.color.textGrey));
-            tv_source.setShadowLayer(20, 0, 0, getResources().getColor(R.color.sourcePink));
-        }
-
-        if (map.get(STATUS_BMIDDLE_PIC) == null) {
-            if (map.get(RETWEETED_STATUS_BMIDDLE_PIC) == null) {
-                ViewGroup.LayoutParams lp = tv_rt_rl.getLayoutParams();
-                lp.width = 10000;
-                tv_rt_rl.setLayoutParams(lp);
-            }
-            iv_image.setVisibility(View.GONE);
-        } else {
-
-            dp = new DownloadPic(iv_image, tv_rt_rl, false, act);
-            dp.execute(map.get(STATUS_BMIDDLE_PIC));
-
-        }
-
-        iv_profile_image.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                new DownloadPic(iv_profile_image).execute(map
-                        .get(STATUS_PROFILE_IMAGE_URL));
-                iv_profile_image.setClickable(false);
-            }
-        });
-
-        tv_screen_name.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                jumpToSingleUser(map.get(STATUS_USER_SCREEN_NAME));
-            }
-        });
-        tv_created_at.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                jumpToSingleUser(map.get(STATUS_USER_SCREEN_NAME));
-            }
-        });
-        tv_source.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                jumpToSingleUser(map.get(STATUS_USER_SCREEN_NAME));
-            }
-        });
 
     }
 
-    private void setNormalSingleWeibo() {
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (dp != null && dp.getStatus() != AsyncTask.Status.FINISHED) {
+            Log.e(TAG, "Cancelled Thread");
+            dp.cancel(true);
+        }
+    }
+
+    public void setSingleWeibo(HashMap<String, String> map) {
+        this.map = map;
+        setStatus();
+    }
+
+    public void setSingleWeiboWithAnim(HashMap<String, String> map) {
+        this.in = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.in);
+        this.out = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.out);
+        setViewShow();
+        this.map = map;
+        setStatus();
+    }
+
+    private void setStatus() {
 
         tv_screen_name.setText(map.get(SCREEN_NAME));
         tv_created_at.setText(" · " + map.get(CREATED_AT));
@@ -238,6 +178,10 @@ public class SingleWeiboFragment extends Fragment {
             }
         });
 
+        setRetweetedStatus();
+        setImage();
+        setLongClickCopyText();
+
     }
 
     private void setRetweetedStatus() {
@@ -252,9 +196,8 @@ public class SingleWeiboFragment extends Fragment {
             if (map.get(RETWEETED_STATUS_BMIDDLE_PIC) == null)
                 iv_rt_image.setVisibility(View.GONE);
             else {
-                new DownloadPic(iv_rt_image, tv_rt_rl, true, act).execute(map
-                        .get(RETWEETED_STATUS_BMIDDLE_PIC));
-
+                dp = new DownloadPic(iv_rt_image, tv_rt_rl, true, act);
+                dp.execute(map.get(RETWEETED_STATUS_BMIDDLE_PIC));
             }
             tv_rt_screen_name.setText(map
                     .get(RETWEETED_STATUS_SCREEN_NAME));
@@ -346,31 +289,39 @@ public class SingleWeiboFragment extends Fragment {
         iv_image = (ImageView) v.findViewById(R.id.frag_single_weibo_image);
         iv_rt_image = (ImageView) v.findViewById(R.id.frag_single_weibo_retweeted_status_weibo_image);
         iv_profile_image = (ImageView) v.findViewById(R.id.frag_single_weibo_profile_image);
+        pb = (ProgressBar) v.findViewById(R.id.frag_single_weibo_pb);
+        sv = (ScrollView) v.findViewById(R.id.frag_single_weibo_sv);
     }
 
-    void jumpToSingleUser(String screenName) {
+    private void jumpToSingleUser(String screenName) {
         Intent it = new Intent(act, SingleUser.class);
         it.putExtra(SCREEN_NAME, screenName);
         startActivity(it);
     }
 
-    void jumpToRetweetedUser(String retweetedScreenName) {
+    private void jumpToRetweetedUser(String retweetedScreenName) {
         Intent it = new Intent(act, SingleUser.class);
         it.putExtra(SCREEN_NAME, retweetedScreenName);
         startActivity(it);
     }
 
-    void jumpToGallery() {
+    private void jumpToGallery() {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(new File(TEMP_IMAGE_PATH, TEMP_IMAGE_NAME)), "image/*");
         startActivity(intent);
     }
-    //    @Override
-//    public void onPrepareOptionsMenu(Menu menu) {
-//
-//        menu.clear();
-//
-//    }
+
+    public void setViewHide() {
+        sv.setVisibility(View.GONE);
+        pb.setVisibility(View.VISIBLE);
+    }
+
+    public void setViewShow() {
+        sv.setVisibility(View.VISIBLE);
+        sv.startAnimation(in);
+        pb.setVisibility(View.GONE);
+        pb.startAnimation(out);
+    }
 
 }

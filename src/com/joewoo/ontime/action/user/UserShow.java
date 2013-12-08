@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
 import com.joewoo.ontime.support.error.ErrorCheck;
@@ -50,7 +51,7 @@ public class UserShow extends Thread {
             hm = null;
 
         } catch (Exception e) {
-            mHandler.sendEmptyMessage(GOT_SHOW_INFO_FAIL);
+            mHandler.obtainMessage(GOT_SHOW_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_user_timeline_fail)).sendToTarget();
             e.printStackTrace();
             return;
         }

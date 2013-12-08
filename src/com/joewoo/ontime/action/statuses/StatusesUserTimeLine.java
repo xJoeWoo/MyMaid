@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.bean.UserTimelineBean;
@@ -46,22 +47,23 @@ import static com.joewoo.ontime.support.info.Defines.TEXT;
 import static com.joewoo.ontime.support.info.Defines.THUMBNAIL_PIC;
 import static com.joewoo.ontime.support.info.Defines.UID;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
+import static com.joewoo.ontime.support.info.Defines.GOT_USER_TIMELINE_ADD_INFO;
 
 public class StatusesUserTimeLine extends Thread {
 
     private Handler mHandler;
     private String screenName;
-    private String max_id;
+    private String maxID;
 
     public StatusesUserTimeLine(String screenName, Handler handler) {
         this.screenName = screenName;
         this.mHandler = handler;
     }
 
-    public StatusesUserTimeLine(String screenName, String max_id, Handler handler) {
+    public StatusesUserTimeLine(String screenName, String maxID, Handler handler) {
         this.screenName = screenName;
         this.mHandler = handler;
-        this.max_id = max_id;
+        this.maxID = maxID;
     }
 
 
@@ -74,11 +76,11 @@ public class StatusesUserTimeLine extends Thread {
             hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
             hm.put(SCREEN_NAME, screenName);
 
-            if(max_id == null) {
+            if(maxID == null) {
                 hm.put(COUNT, AcquireCount.USER_TIMELINE_COUNT);
             } else {
                 hm.put(COUNT, AcquireCount.USER_TIMELINE_ADD_COUNT);
-                hm.put(MAX_ID, max_id);
+                hm.put(MAX_ID, maxID);
             }
 
             httpResult = new HttpUtility().executeGetTask(URLHelper.USER_TIMELINE, hm);
@@ -86,7 +88,7 @@ public class StatusesUserTimeLine extends Thread {
             hm = null;
         } catch (Exception e) {
             e.printStackTrace();
-            mHandler.sendEmptyMessage(GOT_USER_TIMELINE_INFO_FAIL);
+            mHandler.obtainMessage(GOT_USER_TIMELINE_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_user_timeline_fail)).sendToTarget();
             return;
         }
 
@@ -94,7 +96,7 @@ public class StatusesUserTimeLine extends Thread {
 
             ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
 
-            if (max_id == null) {
+            if (maxID == null) {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put(BLANK, " ");
                 text.add(map);
@@ -103,7 +105,6 @@ public class StatusesUserTimeLine extends Thread {
             List<StatusesBean> statuses = new Gson().fromJson(httpResult, UserTimelineBean.class).getStatuses();
 
             String source;
-
 
             for (StatusesBean s : statuses) {
                 HashMap<String, String> map = new HashMap<>();
@@ -164,7 +165,11 @@ public class StatusesUserTimeLine extends Thread {
                 text.add(map);
             }
 
-            mHandler.obtainMessage(GOT_USER_TIMELINE_INFO, text).sendToTarget();
+            if(maxID == null)
+                mHandler.obtainMessage(GOT_USER_TIMELINE_INFO, text).sendToTarget();
+            else
+                mHandler.obtainMessage(GOT_USER_TIMELINE_ADD_INFO, text).sendToTarget();
+
         } else {
             mHandler.obtainMessage(GOT_USER_TIMELINE_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();
         }

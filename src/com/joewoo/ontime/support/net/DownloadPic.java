@@ -18,17 +18,19 @@ import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.image.BitmapSaveAsFile;
 import com.joewoo.ontime.support.image.BitmapScale;
 import com.joewoo.ontime.support.info.Defines;
+import com.joewoo.ontime.support.util.GlobalContext;
 
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
-public final class DownloadPic extends AsyncTask<String, Integer, Bitmap> implements ImageNetworkListener.DownloadProgressListener {
+public class DownloadPic extends AsyncTask<String, Integer, Bitmap> implements ImageNetworkListener.DownloadProgressListener {
 
     private ImageView iv;
     private ProgressBar pb;
     private TextView tv;
     private boolean isRepost = false;
     private Activity act;
-    private Animation fromBottom;
+    private Animation in;
+    private Animation out;
 
     public DownloadPic(ImageView iv, ProgressBar pb) {
         this.iv = iv;
@@ -50,8 +52,9 @@ public final class DownloadPic extends AsyncTask<String, Integer, Bitmap> implem
     @Override
     protected void onPreExecute() {
         // Toast.makeText(activity, "开始下载图片…", Toast.LENGTH_SHORT).show();
-        if (fromBottom == null)
-            fromBottom = AnimationUtils.loadAnimation(act, R.anim.in);
+        in = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.in);
+        out = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.out);
+
     }
 
     @Override
@@ -65,14 +68,16 @@ public final class DownloadPic extends AsyncTask<String, Integer, Bitmap> implem
         if (!params[0].endsWith(".gif")) {
             try {
 
-                byte[] imgBytes = new HttpUtility().executeDownloadImageTask(params[0], this, this);
+                byte[] imgBytes = new HttpUtility().executeDownloadImageTask(params[0], this);
 
                 image = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length);
 
 
                 BitmapSaveAsFile.save(image, BitmapSaveAsFile.SAVE_AS_PNG, Defines.TEMP_IMAGE_PATH, Defines.TEMP_IMAGE_NAME);
 
+
                 image = BitmapScale.resizeBitmap(image, 400, 400);
+
 
 //                    image = Bitmap.createScaledBitmap(image, 256, 256, true);
 //                    image.recycle();
@@ -129,17 +134,18 @@ public final class DownloadPic extends AsyncTask<String, Integer, Bitmap> implem
             }
             iv.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
         }
-
-        iv.startAnimation(fromBottom);
+        iv.startAnimation(in);
 
         if (pb != null)
             pb.setVisibility(View.INVISIBLE);
-        if (tv != null && !isRepost)
+        if (tv != null && !isRepost) {
             tv.setVisibility(View.GONE);
+            tv.startAnimation(out);
+        }
+
 
         bitmap = null;
     }
-
 
     @Override
     public void downloadProgress(int transferred, int contentLength) {

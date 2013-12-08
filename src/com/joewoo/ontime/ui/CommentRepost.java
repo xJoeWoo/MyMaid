@@ -40,7 +40,6 @@ public class CommentRepost extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.from_left_in, R.anim.out);
     }
 
     @Override
@@ -49,8 +48,6 @@ public class CommentRepost extends Activity {
 
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.comment);
-
-        overridePendingTransition(R.anim.from_left_in, R.anim.out);
 
         setProgressBarIndeterminateVisibility(false);
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -167,7 +164,6 @@ public class CommentRepost extends Activity {
                 imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
                 if (et.getText() != null && !et.getText().toString().trim().equals("")) {
                     sending = true;
-                    rfBar(); // 刷新ActionBar
 
                     if (isComment)
                         new CommentsCreate(et.getText().toString(), weibo_id,
@@ -181,6 +177,13 @@ public class CommentRepost extends Activity {
 
                     setProgressBarIndeterminateVisibility(true);
 
+                } else if(isRepost) {
+                    sending = true;
+
+                    new StatusesRepost(getString(R.string.comment_repost_repost), weibo_id,
+                            mHandler).start();
+
+                    setProgressBarIndeterminateVisibility(true);
                 } else {
                     Toast.makeText(CommentRepost.this, R.string.toast_say_sth, Toast.LENGTH_SHORT)
                             .show();
@@ -226,53 +229,14 @@ public class CommentRepost extends Activity {
             sending = false;
             setProgressBarIndeterminateVisibility(false);
             rfBar(); // 刷新ActionBar
+            Toast.makeText(CommentRepost.this, (String) msg.obj,
+                    Toast.LENGTH_SHORT).show();
             switch (msg.what) {
-                case GOT_COMMENT_CREATE_INFO: {
-                    Toast.makeText(CommentRepost.this, R.string.toast_comment_success,
-                            Toast.LENGTH_SHORT).show();
-                    finish();
-
-                    break;
-                }
-                case GOT_REPOST_INFO: {
-                    Toast.makeText(CommentRepost.this, R.string.toast_repost_success,
-                            Toast.LENGTH_SHORT).show();
+                case GOT_COMMENT_CREATE_INFO:
+                case GOT_REPOST_INFO:
+                case GOT_REPLY_INFO:
                     finish();
                     break;
-                }
-                case GOT_REPLY_INFO: {
-                    Toast.makeText(CommentRepost.this, R.string.toast_reply_success,
-                            Toast.LENGTH_SHORT).show();
-                    finish();
-                    break;
-                }
-                case GOT_COMMENT_CREATE_INFO_FAIL: {
-                    if(msg.obj != null)
-                        Toast.makeText(CommentRepost.this, (String) msg.obj,
-                                Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(CommentRepost.this, R.string.toast_comment_fail,
-                                Toast.LENGTH_SHORT).show();
-                    break;
-                }
-                case GOT_REPOST_INFO_FAIL: {
-                    if(msg.obj != null)
-                        Toast.makeText(CommentRepost.this, (String) msg.obj,
-                                Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(CommentRepost.this, R.string.toast_repost_fail,
-                                Toast.LENGTH_SHORT).show();
-                    break;
-                }
-                case GOT_REPLY_INFO_FAIL: {
-                    if(msg.obj != null)
-                        Toast.makeText(CommentRepost.this, (String) msg.obj,
-                                Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(CommentRepost.this, R.string.toast_reply_fail,
-                                Toast.LENGTH_SHORT).show();
-                    break;
-                }
             }
         }
     };

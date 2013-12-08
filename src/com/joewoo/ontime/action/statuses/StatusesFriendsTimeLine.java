@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.bean.FriendsTimelineBean;
 import com.joewoo.ontime.support.bean.StatusesBean;
@@ -225,11 +226,11 @@ public class StatusesFriendsTimeLine extends Thread {
 
 
             } else {
-                mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL, ErrorCheck.getError(httpResult));
+                mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            mHandler.sendEmptyMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL);
+            mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_user_timeline_fail)).sendToTarget();
         }
 
     }
@@ -255,7 +256,7 @@ public class StatusesFriendsTimeLine extends Thread {
             return true;
 
         } catch (Exception e) {
-            mHandler.sendEmptyMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL);
+            mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_user_timeline_fail)).sendToTarget();
             e.printStackTrace();
             return false;
         }

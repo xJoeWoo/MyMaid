@@ -33,12 +33,8 @@ public class MyMaidCommentsToMeAdapter extends BaseAdapter {
         this.context = context;
     }
 
-    public void addItem(ArrayList<HashMap<String, String>> toAdd) {
-        this.data = toAdd;
-    }
-
-    public void changeItem(ArrayList<HashMap<String, String>> toChange) {
-        this.data = toChange;
+    public void setData(ArrayList<HashMap<String, String>> data) {
+        this.data = data;
     }
 
     @Override

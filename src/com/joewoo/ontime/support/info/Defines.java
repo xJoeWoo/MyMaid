@@ -59,6 +59,9 @@ public class Defines {
     public final static int GOT_REPLY_INFO_FAIL = 42;
     public final static int GOT_FRIENDS_IDS_INFO = 43;
     public final static int GOT_FRIENDS_IDS_INFO_FAIL = 44;
+    public final static int GOT_STATUSES_SHOW_INFO = 45;
+    public final static int GOT_STATUSES_SHOW_INFO_FAIL = 46;
+    public final static int GOT_USER_TIMELINE_ADD_INFO = 47;
 
 
 	public final static int ACT_GOT_PHOTO = 1;

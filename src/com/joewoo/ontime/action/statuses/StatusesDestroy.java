@@ -3,6 +3,7 @@ package com.joewoo.ontime.action.statuses;
 import android.os.Handler;
 import android.util.Log;
 
+import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.error.ErrorCheck;
 import com.joewoo.ontime.support.net.HttpUtility;
@@ -11,6 +12,7 @@ import com.joewoo.ontime.support.util.GlobalContext;
 import java.util.HashMap;
 
 import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
+import static com.joewoo.ontime.support.info.Defines.GOT_FAVOURITE_CREATE_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.GOT_STATUSES_DESTROY_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_STATUSES_DESTROY_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.TAG;
@@ -41,12 +43,12 @@ public class StatusesDestroy extends Thread {
 
         } catch (Exception e) {
             e.printStackTrace();
-            mHandler.sendEmptyMessage(GOT_STATUSES_DESTROY_INFO_FAIL);
+            mHandler.obtainMessage(GOT_STATUSES_DESTROY_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_delete_fail)).sendToTarget();
             return;
         }
 
         if(ErrorCheck.getError(httpResult) == null)
-            mHandler.sendEmptyMessage(GOT_STATUSES_DESTROY_INFO);
+            mHandler.obtainMessage(GOT_STATUSES_DESTROY_INFO, GlobalContext.getAppContext().getString(R.string.toast_delete_success)).sendToTarget();
         else
             mHandler.obtainMessage(GOT_STATUSES_DESTROY_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();
     }

@@ -40,12 +40,8 @@ public class MyMaidAdapter extends BaseAdapter {
         this.mInflater = LayoutInflater.from(context);
     }
 
-    public void addItem(ArrayList<HashMap<String, String>> toAdd) {
-        this.data = toAdd;
-    }
-
-    public void changeItem(ArrayList<HashMap<String, String>> toChange) {
-        this.data = toChange;
+    public void setData(ArrayList<HashMap<String, String>> data) {
+        this.data = data;
     }
 
     @Override

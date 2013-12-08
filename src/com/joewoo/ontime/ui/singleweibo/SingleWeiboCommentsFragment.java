@@ -110,8 +110,7 @@ public class SingleWeiboCommentsFragment extends Fragment {
 		return super.onOptionsItemSelected(item);
 	}
 
-    Handler mHandler = new Handler() {
-        @SuppressWarnings("unchecked")
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
 

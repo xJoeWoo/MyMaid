@@ -115,13 +115,15 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int arg2, long arg3) {
-//                if (isNormalMention) {
                 Intent i = new Intent(act, SingleWeiboActivity.class);
-                i.putExtra(SINGLE_WEIBO_MAP, text.get(arg2));
+                if (isNormalMention) {
+                    i.putExtra(SINGLE_WEIBO_MAP, text.get(arg2));
+                } else {
+                    HashMap<String, String> hm = new HashMap<>();
+                    hm.put(WEIBO_ID, text.get(arg2).get(WEIBO_ID));
+                    i.putExtra(SINGLE_WEIBO_MAP, hm);
+                }
                 startActivity(i);
-//                } else {
-//
-//                }
                 return false;
             }
         });
@@ -222,11 +224,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                     break;
                 }
                 case GOT_MENTIONS_INFO_FAIL: {
-                    if (msg.obj != null)
                         Toast.makeText(act, (String) msg.obj,
-                                Toast.LENGTH_SHORT).show();
-                    else
-                        Toast.makeText(act, R.string.toast_mentions_fail,
                                 Toast.LENGTH_SHORT).show();
                     break;
                 }
@@ -247,7 +245,8 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                     break;
                 }
                 case GOT_COMMENTS_MENTIONS_INFO_FAIL: {
-
+                    Toast.makeText(act, (String) msg.obj,
+                            Toast.LENGTH_SHORT).show();
                     break;
                 }
                 case GOT_SET_REMIND_COUNT_INFO_FAIL: {

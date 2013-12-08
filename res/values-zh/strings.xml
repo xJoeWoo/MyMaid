@@ -50,6 +50,7 @@
 	<string name="toast_mentions_fail">获取提及失败…</string>
     <string name="toast_repost_timeline_fail">获取转发微博失败…</string>
     <string name="toast_coming_soon">功能就快来了…</string>
+    <string name="toast_statuses_show_fail">获取微博失败…</string>
 	
 	<string name="menu_repost">转发</string>
 	<string name="menu_reply">回复</string>
@@ -96,6 +97,8 @@
     <string name="frag_mentions_dialog_title">提及</string>
     <string name="frag_mentions_dialog_normal_mention">\@我的微博</string>
     <string name="frag_mentions_dialog_comment_mention">\@我的评论</string>
+
+    <string name="comment_repost_repost">转发</string>
 	
 	<string name="error_token_out_of_date">身份认证过期…请重新登录</string>
 	<string name="error_repeat_content">ERROR!\n不能重复发同一个Po哦\nError -&#160;</string>
