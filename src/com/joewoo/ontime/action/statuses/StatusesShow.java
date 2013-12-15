@@ -69,7 +69,7 @@ public class StatusesShow extends Thread {
 
 
         } catch (Exception e) {
-            mHandler.obtainMessage(GOT_STATUSES_SHOW_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_statuses_show_fail)).sendToTarget();
+            mHandler.obtainMessage(GOT_STATUSES_SHOW_INFO_FAIL, GlobalContext.getResString(R.string.toast_statuses_show_fail)).sendToTarget();
             e.printStackTrace();
             return;
         }

@@ -55,12 +55,12 @@ public class CommentsReply extends Thread {
 
         } catch (Exception e) {
             e.printStackTrace();
-            mHandler.obtainMessage(GOT_REPLY_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_reply_fail)).sendToTarget();
+            mHandler.obtainMessage(GOT_REPLY_INFO_FAIL, GlobalContext.getResString(R.string.toast_reply_fail)).sendToTarget();
             return;
         }
 
         if(ErrorCheck.getError(httpResult) == null)
-            mHandler.obtainMessage(GOT_REPLY_INFO, GlobalContext.getAppContext().getString(R.string.toast_reply_success)).sendToTarget();
+            mHandler.obtainMessage(GOT_REPLY_INFO, GlobalContext.getResString(R.string.toast_reply_success)).sendToTarget();
         else
             mHandler.obtainMessage(GOT_REPLY_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();
     }

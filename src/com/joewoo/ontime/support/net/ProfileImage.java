@@ -1,13 +1,5 @@
 package com.joewoo.ontime.support.net;
 
-import java.io.ByteArrayOutputStream;
-
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import static com.joewoo.ontime.support.info.Defines.*;
-
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
@@ -15,6 +7,11 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.joewoo.ontime.support.image.BitmapRoundCorner;
+
+import java.io.ByteArrayOutputStream;
+
+import static com.joewoo.ontime.support.info.Defines.GOT_PROFILEIMG_INFO;
+import static com.joewoo.ontime.support.info.Defines.TAG;
 
 public final class ProfileImage extends Thread {
 
@@ -29,14 +26,12 @@ public final class ProfileImage extends Thread {
 
     public void run() {
         Log.e(TAG, "Profile Image Thread START");
-        Bitmap bm;
 
         try {
-            HttpUriRequest httpGet = new HttpGet(url);
 
-            bm = BitmapRoundCorner.toRoundCorner(
-                    BitmapFactory.decodeStream(new DefaultHttpClient()
-                            .execute(httpGet).getEntity().getContent()), 25);
+            byte[] bytes = new HttpUtility().executeDownloadImageTask(url, null);
+
+            Bitmap bm = BitmapRoundCorner.toRoundCorner(BitmapFactory.decodeByteArray(bytes, 0, bytes.length), 90);
 
             Log.e(TAG, "GOT: Profile Image");
 

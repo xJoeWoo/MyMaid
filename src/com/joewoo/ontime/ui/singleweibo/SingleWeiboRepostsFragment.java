@@ -44,7 +44,7 @@ public class SingleWeiboRepostsFragment extends Fragment {
         new StatusesRepostTimeline(weibo_id, mHandler).start();
     }
 
-    Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler() {
         @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
@@ -115,22 +115,5 @@ public class SingleWeiboRepostsFragment extends Fragment {
 
         act = (SingleWeiboActivity) getActivity();
 	}
-
-//	@Override
-//	public void onPrepareOptionsMenu(Menu menu) {
-//		menu.clear();
-//
-//
-//	}
-//
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		switch (item.getItemId()) {
-//
-//		}
-//
-//		return super.onOptionsItemSelected(item);
-//	}
-
 
 }

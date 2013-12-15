@@ -44,12 +44,12 @@ public class FavoritesCreate extends Thread {
 
         } catch (Exception e) {
             e.printStackTrace();
-            mHandler.obtainMessage(GOT_FAVOURITE_CREATE_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_add_favourite_fail)).sendToTarget();
+            mHandler.obtainMessage(GOT_FAVOURITE_CREATE_INFO_FAIL, GlobalContext.getResString(R.string.toast_add_favourite_fail)).sendToTarget();
             return;
         }
 
         if(ErrorCheck.getError(httpResult) == null)
-            mHandler.obtainMessage(GOT_FAVOURITE_CREATE_INFO, GlobalContext.getAppContext().getString(R.string.toast_add_favourite_success)).sendToTarget();
+            mHandler.obtainMessage(GOT_FAVOURITE_CREATE_INFO, GlobalContext.getResString(R.string.toast_add_favourite_success)).sendToTarget();
         else
             mHandler.obtainMessage(GOT_FAVOURITE_CREATE_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();
 

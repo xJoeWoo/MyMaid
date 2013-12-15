@@ -93,12 +93,12 @@ public class StatusesFriendsTimeLine extends Thread {
 
                 ArrayList<HashMap<String, String>> text = new ArrayList<>();
 
-                if (max_id == null) {
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put(BLANK, " ");
-                    text.add(map);
-                    map = null;
-                }
+//                if (max_id == null) {
+//                    HashMap<String, String> map = new HashMap<>();
+//                    map.put(BLANK, " ");
+//                    text.add(map);
+//                    map = null;
+//                }
 
                 FriendsTimelineBean f = new Gson().fromJson(httpResult,
                         FriendsTimelineBean.class);
@@ -230,7 +230,7 @@ public class StatusesFriendsTimeLine extends Thread {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_user_timeline_fail)).sendToTarget();
+            mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL, GlobalContext.getResString(R.string.toast_user_timeline_fail)).sendToTarget();
         }
 
     }
@@ -256,7 +256,7 @@ public class StatusesFriendsTimeLine extends Thread {
             return true;
 
         } catch (Exception e) {
-            mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_user_timeline_fail)).sendToTarget();
+            mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL, GlobalContext.getResString(R.string.toast_user_timeline_fail)).sendToTarget();
             e.printStackTrace();
             return false;
         }

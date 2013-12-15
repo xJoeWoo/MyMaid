@@ -10,10 +10,13 @@ public class WeiboBackBean {
 	// Show
 	private String screen_name;
 	private String profile_image_url;
+    private String avatar_large;
+    private String avatar_hd;
 	private String location;
 	private String followers_count;
 	private String friends_count;
 	private String statuses_count;
+    private String description;
 
 	// Create, StatusesUpload
 	private String id;
@@ -59,10 +62,13 @@ public class WeiboBackBean {
 		return profile_image_url;
 	}
 
-	public String getLocation() {
-		location = location.replace(" ", "");
-		return location;
-	}
+    public String getAvatarLarge() { return avatar_large; }
+
+    public String getAvatarHD() { return avatar_hd; }
+
+	public String getLocation() { return location; }
+
+    public String getDescription() { return description; }
 
 	public String getFollowersCount() {
 		return followers_count;

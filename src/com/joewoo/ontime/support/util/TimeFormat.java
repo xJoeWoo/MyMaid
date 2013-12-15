@@ -35,11 +35,11 @@ public final class TimeFormat {
             if(currentDay - statusDay < 1) {
                 return GMTTime.substring(11, 16);
             } else if (currentDay - statusDay < 2) {
-                return GlobalContext.getAppContext().getString(R.string.time_yesterday) + GMTTime.substring(11, 16);
+                return GlobalContext.getResString(R.string.time_yesterday) + GMTTime.substring(11, 16);
             } else if(currentDay - statusDay < 3) {
-                return GlobalContext.getAppContext().getString(R.string.time_2_days_ago) + GMTTime.substring(11, 16);
+                return GlobalContext.getResString(R.string.time_2_days_ago) + GMTTime.substring(11, 16);
             } else if(currentDay - statusDay < 4) {
-                return GlobalContext.getAppContext().getString(R.string.time_3_days_ago) + GMTTime.substring(11, 16);
+                return GlobalContext.getResString(R.string.time_3_days_ago) + GMTTime.substring(11, 16);
             } else {
                 return String.valueOf(c.get(Calendar.MONTH) + 1) + "-" + String.valueOf(c.get(Calendar.DAY_OF_MONTH)) + " · " + GMTTime.substring(11, 16);
             }

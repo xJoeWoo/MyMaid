@@ -18,9 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.joewoo.ontime.action.friendships.FriendsIDs;
+import com.joewoo.ontime.support.adapter.pager.MyMaidPagerAdapter;
 import com.joewoo.ontime.support.net.NetworkStatus;
-import com.joewoo.ontime.support.adapter.pager.MainPagerAdapter;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.ui.Login;
 import com.joewoo.ontime.R;
@@ -36,7 +35,7 @@ import static com.joewoo.ontime.support.info.Defines.TAG;
 
 public class MainTimelineActivity extends FragmentActivity {
 
-    MainPagerAdapter mSectionsPagerAdapter;
+    MyMaidPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
     boolean gotCommentsUnread;
     boolean gotMentionsUnread;
@@ -44,12 +43,16 @@ public class MainTimelineActivity extends FragmentActivity {
     byte[] profileImgBytes;
     private PullToRefreshAttacher mPullToRefreshAttacher;
 
-    boolean isRefreshing;
-
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     SQLiteDatabase sql;
     Cursor c;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +110,7 @@ public class MainTimelineActivity extends FragmentActivity {
                         .setText(getString(R.string.title_frag_comments_to_me).toUpperCase(Locale.US))
                         .setTabListener(tabListener));
 
-                mSectionsPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
+                mSectionsPagerAdapter = new MyMaidPagerAdapter(getSupportFragmentManager());
                 mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
@@ -118,11 +121,11 @@ public class MainTimelineActivity extends FragmentActivity {
                                 actionBar.setSelectedNavigationItem(arg0);
                                 Log.e(TAG, "Page: " + String.valueOf(arg0));
                                 switch (arg0) {
-                                    case MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS: {
+                                    case MyMaidPagerAdapter.FRAG_FRIENDSTIMELINE_POS: {
 
                                         break;
                                     }
-                                    case MainPagerAdapter.FRAG_COMMENTS_POS: {
+                                    case MyMaidPagerAdapter.FRAG_COMMENTS_POS: {
                                         if (!gotCommentsUnread) {
                                             mSectionsPagerAdapter.getCommentsFrag()
                                                     .getUnreadCommentsCount();
@@ -131,7 +134,7 @@ public class MainTimelineActivity extends FragmentActivity {
                                         setActionBarVisible();
                                         break;
                                     }
-                                    case MainPagerAdapter.FRAG_MENTIONS_POS: {
+                                    case MyMaidPagerAdapter.FRAG_MENTIONS_POS: {
                                         if (!gotMentionsUnread) {
                                             mSectionsPagerAdapter.getMentionsFrag()
                                                     .getUnreadMentionsCount();
@@ -144,7 +147,7 @@ public class MainTimelineActivity extends FragmentActivity {
                             }
                         });
 
-                mViewPager.setCurrentItem(MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS);
+                mViewPager.setCurrentItem(MyMaidPagerAdapter.FRAG_FRIENDSTIMELINE_POS);
             } else { // 数据库没有信息
                 Toast.makeText(MainTimelineActivity.this,
                         R.string.toast_login_acquired, Toast.LENGTH_LONG).show();
@@ -179,14 +182,22 @@ public class MainTimelineActivity extends FragmentActivity {
 
         @Override
         public void onTabReselected(Tab tab, android.app.FragmentTransaction ft) {
-            // TODO Auto-generated method stub
-
+            switch (tab.getPosition()) {
+                case MyMaidPagerAdapter.FRAG_FRIENDSTIMELINE_POS:
+                    mSectionsPagerAdapter.getFriendsTimeLineFrag().scrollListViewToTop();
+                    break;
+                case MyMaidPagerAdapter.FRAG_MENTIONS_POS:
+                    mSectionsPagerAdapter.getMentionsFrag().scrollListViewToTop();
+                    break;
+                case MyMaidPagerAdapter.FRAG_COMMENTS_POS:
+                    mSectionsPagerAdapter.getCommentsFrag().scrollListViewToTop();
+                    break;
+            }
         }
 
         @Override
         public void onTabSelected(Tab tab, android.app.FragmentTransaction ft) {
             mViewPager.setCurrentItem(tab.getPosition());
-//            setListViewToTop(tab.getPosition());
         }
 
         @Override
@@ -259,14 +270,6 @@ public class MainTimelineActivity extends FragmentActivity {
             mPullToRefreshAttacher.setRefreshing(false);
             return false;
         }
-    }
-
-    public boolean isRefreshing() {
-        return isRefreshing;
-    }
-
-    public void setRefreshing(boolean isRefreshing) {
-        this.isRefreshing = isRefreshing;
     }
 
     public BitmapDrawable getProfileImage() {

@@ -45,28 +45,28 @@ public class SingleWeiboCommentsFragment extends Fragment {
 
     private ArrayList<HashMap<String, String>> text;
 
-    public void showComments(String weibo_id){
+    public void showComments(String weibo_id) {
         this.weibo_id = weibo_id;
         new CommentsShow(weibo_id, mHandler).start();
     }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_singleweibo_comments_reposts, container, false);
 
-        lv = (ListView)v.findViewById(R.id.lv_single_weibo_comments);
-        pb = (ProgressBar)v.findViewById(R.id.pb_single_weibo_comments);
-        tv = (TextView)v.findViewById(R.id.tv_single_weibo_comments);
+        lv = (ListView) v.findViewById(R.id.lv_single_weibo_comments);
+        pb = (ProgressBar) v.findViewById(R.id.pb_single_weibo_comments);
+        tv = (TextView) v.findViewById(R.id.tv_single_weibo_comments);
 
         return v;
 
-	}
+    }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         act = (SingleWeiboActivity) getActivity();
 
@@ -92,23 +92,9 @@ public class SingleWeiboCommentsFragment extends Fragment {
                 return false;
             }
         });
-	}
 
-	@Override
-	public void onPrepareOptionsMenu(Menu menu) {
-		menu.clear();
+    }
 
-
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-
-		}
-
-		return super.onOptionsItemSelected(item);
-	}
 
     private Handler mHandler = new Handler() {
         @Override
@@ -121,42 +107,38 @@ public class SingleWeiboCommentsFragment extends Fragment {
 
                     text = (ArrayList<HashMap<String, String>>) msg.obj;
 
-                    String[] from = { SCREEN_NAME, TEXT };
-                    int[] to = { R.id.comments_show_screen_name,
-                            R.id.comments_show_text };
+                    String[] from = {SCREEN_NAME, TEXT};
+                    int[] to = {R.id.comments_show_screen_name,
+                            R.id.comments_show_text};
 
-                    SimpleAdapter data = new SimpleAdapter(act , text,
+                    SimpleAdapter data = new SimpleAdapter(act, text,
                             R.layout.comments_show_lv, from, to);
 
-                    // int sv_pos = sv.getScrollY();
+                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> arg0,
+                                                View arg1, int arg2, long arg3) {
 
-                    lv
-                            .setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> arg0,
-                                                        View arg1, int arg2, long arg3) {
+                            Intent it = new Intent();
+                            it.setClass(act, CommentRepost.class);
+                            it.putExtra(IS_REPLY, true);
+                            it.putExtra(WEIBO_ID, weibo_id);
+                            it.putExtra(COMMENT_ID, text.get(arg2).get(COMMENT_ID));
+                            startActivity(it);
 
-                                    Intent it = new Intent();
-                                    it.setClass(act, CommentRepost.class);
-                                    it.putExtra(IS_REPLY, true);
-                                    it.putExtra(WEIBO_ID, weibo_id);
-                                    it.putExtra(COMMENT_ID, text.get(arg2).get(COMMENT_ID));
-                                    startActivity(it);
-
-                                }
-                            });
+                        }
+                    });
 
                     lv.setAdapter(data);
 
-                    if(lv.getCount() == 0)
-                    {
+                    if (lv.getCount() == 0) {
                         tv.setVisibility(View.VISIBLE);
                         tv.setText(R.string.frag_single_weibo_no_comments);
                     }
 
                     break;
                 }
-                case GOT_COMMNETS_SHOW_INFO_FAIL:{
+                case GOT_COMMNETS_SHOW_INFO_FAIL: {
                     Toast.makeText(act, R.string.toast_comments_fail, Toast.LENGTH_SHORT).show();
                     break;
                 }

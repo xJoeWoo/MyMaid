@@ -88,7 +88,7 @@ public class StatusesUserTimeLine extends Thread {
             hm = null;
         } catch (Exception e) {
             e.printStackTrace();
-            mHandler.obtainMessage(GOT_USER_TIMELINE_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_user_timeline_fail)).sendToTarget();
+            mHandler.obtainMessage(GOT_USER_TIMELINE_INFO_FAIL, GlobalContext.getResString(R.string.toast_user_timeline_fail)).sendToTarget();
             return;
         }
 
@@ -96,11 +96,11 @@ public class StatusesUserTimeLine extends Thread {
 
             ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
 
-            if (maxID == null) {
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put(BLANK, " ");
-                text.add(map);
-            }
+//            if (maxID == null) {
+//                HashMap<String, String> map = new HashMap<String, String>();
+//                map.put(BLANK, " ");
+//                text.add(map);
+//            }
 
             List<StatusesBean> statuses = new Gson().fromJson(httpResult, UserTimelineBean.class).getStatuses();
 

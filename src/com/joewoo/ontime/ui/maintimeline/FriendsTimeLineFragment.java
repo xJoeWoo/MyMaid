@@ -22,15 +22,16 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.action.friendships.FriendsIDs;
 import com.joewoo.ontime.action.statuses.StatusesFriendsTimeLine;
-import com.joewoo.ontime.support.adapter.listview.MyMaidAdapter;
+import com.joewoo.ontime.support.adapter.listview.MyMaidListViewAdapter;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.util.IDtoMID;
+import com.joewoo.ontime.support.view.MainTimelineHeaderView;
 import com.joewoo.ontime.ui.Login;
 import com.joewoo.ontime.ui.Post;
 import com.joewoo.ontime.ui.SingleUser;
@@ -43,7 +44,6 @@ import java.util.Locale;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
 
-import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_IDS_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_INFO_FAIL;
@@ -68,7 +68,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
 
     ArrayList<HashMap<String, String>> text;
     ListView lv;
-    MyMaidAdapter mAdapter;
+    MyMaidListViewAdapter mAdapter;
     private PullToRefreshAttacher mPullToRefreshAttacher;
     private MainTimelineActivity act;
 //    private boolean freshedFriendsIDs = false;
@@ -116,8 +116,8 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                                     long arg3) {
                 Intent i = new Intent(act, SingleWeiboActivity.class);
-                i.putExtra(SINGLE_WEIBO_MAP, text.get(arg2));
-                i.putExtra(MAP_POSITION, arg2);
+                i.putExtra(SINGLE_WEIBO_MAP, text.get(arg2 - lv.getHeaderViewsCount()));
+                i.putExtra(MAP_POSITION, arg2 - lv.getHeaderViewsCount());
                 startActivityForResult(i, RESULT_DESTROYED_WEIBO);
             }
         });
@@ -128,22 +128,22 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                                            int arg2, long arg3) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri
                         .parse("http://weibo.com/"
-                                + text.get(arg2).get(UID)
+                                + text.get(arg2 - lv.getHeaderViewsCount()).get(UID)
                                 + "/"
-                                + IDtoMID.Id2Mid(text.get(arg2)
+                                + IDtoMID.Id2Mid(text.get(arg2 - lv.getHeaderViewsCount())
                                 .get(WEIBO_ID)))));
                 return false;
             }
         });
 
-
         lv.setOnScrollListener(new OnScrollListener() {
             int mLastFirstVisibleItem = 0;
+
             @Override
             public void onScroll(AbsListView view, int arg1, int arg2, int arg3) {
 
                 // 检查上下滚动
-                final int currentFirstVisibleItem = lv.getFirstVisiblePosition();
+                final int currentFirstVisibleItem = view.getFirstVisiblePosition();
 
                 if (currentFirstVisibleItem > mLastFirstVisibleItem) {
                     act.setActionBarLowProfile();
@@ -152,35 +152,17 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                 }
                 mLastFirstVisibleItem = currentFirstVisibleItem;
 
-
                 // 滚到到尾刷新
-                if (view.getLastVisiblePosition() == (view.getCount() - 6)) {
-                    if (!act.isRefreshing()) {
-                        Log.e(TAG, "到底");
-                        // 获取后会删除第一项，所以获取数+1
-                        new StatusesFriendsTimeLine(text.get(
-                                view.getLastVisiblePosition() + 5)
-                                .get(WEIBO_ID), mHandler).start();
-                        act.setRefreshing(true);
-                        mPullToRefreshAttacher.setRefreshing(true);
-                    }
+                if (view.getLastVisiblePosition() > (view.getCount() - 6) && !mPullToRefreshAttacher.isRefreshing() && text != null) {
+                    Log.e(TAG, "到底");
+                    // 获取后会删除第一项，所以获取数+1
+                    new StatusesFriendsTimeLine(text.get(view.getCount() - 1 - lv.getHeaderViewsCount()).get(WEIBO_ID), mHandler).start();
+                    mPullToRefreshAttacher.setRefreshing(true);
                 }
-
             }
 
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-//                switch (scrollState) {
-//                    case OnScrollListener.SCROLL_STATE_IDLE: { // 已经停止
-//                        break;
-//                    }
-//                    case OnScrollListener.SCROLL_STATE_FLING: { // 开始滚动
-//                        break;
-//                    }
-//                    case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL: { // 正在滚动
-//                        break;
-//                    }
-//                }
             }
         });
     }
@@ -349,7 +331,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
 //                        Log.e(TAG, String.valueOf(i));
 //                        switch (i) {
 //                            case 0: {
-                if(act.checkNetwork()) {
+                if (act.checkNetwork()) {
                     Intent ii = new Intent(act, SingleUser.class);
                     ii.putExtra(SCREEN_NAME, GlobalContext.getScreenName());
                     startActivity(ii);
@@ -376,7 +358,6 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
         public void handleMessage(Message msg) {
             // act.setProgressBarIndeterminateVisibility(false);
             mPullToRefreshAttacher.setRefreshComplete();
-            (act).setRefreshing(false);
             switch (msg.what) {
 //                case GOT_FRIENDS_IDS_INFO: {
 //                    new StatusesFriendsTimeLine(true, act.getSQL(), mHandler).start();
@@ -396,9 +377,9 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                     break;
                 }
                 case GOT_FRIENDS_TIMELINE_INFO_FAIL: {
-                        Toast.makeText(act,
-                                (String) msg.obj, Toast.LENGTH_SHORT)
-                                .show();
+                    Toast.makeText(act,
+                            (String) msg.obj, Toast.LENGTH_SHORT)
+                            .show();
                     break;
                 }
             }
@@ -423,7 +404,8 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
     }
 
     private void setListView(ArrayList<HashMap<String, String>> arrayList) {
-        mAdapter = new MyMaidAdapter(arrayList, act);
+        mAdapter = new MyMaidListViewAdapter(arrayList, act);
+        lv.addHeaderView(new MainTimelineHeaderView(act), null, false);
         lv.setAdapter(mAdapter);
     }
 
@@ -440,7 +422,8 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
 
     public void refreshFriendsTimeLine() {
         new StatusesFriendsTimeLine(false, act.getSQL(), mHandler).start();
-        act.setRefreshing(true);
         mPullToRefreshAttacher.setRefreshing(true);
     }
+
+    public void scrollListViewToTop() { lv.smoothScrollToPosition(0); }
 }

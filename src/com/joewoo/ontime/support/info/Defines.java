@@ -62,6 +62,9 @@ public class Defines {
     public final static int GOT_STATUSES_SHOW_INFO = 45;
     public final static int GOT_STATUSES_SHOW_INFO_FAIL = 46;
     public final static int GOT_USER_TIMELINE_ADD_INFO = 47;
+    public final static int GOT_MENTIONS_ADD_INFO = 48;
+    public final static int GOT_COMMENTS_MENTIONS_ADD_INFO = 49;
+    public final static int GOT_COMMENTS_TO_ME_ADD_INFO = 50;
 
 
 	public final static int ACT_GOT_PHOTO = 1;

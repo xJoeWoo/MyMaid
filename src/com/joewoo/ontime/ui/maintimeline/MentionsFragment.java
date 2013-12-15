@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -21,9 +22,10 @@ import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.comments.CommentsMentions;
 import com.joewoo.ontime.action.remind.RemindUnreadCount;
 import com.joewoo.ontime.action.statuses.StatusesMentions;
-import com.joewoo.ontime.support.adapter.listview.MyMaidAdapter;
+import com.joewoo.ontime.support.adapter.listview.MyMaidListViewAdapter;
 import com.joewoo.ontime.support.bean.UnreadCountBean;
 import com.joewoo.ontime.support.util.GlobalContext;
+import com.joewoo.ontime.support.view.MainTimelineHeaderView;
 import com.joewoo.ontime.ui.CommentRepost;
 import com.joewoo.ontime.ui.Post;
 import com.joewoo.ontime.ui.SingleUser;
@@ -35,8 +37,10 @@ import java.util.HashMap;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
 
+import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_MENTIONS_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_MENTIONS_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_MENTIONS_INFO_FAIL;
+import static com.joewoo.ontime.support.info.Defines.GOT_MENTIONS_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_MENTIONS_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_MENTIONS_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.GOT_SET_REMIND_COUNT_INFO_FAIL;
@@ -61,6 +65,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
     private PullToRefreshAttacher mPullToRefreshAttacher;
     private MainTimelineActivity act;
     private boolean isNormalMention = true;
+    private MyMaidListViewAdapter mAdapter;
 
     @Override
     public void onRefreshStarted(View view) {
@@ -106,7 +111,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                 Intent i = new Intent();
                 i.setClass(act, CommentRepost.class);
                 i.putExtra(IS_COMMENT, true);
-                i.putExtra(WEIBO_ID, text.get(arg2).get(WEIBO_ID));
+                i.putExtra(WEIBO_ID, text.get(arg2 - lv.getHeaderViewsCount()).get(WEIBO_ID));
                 startActivity(i);
             }
         });
@@ -117,14 +122,34 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                                            int arg2, long arg3) {
                 Intent i = new Intent(act, SingleWeiboActivity.class);
                 if (isNormalMention) {
-                    i.putExtra(SINGLE_WEIBO_MAP, text.get(arg2));
+                    i.putExtra(SINGLE_WEIBO_MAP, text.get(arg2 - lv.getHeaderViewsCount()));
                 } else {
                     HashMap<String, String> hm = new HashMap<>();
-                    hm.put(WEIBO_ID, text.get(arg2).get(WEIBO_ID));
+                    hm.put(WEIBO_ID, text.get(arg2 - lv.getHeaderViewsCount()).get(WEIBO_ID));
                     i.putExtra(SINGLE_WEIBO_MAP, hm);
                 }
                 startActivity(i);
                 return false;
+            }
+        });
+
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                // 滚到到尾刷新
+                if (view.getLastVisiblePosition() > (view.getCount() - 6) && !mPullToRefreshAttacher.isRefreshing() && text != null) {
+                    Log.e(TAG, "到底");
+                    if (isNormalMention)
+                        new StatusesMentions(text.get(view.getCount() - 1 - lv.getHeaderViewsCount()).get(WEIBO_ID), mHandler).start();
+                    else
+                        new CommentsMentions(text.get(view.getCount() - 1 - lv.getHeaderViewsCount()).get(WEIBO_ID), mHandler).start();
+                    mPullToRefreshAttacher.setRefreshing(true);
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
             }
         });
     }
@@ -209,13 +234,12 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
         return super.onOptionsItemSelected(item);
     }
 
-    Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler() {
 
         @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
             // act.setProgressBarIndeterminateVisibility(false);
-            act.setRefreshing(false);
             mPullToRefreshAttacher.setRefreshComplete();
             switch (msg.what) {
                 case GOT_MENTIONS_INFO: {
@@ -224,8 +248,8 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                     break;
                 }
                 case GOT_MENTIONS_INFO_FAIL: {
-                        Toast.makeText(act, (String) msg.obj,
-                                Toast.LENGTH_SHORT).show();
+                    Toast.makeText(act, (String) msg.obj,
+                            Toast.LENGTH_SHORT).show();
                     break;
                 }
                 case GOT_UNREAD_COUNT_INFO: {
@@ -237,6 +261,15 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                         Toast.makeText(act,
                                 R.string.toast_unread_count_fail,
                                 Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                case GOT_COMMENTS_MENTIONS_ADD_INFO:
+                case GOT_MENTIONS_ADD_INFO: {
+                    ArrayList<HashMap<String, String>> tmp = (ArrayList<HashMap<String, String>>) msg.obj;
+                    tmp.remove(0);
+                    text.addAll(tmp);
+                    addListView(text);
+                    tmp = null;
                     break;
                 }
                 case GOT_COMMENTS_MENTIONS_INFO: {
@@ -262,8 +295,14 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
     };
 
     private void setListView(ArrayList<HashMap<String, String>> arrayList) {
-        MyMaidAdapter adapter = new MyMaidAdapter(arrayList, act);
-        lv.setAdapter(adapter);
+        mAdapter = new MyMaidListViewAdapter(arrayList, act);
+        lv.addHeaderView(new MainTimelineHeaderView(act), null, false);
+        lv.setAdapter(mAdapter);
+    }
+
+    private void addListView(ArrayList<HashMap<String, String>> arrayList) {
+        mAdapter.setData(arrayList);
+        mAdapter.notifyDataSetChanged();
     }
 
     public void getUnreadMentionsCount() {
@@ -272,14 +311,14 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
 
     public void refreshMentions() {
         new StatusesMentions(false, act.getSQL(), mHandler).start();
-        act.setRefreshing(true);
         mPullToRefreshAttacher.setRefreshing(true);
     }
 
     public void refreshCommentsMentions() {
         new CommentsMentions(false, act.getSQL(), mHandler).start();
-        act.setRefreshing(true);
         mPullToRefreshAttacher.setRefreshing(true);
     }
+
+    public void scrollListViewToTop() { lv.smoothScrollToPosition(0); }
 
 }

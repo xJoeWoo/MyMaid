@@ -41,6 +41,7 @@ import static com.joewoo.ontime.support.info.Defines.SOURCE;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 import static com.joewoo.ontime.support.info.Defines.TEXT;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
+import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_MENTIONS_ADD_INFO;
 
 /**
  * Created by JoeWoo on 13-10-26.
@@ -52,12 +53,17 @@ public class CommentsMentions extends Thread {
     public boolean isProvidedResult = false;
     private String httpResult;
     private SQLiteDatabase sql;
-    private String max_id;
+    private String maxID;
 
     public CommentsMentions(boolean isProvided, SQLiteDatabase sql, Handler handler) {
         this.mHandler = handler;
         this.sql = sql;
         this.isProvidedResult = isProvided;
+    }
+
+    public CommentsMentions(String maxID, Handler handler) {
+        this.maxID = maxID;
+        this.mHandler = handler;
     }
 
     public void run() {
@@ -68,8 +74,8 @@ public class CommentsMentions extends Thread {
                 return;
         } else {
             httpResult = MyMaidSQLHelper.getOneString(MyMaidSQLHelper.COMMENTS_MENTIONS, sql);
-            if(httpResult == null)
-                if(!fresh())
+            if (httpResult == null)
+                if (!fresh())
                     return;
         }
 
@@ -81,10 +87,10 @@ public class CommentsMentions extends Thread {
 
             ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
 
-            HashMap<String, String> hm = new HashMap<String, String>();
-            hm.put(BLANK, " ");
-            text.add(hm);
-            hm = null;
+//            HashMap<String, String> hm = new HashMap<String, String>();
+//            hm.put(BLANK, " ");
+//            text.add(hm);
+//            hm = null;
 
             String source;
 
@@ -121,17 +127,18 @@ public class CommentsMentions extends Thread {
                 text.add(map);
             }
 
-            mHandler.obtainMessage(GOT_COMMENTS_MENTIONS_INFO, text)
-                    .sendToTarget();
+            if (maxID == null)
+                mHandler.obtainMessage(GOT_COMMENTS_MENTIONS_INFO, text).sendToTarget();
+            else
+                mHandler.obtainMessage(GOT_COMMENTS_MENTIONS_ADD_INFO, text).sendToTarget();
 
             comments = null;
 
-            if (!isProvidedResult)
-                new RemindSetCount(mHandler)
-                        .execute(RemindSetCount.setCommentMentionsCount);
+            if (!isProvidedResult && maxID == null)
+                new RemindSetCount(RemindSetCount.CommentMentionsCount).start();
 
         } catch (Exception e) {
-            mHandler.obtainMessage(GOT_COMMENTS_MENTIONS_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_mentions_fail)).sendToTarget();
+            mHandler.obtainMessage(GOT_COMMENTS_MENTIONS_INFO_FAIL, GlobalContext.getResString(R.string.toast_mentions_fail)).sendToTarget();
             e.printStackTrace();
         }
     }
@@ -141,11 +148,11 @@ public class CommentsMentions extends Thread {
             HashMap<String, String> hm = new HashMap<String, String>();
             hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
 
-            if (max_id == null) {
+            if (maxID == null) {
                 hm.put(COUNT, AcquireCount.COMMENTS_MENTIONS_COUNT);
             } else {
                 hm.put(COUNT, AcquireCount.COMMENTS_MENTIONS_ADD_COUNT);
-                hm.put(MAX_ID, max_id);
+                hm.put(MAX_ID, maxID);
             }
 
             httpResult = new HttpUtility().executeGetTask(URLHelper.COMMENTS_MENTIONS, hm);
@@ -156,7 +163,7 @@ public class CommentsMentions extends Thread {
 
             return true;
         } catch (Exception e) {
-            mHandler.obtainMessage(GOT_COMMENTS_MENTIONS_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_mentions_fail)).sendToTarget();
+            mHandler.obtainMessage(GOT_COMMENTS_MENTIONS_INFO_FAIL, GlobalContext.getResString(R.string.toast_mentions_fail)).sendToTarget();
             e.printStackTrace();
             return false;
         }

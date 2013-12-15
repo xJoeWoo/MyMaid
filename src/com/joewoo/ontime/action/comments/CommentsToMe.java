@@ -26,10 +26,12 @@ import static com.joewoo.ontime.support.info.Defines.BLANK;
 import static com.joewoo.ontime.support.info.Defines.COMMENT_ID;
 import static com.joewoo.ontime.support.info.Defines.COUNT;
 import static com.joewoo.ontime.support.info.Defines.CREATED_AT;
+import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_TO_ME_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_TO_ME_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_TO_ME_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.IS_COMMENT;
 import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
+import static com.joewoo.ontime.support.info.Defines.MAX_ID;
 import static com.joewoo.ontime.support.info.Defines.PIC_URLS;
 import static com.joewoo.ontime.support.info.Defines.REPLY_COMMNET_TEXT;
 import static com.joewoo.ontime.support.info.Defines.REPLY_COMMNET_USER_SCREEN_NAME;
@@ -58,11 +60,17 @@ public class CommentsToMe extends Thread {
     public boolean isProvidedResult = false;
     private String httpResult;
     private SQLiteDatabase sql;
+    private String maxID = null;
 
     public CommentsToMe(boolean isProvided, SQLiteDatabase sql, Handler handler) {
         this.mHandler = handler;
         this.sql = sql;
         this.isProvidedResult = isProvided;
+    }
+
+    public CommentsToMe(String maxID, Handler handler) {
+        this.maxID = maxID;
+        this.mHandler = handler;
     }
 
     @Override
@@ -74,8 +82,8 @@ public class CommentsToMe extends Thread {
                 return;
         } else {
             httpResult = MyMaidSQLHelper.getOneString(MyMaidSQLHelper.COMMENTS_TO_ME, sql);
-            if(httpResult == null)
-                if(!fresh())
+            if (httpResult == null)
+                if (!fresh())
                     return;
         }
 
@@ -87,10 +95,10 @@ public class CommentsToMe extends Thread {
 
             ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
 
-            HashMap<String, String> hm = new HashMap<String, String>();
-            hm.put(BLANK, " ");
-            text.add(hm);
-            hm = null;
+//            HashMap<String, String> hm = new HashMap<String, String>();
+//            hm.put(BLANK, " ");
+//            text.add(hm);
+//            hm = null;
 
             String source;
 
@@ -113,7 +121,7 @@ public class CommentsToMe extends Thread {
                 map.put(STATUS_REPOSTS_COUNT, c.getStatus().getRepostsCount());
                 map.put(STATUS_CREATED_AT, TimeFormat.parse(c.getStatus().getCreatedAt()));
 
-                if(c.getStatus().getPicURLs() != null && c.getStatus().getPicURLs().size() > 1)
+                if (c.getStatus().getPicURLs() != null && c.getStatus().getPicURLs().size() > 1)
                     map.put(PIC_URLS, " ");
 
                 source = c.getStatus().getSource();
@@ -135,7 +143,7 @@ public class CommentsToMe extends Thread {
                     map.put(RETWEETED_STATUS, c.getStatus()
                             .getRetweetedStatus().getText());
 
-                    if(c.getStatus().getRetweetedStatus().getPicURLs() != null && c.getStatus().getRetweetedStatus().getPicURLs().size() > 1)
+                    if (c.getStatus().getRetweetedStatus().getPicURLs() != null && c.getStatus().getRetweetedStatus().getPicURLs().size() > 1)
                         map.put(PIC_URLS, " ");
 
                     if (c.getStatus().getRetweetedStatus().getThumbnailPic() != null) {
@@ -163,17 +171,16 @@ public class CommentsToMe extends Thread {
                     map.put(REPLY_COMMNET_TEXT, c.getStatus().getText());
                 }
 
-                map.put(IS_COMMENT, " ");
-
                 text.add(map);
             }
 
-            mHandler.obtainMessage(GOT_COMMENTS_TO_ME_INFO, text)
-                    .sendToTarget();
+            if (maxID == null)
+                mHandler.obtainMessage(GOT_COMMENTS_TO_ME_INFO, text).sendToTarget();
+            else
+                mHandler.obtainMessage(GOT_COMMENTS_TO_ME_ADD_INFO, text).sendToTarget();
 
-            if(!isProvidedResult)
-                new RemindSetCount(mHandler)
-                        .execute(RemindSetCount.setCommentsCount);
+            if (!isProvidedResult && maxID == null)
+                new RemindSetCount(RemindSetCount.CommentsCount).start();
 
         } else {
             mHandler.obtainMessage(GOT_COMMENTS_TO_ME_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();
@@ -184,7 +191,13 @@ public class CommentsToMe extends Thread {
         try {
             HashMap<String, String> hm = new HashMap<String, String>();
             hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
-            hm.put(COUNT, AcquireCount.COMMENTS_TO_ME_COUNT);
+
+            if (maxID == null)
+                hm.put(COUNT, AcquireCount.COMMENTS_TO_ME_COUNT);
+            else {
+                hm.put(COUNT, AcquireCount.COMMENTS_TO_ME_ADD_COUNT);
+                hm.put(MAX_ID, maxID);
+            }
 
             httpResult = new HttpUtility().executeGetTask(URLHelper.COMMENTS_TO_ME, hm);
 

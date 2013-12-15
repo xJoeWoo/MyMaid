@@ -11,7 +11,7 @@ import com.joewoo.ontime.ui.maintimeline.CommentsToMeFragment;
 import com.joewoo.ontime.ui.maintimeline.FriendsTimeLineFragment;
 import com.joewoo.ontime.ui.maintimeline.MentionsFragment;
 
-public class MainPagerAdapter extends FragmentPagerAdapter {
+public class MyMaidPagerAdapter extends FragmentPagerAdapter {
 
     public final static int FRAG_MENTIONS_POS = 0;
     public final static int FRAG_FRIENDSTIMELINE_POS = 1;
@@ -21,7 +21,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 
 	private List<Fragment> mFragments = new ArrayList<Fragment>();
 
-	public MainPagerAdapter(FragmentManager fm) {
+	public MyMaidPagerAdapter(FragmentManager fm) {
 		super(fm);
 
 		// add fragments

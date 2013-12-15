@@ -28,13 +28,13 @@ import static com.joewoo.ontime.support.info.Defines.SOURCE;
 import static com.joewoo.ontime.support.info.Defines.TEXT;
 import static com.joewoo.ontime.support.info.Defines.THUMBNAIL_PIC;
 
-public class MyMaidAdapter extends BaseAdapter {
+public class MyMaidListViewAdapter extends BaseAdapter {
 
     private ArrayList<HashMap<String, String>> data;
     private LayoutInflater mInflater;
     private Context context;
 
-    public MyMaidAdapter(ArrayList<HashMap<String, String>> data, Context context) {
+    public MyMaidListViewAdapter(ArrayList<HashMap<String, String>> data, Context context) {
         this.context = context;
         this.data = data;
         this.mInflater = LayoutInflater.from(context);

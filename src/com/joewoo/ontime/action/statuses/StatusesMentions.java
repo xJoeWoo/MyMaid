@@ -30,6 +30,7 @@ import static com.joewoo.ontime.support.info.Defines.CREATED_AT;
 import static com.joewoo.ontime.support.info.Defines.GOT_MENTIONS_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_MENTIONS_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
+import static com.joewoo.ontime.support.info.Defines.MAX_ID;
 import static com.joewoo.ontime.support.info.Defines.PIC_URLS;
 import static com.joewoo.ontime.support.info.Defines.PROFILE_IMAGE_URL;
 import static com.joewoo.ontime.support.info.Defines.REPOSTS_COUNT;
@@ -49,6 +50,7 @@ import static com.joewoo.ontime.support.info.Defines.TEXT;
 import static com.joewoo.ontime.support.info.Defines.THUMBNAIL_PIC;
 import static com.joewoo.ontime.support.info.Defines.UID;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
+import static com.joewoo.ontime.support.info.Defines.GOT_MENTIONS_ADD_INFO;
 
 public class StatusesMentions extends Thread {
 
@@ -56,11 +58,17 @@ public class StatusesMentions extends Thread {
     public boolean isProvidedResult = false;
     private String httpResult;
     private SQLiteDatabase sql;
+    private String maxID = null;
 
     public StatusesMentions(boolean isProvided, SQLiteDatabase sql, Handler handler) {
         this.mHandler = handler;
         this.sql = sql;
         this.isProvidedResult = isProvided;
+    }
+
+    public StatusesMentions(String maxID, Handler handler) {
+        this.maxID = maxID;
+        this.mHandler = handler;
     }
 
     @Override
@@ -87,10 +95,10 @@ public class StatusesMentions extends Thread {
 
             ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
 
-            HashMap<String, String> hm = new HashMap<String, String>();
-            hm.put(BLANK, " ");
-            text.add(hm);
-            hm = null;
+//            HashMap<String, String> hm = new HashMap<String, String>();
+//            hm.put(BLANK, " ");
+//            text.add(hm);
+//            hm = null;
 
             String source;
 
@@ -154,11 +162,13 @@ public class StatusesMentions extends Thread {
                 text.add(map);
             }
 
-            mHandler.obtainMessage(GOT_MENTIONS_INFO, text).sendToTarget();
+            if(maxID == null)
+                mHandler.obtainMessage(GOT_MENTIONS_INFO, text).sendToTarget();
+            else
+                mHandler.obtainMessage(GOT_MENTIONS_ADD_INFO, text).sendToTarget();
 
-            if(!isProvidedResult)
-                new RemindSetCount(mHandler)
-                        .execute(RemindSetCount.setMentionsCount);
+            if(!isProvidedResult && maxID == null)
+                new RemindSetCount(RemindSetCount.MentionsCount).start();
 
         } else {
             mHandler.obtainMessage(GOT_MENTIONS_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();
@@ -169,7 +179,13 @@ public class StatusesMentions extends Thread {
         try {
             HashMap<String, String> hm = new HashMap<String, String>();
             hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
-            hm.put(COUNT, AcquireCount.MENTIONS_COUNT);
+
+            if(maxID == null) {
+                hm.put(COUNT, AcquireCount.MENTIONS_COUNT);
+            }else{
+                hm.put(COUNT, AcquireCount.MENTIONS_ADD_COUNT);
+                hm.put(MAX_ID, maxID);
+            }
 
             httpResult = new HttpUtility().executeGetTask(URLHelper.MENTIONS, hm);
 
@@ -180,7 +196,7 @@ public class StatusesMentions extends Thread {
             return true;
 
         } catch (Exception e) {
-            mHandler.obtainMessage(GOT_MENTIONS_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_mentions_fail)).sendToTarget();
+            mHandler.obtainMessage(GOT_MENTIONS_INFO_FAIL, GlobalContext.getResString(R.string.toast_mentions_fail)).sendToTarget();
             e.printStackTrace();
             return false;
         }

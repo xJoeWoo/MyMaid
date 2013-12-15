@@ -51,7 +51,7 @@ public class UserShow extends Thread {
             hm = null;
 
         } catch (Exception e) {
-            mHandler.obtainMessage(GOT_SHOW_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_user_timeline_fail)).sendToTarget();
+            mHandler.obtainMessage(GOT_SHOW_INFO_FAIL, GlobalContext.getResString(R.string.toast_user_timeline_fail)).sendToTarget();
             e.printStackTrace();
             return;
         }

@@ -58,13 +58,12 @@ public class CommentsCreate extends Thread {
         } catch (Exception e) {
             Log.e(TAG, "Comment Create Thread FAILED");
             e.printStackTrace();
-            mHandler.obtainMessage(GOT_COMMENT_CREATE_INFO_FAIL, GlobalContext.getAppContext().getString(R.string.toast_comment_fail)).sendToTarget();
-
+            mHandler.obtainMessage(GOT_COMMENT_CREATE_INFO_FAIL, GlobalContext.getResString(R.string.toast_comment_fail)).sendToTarget();
             return;
         }
 
         if(ErrorCheck.getError(httpResult) == null)
-            mHandler.obtainMessage(GOT_COMMENT_CREATE_INFO, GlobalContext.getAppContext().getString(R.string.toast_comment_success)).sendToTarget();
+            mHandler.obtainMessage(GOT_COMMENT_CREATE_INFO, GlobalContext.getResString(R.string.toast_comment_success)).sendToTarget();
 
         else
             mHandler.obtainMessage(GOT_COMMENT_CREATE_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();

@@ -1,79 +1,50 @@
 package com.joewoo.ontime.action.remind;
 
-import static com.joewoo.ontime.support.info.Defines.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-
-import com.google.gson.Gson;
-import com.joewoo.ontime.action.URLHelper;
-import com.joewoo.ontime.support.bean.WeiboBackBean;
-import com.joewoo.ontime.support.util.GlobalContext;
-
-import android.os.AsyncTask;
-import android.os.Handler;
 import android.util.Log;
 
-public class RemindSetCount extends AsyncTask<String, Integer, String> {
+import com.joewoo.ontime.action.URLHelper;
+import com.joewoo.ontime.support.net.HttpUtility;
+import com.joewoo.ontime.support.util.GlobalContext;
 
-    private Handler mHandler;
+import java.util.HashMap;
 
-    public final static String setCommentsCount = "cmt";
-    public final static String setMentionsCount = "mention_status";
-    public final static String setCommentMentionsCount = "mention_cmt";
-    public final static String setFollowersCount = "follower";
+import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
+import static com.joewoo.ontime.support.info.Defines.TAG;
 
-    public RemindSetCount(Handler handler) {
-        this.mHandler = handler;
+public class RemindSetCount extends Thread {
+
+    public final static String CommentsCount = "cmt";
+    public final static String MentionsCount = "mention_status";
+    public final static String CommentMentionsCount = "mention_cmt";
+    public final static String FollowersCount = "follower";
+
+    private String type;
+
+    public RemindSetCount(String type) {
+        this.type = type;
     }
 
     @Override
-    protected String doInBackground(String... params) {
+    public void run() {
 
         Log.e(TAG, "Set Remind Count AsycnTask start");
-        Log.e(TAG, "type: " + params[0]);
-        String httpResult = null;
+        Log.e(TAG, "type: " + type);
 
-        HttpPost httpRequest = new HttpPost(URLHelper.SET_REMIND_COUNT);
-        List<NameValuePair> p = new ArrayList<NameValuePair>();
-        p.add(new BasicNameValuePair(ACCESS_TOKEN, GlobalContext.getAccessToken()));
-        p.add(new BasicNameValuePair("type", params[0]));
+        String httpResult;
 
         try {
-            httpRequest.setEntity(new UrlEncodedFormEntity(p, HTTP.UTF_8));
-            httpResult = EntityUtils.toString(new DefaultHttpClient().execute(
-                    httpRequest).getEntity());
+            HashMap<String, String> hm = new HashMap<String, String>();
 
-            Log.e(TAG, "GOT: " + httpResult);
+            hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+            hm.put("type", type);
 
-
-        } catch (Exception e) {
+            httpResult = new HttpUtility().executePostTask(URLHelper.SET_REMIND_COUNT, hm);
+            //        if(result != null && ErrorCheck.getError(result) != null)
+//            Toast.makeText(GlobalContext.getAppContext(), ErrorCheck.getError(result), Toast.LENGTH_SHORT).show();
+//        else if(result == null)
+//            Toast.makeText(GlobalContext.getAppContext(), GlobalContext.getResString(R.string.toast_mentions_fail), Toast.LENGTH_SHORT).show();
+        }catch (Exception e) {
             e.printStackTrace();
         }
-        return httpResult;
     }
-
-    @Override
-    protected void onProgressUpdate(Integer... progress) {
-
-    }
-
-    @Override
-    protected void onPostExecute(String result) {
-        Log.e(TAG, result);
-        WeiboBackBean b = new Gson().fromJson(result, WeiboBackBean.class);
-
-        if (b.getSetRemindCountResult() == null) {
-            mHandler.sendEmptyMessage(GOT_SET_REMIND_COUNT_INFO_FAIL);
-        }
-    }
-
 }
