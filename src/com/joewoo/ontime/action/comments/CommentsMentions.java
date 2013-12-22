@@ -85,7 +85,7 @@ public class CommentsMentions extends Thread {
             List<CommentsBean> comments = new Gson().fromJson(httpResult,
                     CommentsMentionsBean.class).getComments();
 
-            ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
+//            ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
 
 //            HashMap<String, String> hm = new HashMap<String, String>();
 //            hm.put(BLANK, " ");
@@ -93,44 +93,57 @@ public class CommentsMentions extends Thread {
 //            hm = null;
 
             String source;
+            int index = -1;
 
             for (CommentsBean c : comments) {
-                HashMap<String, String> map = new HashMap<String, String>();
 
-                source = c.getSource();
-                map.put(SOURCE, " · " + source.substring(source.indexOf(">") + 1,
-                        source.indexOf("</a>")));
-                map.put(CREATED_AT, TimeFormat.parse(c.getCreatedAt()));
-                // map.put(UID, c.getUser().getId());
-                map.put(SCREEN_NAME, c.getUser().getScreenName());
-                map.put(TEXT, c.getText());
-                map.put(COMMENT_ID, c.getId());
+                index++;
 
-                map.put(WEIBO_ID, c.getStatus().getId());
+                c.setCreatedAt(TimeFormat.parse(comments.get(index).getCreatedAt()));
 
-                map.put(COMMENTS_COUNT, c.getStatus().getCommentsCount());
-                map.put(REPOSTS_COUNT, c.getStatus().getRepostsCount());
+                source = comments.get(index).getSource();
+                source = source.substring(source.indexOf(">") + 1,
+                        source.indexOf("</a>"));
+                c.setSource(source);
 
-                source = c.getStatus().getSource();
-                map.put(RETWEETED_STATUS_SOURCE, " · " + source.substring(source.indexOf(">") + 1,
-                        source.indexOf("</a>")));
-                map.put(RETWEETED_STATUS_SCREEN_NAME, c.getStatus().getUser().getScreenName());
-                map.put(RETWEETED_STATUS, c.getStatus().getText());
-                map.put(RETWEETED_STATUS_CREATED_AT, TimeFormat.parse(c.getStatus().getCreatedAt()));
-
-                map.put(IS_REPOST, " ");
-
-                if (c.getStatus().getThumbnailPic() != null) {
-                    map.put(RETWEETED_STATUS_BMIDDLE_PIC, c.getStatus().getBmiddlePic());
-                }
-
-                text.add(map);
+//                HashMap<String, String> map = new HashMap<String, String>();
+//
+//                source = c.getSource();
+//                map.put(SOURCE, " · " + source.substring(source.indexOf(">") + 1,
+//                        source.indexOf("</a>")));
+//                map.put(CREATED_AT, TimeFormat.parse(c.getCreatedAt()));
+//                // map.put(UID, c.getUser().getId());
+//                map.put(SCREEN_NAME, c.getUser().getScreenName());
+//                map.put(TEXT, c.getText());
+//                map.put(COMMENT_ID, c.getId());
+//
+//                map.put(WEIBO_ID, c.getStatus().getId());
+//
+//                map.put(COMMENTS_COUNT, c.getStatus().getCommentsCount());
+//                map.put(REPOSTS_COUNT, c.getStatus().getRepostsCount());
+//
+//                source = c.getStatus().getSource();
+//                map.put(RETWEETED_STATUS_SOURCE, " · " + source.substring(source.indexOf(">") + 1,
+//                        source.indexOf("</a>")));
+//                map.put(RETWEETED_STATUS_SCREEN_NAME, c.getStatus().getUser().getScreenName());
+//                map.put(RETWEETED_STATUS, c.getStatus().getText());
+//                map.put(RETWEETED_STATUS_CREATED_AT, TimeFormat.parse(c.getStatus().getCreatedAt()));
+//
+//                map.put(IS_REPOST, " ");
+//
+//                if (c.getStatus().getThumbnailPic() != null) {
+//                    map.put(RETWEETED_STATUS_BMIDDLE_PIC, c.getStatus().getBmiddlePic());
+//                }
+//
+//                text.add(map);
             }
 
             if (maxID == null)
-                mHandler.obtainMessage(GOT_COMMENTS_MENTIONS_INFO, text).sendToTarget();
-            else
-                mHandler.obtainMessage(GOT_COMMENTS_MENTIONS_ADD_INFO, text).sendToTarget();
+                mHandler.obtainMessage(GOT_COMMENTS_MENTIONS_INFO, comments).sendToTarget();
+            else {
+                comments.remove(0);
+                mHandler.obtainMessage(GOT_COMMENTS_MENTIONS_ADD_INFO, comments).sendToTarget();
+            }
 
             comments = null;
 

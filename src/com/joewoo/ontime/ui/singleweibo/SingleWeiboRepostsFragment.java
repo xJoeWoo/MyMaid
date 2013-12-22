@@ -5,29 +5,34 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.joewoo.ontime.R;
+import com.joewoo.ontime.action.comments.CommentsShow;
 import com.joewoo.ontime.action.statuses.StatusesRepostTimeline;
+import com.joewoo.ontime.support.adapter.listview.SingleWeiboMensListViewAdapter;
+import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.info.AcquireCount;
 import com.joewoo.ontime.ui.CommentRepost;
+import com.joewoo.ontime.ui.SingleUser;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
+import static com.joewoo.ontime.support.info.Defines.GOT_REPOST_TIMELINE_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_REPOST_TIMELINE_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_REPOST_TIMELINE_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.IS_COMMENT;
 import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
-import static com.joewoo.ontime.support.info.Defines.TEXT;
+import static com.joewoo.ontime.support.info.Defines.TAG;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
 
@@ -36,59 +41,45 @@ public class SingleWeiboRepostsFragment extends Fragment {
     private SingleWeiboActivity act;
     private ListView lv;
     private ProgressBar pb;
-    private String weibo_id;
+    private String weiboID;
     private TextView tv;
+    private SingleWeiboMensListViewAdapter adapter;
+    private List<StatusesBean> statuses;
 
-    public void showReposts(String weibo_id){
-        this.weibo_id = weibo_id;
-        new StatusesRepostTimeline(weibo_id, mHandler).start();
+    public void showReposts(String weiboID){
+        new StatusesRepostTimeline(weiboID, mHandler).start();
+        this.weiboID = weiboID;
     }
 
     private Handler mHandler = new Handler() {
-        @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
 
             pb.setVisibility(View.GONE);
+            act.setFreshing(false);
 
             switch (msg.what) {
                 case GOT_REPOST_TIMELINE_INFO: {
 
-                    final ArrayList<HashMap<String, String>> text = (ArrayList<HashMap<String, String>>) msg.obj;
+                    statuses = (List<StatusesBean>) msg.obj;
 
-                    String[] from = { SCREEN_NAME, TEXT };
-                    int[] to = { R.id.comments_show_screen_name,
-                            R.id.comments_show_text };
-
-                    SimpleAdapter data = new SimpleAdapter(act , text,
-                            R.layout.comments_show_lv, from, to);
-
-                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> arg0,
-                                                View arg1, int arg2, long arg3) {
-
-                            Intent it = new Intent();
-                            it.setClass(act, CommentRepost.class);
-                            it.putExtra(IS_COMMENT, true);
-                            it.putExtra(WEIBO_ID, weibo_id);
-                            startActivity(it);
-
+                    if(statuses != null) {
+                        if (statuses.isEmpty()) {
+                            tv.setVisibility(View.VISIBLE);
+                            tv.setText(R.string.frag_single_weibo_no_reposts);
+                        } else {
+                            setListView(statuses);
                         }
-                    });
-
-                    lv.setAdapter(data);
-
-                    if(lv.getCount() == 0)
-                    {
-                        tv.setVisibility(View.VISIBLE);
-                        tv.setText(R.string.frag_single_weibo_no_reposts);
                     }
 
                     break;
                 }
+                case GOT_REPOST_TIMELINE_ADD_INFO: {
+                    statuses.addAll((List<StatusesBean>) msg.obj);
+                    setListView(statuses);
+                }
                 case GOT_REPOST_TIMELINE_INFO_FAIL:{
-                    Toast.makeText(act, R.string.toast_repost_timeline_fail, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(act, (String) msg.obj, Toast.LENGTH_SHORT).show();
                     break;
                 }
             }
@@ -114,6 +105,56 @@ public class SingleWeiboRepostsFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 
         act = (SingleWeiboActivity) getActivity();
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                                    long arg3) {
+                Intent i = new Intent(act, CommentRepost.class);
+                i.putExtra(IS_COMMENT, true);
+                i.putExtra(WEIBO_ID, statuses.get(arg2).getId());
+                startActivity(i);
+            }
+        });
+
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                           int arg2, long arg3) {
+                Intent i = new Intent(act, SingleUser.class);
+                i.putExtra(SCREEN_NAME, statuses.get(arg2).getUser().getScreenName());
+                startActivity(i);
+                return false;
+            }
+        });
+
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScroll(AbsListView view, int arg1, int arg2, int arg3) {
+
+
+                // 滚到到尾刷新
+                if (view.getCount() > (Integer.valueOf(AcquireCount.REPOSTS_TIMELINE_COUNT) - 2) && !act.isFreshing() && statuses != null && statuses.size() > 6 && view.getLastVisiblePosition() > (view.getCount() - 6)) {
+                    Log.e(TAG, "到底");
+                    // 获取后会删除第一项，所以获取数+1
+                    new StatusesRepostTimeline(weiboID, statuses.get(view.getCount() - 1).getId(), mHandler).start();
+                    act.setFreshing(true);
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+        });
+
+        adapter = new SingleWeiboMensListViewAdapter(act);
 	}
+
+    private void setListView(List<StatusesBean> statuses) {
+        adapter.setData(statuses);
+        if(lv.getAdapter() == null)
+            lv.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
 
 }

@@ -16,40 +16,16 @@ import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.util.TimeFormat;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
-import static com.joewoo.ontime.support.info.Defines.BLANK;
-import static com.joewoo.ontime.support.info.Defines.BMIDDLE_PIC;
-import static com.joewoo.ontime.support.info.Defines.COMMENTS_COUNT;
 import static com.joewoo.ontime.support.info.Defines.COUNT;
-import static com.joewoo.ontime.support.info.Defines.CREATED_AT;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_INFO_FAIL;
-import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
 import static com.joewoo.ontime.support.info.Defines.MAX_ID;
-import static com.joewoo.ontime.support.info.Defines.PIC_URLS;
-import static com.joewoo.ontime.support.info.Defines.PROFILE_IMAGE_URL;
-import static com.joewoo.ontime.support.info.Defines.REPOSTS_COUNT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_BMIDDLE_PIC;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_COMMENTS_COUNT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_CREATED_AT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_REPOSTS_COUNT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SCREEN_NAME;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SOURCE;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_THUMBNAIL_PIC;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_UID;
-import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
-import static com.joewoo.ontime.support.info.Defines.SOURCE;
 import static com.joewoo.ontime.support.info.Defines.TAG;
-import static com.joewoo.ontime.support.info.Defines.TEXT;
-import static com.joewoo.ontime.support.info.Defines.THUMBNAIL_PIC;
-import static com.joewoo.ontime.support.info.Defines.UID;
-import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
 public class StatusesFriendsTimeLine extends Thread {
 
@@ -91,15 +67,6 @@ public class StatusesFriendsTimeLine extends Thread {
 
             if (ErrorCheck.getError(httpResult) == null) {
 
-                ArrayList<HashMap<String, String>> text = new ArrayList<>();
-
-//                if (max_id == null) {
-//                    HashMap<String, String> map = new HashMap<>();
-//                    map.put(BLANK, " ");
-//                    text.add(map);
-//                    map = null;
-//                }
-
                 FriendsTimelineBean f = new Gson().fromJson(httpResult,
                         FriendsTimelineBean.class);
 
@@ -111,118 +78,53 @@ public class StatusesFriendsTimeLine extends Thread {
                     Log.e(TAG, "Ad: " + adIDs[i]);
                 }
 
-                String source;
-//                int index = 0;
+                int index = -1;
+                int adPosition = -1;
 
-                outer:
+                String source;
+
                 for (StatusesBean s : statuses) {
 
-//                    index++;
-////                Log.e(TAG, String.valueOf(index));
-//
-//                if (index == 3 && GlobalContext.getFriendsIDs() != null) {
-//                    boolean isAd = true;
-//                    long thisUserID = Long.valueOf(s.getUser().getId());
-//                    long[] ids = GlobalContext.getFriendsIDs();
-//                    for (long id : ids) {
-//                        if (thisUserID == id) {
-//                            isAd = false;
-//                            break;
-//                        }
-//                    }
-//                    ids = null;
-//                    if (isAd) {
-//                        Log.e(TAG, "HAAAAAAAA! CAUGHT AN AD!!!!");
-//                        continue;
-//                    }
-//                }
+                    index++;
+
+                    s.setCreatedAt(TimeFormat.parse(statuses.get(index).getCreatedAt()));
+
+                    source = statuses.get(index).getSource();
+                    source = source.substring(source.indexOf(">") + 1,
+                            source.indexOf("</a>"));
+                    s.setSource(source);
+
+                    if (s.getRetweetedStatus() != null) {
+
+                        s.getRetweetedStatus().setCreatedAt(TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
+
+                        source = s.getRetweetedStatus().getSource();
+                        source = source.substring(source.indexOf(">") + 1,
+                                source.indexOf("</a>"));
+                        s.getRetweetedStatus().setSource(source);
+                    }
+
 
                     for (String adID : adIDs)
                         if (s.getId().equals(adID)) {
                             Log.e(TAG, "HAAAAAAAA! CAUGHT AN AD!!!!");
-                            continue outer;
+                            adPosition = index;
                         }
 
-
-                    HashMap<String, String> map = new HashMap<>();
-
-                    source = s.getSource();
-
-                    map.put(SOURCE, " · " + source.substring(source.indexOf(">") + 1,
-                            source.indexOf("</a>")));
-
-                    map.put(CREATED_AT, TimeFormat.parse(s.getCreatedAt()));
-
-                    map.put(UID, s.getUser().getId());
-                    map.put(SCREEN_NAME, s.getUser().getScreenName());
-                    map.put(TEXT, s.getText());
-                    map.put(COMMENTS_COUNT, s.getCommentsCount());
-                    map.put(REPOSTS_COUNT, s.getRepostsCount());
-                    map.put(WEIBO_ID, s.getId());
-                    map.put(PROFILE_IMAGE_URL, s.getUser()
-                            .getProfileImageUrl());
-
-                    if (s.getPicURLs() != null && s.getPicURLs().size() > 1)
-                        map.put(PIC_URLS, " ");
-
-
-                    try {
-
-                        map.put(RETWEETED_STATUS_UID, s
-                                .getRetweetedStatus().getUser().getId());
-
-                        source = s.getRetweetedStatus()
-                                .getSource();
-
-                        map.put(RETWEETED_STATUS_SOURCE, " · " + source.substring(source.indexOf(">") + 1,
-                                source.indexOf("</a>")));
-
-                        map.put(RETWEETED_STATUS_CREATED_AT, TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
-
-                        map.put(RETWEETED_STATUS_COMMENTS_COUNT, s
-                                .getRetweetedStatus().getCommentsCount());
-                        map.put(RETWEETED_STATUS_REPOSTS_COUNT, s
-                                .getRetweetedStatus().getRepostsCount());
-                        map.put(RETWEETED_STATUS_SCREEN_NAME, s
-                                .getRetweetedStatus().getUser().getScreenName());
-                        map.put(RETWEETED_STATUS, s
-                                .getRetweetedStatus().getText());
-
-                        if (s.getRetweetedStatus().getPicURLs() != null && s.getRetweetedStatus().getPicURLs().size() > 1)
-                            map.put(PIC_URLS, " ");
-
-                        if (s.getRetweetedStatus().getThumbnailPic() != null) {
-                            map.put(RETWEETED_STATUS_THUMBNAIL_PIC, s
-                                    .getRetweetedStatus().getThumbnailPic());
-                            map.put(RETWEETED_STATUS_BMIDDLE_PIC, s
-                                    .getRetweetedStatus().getBmiddlePic());
-                        }
-                        map.put(IS_REPOST, " ");
-
-                    } catch (Exception e) {
-
-                    }
-
-                    if (s.getThumbnailPic() != null) {
-                        map.put(THUMBNAIL_PIC, s.getThumbnailPic());
-                        map.put(BMIDDLE_PIC, s.getBmiddlePic());
-                    }
-
-                    text.add(map);
                 }
 
-                statuses = null;
-                f = null;
-                adIDs = null;
-                source = null;
+                if (adPosition != -1)
+                    statuses.remove(adPosition);
 
 
                 if (max_id == null)
-                    mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO, text)
+                    mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO, statuses)
                             .sendToTarget();
-                else
-                    mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_ADD_INFO, text)
+                else {
+                    statuses.remove(0);
+                    mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_ADD_INFO, statuses)
                             .sendToTarget();
+                }
 
 
             } else {

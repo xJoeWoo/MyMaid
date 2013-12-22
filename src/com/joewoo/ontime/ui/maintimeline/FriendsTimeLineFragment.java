@@ -22,12 +22,12 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.statuses.StatusesFriendsTimeLine;
-import com.joewoo.ontime.support.adapter.listview.MyMaidListViewAdapter;
+import com.joewoo.ontime.support.adapter.listview.MainListViewAdapter;
+import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.util.IDtoMID;
@@ -37,8 +37,7 @@ import com.joewoo.ontime.ui.Post;
 import com.joewoo.ontime.ui.SingleUser;
 import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
@@ -50,7 +49,6 @@ import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_INFO_F
 import static com.joewoo.ontime.support.info.Defines.IS_FRAG_POST;
 import static com.joewoo.ontime.support.info.Defines.LASTUID;
 import static com.joewoo.ontime.support.info.Defines.LOG_DEVIDER;
-import static com.joewoo.ontime.support.info.Defines.MAP_POSITION;
 import static com.joewoo.ontime.support.info.Defines.MENU_POST;
 import static com.joewoo.ontime.support.info.Defines.MENU_PROFILE_IMAGE;
 import static com.joewoo.ontime.support.info.Defines.MENU_UNREAD_COUNT;
@@ -58,17 +56,16 @@ import static com.joewoo.ontime.support.info.Defines.PREFERENCES;
 import static com.joewoo.ontime.support.info.Defines.PROFILE_IMAGE;
 import static com.joewoo.ontime.support.info.Defines.RESULT_DESTROYED_WEIBO;
 import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
-import static com.joewoo.ontime.support.info.Defines.SINGLE_WEIBO_MAP;
+import static com.joewoo.ontime.support.info.Defines.STATUS_BEAN;
+import static com.joewoo.ontime.support.info.Defines.STATUS_BEAN_POSITION;
 import static com.joewoo.ontime.support.info.Defines.TAG;
-import static com.joewoo.ontime.support.info.Defines.UID;
-import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
 
 public class FriendsTimeLineFragment extends Fragment implements OnRefreshListener {
 
-    ArrayList<HashMap<String, String>> text;
+    List<StatusesBean> statuses;
     ListView lv;
-    MyMaidListViewAdapter mAdapter;
+    MainListViewAdapter mAdapter;
     private PullToRefreshAttacher mPullToRefreshAttacher;
     private MainTimelineActivity act;
 //    private boolean freshedFriendsIDs = false;
@@ -116,8 +113,8 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                                     long arg3) {
                 Intent i = new Intent(act, SingleWeiboActivity.class);
-                i.putExtra(SINGLE_WEIBO_MAP, text.get(arg2 - lv.getHeaderViewsCount()));
-                i.putExtra(MAP_POSITION, arg2 - lv.getHeaderViewsCount());
+                i.putExtra(STATUS_BEAN, statuses.get(arg2 - lv.getHeaderViewsCount()));
+                i.putExtra(STATUS_BEAN_POSITION, arg2 - lv.getHeaderViewsCount());
                 startActivityForResult(i, RESULT_DESTROYED_WEIBO);
             }
         });
@@ -128,10 +125,10 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                                            int arg2, long arg3) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri
                         .parse("http://weibo.com/"
-                                + text.get(arg2 - lv.getHeaderViewsCount()).get(UID)
+                                + statuses.get(arg2 - lv.getHeaderViewsCount()).getUser().getId()
                                 + "/"
-                                + IDtoMID.Id2Mid(text.get(arg2 - lv.getHeaderViewsCount())
-                                .get(WEIBO_ID)))));
+                                + IDtoMID.Id2Mid(statuses.get(arg2 - lv.getHeaderViewsCount())
+                                .getId()))));
                 return false;
             }
         });
@@ -153,10 +150,10 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                 mLastFirstVisibleItem = currentFirstVisibleItem;
 
                 // 滚到到尾刷新
-                if (view.getLastVisiblePosition() > (view.getCount() - 6) && !mPullToRefreshAttacher.isRefreshing() && text != null) {
+                if (view.getLastVisiblePosition() > (view.getCount() - 6) && !mPullToRefreshAttacher.isRefreshing() && statuses != null) {
                     Log.e(TAG, "到底");
                     // 获取后会删除第一项，所以获取数+1
-                    new StatusesFriendsTimeLine(text.get(view.getCount() - 1 - lv.getHeaderViewsCount()).get(WEIBO_ID), mHandler).start();
+                    new StatusesFriendsTimeLine(statuses.get(view.getCount() - 1 - lv.getHeaderViewsCount()).getId(), mHandler).start();
                     mPullToRefreshAttacher.setRefreshing(true);
                 }
             }
@@ -165,6 +162,9 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
             public void onScrollStateChanged(AbsListView view, int scrollState) {
             }
         });
+
+        mAdapter = new MainListViewAdapter(act);
+        lv.addHeaderView(new MainTimelineHeaderView(act), null, false);
     }
 
     @Override
@@ -364,16 +364,13 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
 //                    break;
 //                }
                 case GOT_FRIENDS_TIMELINE_INFO: {
-                    text = (ArrayList<HashMap<String, String>>) msg.obj;
-                    setListView(text);
+                    statuses = (List<StatusesBean>) msg.obj;
+                    setListView(statuses);
                     break;
                 }
                 case GOT_FRIENDS_TIMELINE_ADD_INFO: {
-                    ArrayList<HashMap<String, String>> tmp = (ArrayList<HashMap<String, String>>) msg.obj;
-                    tmp.remove(0);
-                    text.addAll(tmp);
-                    addListView(text);
-                    tmp = null;
+                    statuses.addAll((List<StatusesBean>) msg.obj);
+                    setListView(statuses);
                     break;
                 }
                 case GOT_FRIENDS_TIMELINE_INFO_FAIL: {
@@ -394,8 +391,8 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
             case RESULT_DESTROYED_WEIBO: {
                 if (data != null) {
                     int pos;
-                    if ((pos = data.getIntExtra(MAP_POSITION, -1)) != -1) {
-                        clearListViewItem(text, pos);
+                    if ((pos = data.getIntExtra(STATUS_BEAN_POSITION, -1)) != -1) {
+                        clearListViewItem(statuses, pos);
                     }
                     break;
                 }
@@ -403,21 +400,16 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
         }
     }
 
-    private void setListView(ArrayList<HashMap<String, String>> arrayList) {
-        mAdapter = new MyMaidListViewAdapter(arrayList, act);
-        lv.addHeaderView(new MainTimelineHeaderView(act), null, false);
-        lv.setAdapter(mAdapter);
-    }
-
-    private void addListView(ArrayList<HashMap<String, String>> arrayList) {
-        mAdapter.setData(arrayList);
+    private void setListView(List<StatusesBean> statuses) {
+        mAdapter.setData(statuses);
+        if(lv.getAdapter() == null)
+            lv.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
     }
 
-    private void clearListViewItem(ArrayList<HashMap<String, String>> arrayList, int position) {
-        arrayList.remove(position);
-        mAdapter.setData(arrayList);
-        mAdapter.notifyDataSetChanged();
+    private void clearListViewItem(List<StatusesBean> statuses, int position) {
+        statuses.remove(position);
+        setListView(statuses);
     }
 
     public void refreshFriendsTimeLine() {

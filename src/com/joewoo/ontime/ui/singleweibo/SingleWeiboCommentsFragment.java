@@ -5,33 +5,35 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.comments.CommentsShow;
+import com.joewoo.ontime.action.statuses.StatusesFriendsTimeLine;
+import com.joewoo.ontime.support.adapter.listview.SingleWeiboCmtsListViewAdapter;
+import com.joewoo.ontime.support.bean.CommentsBean;
 import com.joewoo.ontime.support.info.AcquireCount;
 import com.joewoo.ontime.ui.CommentRepost;
 import com.joewoo.ontime.ui.SingleUser;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import static com.joewoo.ontime.support.info.Defines.COMMENT_ID;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMNETS_SHOW_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_COMMNETS_SHOW_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMNETS_SHOW_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.IS_REPLY;
 import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
-import static com.joewoo.ontime.support.info.Defines.TEXT;
+import static com.joewoo.ontime.support.info.Defines.TAG;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
 
@@ -39,15 +41,15 @@ public class SingleWeiboCommentsFragment extends Fragment {
 
     private SingleWeiboActivity act;
     private ListView lv;
-    private String weibo_id;
     private ProgressBar pb;
+    private String weiboID;
     private TextView tv;
+    private List<CommentsBean> comments;
+    private SingleWeiboCmtsListViewAdapter adapter;
 
-    private ArrayList<HashMap<String, String>> text;
-
-    public void showComments(String weibo_id) {
-        this.weibo_id = weibo_id;
-        new CommentsShow(weibo_id, mHandler).start();
+    public void showComments(String weiboID) {
+        new CommentsShow(weiboID, mHandler).start();
+        this.weiboID = weiboID;
     }
 
     @Override
@@ -76,8 +78,8 @@ public class SingleWeiboCommentsFragment extends Fragment {
                                     long arg3) {
                 Intent i = new Intent(act, CommentRepost.class);
                 i.putExtra(IS_REPLY, true);
-                i.putExtra(WEIBO_ID, text.get(arg2).get(WEIBO_ID));
-                i.putExtra(COMMENT_ID, text.get(arg2).get(COMMENT_ID));
+                i.putExtra(WEIBO_ID, comments.get(arg2).getStatus().getId());
+                i.putExtra(COMMENT_ID, comments.get(arg2).getId());
                 startActivity(i);
             }
         });
@@ -87,11 +89,31 @@ public class SingleWeiboCommentsFragment extends Fragment {
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int arg2, long arg3) {
                 Intent i = new Intent(act, SingleUser.class);
-                i.putExtra(SCREEN_NAME, text.get(arg2).get(SCREEN_NAME));
+                i.putExtra(SCREEN_NAME, comments.get(arg2).getUser().getScreenName());
                 startActivity(i);
                 return false;
             }
         });
+
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScroll(AbsListView view, int arg1, int arg2, int arg3) {
+
+
+                // 滚到到尾刷新
+                if (view.getCount() > (Integer.valueOf(AcquireCount.COMMENTS_SHOW_COUNT) - 2) && !act.isFreshing() && comments != null && comments.size() > 6 && view.getLastVisiblePosition() > (view.getCount() - 6)) {
+                    Log.e(TAG, "到底");
+                    new CommentsShow(weiboID, comments.get(view.getCount() - 1).getId(), mHandler).start();
+                    act.setFreshing(true);
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+        });
+
+        adapter = new SingleWeiboCmtsListViewAdapter(act);
 
     }
 
@@ -101,51 +123,45 @@ public class SingleWeiboCommentsFragment extends Fragment {
         public void handleMessage(Message msg) {
 
             pb.setVisibility(View.GONE);
+            act.setFreshing(false);
 
             switch (msg.what) {
                 case GOT_COMMNETS_SHOW_INFO: {
 
-                    text = (ArrayList<HashMap<String, String>>) msg.obj;
+                    comments = (List<CommentsBean>) msg.obj;
 
-                    String[] from = {SCREEN_NAME, TEXT};
-                    int[] to = {R.id.comments_show_screen_name,
-                            R.id.comments_show_text};
-
-                    SimpleAdapter data = new SimpleAdapter(act, text,
-                            R.layout.comments_show_lv, from, to);
-
-                    lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> arg0,
-                                                View arg1, int arg2, long arg3) {
-
-                            Intent it = new Intent();
-                            it.setClass(act, CommentRepost.class);
-                            it.putExtra(IS_REPLY, true);
-                            it.putExtra(WEIBO_ID, weibo_id);
-                            it.putExtra(COMMENT_ID, text.get(arg2).get(COMMENT_ID));
-                            startActivity(it);
-
+                    if(comments != null) {
+                        if (comments.isEmpty()) {
+                            tv.setVisibility(View.VISIBLE);
+                            tv.setText(R.string.frag_single_weibo_no_comments);
+                        } else {
+                            setListView(comments);
                         }
-                    });
-
-                    lv.setAdapter(data);
-
-                    if (lv.getCount() == 0) {
-                        tv.setVisibility(View.VISIBLE);
-                        tv.setText(R.string.frag_single_weibo_no_comments);
                     }
+
 
                     break;
                 }
+                case GOT_COMMNETS_SHOW_ADD_INFO: {
+                    comments.addAll((List<CommentsBean>) msg.obj);
+                    setListView(comments);
+                    break;
+                }
                 case GOT_COMMNETS_SHOW_INFO_FAIL: {
-                    Toast.makeText(act, R.string.toast_comments_fail, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(act, (String) msg.obj, Toast.LENGTH_SHORT).show();
                     break;
                 }
             }
         }
 
     };
+
+    private void setListView(List<CommentsBean> comments) {
+        adapter.setData(comments);
+        if (lv.getAdapter() == null)
+            lv.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
 
 
 }

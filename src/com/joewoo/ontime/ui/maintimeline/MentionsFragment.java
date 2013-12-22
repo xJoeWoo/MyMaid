@@ -22,8 +22,12 @@ import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.comments.CommentsMentions;
 import com.joewoo.ontime.action.remind.RemindUnreadCount;
 import com.joewoo.ontime.action.statuses.StatusesMentions;
-import com.joewoo.ontime.support.adapter.listview.MyMaidListViewAdapter;
+import com.joewoo.ontime.support.adapter.listview.CommentsMentionsListViewAdapter;
+import com.joewoo.ontime.support.adapter.listview.MainListViewAdapter;
+import com.joewoo.ontime.support.bean.CommentsBean;
+import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.bean.UnreadCountBean;
+import com.joewoo.ontime.support.info.AcquireCount;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.view.MainTimelineHeaderView;
 import com.joewoo.ontime.ui.CommentRepost;
@@ -31,8 +35,7 @@ import com.joewoo.ontime.ui.Post;
 import com.joewoo.ontime.ui.SingleUser;
 import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
@@ -52,20 +55,22 @@ import static com.joewoo.ontime.support.info.Defines.MENU_PROFILE_IMAGE;
 import static com.joewoo.ontime.support.info.Defines.MENU_UNREAD_COUNT;
 import static com.joewoo.ontime.support.info.Defines.PROFILE_IMAGE;
 import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
-import static com.joewoo.ontime.support.info.Defines.SINGLE_WEIBO_MAP;
+import static com.joewoo.ontime.support.info.Defines.STATUS_BEAN;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
 public class MentionsFragment extends Fragment implements OnRefreshListener {
 
-    ArrayList<HashMap<String, String>> text;
+    private List<StatusesBean> statuses;
+    private List<CommentsBean> comments;
     ListView lv;
     String unreadCount;
     String unreadCommentMentionsCount;
     private PullToRefreshAttacher mPullToRefreshAttacher;
     private MainTimelineActivity act;
     private boolean isNormalMention = true;
-    private MyMaidListViewAdapter mAdapter;
+    private MainListViewAdapter mainAdapter;
+    private CommentsMentionsListViewAdapter commentsAdapter;
 
     @Override
     public void onRefreshStarted(View view) {
@@ -111,7 +116,10 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                 Intent i = new Intent();
                 i.setClass(act, CommentRepost.class);
                 i.putExtra(IS_COMMENT, true);
-                i.putExtra(WEIBO_ID, text.get(arg2 - lv.getHeaderViewsCount()).get(WEIBO_ID));
+                if(isNormalMention)
+                    i.putExtra(WEIBO_ID, statuses.get(arg2 - lv.getHeaderViewsCount()).getId());
+                else
+                    i.putExtra(WEIBO_ID, comments.get(arg2 - lv.getHeaderViewsCount()).getId());
                 startActivity(i);
             }
         });
@@ -122,11 +130,9 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                                            int arg2, long arg3) {
                 Intent i = new Intent(act, SingleWeiboActivity.class);
                 if (isNormalMention) {
-                    i.putExtra(SINGLE_WEIBO_MAP, text.get(arg2 - lv.getHeaderViewsCount()));
+                    i.putExtra(STATUS_BEAN, statuses.get(arg2 - lv.getHeaderViewsCount()));
                 } else {
-                    HashMap<String, String> hm = new HashMap<>();
-                    hm.put(WEIBO_ID, text.get(arg2 - lv.getHeaderViewsCount()).get(WEIBO_ID));
-                    i.putExtra(SINGLE_WEIBO_MAP, hm);
+                    i.putExtra(WEIBO_ID, comments.get(arg2 - lv.getHeaderViewsCount()).getId());
                 }
                 startActivity(i);
                 return false;
@@ -137,12 +143,12 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 // 滚到到尾刷新
-                if (view.getLastVisiblePosition() > (view.getCount() - 6) && !mPullToRefreshAttacher.isRefreshing() && text != null) {
+                if (view.getCount() > (Integer.valueOf(AcquireCount.MENTIONS_COUNT) - 2) && view.getLastVisiblePosition() > (view.getCount() - 6) && !mPullToRefreshAttacher.isRefreshing() && statuses != null) {
                     Log.e(TAG, "到底");
                     if (isNormalMention)
-                        new StatusesMentions(text.get(view.getCount() - 1 - lv.getHeaderViewsCount()).get(WEIBO_ID), mHandler).start();
+                        new StatusesMentions(statuses.get(view.getCount() - 1 - lv.getHeaderViewsCount()).getId(), mHandler).start();
                     else
-                        new CommentsMentions(text.get(view.getCount() - 1 - lv.getHeaderViewsCount()).get(WEIBO_ID), mHandler).start();
+                        new CommentsMentions(comments.get(view.getCount() - 1 - lv.getHeaderViewsCount()).getId(), mHandler).start();
                     mPullToRefreshAttacher.setRefreshing(true);
                 }
             }
@@ -152,6 +158,10 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
 
             }
         });
+
+        mainAdapter = new MainListViewAdapter(act);
+        commentsAdapter = new CommentsMentionsListViewAdapter(act);
+        lv.addHeaderView(new MainTimelineHeaderView(act), null, false);
     }
 
     @Override
@@ -177,7 +187,6 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
         menu.add(0, MENU_POST, 0, R.string.menu_post)
                 .setIcon(R.drawable.social_send_now)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
     }
 
     @Override
@@ -243,10 +252,11 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
             mPullToRefreshAttacher.setRefreshComplete();
             switch (msg.what) {
                 case GOT_MENTIONS_INFO: {
-                    text = (ArrayList<HashMap<String, String>>) msg.obj;
-                    setListView(text);
+                    statuses = (List<StatusesBean>) msg.obj;
+                    setListView(statuses);
                     break;
                 }
+                case GOT_COMMENTS_MENTIONS_INFO_FAIL:
                 case GOT_MENTIONS_INFO_FAIL: {
                     Toast.makeText(act, (String) msg.obj,
                             Toast.LENGTH_SHORT).show();
@@ -263,23 +273,19 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                                 Toast.LENGTH_SHORT).show();
                     break;
                 }
-                case GOT_COMMENTS_MENTIONS_ADD_INFO:
                 case GOT_MENTIONS_ADD_INFO: {
-                    ArrayList<HashMap<String, String>> tmp = (ArrayList<HashMap<String, String>>) msg.obj;
-                    tmp.remove(0);
-                    text.addAll(tmp);
-                    addListView(text);
-                    tmp = null;
+                    statuses.addAll((List<StatusesBean>) msg.obj);
+                    setListView(statuses);
+                    break;
+                }
+                case GOT_COMMENTS_MENTIONS_ADD_INFO: {
+                    comments.addAll((List<CommentsBean>) msg.obj);
+                    setCommentsListView(comments);
                     break;
                 }
                 case GOT_COMMENTS_MENTIONS_INFO: {
-                    text = (ArrayList<HashMap<String, String>>) msg.obj;
-                    setListView(text);
-                    break;
-                }
-                case GOT_COMMENTS_MENTIONS_INFO_FAIL: {
-                    Toast.makeText(act, (String) msg.obj,
-                            Toast.LENGTH_SHORT).show();
+                    comments = (List<CommentsBean>) msg.obj;
+                    setCommentsListView(comments);
                     break;
                 }
                 case GOT_SET_REMIND_COUNT_INFO_FAIL: {
@@ -294,15 +300,35 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
 
     };
 
-    private void setListView(ArrayList<HashMap<String, String>> arrayList) {
-        mAdapter = new MyMaidListViewAdapter(arrayList, act);
-        lv.addHeaderView(new MainTimelineHeaderView(act), null, false);
-        lv.setAdapter(mAdapter);
+    private void setListView(List<StatusesBean> statuses) {
+        mainAdapter.setData(statuses);
+        setAdapter(isNormalMention);
+        mainAdapter.notifyDataSetChanged();
     }
 
-    private void addListView(ArrayList<HashMap<String, String>> arrayList) {
-        mAdapter.setData(arrayList);
-        mAdapter.notifyDataSetChanged();
+    private void setCommentsListView(List<CommentsBean> comments) {
+        commentsAdapter.setData(comments);
+        setAdapter(isNormalMention);
+        commentsAdapter.notifyDataSetChanged();
+    }
+
+    private void setAdapter(boolean isNormalMention) {
+        if(lv.getAdapter() == null) {
+            if (isNormalMention)
+                lv.setAdapter(mainAdapter);
+            else
+                lv.setAdapter(commentsAdapter);
+        } else {
+            Log.e(TAG, "isNor: " + String.valueOf(isNormalMention));
+            Log.e(TAG, "Adapter: " + String.valueOf(lv.getAdapter() == mainAdapter ? "1" : "0"));
+            if(!isNormalMention && lv.getAdapter() != mainAdapter)
+                lv.setAdapter(commentsAdapter);
+            else if (isNormalMention && lv.getAdapter() != commentsAdapter)
+                lv.setAdapter(mainAdapter);
+            Log.e(TAG, "isNor: " + String.valueOf(isNormalMention));
+            Log.e(TAG, "Adapter: " + String.valueOf(lv.getAdapter() == mainAdapter ? "1" : "0"));
+        }
+
     }
 
     public void getUnreadMentionsCount() {

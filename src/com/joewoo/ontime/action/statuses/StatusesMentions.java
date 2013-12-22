@@ -81,8 +81,8 @@ public class StatusesMentions extends Thread {
                 return;
         } else {
             httpResult = MyMaidSQLHelper.getOneString(MyMaidSQLHelper.MENTIONS, sql);
-            if(httpResult == null)
-                if(!fresh())
+            if (httpResult == null)
+                if (!fresh())
                     return;
         }
 
@@ -93,7 +93,7 @@ public class StatusesMentions extends Thread {
             List<StatusesBean> statuses = new Gson().fromJson(httpResult,
                     MentionsBean.class).getStatuses();
 
-            ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
+//            ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
 
 //            HashMap<String, String> hm = new HashMap<String, String>();
 //            hm.put(BLANK, " ");
@@ -101,73 +101,40 @@ public class StatusesMentions extends Thread {
 //            hm = null;
 
             String source;
+            int index = -1;
 
             for (StatusesBean s : statuses) {
-                HashMap<String, String> map = new HashMap<String, String>();
-                source = s.getSource();
-                map.put(SOURCE, " · " + source.substring(source.indexOf(">") + 1,
-                        source.indexOf("</a>")));
-                map.put(CREATED_AT, TimeFormat.parse(s.getCreatedAt()));
-                map.put(SCREEN_NAME, s.getUser().getScreenName());
-                map.put(TEXT, s.getText());
-                map.put(WEIBO_ID, s.getId());
-                map.put(COMMENTS_COUNT, s.getCommentsCount());
-                map.put(REPOSTS_COUNT, s.getRepostsCount());
-                map.put(UID, s.getUser().getId());
-                map.put(PROFILE_IMAGE_URL, s.getUser()
-                        .getProfileImageUrl());
 
-                if(s.getPicURLs() != null && s.getPicURLs().size() > 1)
-                    map.put(PIC_URLS, " ");
+                index++;
 
-                try {
-                    map.put(RETWEETED_STATUS_UID, s
-                            .getRetweetedStatus().getUser().getId());
-                    source = s.getRetweetedStatus()
-                            .getSource();
-                    map.put(RETWEETED_STATUS_SOURCE, " · " + source.substring(source.indexOf(">") + 1,
-                            source.indexOf("</a>")));
-                    map.put(RETWEETED_STATUS_CREATED_AT, TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
-                    map.put(RETWEETED_STATUS_UID, s
-                            .getRetweetedStatus().getUser().getId());
-                    map.put(RETWEETED_STATUS_SCREEN_NAME, s
-                            .getRetweetedStatus().getUser().getScreenName());
-                    map.put(RETWEETED_STATUS, s
-                            .getRetweetedStatus().getText());
-                    map.put(RETWEETED_STATUS_COMMENTS_COUNT, s
-                            .getRetweetedStatus().getCommentsCount());
-                    map.put(RETWEETED_STATUS_REPOSTS_COUNT, s
-                            .getRetweetedStatus().getRepostsCount());
+                s.setCreatedAt(TimeFormat.parse(statuses.get(index).getCreatedAt()));
 
-                    if(s.getRetweetedStatus().getPicURLs() != null && s.getRetweetedStatus().getPicURLs().size() > 1)
-                        map.put(PIC_URLS, " ");
+                source = statuses.get(index).getSource();
+                source = source.substring(source.indexOf(">") + 1,
+                        source.indexOf("</a>"));
+                s.setSource(source);
 
-                    if (s.getRetweetedStatus().getThumbnailPic() != null) {
-                        map.put(RETWEETED_STATUS_THUMBNAIL_PIC, s
-                                .getRetweetedStatus().getThumbnailPic());
-                        map.put(RETWEETED_STATUS_BMIDDLE_PIC, s
-                                .getRetweetedStatus().getBmiddlePic());
-                    }
-                    map.put(IS_REPOST, " ");
+                if (s.getRetweetedStatus() != null) {
 
-                } catch (Exception e) {
-//                    e.printStackTrace();
+                    s.getRetweetedStatus().setCreatedAt(TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
+
+                    source = s.getRetweetedStatus().getSource();
+                    source = source.substring(source.indexOf(">") + 1,
+                            source.indexOf("</a>"));
+                    s.getRetweetedStatus().setSource(source);
                 }
 
-                if (s.getThumbnailPic() != null) {
-                    map.put(THUMBNAIL_PIC, s.getThumbnailPic());
-                    map.put(BMIDDLE_PIC, s.getBmiddlePic());
-                }
-
-                text.add(map);
             }
 
-            if(maxID == null)
-                mHandler.obtainMessage(GOT_MENTIONS_INFO, text).sendToTarget();
-            else
-                mHandler.obtainMessage(GOT_MENTIONS_ADD_INFO, text).sendToTarget();
+            if (maxID == null)
+                mHandler.obtainMessage(GOT_MENTIONS_INFO, statuses).sendToTarget();
+            else {
+                statuses.remove(0);
+                mHandler.obtainMessage(GOT_MENTIONS_ADD_INFO, statuses).sendToTarget();
 
-            if(!isProvidedResult && maxID == null)
+            }
+
+            if (!isProvidedResult && maxID == null)
                 new RemindSetCount(RemindSetCount.MentionsCount).start();
 
         } else {
@@ -180,9 +147,9 @@ public class StatusesMentions extends Thread {
             HashMap<String, String> hm = new HashMap<String, String>();
             hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
 
-            if(maxID == null) {
+            if (maxID == null) {
                 hm.put(COUNT, AcquireCount.MENTIONS_COUNT);
-            }else{
+            } else {
                 hm.put(COUNT, AcquireCount.MENTIONS_ADD_COUNT);
                 hm.put(MAX_ID, maxID);
             }

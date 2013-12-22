@@ -76,7 +76,7 @@ public final class JavaHttpUtility {
                     throw new Exception();
                 }
 
-                Log.e(TAG, String.valueOf(bytesum));
+//                Log.e(TAG, String.valueOf(bytesum));
 
                 bytesum += byteread;
                 baos.write(buffer, 0, byteread);

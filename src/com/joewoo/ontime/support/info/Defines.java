@@ -9,8 +9,8 @@ public class Defines {
 
     public final static int RESULT_DESTROYED_WEIBO = 2;
 
-    public final static String SINGLE_WEIBO_MAP = "single_weibo_hash_map";
-    public final static String MAP_POSITION = "map_position";
+    public final static String STATUS_BEAN = "status_bean";
+    public final static String STATUS_BEAN_POSITION = "bean_position";
 
     public final static String TEMP_IMAGE_NAME = "tmp.png";
     public final static String TEMP_IMAGE_PATH = Environment.getExternalStorageDirectory() + "/Android/data/com.joewoo.ontime/";
@@ -65,6 +65,8 @@ public class Defines {
     public final static int GOT_MENTIONS_ADD_INFO = 48;
     public final static int GOT_COMMENTS_MENTIONS_ADD_INFO = 49;
     public final static int GOT_COMMENTS_TO_ME_ADD_INFO = 50;
+    public final static int GOT_COMMNETS_SHOW_ADD_INFO = 51;
+    public final static int GOT_REPOST_TIMELINE_ADD_INFO = 52;
 
 
 	public final static int ACT_GOT_PHOTO = 1;

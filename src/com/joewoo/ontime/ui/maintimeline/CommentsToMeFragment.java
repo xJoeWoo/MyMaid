@@ -19,8 +19,10 @@ import android.widget.Toast;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.comments.CommentsToMe;
 import com.joewoo.ontime.action.remind.RemindUnreadCount;
-import com.joewoo.ontime.support.adapter.listview.MyMaidCommentsToMeAdapter;
+import com.joewoo.ontime.support.adapter.listview.CommentsToMeAdapter;
+import com.joewoo.ontime.support.bean.CommentsBean;
 import com.joewoo.ontime.support.bean.UnreadCountBean;
+import com.joewoo.ontime.support.info.AcquireCount;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.view.MainTimelineHeaderView;
 import com.joewoo.ontime.ui.CommentRepost;
@@ -28,13 +30,13 @@ import com.joewoo.ontime.ui.Post;
 import com.joewoo.ontime.ui.SingleUser;
 import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
 
 import static com.joewoo.ontime.support.info.Defines.COMMENT_ID;
+import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_TO_ME_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_TO_ME_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_TO_ME_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.GOT_SET_REMIND_COUNT_INFO_FAIL;
@@ -46,19 +48,17 @@ import static com.joewoo.ontime.support.info.Defines.MENU_PROFILE_IMAGE;
 import static com.joewoo.ontime.support.info.Defines.MENU_UNREAD_COUNT;
 import static com.joewoo.ontime.support.info.Defines.PROFILE_IMAGE;
 import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
-import static com.joewoo.ontime.support.info.Defines.SINGLE_WEIBO_MAP;
-import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_TO_ME_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
 public class CommentsToMeFragment extends Fragment implements OnRefreshListener {
 
-    ArrayList<HashMap<String, String>> text;
-    ListView lv;
-    String unreadCount;
+    private List<CommentsBean> comments;
+    private ListView lv;
+    private String unreadCount;
     private PullToRefreshAttacher mPullToRefreshAttacher;
     private MainTimelineActivity act;
-    private MyMaidCommentsToMeAdapter mAdapter;
+    private CommentsToMeAdapter mAdapter;
 
     @Override
     public void onRefreshStarted(View view) {
@@ -98,8 +98,8 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
                                     long arg3) {
                 Intent i = new Intent(act, CommentRepost.class);
                 i.putExtra(IS_REPLY, true);
-                i.putExtra(WEIBO_ID, text.get(arg2 - lv.getHeaderViewsCount()).get(WEIBO_ID));
-                i.putExtra(COMMENT_ID, text.get(arg2 - lv.getHeaderViewsCount()).get(COMMENT_ID));
+                i.putExtra(WEIBO_ID, comments.get(arg2 - lv.getHeaderViewsCount()).getStatus().getId());
+                i.putExtra(COMMENT_ID, comments.get(arg2 - lv.getHeaderViewsCount()).getId());
                 startActivity(i);
             }
         });
@@ -108,10 +108,8 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int arg2, long arg3) {
-                HashMap<String, String> hm = new HashMap<>();
-                hm.put(WEIBO_ID, text.get(arg2 - lv.getHeaderViewsCount()).get(WEIBO_ID));
                 Intent i = new Intent(act, SingleWeiboActivity.class);
-                i.putExtra(SINGLE_WEIBO_MAP, hm);
+                i.putExtra(WEIBO_ID, comments.get(arg2 - lv.getHeaderViewsCount()).getStatus().getId());
                 startActivity(i);
                 return false;
             }
@@ -120,10 +118,10 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
         lv.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (view.getLastVisiblePosition() > (view.getCount() - 6) && !mPullToRefreshAttacher.isRefreshing() && text != null) {
+                if (view.getCount() > (Integer.valueOf(AcquireCount.COMMENTS_TO_ME_COUNT) - 2) && view.getLastVisiblePosition() > (view.getCount() - 6) && !mPullToRefreshAttacher.isRefreshing() && comments != null) {
                     Log.e(TAG, "到底");
                     // 获取后会删除第一项，所以获取数+1
-                    new CommentsToMe(text.get(view.getCount() - 1 - lv.getHeaderViewsCount()).get(WEIBO_ID), mHandler).start();
+                    new CommentsToMe(comments.get(view.getCount() - 1 - lv.getHeaderViewsCount()).getStatus().getId(), mHandler).start();
                     mPullToRefreshAttacher.setRefreshing(true);
                 }
             }
@@ -133,6 +131,9 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
 
             }
         });
+
+        mAdapter = new CommentsToMeAdapter(act);
+        lv.addHeaderView(new MainTimelineHeaderView(act), null, false);
     }
 
     @Override
@@ -201,8 +202,8 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
             mPullToRefreshAttacher.setRefreshing(false);
             switch (msg.what) {
                 case GOT_COMMENTS_TO_ME_INFO: {
-                    text = (ArrayList<HashMap<String, String>>) msg.obj;
-                    setListView(text);
+                    comments = (List<CommentsBean>) msg.obj;
+                    setListView(comments);
                     break;
                 }
                 case GOT_COMMENTS_TO_ME_INFO_FAIL: {
@@ -221,11 +222,8 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
                     break;
                 }
                 case GOT_COMMENTS_TO_ME_ADD_INFO: {
-                    ArrayList<HashMap<String, String>> tmp = (ArrayList<HashMap<String, String>>) msg.obj;
-                    tmp.remove(0);
-                    text.addAll(tmp);
-                    addListView(text);
-                    tmp = null;
+                    comments.addAll((List<CommentsBean>) msg.obj);
+                    setListView(comments);
                     break;
                 }
                 case GOT_SET_REMIND_COUNT_INFO_FAIL: {
@@ -249,14 +247,10 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
         mPullToRefreshAttacher.setRefreshing(true);
     }
 
-    private void setListView(ArrayList<HashMap<String, String>> arrayList) {
-        mAdapter = new MyMaidCommentsToMeAdapter(act, arrayList);
-        lv.addHeaderView(new MainTimelineHeaderView(act), null, false);
-        lv.setAdapter(mAdapter);
-    }
-
-    private void addListView(ArrayList<HashMap<String, String>> arrayList) {
-        mAdapter.setData(arrayList);
+    private void setListView(List<CommentsBean> comments) {
+        mAdapter.setData(comments);
+        if(lv.getAdapter() == null)
+            lv.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
     }
 

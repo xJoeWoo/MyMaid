@@ -18,42 +18,24 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.support.net.DownloadPic;
+import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.menu.CopyTextContextualMenu;
+import com.joewoo.ontime.support.net.DownloadPic;
 import com.joewoo.ontime.support.net.DownloadUserProfileImage;
 import com.joewoo.ontime.support.util.CheckMentionsURLTopic;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.ui.SingleUser;
 
 import java.io.File;
-import java.util.HashMap;
 
-import static com.joewoo.ontime.support.info.Defines.BMIDDLE_PIC;
-import static com.joewoo.ontime.support.info.Defines.CREATED_AT;
-import static com.joewoo.ontime.support.info.Defines.IS_COMMENT;
-import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
-import static com.joewoo.ontime.support.info.Defines.PROFILE_IMAGE_URL;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_BMIDDLE_PIC;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_CREATED_AT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SCREEN_NAME;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SOURCE;
 import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
-import static com.joewoo.ontime.support.info.Defines.SOURCE;
-import static com.joewoo.ontime.support.info.Defines.STATUS_BMIDDLE_PIC;
-import static com.joewoo.ontime.support.info.Defines.STATUS_CREATED_AT;
-import static com.joewoo.ontime.support.info.Defines.STATUS_PROFILE_IMAGE_URL;
-import static com.joewoo.ontime.support.info.Defines.STATUS_SOURCE;
-import static com.joewoo.ontime.support.info.Defines.STATUS_TEXT;
-import static com.joewoo.ontime.support.info.Defines.STATUS_USER_SCREEN_NAME;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 import static com.joewoo.ontime.support.info.Defines.TEMP_IMAGE_NAME;
 import static com.joewoo.ontime.support.info.Defines.TEMP_IMAGE_PATH;
-import static com.joewoo.ontime.support.info.Defines.TEXT;
 
 public class SingleWeiboFragment extends Fragment {
 
-    private HashMap<String, String> map;
+    private StatusesBean status;
 
     private SingleWeiboActivity act;
 
@@ -107,36 +89,35 @@ public class SingleWeiboFragment extends Fragment {
         }
     }
 
-    public void setSingleWeibo(HashMap<String, String> map) {
-        this.map = map;
+    public void setSingleWeibo(StatusesBean status) {
+        this.status = status;
         setStatus();
     }
 
-    public void setSingleWeiboWithAnim(HashMap<String, String> map) {
+    public void setSingleWeiboWithAnim(StatusesBean status) {
         this.in = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.in);
         this.out = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.out);
         setViewShow();
-        this.map = map;
+        this.status = status;
         setStatus();
     }
 
     private void setStatus() {
 
-        tv_screen_name.setText(map.get(SCREEN_NAME));
-        tv_created_at.setText(" · " + map.get(CREATED_AT));
+        tv_screen_name.setText(status.getUser().getScreenName());
+        tv_created_at.setText(" · " + status.getCreatedAt());
 
-        tv_text.setText(CheckMentionsURLTopic.getSpannableString(map.get(TEXT), act));
+        tv_text.setText(CheckMentionsURLTopic.getSpannableString(status.getText(), act));
         tv_text.setMovementMethod(LinkMovementMethod.getInstance());
 
-        tv_source.setText(map.get(SOURCE));
-        if (map.get(SOURCE).equals(" · " + getString(R.string.app_name_cn))) {
+        tv_source.setText(" · " + status.getSource());
+        if (status.getSource().equals(getString(R.string.app_name_cn))) {
             tv_source.setTextColor(getResources().getColor(R.color.textGrey));
             tv_source.setShadowLayer(20, 0, 0, getResources().getColor(R.color.sourcePink));
         }
 
-
-        if (map.get(BMIDDLE_PIC) == null) {
-            if (map.get(RETWEETED_STATUS_BMIDDLE_PIC) == null) {
+        if (status.getBmiddlePic() == null) {
+            if (status.getRetweetedStatus() != null && status.getRetweetedStatus().getBmiddlePic() == null) {
                 ViewGroup.LayoutParams lp = tv_rt_rl.getLayoutParams();
                 lp.width = 10000;
                 tv_rt_rl.setLayoutParams(lp);
@@ -145,7 +126,7 @@ public class SingleWeiboFragment extends Fragment {
         } else {
 
             dp = new DownloadPic(iv_image, tv_rt_rl, false, act);
-            dp.execute(map.get(BMIDDLE_PIC));
+            dp.execute(status.getBmiddlePic());
 
         }
 
@@ -153,8 +134,7 @@ public class SingleWeiboFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                new DownloadUserProfileImage(iv_profile_image).execute(map
-                        .get(PROFILE_IMAGE_URL));
+                new DownloadUserProfileImage(iv_profile_image).execute(status.getUser().getProfileImageUrl());
                 iv_profile_image.setClickable(false);
             }
         });
@@ -162,19 +142,19 @@ public class SingleWeiboFragment extends Fragment {
         tv_screen_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jumpToSingleUser(map.get(SCREEN_NAME));
+                jumpToSingleUser(status.getUser().getScreenName());
             }
         });
         tv_created_at.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jumpToSingleUser(map.get(SCREEN_NAME));
+                jumpToSingleUser(status.getUser().getScreenName());
             }
         });
         tv_source.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                jumpToSingleUser(map.get(SCREEN_NAME));
+                jumpToSingleUser(status.getUser().getScreenName());
             }
         });
 
@@ -185,7 +165,7 @@ public class SingleWeiboFragment extends Fragment {
     }
 
     private void setRetweetedStatus() {
-        if (map.get(IS_REPOST) == null) {
+        if (status.getRetweetedStatus() == null) {
             tv_rt_rl.setVisibility(View.GONE);
             tv_rt_screen_name.setVisibility(View.GONE);
             tv_rt_created_at.setVisibility(View.GONE);
@@ -193,22 +173,20 @@ public class SingleWeiboFragment extends Fragment {
             tv_rt_source.setVisibility(View.GONE);
             iv_rt_image.setVisibility(View.GONE);
         } else {
-            if (map.get(RETWEETED_STATUS_BMIDDLE_PIC) == null)
+            if (status.getRetweetedStatus().getBmiddlePic() == null)
                 iv_rt_image.setVisibility(View.GONE);
             else {
                 dp = new DownloadPic(iv_rt_image, tv_rt_rl, true, act);
-                dp.execute(map.get(RETWEETED_STATUS_BMIDDLE_PIC));
+                dp.execute(status.getRetweetedStatus().getBmiddlePic());
             }
-            tv_rt_screen_name.setText(map
-                    .get(RETWEETED_STATUS_SCREEN_NAME));
-            tv_rt_created_at.setText(" · " + map
-                    .get(RETWEETED_STATUS_CREATED_AT));
+            tv_rt_screen_name.setText(status.getRetweetedStatus().getUser().getScreenName());
+            tv_rt_created_at.setText(" · " + status.getRetweetedStatus().getCreatedAt());
 
-            tv_rt_text.setText(CheckMentionsURLTopic.getSpannableString(map.get(RETWEETED_STATUS), act));
+            tv_rt_text.setText(CheckMentionsURLTopic.getSpannableString(status.getRetweetedStatus().getText(), act));
             tv_rt_text.setMovementMethod(LinkMovementMethod.getInstance());
 
-            tv_rt_source.setText(map.get(RETWEETED_STATUS_SOURCE));
-            if (map.get(RETWEETED_STATUS_SOURCE).equals(" · " + getString(R.string.app_name_cn))) {
+            tv_rt_source.setText(" · " + status.getRetweetedStatus().getSource());
+            if (status.getRetweetedStatus().getSource().equals( getString(R.string.app_name_cn))) {
                 tv_rt_source.setTextColor(getResources().getColor(R.color.textGrey));
                 tv_rt_source.setShadowLayer(20, 0, 0, getResources().getColor(R.color.sourcePink));
             }
@@ -216,19 +194,19 @@ public class SingleWeiboFragment extends Fragment {
             tv_rt_screen_name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    jumpToRetweetedUser(map.get(RETWEETED_STATUS_SCREEN_NAME));
+                    jumpToRetweetedUser(status.getRetweetedStatus().getUser().getScreenName());
                 }
             });
             tv_rt_source.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    jumpToRetweetedUser(map.get(RETWEETED_STATUS_SCREEN_NAME));
+                    jumpToRetweetedUser(status.getRetweetedStatus().getUser().getScreenName());
                 }
             });
             tv_rt_created_at.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    jumpToRetweetedUser(map.get(RETWEETED_STATUS_SCREEN_NAME));
+                    jumpToRetweetedUser(status.getRetweetedStatus().getUser().getScreenName());
                 }
             });
 

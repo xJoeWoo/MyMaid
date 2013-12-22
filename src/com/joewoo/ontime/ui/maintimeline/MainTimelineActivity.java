@@ -18,7 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.joewoo.ontime.support.adapter.pager.MyMaidPagerAdapter;
+import com.joewoo.ontime.support.adapter.pager.MainPagerAdapter;
 import com.joewoo.ontime.support.net.NetworkStatus;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.ui.Login;
@@ -35,7 +35,7 @@ import static com.joewoo.ontime.support.info.Defines.TAG;
 
 public class MainTimelineActivity extends FragmentActivity {
 
-    MyMaidPagerAdapter mSectionsPagerAdapter;
+    MainPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
     boolean gotCommentsUnread;
     boolean gotMentionsUnread;
@@ -110,7 +110,7 @@ public class MainTimelineActivity extends FragmentActivity {
                         .setText(getString(R.string.title_frag_comments_to_me).toUpperCase(Locale.US))
                         .setTabListener(tabListener));
 
-                mSectionsPagerAdapter = new MyMaidPagerAdapter(getSupportFragmentManager());
+                mSectionsPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
                 mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
@@ -121,11 +121,11 @@ public class MainTimelineActivity extends FragmentActivity {
                                 actionBar.setSelectedNavigationItem(arg0);
                                 Log.e(TAG, "Page: " + String.valueOf(arg0));
                                 switch (arg0) {
-                                    case MyMaidPagerAdapter.FRAG_FRIENDSTIMELINE_POS: {
+                                    case MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS: {
 
                                         break;
                                     }
-                                    case MyMaidPagerAdapter.FRAG_COMMENTS_POS: {
+                                    case MainPagerAdapter.FRAG_COMMENTS_POS: {
                                         if (!gotCommentsUnread) {
                                             mSectionsPagerAdapter.getCommentsFrag()
                                                     .getUnreadCommentsCount();
@@ -134,7 +134,7 @@ public class MainTimelineActivity extends FragmentActivity {
                                         setActionBarVisible();
                                         break;
                                     }
-                                    case MyMaidPagerAdapter.FRAG_MENTIONS_POS: {
+                                    case MainPagerAdapter.FRAG_MENTIONS_POS: {
                                         if (!gotMentionsUnread) {
                                             mSectionsPagerAdapter.getMentionsFrag()
                                                     .getUnreadMentionsCount();
@@ -147,7 +147,7 @@ public class MainTimelineActivity extends FragmentActivity {
                             }
                         });
 
-                mViewPager.setCurrentItem(MyMaidPagerAdapter.FRAG_FRIENDSTIMELINE_POS);
+                mViewPager.setCurrentItem(MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS);
             } else { // 数据库没有信息
                 Toast.makeText(MainTimelineActivity.this,
                         R.string.toast_login_acquired, Toast.LENGTH_LONG).show();
@@ -183,13 +183,13 @@ public class MainTimelineActivity extends FragmentActivity {
         @Override
         public void onTabReselected(Tab tab, android.app.FragmentTransaction ft) {
             switch (tab.getPosition()) {
-                case MyMaidPagerAdapter.FRAG_FRIENDSTIMELINE_POS:
+                case MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS:
                     mSectionsPagerAdapter.getFriendsTimeLineFrag().scrollListViewToTop();
                     break;
-                case MyMaidPagerAdapter.FRAG_MENTIONS_POS:
+                case MainPagerAdapter.FRAG_MENTIONS_POS:
                     mSectionsPagerAdapter.getMentionsFrag().scrollListViewToTop();
                     break;
-                case MyMaidPagerAdapter.FRAG_COMMENTS_POS:
+                case MainPagerAdapter.FRAG_COMMENTS_POS:
                     mSectionsPagerAdapter.getCommentsFrag().scrollListViewToTop();
                     break;
             }

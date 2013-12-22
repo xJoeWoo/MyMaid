@@ -68,6 +68,7 @@ public class CommentRepost extends Activity {
                 et.setText(i.getStringExtra(TEXT));
                 et.setSelection(0);
             }
+            et.setHint(R.string.comment_repost_repost);
         } else if (isReply) {
             setTitle(R.string.title_act_reply);
             comment_id = i.getStringExtra(COMMENT_ID);
@@ -93,7 +94,7 @@ public class CommentRepost extends Activity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                rfBar(); // Refresh ActionBar
+                invalidateOptionsMenu();
             }
         });
     }
@@ -114,8 +115,6 @@ public class CommentRepost extends Activity {
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(0, MENU_TOPIC, 0, R.string.menu_topic);
-//
-//		menu.add(0, 1000, 0, "转发");
 
         if (!sending) {
             menu.add(0, MENU_POST, 0, R.string.menu_post)
@@ -127,9 +126,6 @@ public class CommentRepost extends Activity {
             // .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
 
-        // menu.add(0, MENU_FAVOURITE_CREATE, 0,
-        // getString(R.string.menu_favourite_create));
-
         return true;
     }
 
@@ -140,13 +136,6 @@ public class CommentRepost extends Activity {
                 finish();
                 break;
             }
-            // case MENU_FAVOURITE_CREATE: {
-            // rfBar(); // 刷新ActionBar
-            // sending = true;
-            // new FavoritesCreate(weibo_id, mHandler).start();
-            // setProgressBarIndeterminateVisibility(true);
-            // break;
-            // }
             case MENU_LETTERS: {
                 if (System.currentTimeMillis() - downTime > 2000) {
                     Toast.makeText(CommentRepost.this, R.string.toast_press_again_to_clear_text,
@@ -157,7 +146,6 @@ public class CommentRepost extends Activity {
                 }
                 break;
             }
-
             case MENU_POST: {
 
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -220,6 +208,7 @@ public class CommentRepost extends Activity {
                 break;
             }
         }
+        invalidateOptionsMenu();
         return super.onOptionsItemSelected(item);
     }
 
@@ -228,7 +217,7 @@ public class CommentRepost extends Activity {
         public void handleMessage(Message msg) {
             sending = false;
             setProgressBarIndeterminateVisibility(false);
-            rfBar(); // 刷新ActionBar
+            invalidateOptionsMenu();
             Toast.makeText(CommentRepost.this, (String) msg.obj,
                     Toast.LENGTH_SHORT).show();
             switch (msg.what) {
@@ -274,7 +263,4 @@ public class CommentRepost extends Activity {
         }
     }
 
-    private void rfBar() {
-        getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL); // 刷新ActionBar
-    }
 }
