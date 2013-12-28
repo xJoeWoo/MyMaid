@@ -7,10 +7,23 @@ import android.os.Parcelable;
  * Created by JoeWoo on 13-11-10.
  */
 public class PicURLsBean implements Parcelable {
+
     private String thumbnail_pic;
 
-    public String getThumbnailPic(){
+    public String getThumbnailPic() {
         return thumbnail_pic;
+    }
+
+    public String getSquarePic() {
+        return thumbnail_pic.replace("thumbnail", "square");
+    }
+
+    public String getBmiddlePic() {
+        return thumbnail_pic.replace("thumbnail", "bmiddle");
+    }
+
+    public String getLargePic() {
+        return thumbnail_pic.replace("thumbnail", "large");
     }
 
     public PicURLsBean(Parcel parcel) {

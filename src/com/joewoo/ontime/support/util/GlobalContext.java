@@ -12,7 +12,6 @@ import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 public final class GlobalContext extends Application{
 
     private static GlobalContext globalContext;
-    private static String AUTH_CODE;
     private static String ACCESS_TOKEN;
     private static String UID;
     private static String SCREEN_NAME;
@@ -54,14 +53,6 @@ public final class GlobalContext extends Application{
 
     public static Context getAppContext() {
         return globalContext.getApplicationContext();
-    }
-
-    public static String getAuthCode() {
-        return AUTH_CODE;
-    }
-
-    public static void setAuthCode(String authCode) {
-        AUTH_CODE = authCode;
     }
 
     public static String getAccessToken() {

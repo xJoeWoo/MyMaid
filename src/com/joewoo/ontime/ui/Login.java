@@ -77,9 +77,8 @@ public class Login extends Activity {
                 if (url.startsWith(URLHelper.CALLBACK)) {
                     view.cancelLongPress();
                     view.stopLoading();
-                    GlobalContext.setAuthCode(url.substring(url.indexOf("=") + 1));
-                    Log.e(TAG, "Auth Code: " + GlobalContext.getAuthCode());
-                    new AccessToken(mHandler).start();
+                    Log.e(TAG, "Auth Code: " + url.substring(url.indexOf("=") + 1));
+                    new AccessToken(url.substring(url.indexOf("=") + 1), mHandler).start();
                 }
 //				super.onPageStarted(view, url, favicon);
             }

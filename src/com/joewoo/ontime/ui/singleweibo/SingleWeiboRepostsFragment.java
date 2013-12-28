@@ -17,9 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.action.comments.CommentsShow;
 import com.joewoo.ontime.action.statuses.StatusesRepostTimeline;
 import com.joewoo.ontime.support.adapter.listview.SingleWeiboMensListViewAdapter;
+import com.joewoo.ontime.support.bean.RepostTimelineBean;
 import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.info.AcquireCount;
 import com.joewoo.ontime.ui.CommentRepost;
@@ -62,7 +62,9 @@ public class SingleWeiboRepostsFragment extends Fragment {
             switch (msg.what) {
                 case GOT_REPOST_TIMELINE_INFO: {
 
-                    statuses = (List<StatusesBean>) msg.obj;
+                    RepostTimelineBean b = (RepostTimelineBean) msg.obj;
+
+                    statuses = b.getReposts();
 
                     if(statuses != null) {
                         if (statuses.isEmpty()) {
@@ -73,13 +75,14 @@ public class SingleWeiboRepostsFragment extends Fragment {
                         }
                     }
 
-                    act.setRepostsCount(statuses.size());
+                    act.setRepostsCount(b.getTotalNumber());
 
                     break;
                 }
                 case GOT_REPOST_TIMELINE_ADD_INFO: {
                     statuses.addAll((List<StatusesBean>) msg.obj);
                     setListView(statuses);
+                    break;
                 }
                 case GOT_REPOST_TIMELINE_INFO_FAIL:{
                     Toast.makeText(act, (String) msg.obj, Toast.LENGTH_SHORT).show();

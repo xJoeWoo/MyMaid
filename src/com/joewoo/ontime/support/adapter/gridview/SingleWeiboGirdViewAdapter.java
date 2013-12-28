@@ -60,7 +60,7 @@ public class SingleWeiboGirdViewAdapter extends BaseAdapter {
                     null);
             holder.iv = (ImageView) convertView.findViewById(R.id.frag_single_weibo_grid_view_img);
 
-            String url = pics.get(position).getThumbnailPic().replace("thumbnail", "square");
+            String url = pics.get(position).getSquarePic();
 
             new DownloadMuiltPic(holder.iv).execute(url);
 

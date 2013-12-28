@@ -18,9 +18,11 @@ import static com.joewoo.ontime.support.info.Defines.TAG;
 public class AccessToken extends Thread {
 
     private Handler mHandler;
+    private String authCode;
 
-    public AccessToken(Handler handler) {
+    public AccessToken(String authCode, Handler handler) {
         this.mHandler = handler;
+        this.authCode = authCode;
     }
 
     public void run() {
@@ -32,7 +34,7 @@ public class AccessToken extends Thread {
             hm.put("client_id", Defines.APP_KEY);
             hm.put("client_secret", Defines.APP_SECRET);
             hm.put("grant_type", "authorization_code");
-            hm.put("code", GlobalContext.getAuthCode());
+            hm.put("code", authCode);
             hm.put("redirect_uri", URLHelper.CALLBACK);
 
             httpResult = new HttpUtility().executePostTask(URLHelper.TOKEN, hm);

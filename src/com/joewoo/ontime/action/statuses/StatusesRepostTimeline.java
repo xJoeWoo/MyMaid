@@ -73,14 +73,13 @@ public class StatusesRepostTimeline extends Thread {
 
         if (ErrorCheck.getError(httpResult) == null) {
 
-            List<StatusesBean> statuses = new Gson().fromJson(httpResult,
-                    RepostTimelineBean.class).getReposts();
-
-
             if(maxID == null)
-                mHandler.obtainMessage(GOT_REPOST_TIMELINE_INFO, statuses).sendToTarget();
+                mHandler.obtainMessage(GOT_REPOST_TIMELINE_INFO, new Gson().fromJson(httpResult,
+                        RepostTimelineBean.class)).sendToTarget();
             else
             {
+                List<StatusesBean> statuses = new Gson().fromJson(httpResult,
+                        RepostTimelineBean.class).getReposts();
                 statuses.remove(0);
                 mHandler.obtainMessage(GOT_REPOST_TIMELINE_ADD_INFO, statuses).sendToTarget();
             }

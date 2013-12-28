@@ -70,13 +70,12 @@ public class CommentsShow extends Thread {
 
         if (ErrorCheck.getError(httpResult) == null) {
 
-            List<CommentsBean> comments = new Gson().fromJson(httpResult,
-                    CommentsToMeBean.class).getComments();
-
-
             if (maxID == null)
-                mHandler.obtainMessage(GOT_COMMNETS_SHOW_INFO, comments).sendToTarget();
+                mHandler.obtainMessage(GOT_COMMNETS_SHOW_INFO,  new Gson().fromJson(httpResult,
+                        CommentsToMeBean.class)).sendToTarget();
             else {
+                List<CommentsBean> comments = new Gson().fromJson(httpResult,
+                        CommentsToMeBean.class).getComments();
                 comments.remove(0);
                 mHandler.obtainMessage(GOT_COMMNETS_SHOW_ADD_INFO, comments).sendToTarget();
             }

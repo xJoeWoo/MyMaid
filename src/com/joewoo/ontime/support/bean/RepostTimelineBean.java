@@ -9,12 +9,12 @@ import java.util.List;
 public class RepostTimelineBean {
 
     private List<StatusesBean> reposts;
-    private String total_number;
+    private int total_number;
 
     public List<StatusesBean> getReposts(){
         return reposts;
     }
-    public String getTotalNumber(){
+    public int getTotalNumber(){
         return total_number;
     }
 
