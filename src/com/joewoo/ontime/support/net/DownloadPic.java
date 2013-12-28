@@ -1,9 +1,15 @@
 package com.joewoo.ontime.support.net;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -11,7 +17,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.joewoo.ontime.R;
@@ -20,27 +25,22 @@ import com.joewoo.ontime.support.image.BitmapScale;
 import com.joewoo.ontime.support.info.Defines;
 import com.joewoo.ontime.support.util.GlobalContext;
 
+import java.io.File;
+
 import static com.joewoo.ontime.support.info.Defines.TAG;
+import static com.joewoo.ontime.support.info.Defines.TEMP_IMAGE_NAME;
+import static com.joewoo.ontime.support.info.Defines.TEMP_IMAGE_PATH;
 
 public class DownloadPic extends AsyncTask<String, Integer, Bitmap> implements ImageNetworkListener.DownloadProgressListener {
 
     private ImageView iv;
-    private ProgressBar pb;
     private TextView tv;
     private boolean isRepost = false;
     private Activity act;
     private Animation in;
     private Animation out;
-
-    public DownloadPic(ImageView iv, ProgressBar pb) {
-        this.iv = iv;
-        this.pb = pb;
-
-    }
-
-    public DownloadPic(ImageView iv) {
-        this.iv = iv;
-    }
+    private float width;
+    private ViewGroup.LayoutParams lp;
 
     public DownloadPic(ImageView iv, TextView tv, boolean isRepost, Activity act) {
         this.iv = iv;
@@ -54,6 +54,14 @@ public class DownloadPic extends AsyncTask<String, Integer, Bitmap> implements I
         // Toast.makeText(activity, "开始下载图片…", Toast.LENGTH_SHORT).show();
         in = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.in);
         out = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.out);
+
+        if(tv != null) {
+            DisplayMetrics dm = new DisplayMetrics();
+            act.getWindowManager().getDefaultDisplay().getMetrics(dm);
+            width = ((dm.widthPixels * dm.density) - 32) / 100;
+            tv.setVisibility(View.VISIBLE);
+            lp = tv.getLayoutParams();
+        }
 
     }
 
@@ -76,7 +84,24 @@ public class DownloadPic extends AsyncTask<String, Integer, Bitmap> implements I
                 BitmapSaveAsFile.save(image, BitmapSaveAsFile.SAVE_AS_PNG, Defines.TEMP_IMAGE_PATH, Defines.TEMP_IMAGE_NAME);
 
 
-                image = BitmapScale.resizeBitmap(image, 400, 400);
+                if(iv != null)
+                    image = BitmapScale.resizeBitmap(image, 400, 400);
+                else
+                    return null;
+//
+//                Bitmap inputBitmap = image;
+//                Bitmap outputBitmap = image;
+//
+//                RenderScript rs = RenderScript.create(act);
+//                ScriptIntrinsicBlur theIntrinsic = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));;
+//                Allocation tmpIn = Allocation.createFromBitmap(rs, inputBitmap);
+//                Allocation tmpOut = Allocation.createFromBitmap(rs, outputBitmap);
+//                theIntrinsic.setRadius(25.f);
+//                theIntrinsic.setInput(tmpIn);
+//                theIntrinsic.forEach(tmpOut);
+//                tmpOut.copyTo(outputBitmap);
+//
+//                return outputBitmap;
 
 
 //                    image = Bitmap.createScaledBitmap(image, 256, 256, true);
@@ -102,47 +127,41 @@ public class DownloadPic extends AsyncTask<String, Integer, Bitmap> implements I
     protected void onProgressUpdate(Integer... progress) {
 //        Log.e(TAG, "Progress: "+String.valueOf(progress[0]));
 
-        if (pb != null) {
-            if (progress[0] == 0)
-                pb.setVisibility(View.VISIBLE);
-            // Log.e(TAG, "Process - " + String.valueOf(progress[0]));
-            pb.setProgress(progress[0]);
-        } else if (tv != null) {
-
-            DisplayMetrics dm = new DisplayMetrics();
-            act.getWindowManager().getDefaultDisplay().getMetrics(dm);
-            float width = ((dm.widthPixels * dm.density) - 32) / 100;
-
-            tv.setVisibility(View.VISIBLE);
-            ViewGroup.LayoutParams lp = tv.getLayoutParams();
+        if (tv != null) {
             lp.width = (int) (width * progress[0]);
             tv.setLayoutParams(lp);
-
         }
     }
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
 
+        if (tv != null && !isRepost) {
+            tv.setVisibility(View.GONE);
+            tv.startAnimation(out);
+            lp.width = 0;
+            tv.setLayoutParams(lp);
+        }
+
+        if(iv == null) {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.fromFile(new File(TEMP_IMAGE_PATH, TEMP_IMAGE_NAME)), "image/*");
+            act.startActivity(intent);
+            return;
+        }
+
         if (bitmap != null) {
+            iv.setVisibility(View.VISIBLE);
             iv.setImageBitmap(bitmap);
         } else {
             if (tv != null) {
-                ViewGroup.LayoutParams lp = tv.getLayoutParams();
                 lp.width = 10000;
                 tv.setLayoutParams(lp);
             }
             iv.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
         }
         iv.startAnimation(in);
-
-        if (pb != null)
-            pb.setVisibility(View.INVISIBLE);
-        if (tv != null && !isRepost) {
-            tv.setVisibility(View.GONE);
-            tv.startAnimation(out);
-        }
-
 
         bitmap = null;
     }

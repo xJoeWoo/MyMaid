@@ -45,7 +45,6 @@ public class MainTimelineActivity extends FragmentActivity {
 
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
-    SQLiteDatabase sql;
     Cursor c;
 
     @Override
@@ -62,8 +61,6 @@ public class MainTimelineActivity extends FragmentActivity {
 
         Log.e(TAG, "MyMaid START!");
 
-        sql = new MyMaidSQLHelper(MainTimelineActivity.this,
-                MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION).getWritableDatabase();
         preferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
         editor = preferences.edit();
 
@@ -71,7 +68,7 @@ public class MainTimelineActivity extends FragmentActivity {
 
             String lastUid = preferences.getString(LASTUID, null);
 
-            c = sql.query(MyMaidSQLHelper.tableName, new String[]{MyMaidSQLHelper.UID,
+            c = GlobalContext.getSQL().query(MyMaidSQLHelper.tableName, new String[]{MyMaidSQLHelper.UID,
                     MyMaidSQLHelper.ACCESS_TOKEN, MyMaidSQLHelper.SCREEN_NAME,
                     MyMaidSQLHelper.DRAFT, MyMaidSQLHelper.PROFILEIMG}, MyMaidSQLHelper.UID + "=?",
                     new String[]{lastUid}, null, null, null);
@@ -234,10 +231,6 @@ public class MainTimelineActivity extends FragmentActivity {
         }
 
 
-    }
-
-    public SQLiteDatabase getSQL() {
-        return sql;
     }
 
     public void setActionBarLowProfile() {

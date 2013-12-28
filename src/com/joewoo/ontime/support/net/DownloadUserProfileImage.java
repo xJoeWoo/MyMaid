@@ -10,7 +10,7 @@ import com.joewoo.ontime.support.image.BitmapRoundCorner;
 
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
-public final class DownloadUserProfileImage extends AsyncTask<String, Integer, Bitmap> {
+public final class DownloadUserProfileImage extends AsyncTask<String, Integer, Bitmap[]> {
 
     private ImageView iv;
 
@@ -19,18 +19,18 @@ public final class DownloadUserProfileImage extends AsyncTask<String, Integer, B
     }
 
     @Override
-    protected Bitmap doInBackground(String... params) {
+    protected Bitmap[] doInBackground(String... params) {
 
         Log.e(TAG, "Download User Proflie Image AsyncTask START");
         Log.e(TAG, "Pic URL - " + params[0]);
 
-        Bitmap image = null;
+        Bitmap[] image = new Bitmap[2];
 
             try {
 
                 byte[] imgBytes = new HttpUtility().executeDownloadImageTask(params[0], null);
 
-                image = BitmapRoundCorner.toRoundCorner(BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length), 25);
+                image[0] = BitmapRoundCorner.toRoundCorner(BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length), 25);
 
 
             } catch (Exception e) {
@@ -44,10 +44,10 @@ public final class DownloadUserProfileImage extends AsyncTask<String, Integer, B
 
 
     @Override
-    protected void onPostExecute(Bitmap bitmap) {
+    protected void onPostExecute(Bitmap[] bitmap) {
 
         if (bitmap != null) {
-            iv.setImageBitmap(bitmap);
+            iv.setImageBitmap(bitmap[0]);
         }
 
         bitmap = null;

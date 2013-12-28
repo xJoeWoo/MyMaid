@@ -1,5 +1,6 @@
 package com.joewoo.ontime.support.adapter.listview;
 
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -20,4 +21,5 @@ public class ViewHolder {
     public TextView tv_source;
     public TextView tv_crt_at;
     public TextView tv_blank;
+    public ImageView iv;
 }

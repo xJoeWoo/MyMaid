@@ -107,7 +107,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        new StatusesMentions(true, act.getSQL(), mHandler).start();
+        new StatusesMentions(true, GlobalContext.getSQL(), mHandler).start();
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -214,12 +214,12 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                         switch (i) {
                             case 0: {
                                 isNormalMention = true;
-                                new StatusesMentions(true, act.getSQL(), mHandler).start();
+                                new StatusesMentions(true, GlobalContext.getSQL(), mHandler).start();
                                 break;
                             }
                             case 1: {
                                 isNormalMention = false;
-                                new CommentsMentions(true, act.getSQL(), mHandler).start();
+                                new CommentsMentions(true, GlobalContext.getSQL(), mHandler).start();
                                 break;
                             }
                         }
@@ -336,12 +336,12 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
     }
 
     public void refreshMentions() {
-        new StatusesMentions(false, act.getSQL(), mHandler).start();
+        new StatusesMentions(false, GlobalContext.getSQL(), mHandler).start();
         mPullToRefreshAttacher.setRefreshing(true);
     }
 
     public void refreshCommentsMentions() {
-        new CommentsMentions(false, act.getSQL(), mHandler).start();
+        new CommentsMentions(false, GlobalContext.getSQL(), mHandler).start();
         mPullToRefreshAttacher.setRefreshing(true);
     }
 

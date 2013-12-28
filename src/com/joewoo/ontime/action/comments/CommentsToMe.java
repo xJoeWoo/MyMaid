@@ -67,96 +67,16 @@ public class CommentsToMe extends Thread {
             List<CommentsBean> comments = new Gson().fromJson(httpResult,
                     CommentsToMeBean.class).getComments();
 
-//            ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
-
-//            HashMap<String, String> hm = new HashMap<String, String>();
-//            hm.put(BLANK, " ");
-//            text.add(hm);
-//            hm = null;
-
             String source;
-            int index = -1;
 
             for (CommentsBean c : comments) {
 
-                index++;
+                c.setCreatedAt(TimeFormat.parse(c.getCreatedAt()));
 
-                c.setCreatedAt(TimeFormat.parse(comments.get(index).getCreatedAt()));
-
-                source = comments.get(index).getSource();
+                source = c.getSource();
                 source = source.substring(source.indexOf(">") + 1,
                         source.indexOf("</a>"));
                 c.setSource(source);
-
-//                HashMap<String, String> map = new HashMap<String, String>();
-//
-//                source = c.getSource();
-//                map.put(SOURCE, " · " + source.substring(source.indexOf(">") + 1,
-//                        source.indexOf("</a>")));
-//                map.put(CREATED_AT, TimeFormat.parse(c.getCreatedAt()));
-//                // map.put(UID, c.getUser().getId());
-//                map.put(SCREEN_NAME, c.getUser().getScreenName());
-//                map.put(TEXT, c.getText());
-//                map.put(COMMENT_ID, c.getId());
-//
-//                map.put(WEIBO_ID, c.getStatus().getId());
-//                map.put(STATUS_TEXT, c.getStatus().getText());
-//                map.put(STATUS_USER_SCREEN_NAME, c.getStatus().getUser().getScreenName());
-//                map.put(STATUS_COMMENTS_COUNT, c.getStatus().getCommentsCount());
-//                map.put(STATUS_REPOSTS_COUNT, c.getStatus().getRepostsCount());
-//                map.put(STATUS_CREATED_AT, TimeFormat.parse(c.getStatus().getCreatedAt()));
-//
-//                if (c.getStatus().getPicURLs() != null && c.getStatus().getPicURLs().size() > 1)
-//                    map.put(PIC_URLS, " ");
-//
-//                source = c.getStatus().getSource();
-//                map.put(STATUS_SOURCE, " · " + source.substring(source.indexOf(">") + 1,
-//                        source.indexOf("</a>")));
-//
-//                map.put(STATUS_PROFILE_IMAGE_URL, c.getStatus().getUser().getProfileImageUrl());
-//
-//                try {
-//                    source = c.getStatus().getRetweetedStatus()
-//                            .getSource();
-//
-//                    map.put(RETWEETED_STATUS_SOURCE, " · " + source.substring(source.indexOf(">") + 1,
-//                            source.indexOf("</a>")));
-//                    map.put(RETWEETED_STATUS_CREATED_AT, TimeFormat.parse(c.getStatus().getRetweetedStatus().getCreatedAt()));
-//
-//                    map.put(RETWEETED_STATUS_SCREEN_NAME, c.getStatus()
-//                            .getRetweetedStatus().getUser().getScreenName());
-//                    map.put(RETWEETED_STATUS, c.getStatus()
-//                            .getRetweetedStatus().getText());
-//
-//                    if (c.getStatus().getRetweetedStatus().getPicURLs() != null && c.getStatus().getRetweetedStatus().getPicURLs().size() > 1)
-//                        map.put(PIC_URLS, " ");
-//
-//                    if (c.getStatus().getRetweetedStatus().getThumbnailPic() != null) {
-//                        map.put(RETWEETED_STATUS_BMIDDLE_PIC, c.getStatus()
-//                                .getRetweetedStatus().getBmiddlePic());
-//                    }
-//                    map.put(IS_REPOST, " ");
-//
-//                } catch (Exception e) {
-////                    e.printStackTrace();
-//                }
-//
-//                if (c.getStatus().getBmiddlePic() != null) {
-//                    map.put(STATUS_BMIDDLE_PIC, c.getStatus().getBmiddlePic());
-//                }
-//
-//                if (c.getReplyComment() != null) {
-//                    map.put(REPLY_COMMNET_USER_SCREEN_NAME, c
-//                            .getReplyComment().getUser().getScreenName());
-//                    map.put(REPLY_COMMNET_TEXT, c.getReplyComment()
-//                            .getText());
-//                } else {
-//                    map.put(REPLY_COMMNET_USER_SCREEN_NAME, c
-//                            .getStatus().getUser().getScreenName());
-//                    map.put(REPLY_COMMNET_TEXT, c.getStatus().getText());
-//                }
-//
-//                text.add(map);
             }
 
             if (maxID == null)

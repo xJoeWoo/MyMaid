@@ -57,12 +57,13 @@ public class SingleWeiboActivity extends FragmentActivity {
     private ActionBar actionBar;
     private String titleRepost;
     private String titleComment;
+    private int repostsCount;
+    private int commentsCount;
     private String weiboID = null;
     private boolean isFreshing;
 
-
     public void setSingleWeiboFragment() {
-        if(status != null) {
+        if (status != null) {
             setSingleWeibo(false);
         } else {
             mSectionsPagerAdapter.getSingleWeiboFrag().setViewHide();
@@ -78,7 +79,7 @@ public class SingleWeiboActivity extends FragmentActivity {
 
         i = getIntent();
 
-        if(i.getStringExtra(WEIBO_ID) != null){
+        if (i.getStringExtra(WEIBO_ID) != null) {
             weiboID = i.getStringExtra(WEIBO_ID);
         } else {
             status = i.getParcelableExtra(STATUS_BEAN);
@@ -177,9 +178,9 @@ public class SingleWeiboActivity extends FragmentActivity {
                 case GOT_STATUSES_SHOW_INFO_FAIL:
                 case GOT_FAVOURITE_CREATE_INFO_FAIL:
                 case GOT_STATUSES_DESTROY_INFO_FAIL: {
-                        Toast.makeText(SingleWeiboActivity.this,
-                                (String) msg.obj,
-                                Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SingleWeiboActivity.this,
+                            (String) msg.obj,
+                            Toast.LENGTH_SHORT).show();
                     break;
                 }
 
@@ -266,31 +267,17 @@ public class SingleWeiboActivity extends FragmentActivity {
     }
 
     private void setSingleWeibo(boolean withAnim) {
-        String repostCount;
-        String commentsCount;
 
-        repostCount = status.getRepostsCount() + " ";
-        commentsCount = status.getCommentsCount() + " ";
+        repostsCount = status.getRepostsCount();
+        commentsCount = status.getCommentsCount();
 
-        if (Locale.getDefault().getLanguage().equals("en")) {
-            if (!repostCount.equals("1"))
-                titleRepost += "S";
-            if (!commentsCount.equals("1"))
-                titleComment += "S";
-        }
+        setCommentsCount(commentsCount);
+        setRepostsCount(repostsCount);
 
-        actionBar.getTabAt(0).setText(repostCount + titleRepost);
-        actionBar.getTabAt(2).setText(commentsCount + titleComment);
-
-        if(withAnim)
+        if (withAnim)
             mSectionsPagerAdapter.getSingleWeiboFrag().setSingleWeiboWithAnim(status);
         else
             mSectionsPagerAdapter.getSingleWeiboFrag().setSingleWeibo(status);
-
-        titleRepost = null;
-        titleComment = null;
-        repostCount = null;
-        commentsCount = null;
 
         invalidateOptionsMenu();
     }
@@ -299,7 +286,14 @@ public class SingleWeiboActivity extends FragmentActivity {
 
         @Override
         public void onTabReselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
-            // TODO Auto-generated method stub
+            switch (tab.getPosition()) {
+                case SingleWeiboPagerAdapter.FRAG_SINGLEWEIBOCOMMENTS_POS:
+                    mSectionsPagerAdapter.getSingleWeiboCommentsFrag().showComments(weiboID);
+                    break;
+                case SingleWeiboPagerAdapter.FRAG_SINGLEWEIBOREPOSTS_POS:
+                    mSectionsPagerAdapter.getSingleWeiboRepostsFrag().showReposts(weiboID);
+                    break;
+            }
 
         }
 
@@ -310,7 +304,6 @@ public class SingleWeiboActivity extends FragmentActivity {
 
         @Override
         public void onTabUnselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
-            // TODO Auto-generated method stub
 
         }
     };
@@ -321,6 +314,27 @@ public class SingleWeiboActivity extends FragmentActivity {
 
     public void setFreshing(boolean isFreshing) {
         this.isFreshing = isFreshing;
+    }
+
+    public void setCommentsCount(int commentsCount) {
+        this.commentsCount = commentsCount;
+        checkPlural();
+        actionBar.getTabAt(SingleWeiboPagerAdapter.FRAG_SINGLEWEIBOCOMMENTS_POS).setText(this.commentsCount + " " + titleComment);
+    }
+
+    public void setRepostsCount(int repostsCount) {
+        this.repostsCount = repostsCount;
+        checkPlural();
+        actionBar.getTabAt(SingleWeiboPagerAdapter.FRAG_SINGLEWEIBOREPOSTS_POS).setText(this.repostsCount + " " + titleRepost);
+    }
+
+    private void checkPlural() {
+        if (Locale.getDefault().getLanguage().equals("en")) {
+            if (repostsCount != 1 && !titleRepost.endsWith("S"))
+                titleRepost += "S";
+            if (commentsCount != 1 && !titleComment.endsWith("S"))
+                titleComment += "S";
+        }
     }
 
 }

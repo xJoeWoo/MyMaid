@@ -12,12 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.joewoo.ontime.R;
+import com.joewoo.ontime.support.adapter.gridview.SingleWeiboGirdViewAdapter;
 import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.menu.CopyTextContextualMenu;
 import com.joewoo.ontime.support.net.DownloadPic;
@@ -49,10 +52,10 @@ public class SingleWeiboFragment extends Fragment {
     private TextView tv_rt_source;
     private TextView tv_rt_created_at;
     private ImageView iv_image;
-    private ImageView iv_rt_image;
     private ImageView iv_profile_image;
     private ProgressBar pb;
     private ScrollView sv;
+    private GridView gv;
 
     private Animation in;
     private Animation out;
@@ -116,19 +119,6 @@ public class SingleWeiboFragment extends Fragment {
             tv_source.setShadowLayer(20, 0, 0, getResources().getColor(R.color.sourcePink));
         }
 
-        if (status.getBmiddlePic() == null) {
-            if (status.getRetweetedStatus() != null && status.getRetweetedStatus().getBmiddlePic() == null) {
-                ViewGroup.LayoutParams lp = tv_rt_rl.getLayoutParams();
-                lp.width = 10000;
-                tv_rt_rl.setLayoutParams(lp);
-            }
-            iv_image.setVisibility(View.GONE);
-        } else {
-
-            dp = new DownloadPic(iv_image, tv_rt_rl, false, act);
-            dp.execute(status.getBmiddlePic());
-
-        }
 
         iv_profile_image.setOnClickListener(new View.OnClickListener() {
 
@@ -171,12 +161,10 @@ public class SingleWeiboFragment extends Fragment {
             tv_rt_created_at.setVisibility(View.GONE);
             tv_rt_text.setVisibility(View.GONE);
             tv_rt_source.setVisibility(View.GONE);
-            iv_rt_image.setVisibility(View.GONE);
+//            iv_rt_image.setVisibility(View.GONE);
         } else {
-            if (status.getRetweetedStatus().getBmiddlePic() == null)
-                iv_rt_image.setVisibility(View.GONE);
-            else {
-                dp = new DownloadPic(iv_rt_image, tv_rt_rl, true, act);
+            if (status.getRetweetedStatus().getBmiddlePic() != null) {
+                dp = new DownloadPic(iv_image, tv_rt_rl, true, act);
                 dp.execute(status.getRetweetedStatus().getBmiddlePic());
             }
             tv_rt_screen_name.setText(status.getRetweetedStatus().getUser().getScreenName());
@@ -186,7 +174,7 @@ public class SingleWeiboFragment extends Fragment {
             tv_rt_text.setMovementMethod(LinkMovementMethod.getInstance());
 
             tv_rt_source.setText(" · " + status.getRetweetedStatus().getSource());
-            if (status.getRetweetedStatus().getSource().equals( getString(R.string.app_name_cn))) {
+            if (status.getRetweetedStatus().getSource().equals(getString(R.string.app_name_cn))) {
                 tv_rt_source.setTextColor(getResources().getColor(R.color.textGrey));
                 tv_rt_source.setShadowLayer(20, 0, 0, getResources().getColor(R.color.sourcePink));
             }
@@ -214,15 +202,30 @@ public class SingleWeiboFragment extends Fragment {
     }
 
     private void setImage() {
-        if (iv_rt_image.getVisibility() == View.VISIBLE) {
-            iv_rt_image.setOnClickListener(new View.OnClickListener() {
+
+        if (status.getBmiddlePic() == null) {
+
+            if (status.getRetweetedStatus() != null && status.getRetweetedStatus().getBmiddlePic() == null) {
+                ViewGroup.LayoutParams lp = tv_rt_rl.getLayoutParams();
+                lp.width = 10000;
+                tv_rt_rl.setLayoutParams(lp);
+            }
+            iv_image.setVisibility(View.GONE);
+
+        } else if (status.getPicURLs() != null && status.getPicURLs().size() > 1) {
+
+            gv.setAdapter(new SingleWeiboGirdViewAdapter(act, status.getPicURLs()));
+
+            gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onClick(View v) {
-                    jumpToGallery();
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    new DownloadPic(null, tv_rt_rl, false, act).execute(status.getPicURLs().get(position).getThumbnailPic().replace("thumbnail", "bmiddle"));
                 }
             });
-        }
-        if (iv_image.getVisibility() == View.VISIBLE) {
+
+        } else {
+            dp = new DownloadPic(iv_image, tv_rt_rl, false, act);
+            dp.execute(status.getBmiddlePic());
             iv_image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -230,6 +233,8 @@ public class SingleWeiboFragment extends Fragment {
                 }
             });
         }
+
+
     }
 
     private void setLongClickCopyText() {
@@ -265,10 +270,10 @@ public class SingleWeiboFragment extends Fragment {
         tv_rt_text = (TextView) v.findViewById(R.id.frag_single_weibo_retweeted_status);
         tv_source = (TextView) v.findViewById(R.id.frag_single_weibo_source);
         iv_image = (ImageView) v.findViewById(R.id.frag_single_weibo_image);
-        iv_rt_image = (ImageView) v.findViewById(R.id.frag_single_weibo_retweeted_status_weibo_image);
         iv_profile_image = (ImageView) v.findViewById(R.id.frag_single_weibo_profile_image);
         pb = (ProgressBar) v.findViewById(R.id.frag_single_weibo_pb);
         sv = (ScrollView) v.findViewById(R.id.frag_single_weibo_sv);
+        gv = (GridView) v.findViewById(R.id.frag_single_weibo_pics_grid);
     }
 
     private void jumpToSingleUser(String screenName) {

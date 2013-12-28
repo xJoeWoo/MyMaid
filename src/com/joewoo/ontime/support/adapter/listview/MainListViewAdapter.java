@@ -15,12 +15,11 @@ import java.util.List;
 public class MainListViewAdapter extends BaseAdapter {
 
     private List<StatusesBean> statuses;
-    private LayoutInflater mInflater;
     private Context context;
 
     public MainListViewAdapter(Context context) {
         this.context = context;
-        this.mInflater = LayoutInflater.from(context);
+
     }
 
     public void setData(List<StatusesBean> statuses) {
@@ -46,12 +45,13 @@ public class MainListViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         // Log.e(TAG, "getView");
 
-        ViewHolder holder = null;
+        ViewHolder holder;
 
         if (convertView == null) {
 
             holder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.friendstimeline_lv,
+
+            convertView = LayoutInflater.from(context).inflate(R.layout.friendstimeline_lv,
                     null);
 
             // Find views
@@ -105,9 +105,11 @@ public class MainListViewAdapter extends BaseAdapter {
 
         holder.tv_scr_name.setText(s.getUser().getScreenName());
 
+//        holder.tv_text.setText(CheckMentionsURLTopic.getSpannableString(s.getText(), context));
         holder.tv_text.setText(s.getText());
 
         if (s.getRetweetedStatus() == null) {
+
             holder.tv_rt_rl.setVisibility(View.GONE);
             holder.tv_rt_scr_name.setVisibility(View.GONE);
             holder.tv_rt.setVisibility(View.GONE);
@@ -115,17 +117,21 @@ public class MainListViewAdapter extends BaseAdapter {
             holder.tv_rt_scr_name.setVisibility(View.VISIBLE);
             holder.tv_rt.setVisibility(View.VISIBLE);
             holder.tv_rt_rl.setVisibility(View.VISIBLE);
-            holder.tv_rt_scr_name.setText(s.getRetweetedStatus().getUser().getScreenName());
+//            holder.tv_rt.setText(CheckMentionsURLTopic.getSpannableString(s.getRetweetedStatus().getText(), context));
             holder.tv_rt.setText(s.getRetweetedStatus().getText());
-
-            if (s.getRetweetedStatus().getPicURLs().size() == 1) {
-                holder.tv_img.setVisibility(View.VISIBLE);
-                holder.tv_img.setBackgroundResource(R.drawable.image_dark);
-            } else if (s.getRetweetedStatus().getPicURLs().size() > 1) {
-                holder.tv_img.setVisibility(View.VISIBLE);
-                holder.tv_img.setBackgroundResource(R.drawable.muilt_image);
-            } else
-                holder.tv_img.setVisibility(View.GONE);
+            if (s.getRetweetedStatus().getUser() != null) { // 微博已被删除
+                holder.tv_rt_scr_name.setText(s.getRetweetedStatus().getUser().getScreenName());
+                if (s.getRetweetedStatus().getPicURLs().size() == 1) {
+                    holder.tv_img.setVisibility(View.VISIBLE);
+                    holder.tv_img.setBackgroundResource(R.drawable.image_dark);
+                } else if (s.getRetweetedStatus().getPicURLs().size() > 1) {
+                    holder.tv_img.setVisibility(View.VISIBLE);
+                    holder.tv_img.setBackgroundResource(R.drawable.muilt_image);
+                } else
+                    holder.tv_img.setVisibility(View.GONE);
+            } else {
+                holder.tv_rt_scr_name.setText("……");
+            }
 
         }
 
@@ -140,9 +146,9 @@ public class MainListViewAdapter extends BaseAdapter {
 
         holder.tv_crt_at.setText(s.getCreatedAt());
 
-        holder.tv_cmt_cnt.setText(s.getCommentsCount());
+        holder.tv_cmt_cnt.setText(String.valueOf(s.getCommentsCount()));
 
-        holder.tv_rpos_cnt.setText(s.getRepostsCount());
+        holder.tv_rpos_cnt.setText(String.valueOf(s.getRepostsCount()));
 
         return convertView;
     }

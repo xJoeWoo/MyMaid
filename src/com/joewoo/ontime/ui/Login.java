@@ -47,9 +47,9 @@ public class Login extends Activity {
     SharedPreferences uids;
     SharedPreferences.Editor uidsE;
 
-    private MyMaidSQLHelper sqlHelper = new MyMaidSQLHelper(Login.this, MyMaidSQLHelper.SQL_NAME, null,
-            MyMaidSQLHelper.SQL_VERSION);
-    private SQLiteDatabase sql;
+//    private MyMaidSQLHelper sqlHelper = new MyMaidSQLHelper(Login.this, MyMaidSQLHelper.SQL_NAME, null,
+//            MyMaidSQLHelper.SQL_VERSION);
+//    private SQLiteDatabase sql;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public class Login extends Activity {
         uids = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
         uidsE = uids.edit();
 
-        sql = sqlHelper.getWritableDatabase();
+//        sql = sqlHelper.getWritableDatabase();
 
         wv_login.setWebViewClient(new WebViewClient() {
 
@@ -124,7 +124,7 @@ public class Login extends Activity {
 
                 case GOT_PROFILEIMG_INFO: {
 
-                    Cursor c = sql.query(MyMaidSQLHelper.tableName, new String[]{
+                    Cursor c = GlobalContext.getSQL().query(MyMaidSQLHelper.tableName, new String[]{
                             MyMaidSQLHelper.UID, MyMaidSQLHelper.ACCESS_TOKEN,
                             MyMaidSQLHelper.SCREEN_NAME}, MyMaidSQLHelper.UID + "=?",
                             new String[]{GlobalContext.getUID()}, null, null, null);
@@ -140,7 +140,7 @@ public class Login extends Activity {
 
                         Log.e(MyMaidSQLHelper.TAG_SQL, "Got login info");
 
-                        if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID
+                        if (GlobalContext.getSQL().update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID
                                 + "='" + GlobalContext.getUID() + "'", null) != 0) {
                             Log.e(MyMaidSQLHelper.TAG_SQL, "SQL login info Updated");
                         }
@@ -154,9 +154,9 @@ public class Login extends Activity {
 
                         cv.put(MyMaidSQLHelper.UID, GlobalContext.getUID());
 
-                        sql.insert(MyMaidSQLHelper.tableName, null, cv);
+                        GlobalContext.getSQL().insert(MyMaidSQLHelper.tableName, null, cv);
 
-                        Cursor cursor = sql.query(MyMaidSQLHelper.tableName, null, null,
+                        Cursor cursor = GlobalContext.getSQL().query(MyMaidSQLHelper.tableName, null, null,
                                 null, null, null, null);
                         Log.e(MyMaidSQLHelper.TAG_SQL, "Inserted");
                         Log.e(MyMaidSQLHelper.TAG_SQL, "Display all data:");
@@ -179,17 +179,14 @@ public class Login extends Activity {
 
                     uids = null;
                     uidsE = null;
-                    sqlHelper = null;
                     cv = null;
                     c = null;
 
-                    new FriendsIDs(false, GlobalContext.getScreenName(), sql, mHandler).start();
+                    new FriendsIDs(false, GlobalContext.getScreenName(), GlobalContext.getSQL(), mHandler).start();
 
                     break;
                 }
                 case GOT_FRIENDS_IDS_INFO: {
-
-                    sql.close();
 
                     startActivity(new Intent(Login.this, MainTimelineActivity.class));
                     finish();

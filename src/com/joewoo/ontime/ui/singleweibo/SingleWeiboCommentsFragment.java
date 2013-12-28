@@ -49,6 +49,7 @@ public class SingleWeiboCommentsFragment extends Fragment {
 
     public void showComments(String weiboID) {
         new CommentsShow(weiboID, mHandler).start();
+        pb.setVisibility(View.VISIBLE);
         this.weiboID = weiboID;
     }
 
@@ -139,6 +140,7 @@ public class SingleWeiboCommentsFragment extends Fragment {
                         }
                     }
 
+                    act.setCommentsCount(comments.size());
 
                     break;
                 }

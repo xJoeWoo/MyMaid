@@ -2,6 +2,9 @@ package com.joewoo.ontime.support.util;
 
 import android.app.Application;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 
 /**
  * Created by JoeWoo on 13-11-21.
@@ -18,10 +21,19 @@ public final class GlobalContext extends Application{
 
     private static long[] FRIENDS_IDS;
 
+    private static SQLiteDatabase sql;
+
     @Override
     public void onCreate() {
         super.onCreate();
         globalContext = this;
+
+        sql = new MyMaidSQLHelper(GlobalContext.getAppContext(),
+                MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION).getWritableDatabase();
+    }
+
+    public static SQLiteDatabase getSQL() {
+        return sql;
     }
 
     public static String getResString(int resId) {

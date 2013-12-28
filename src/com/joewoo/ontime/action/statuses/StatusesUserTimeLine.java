@@ -14,40 +14,17 @@ import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.util.TimeFormat;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
-import static com.joewoo.ontime.support.info.Defines.BLANK;
-import static com.joewoo.ontime.support.info.Defines.BMIDDLE_PIC;
-import static com.joewoo.ontime.support.info.Defines.COMMENTS_COUNT;
 import static com.joewoo.ontime.support.info.Defines.COUNT;
-import static com.joewoo.ontime.support.info.Defines.CREATED_AT;
+import static com.joewoo.ontime.support.info.Defines.GOT_USER_TIMELINE_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_USER_TIMELINE_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_USER_TIMELINE_INFO_FAIL;
-import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
 import static com.joewoo.ontime.support.info.Defines.MAX_ID;
-import static com.joewoo.ontime.support.info.Defines.PIC_URLS;
-import static com.joewoo.ontime.support.info.Defines.PROFILE_IMAGE_URL;
-import static com.joewoo.ontime.support.info.Defines.REPOSTS_COUNT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_BMIDDLE_PIC;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_COMMENTS_COUNT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_CREATED_AT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_REPOSTS_COUNT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SCREEN_NAME;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SOURCE;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_THUMBNAIL_PIC;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_UID;
 import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
-import static com.joewoo.ontime.support.info.Defines.SOURCE;
 import static com.joewoo.ontime.support.info.Defines.TAG;
-import static com.joewoo.ontime.support.info.Defines.TEXT;
-import static com.joewoo.ontime.support.info.Defines.THUMBNAIL_PIC;
-import static com.joewoo.ontime.support.info.Defines.UID;
-import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
-import static com.joewoo.ontime.support.info.Defines.GOT_USER_TIMELINE_ADD_INFO;
 
 public class StatusesUserTimeLine extends Thread {
 
@@ -105,17 +82,12 @@ public class StatusesUserTimeLine extends Thread {
             List<StatusesBean> statuses = new Gson().fromJson(httpResult, UserTimelineBean.class).getStatuses();
 
             String source;
-            int index = -1;
-
-
 
             for (StatusesBean s : statuses) {
 
-                index++;
+                s.setCreatedAt(TimeFormat.parse(s.getCreatedAt()));
 
-                s.setCreatedAt(TimeFormat.parse(statuses.get(index).getCreatedAt()));
-
-                source = statuses.get(index).getSource();
+                source = s.getSource();
                 source = source.substring(source.indexOf(">") + 1,
                         source.indexOf("</a>"));
                 s.setSource(source);
@@ -125,9 +97,12 @@ public class StatusesUserTimeLine extends Thread {
                     s.getRetweetedStatus().setCreatedAt(TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
 
                     source = s.getRetweetedStatus().getSource();
-                    source = source.substring(source.indexOf(">") + 1,
-                            source.indexOf("</a>"));
-                    s.getRetweetedStatus().setSource(source);
+
+                    if(source != null) {
+                        source = source.substring(source.indexOf(">") + 1,
+                                source.indexOf("</a>"));
+                        s.getRetweetedStatus().setSource(source);
+                    }
                 }
 
 //                HashMap<String, String> map = new HashMap<>();

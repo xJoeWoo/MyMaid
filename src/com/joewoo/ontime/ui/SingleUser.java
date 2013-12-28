@@ -86,8 +86,13 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                                     long arg3) {
-                Intent ii = new Intent(SingleUser.this, SingleWeiboActivity.class);
+
                 StatusesBean b = statuses.get(arg2 - lv.getHeaderViewsCount());
+
+                if(b.getRetweetedStatus() != null && b.getRetweetedStatus().getUser() == null)
+                    return; // 微博已被删除不继续进行
+
+                Intent ii = new Intent(SingleUser.this, SingleWeiboActivity.class);
                 ii.putExtra(STATUS_BEAN, b);
                 ii.putExtra(STATUS_BEAN_POSITION, arg2 - lv.getHeaderViewsCount());
                 startActivityForResult(ii, RESULT_DESTROYED_WEIBO);

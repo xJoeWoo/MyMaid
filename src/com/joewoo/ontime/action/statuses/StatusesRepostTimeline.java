@@ -46,7 +46,7 @@ public class StatusesRepostTimeline extends Thread {
     }
 
     public void run() {
-        String httpResult = null;
+        String httpResult;
         Log.e(TAG, "Reposts Timeline Thread Start");
         try {
 

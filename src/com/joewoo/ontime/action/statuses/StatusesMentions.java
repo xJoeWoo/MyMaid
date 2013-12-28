@@ -101,15 +101,12 @@ public class StatusesMentions extends Thread {
 //            hm = null;
 
             String source;
-            int index = -1;
 
             for (StatusesBean s : statuses) {
 
-                index++;
+                s.setCreatedAt(TimeFormat.parse(s.getCreatedAt()));
 
-                s.setCreatedAt(TimeFormat.parse(statuses.get(index).getCreatedAt()));
-
-                source = statuses.get(index).getSource();
+                source = s.getSource();
                 source = source.substring(source.indexOf(">") + 1,
                         source.indexOf("</a>"));
                 s.setSource(source);

@@ -15,11 +15,9 @@ import java.util.List;
 public class CommentsToMeAdapter extends BaseAdapter {
 
     private List<CommentsBean> data;
-    private LayoutInflater mInflater;
     private Context context;
 
     public CommentsToMeAdapter(Context context) {
-        this.mInflater = LayoutInflater.from(context);
         this.context = context;
     }
 
@@ -51,7 +49,7 @@ public class CommentsToMeAdapter extends BaseAdapter {
         if (convertView == null) {
 
             holder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.comments_to_me_lv,
+            convertView = LayoutInflater.from(context).inflate(R.layout.comments_to_me_lv,
                     null);
 
             holder.tv_scr_name = (TextView) convertView

@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.bean.CommentsBean;
-import com.joewoo.ontime.support.bean.PicURLsBean;
 
 import java.util.List;
 
@@ -19,12 +18,10 @@ import java.util.List;
 public class CommentsMentionsListViewAdapter extends BaseAdapter {
 
     private List<CommentsBean> comments;
-    private LayoutInflater mInflater;
     private Context context;
 
     public CommentsMentionsListViewAdapter(Context context) {
         this.context = context;
-        this.mInflater = LayoutInflater.from(context);
     }
 
     public void setData(List<CommentsBean> comments) {
@@ -63,14 +60,12 @@ public class CommentsMentionsListViewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        if (comments != null) {
-
             ViewHolder holder = null;
 
             if (convertView == null) {
 
                 holder = new ViewHolder();
-                convertView = mInflater.inflate(R.layout.friendstimeline_lv,
+                convertView = LayoutInflater.from(context).inflate(R.layout.friendstimeline_lv,
                         null);
 
                 // Find views
@@ -145,14 +140,15 @@ public class CommentsMentionsListViewAdapter extends BaseAdapter {
                 holder.tv_source.setShadowLayer(0, 0, 0, 0);
             }
 
-
             holder.tv_crt_at.setText(c.getStatus().getCreatedAt());
 
-            holder.tv_cmt_cnt.setText(c.getStatus().getCommentsCount());
+            holder.tv_cmt_cnt.setText(String.valueOf(c.getStatus().getCommentsCount()));
+
+            holder.tv_rpos_cnt.setText(String.valueOf(c.getStatus().getRepostsCount()));
 
             holder.tv_crt_at.setText(c.getCreatedAt());
 
             return convertView;
-        } else return null;
+
     }
 }

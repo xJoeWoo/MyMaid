@@ -89,7 +89,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        new CommentsToMe(true, act.getSQL(), mHandler).start();
+        new CommentsToMe(true, GlobalContext.getSQL(), mHandler).start();
 
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -243,7 +243,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
     }
 
     public void refreshComments() {
-        new CommentsToMe(false, act.getSQL(), mHandler).start();
+        new CommentsToMe(false, GlobalContext.getSQL(), mHandler).start();
         mPullToRefreshAttacher.setRefreshing(true);
     }
 

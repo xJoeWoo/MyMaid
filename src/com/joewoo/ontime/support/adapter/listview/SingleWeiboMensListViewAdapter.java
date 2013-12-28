@@ -20,11 +20,9 @@ public class SingleWeiboMensListViewAdapter extends BaseAdapter {
 
     private Context context;
     private List<StatusesBean> statuses;
-    private LayoutInflater mInflater;
 
     public SingleWeiboMensListViewAdapter(Context context) {
         this.context = context;
-        this.mInflater = LayoutInflater.from(context);
     }
 
     public void setData(List<StatusesBean> statuses) {
@@ -54,7 +52,7 @@ public class SingleWeiboMensListViewAdapter extends BaseAdapter {
         if (convertView == null) {
 
             holder = new ViewHolder();
-            convertView = mInflater.inflate(R.layout.comments_repsots_show_lv,
+            convertView = LayoutInflater.from(context).inflate(R.layout.comments_repsots_show_lv,
                     null);
 
             holder.tv_scr_name = (TextView) convertView
@@ -68,7 +66,6 @@ public class SingleWeiboMensListViewAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
 
 
         holder.tv_scr_name.setText(statuses.get(position).getUser().getScreenName());

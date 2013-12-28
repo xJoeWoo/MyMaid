@@ -13,8 +13,8 @@ public class StatusesBean implements Parcelable{
     private String source;
     private boolean favorited;
     private StatusesBean retweeted_status;
-    private String reposts_count;
-    private String comments_count;
+    private int reposts_count;
+    private int comments_count;
     private UserBean user;
     private String thumbnail_pic;
     private String bmiddle_pic;
@@ -50,11 +50,11 @@ public class StatusesBean implements Parcelable{
         return favorited;
     }
 
-    public String getRepostsCount() {
+    public int getRepostsCount() {
         return reposts_count;
     }
 
-    public String getCommentsCount() {
+    public int getCommentsCount() {
         return comments_count;
     }
 
@@ -91,8 +91,8 @@ public class StatusesBean implements Parcelable{
         dest.writeString(source);
         dest.writeByte((byte) (favorited ? 1 : 0));
         dest.writeValue(retweeted_status);
-        dest.writeString(reposts_count);
-        dest.writeString(comments_count);
+        dest.writeInt(reposts_count);
+        dest.writeInt(comments_count);
         dest.writeValue(user);
         dest.writeString(thumbnail_pic);
         dest.writeString(bmiddle_pic);
@@ -119,8 +119,8 @@ public class StatusesBean implements Parcelable{
         source = parcel.readString();
         favorited = parcel.readByte() != 0;
         retweeted_status = (StatusesBean) parcel.readValue(StatusesBean.class.getClassLoader());
-        reposts_count = parcel.readString();
-        comments_count = parcel.readString();
+        reposts_count = parcel.readInt();
+        comments_count = parcel.readInt();
         user = (UserBean) parcel.readValue(UserBean.class.getClassLoader());
         thumbnail_pic = parcel.readString();
         bmiddle_pic = parcel.readString();

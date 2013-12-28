@@ -76,7 +76,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
         if (act.checkNetwork()) {
             refreshFriendsTimeLine();
 //            if(!freshedFriendsIDs) {
-//                new FriendsIDs(false, GlobalContext.getScreenName(), act.getSQL(), null).start();
+//                new FriendsIDs(false, GlobalContext.getScreenName(), GlobalContext.getSQL(), null).start();
 //                freshedFriendsIDs = true;
 //            }
         }
@@ -104,9 +104,9 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        new StatusesFriendsTimeLine(true, act.getSQL(), mHandler).start();
+        new StatusesFriendsTimeLine(true, GlobalContext.getSQL(), mHandler).start();
 
-//        new FriendsIDs(true, GlobalContext.getScreenName(), act.getSQL(), mHandler).start();
+//        new FriendsIDs(true, GlobalContext.getScreenName(), GlobalContext.getSQL(), mHandler).start();
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -208,7 +208,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
             }
             case MENU_PROFILE_IMAGE: {
 
-                Cursor cursor = act.getSQL().query(MyMaidSQLHelper.tableName, new String[]{
+                Cursor cursor = GlobalContext.getSQL().query(MyMaidSQLHelper.tableName, new String[]{
                         MyMaidSQLHelper.UID, MyMaidSQLHelper.SCREEN_NAME}, null, null, null,
                         null, null);
                 Log.e(MyMaidSQLHelper.TAG_SQL, "Queried users");
@@ -290,7 +290,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                                                                         LASTUID, "");
                                                                 editor.commit();
 
-                                                                if (act.getSQL().delete(
+                                                                if (GlobalContext.getSQL().delete(
                                                                         MyMaidSQLHelper.tableName,
                                                                         MyMaidSQLHelper.UID
                                                                                 + "=?",
@@ -360,7 +360,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
             mPullToRefreshAttacher.setRefreshComplete();
             switch (msg.what) {
 //                case GOT_FRIENDS_IDS_INFO: {
-//                    new StatusesFriendsTimeLine(true, act.getSQL(), mHandler).start();
+//                    new StatusesFriendsTimeLine(true, GlobalContext.getSQL(), mHandler).start();
 //                    break;
 //                }
                 case GOT_FRIENDS_TIMELINE_INFO: {
@@ -413,7 +413,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
     }
 
     public void refreshFriendsTimeLine() {
-        new StatusesFriendsTimeLine(false, act.getSQL(), mHandler).start();
+        new StatusesFriendsTimeLine(false, GlobalContext.getSQL(), mHandler).start();
         mPullToRefreshAttacher.setRefreshing(true);
     }
 

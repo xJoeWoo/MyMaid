@@ -48,6 +48,7 @@ public class SingleWeiboRepostsFragment extends Fragment {
 
     public void showReposts(String weiboID){
         new StatusesRepostTimeline(weiboID, mHandler).start();
+        pb.setVisibility(View.VISIBLE);
         this.weiboID = weiboID;
     }
 
@@ -71,6 +72,8 @@ public class SingleWeiboRepostsFragment extends Fragment {
                             setListView(statuses);
                         }
                     }
+
+                    act.setRepostsCount(statuses.size());
 
                     break;
                 }

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -73,9 +72,9 @@ public class Post extends Activity {
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
 
-	MyMaidSQLHelper sqlHelper = new MyMaidSQLHelper(Post.this, MyMaidSQLHelper.SQL_NAME, null,
-            MyMaidSQLHelper.SQL_VERSION);
-	SQLiteDatabase sql;
+//	MyMaidSQLHelper sqlHelper = new MyMaidSQLHelper(Post.this, MyMaidSQLHelper.SQL_NAME, null,
+//            MyMaidSQLHelper.SQL_VERSION);
+//	SQLiteDatabase sql;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +90,7 @@ public class Post extends Activity {
 		getActionBar().setDisplayUseLogoEnabled(true);
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		sql = sqlHelper.getWritableDatabase();
+//		sql = sqlHelper.getWritableDatabase();
 
 		preferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
 		editor = preferences.edit();
@@ -106,7 +105,7 @@ public class Post extends Activity {
 
 				String lastUid = preferences.getString(LASTUID, null);
 
-				Cursor c = sql.query(MyMaidSQLHelper.tableName, new String[] {
+				Cursor c = GlobalContext.getSQL().query(MyMaidSQLHelper.tableName, new String[] {
 						MyMaidSQLHelper.UID, MyMaidSQLHelper.ACCESS_TOKEN,
 						MyMaidSQLHelper.LOCATION, MyMaidSQLHelper.EXPIRES_IN,
 						MyMaidSQLHelper.SCREEN_NAME, MyMaidSQLHelper.DRAFT,
@@ -149,7 +148,7 @@ public class Post extends Activity {
 
 						if (GlobalContext.getPicPath() != null) {
 							filePath = GlobalContext.getPicPath();
-							rfBar();
+							invalidateOptionsMenu();
 						} else if (GlobalContext.getWords() != null) {
 							et_post.setText(GlobalContext.getWords());
 						}
@@ -180,7 +179,7 @@ public class Post extends Activity {
 							if (uri != null) {
 								filePath = getFilePath(uri);
 							}
-							rfBar();
+							invalidateOptionsMenu();
 						}
 
 					} else {// 登录到此Activity
@@ -214,7 +213,7 @@ public class Post extends Activity {
                                     .decodeByteArray(profileImg, 0,
                                             profileImg.length)));
 			Log.e(TAG, "21");
-			Cursor c = sql.query(MyMaidSQLHelper.tableName,
+			Cursor c = GlobalContext.getSQL().query(MyMaidSQLHelper.tableName,
 					new String[] { MyMaidSQLHelper.DRAFT }, MyMaidSQLHelper.UID + "=?",
 					new String[] { GlobalContext.getUID() }, null, null, null);
 			Log.e(TAG, "22");
@@ -243,7 +242,7 @@ public class Post extends Activity {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				rfBar(); // 刷新ActionBar
+				invalidateOptionsMenu();
 			}
 		});
 
@@ -342,7 +341,7 @@ public class Post extends Activity {
 					filePath = null;
 				}
 			}
-			rfBar();
+			invalidateOptionsMenu();
 			break;
 		}
 		case MENU_POST: {
@@ -359,7 +358,7 @@ public class Post extends Activity {
 
 					setProgressBarIndeterminateVisibility(true);
 					sending = true;
-					rfBar(); // 刷新ActionBar
+					invalidateOptionsMenu(); // 刷新ActionBar
 				} else {
 					Toast.makeText(Post.this, R.string.toast_say_sth,
 							Toast.LENGTH_SHORT).show();
@@ -425,7 +424,7 @@ public class Post extends Activity {
 			sending = false;
 			sent = true;
 			setProgressBarIndeterminateVisibility(false);
-			rfBar();
+			invalidateOptionsMenu();
 
 			switch (msg.what) {
 			case GOT_UPDATE_INFO: {
@@ -500,7 +499,7 @@ public class Post extends Activity {
 			}
 			case ACT_GOT_PHOTO: {
 				filePath = getFilePath(data.getData());
-				rfBar();
+				invalidateOptionsMenu();
 				break;
 			}
 			}
@@ -532,8 +531,8 @@ public class Post extends Activity {
 			draft = et_post.getText().toString();
 			ContentValues cv = new ContentValues();
 			cv.put(MyMaidSQLHelper.DRAFT, draft);
-			if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"
-					+ GlobalContext.getUID() + "'", null) != 0) {
+			if (GlobalContext.getSQL().update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"
+                    + GlobalContext.getUID() + "'", null) != 0) {
 				Log.e(MyMaidSQLHelper.TAG_SQL, "Saved draft: " + draft);
 			}
 		}
@@ -542,14 +541,10 @@ public class Post extends Activity {
 	private void clearDraft() {
 		ContentValues cv = new ContentValues();
 		cv.put(MyMaidSQLHelper.DRAFT, "");
-		if (sql.update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"
-				+ GlobalContext.getUID() + "'", null) != 0) {
+		if (GlobalContext.getSQL().update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID + "='"
+                + GlobalContext.getUID() + "'", null) != 0) {
 			Log.e(MyMaidSQLHelper.TAG_SQL, "Cleared draft");
 		}
-	}
-
-	private void rfBar() {
-		getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL); // 刷新ActionBar
 	}
 
 	@Override
