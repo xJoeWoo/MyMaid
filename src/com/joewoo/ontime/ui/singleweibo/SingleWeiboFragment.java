@@ -163,10 +163,7 @@ public class SingleWeiboFragment extends Fragment {
             tv_rt_source.setVisibility(View.GONE);
 //            iv_rt_image.setVisibility(View.GONE);
         } else {
-            if (status.getRetweetedStatus().getBmiddlePic() != null) {
-                dp = new DownloadPic(iv_image, tv_rt_rl, true, act);
-                dp.execute(status.getRetweetedStatus().getBmiddlePic());
-            }
+
             tv_rt_screen_name.setText(status.getRetweetedStatus().getUser().getScreenName());
             tv_rt_created_at.setText(" · " + status.getRetweetedStatus().getCreatedAt());
 
@@ -203,16 +200,8 @@ public class SingleWeiboFragment extends Fragment {
 
     private void setImage() {
 
-        if (status.getBmiddlePic() == null) {
-
-            if (status.getRetweetedStatus() != null && status.getRetweetedStatus().getBmiddlePic() == null) {
-                ViewGroup.LayoutParams lp = tv_rt_rl.getLayoutParams();
-                lp.width = 10000;
-                tv_rt_rl.setLayoutParams(lp);
-            }
-            iv_image.setVisibility(View.GONE);
-
-        } else if (status.getPicURLs() != null && status.getPicURLs().size() > 1) {
+        if (status.getPicURLs() != null && status.getPicURLs().size() > 1) {
+            // 原创多图微博
 
             gv.setAdapter(new SingleWeiboGirdViewAdapter(act, status.getPicURLs()));
 
@@ -223,7 +212,25 @@ public class SingleWeiboFragment extends Fragment {
                 }
             });
 
-        } else {
+        } else if (status.getRetweetedStatus() != null && status.getRetweetedStatus().getPicURLs() != null && status.getRetweetedStatus().getPicURLs().size() > 1) {
+            // 转发多图微博
+
+            ViewGroup.LayoutParams lp = tv_rt_rl.getLayoutParams();
+            lp.width = 10000;
+            tv_rt_rl.setLayoutParams(lp);
+
+            gv.setAdapter(new SingleWeiboGirdViewAdapter(act, status.getRetweetedStatus().getPicURLs()));
+
+            gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    new DownloadPic(null, tv_rt_rl, true, act).execute(status.getRetweetedStatus().getPicURLs().get(position).getBmiddlePic());
+                }
+            });
+
+        } else if (status.getBmiddlePic() != null) {
+            // 原创有图微博
+
             dp = new DownloadPic(iv_image, tv_rt_rl, false, act);
             dp.execute(status.getBmiddlePic());
             iv_image.setOnClickListener(new View.OnClickListener() {
@@ -232,9 +239,28 @@ public class SingleWeiboFragment extends Fragment {
                     jumpToGallery();
                 }
             });
+
+        } else if (status.getRetweetedStatus() != null && status.getRetweetedStatus().getBmiddlePic() != null) {
+            // 转发有图微博
+
+            dp = new DownloadPic(iv_image, tv_rt_rl, true, act);
+            dp.execute(status.getRetweetedStatus().getBmiddlePic());
+            iv_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    jumpToGallery();
+                }
+            });
+
+        } else {
+            // 什么都木有
+
+            if (status.getRetweetedStatus() != null && status.getRetweetedStatus().getBmiddlePic() == null) {
+                ViewGroup.LayoutParams lp = tv_rt_rl.getLayoutParams();
+                lp.width = 10000;
+                tv_rt_rl.setLayoutParams(lp);
+            }
         }
-
-
     }
 
     private void setLongClickCopyText() {

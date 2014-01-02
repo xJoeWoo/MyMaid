@@ -16,12 +16,12 @@ import java.util.List;
 /**
  * Created by JoeWoo on 13-12-21.
  */
-public class SingleWeiboCmtsListViewAdapter extends BaseAdapter {
+public class SingleWeiboCmtsAdapter extends BaseAdapter {
 
     private Context context;
     private List<CommentsBean> comments;
 
-    public SingleWeiboCmtsListViewAdapter(Context context) {
+    public SingleWeiboCmtsAdapter(Context context) {
         this.context = context;
     }
 

@@ -18,9 +18,7 @@ import android.widget.Toast;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.comments.CommentsShow;
-import com.joewoo.ontime.action.comments.CommentsToMe;
-import com.joewoo.ontime.action.statuses.StatusesFriendsTimeLine;
-import com.joewoo.ontime.support.adapter.listview.SingleWeiboCmtsListViewAdapter;
+import com.joewoo.ontime.support.adapter.listview.SingleWeiboCmtsAdapter;
 import com.joewoo.ontime.support.bean.CommentsBean;
 import com.joewoo.ontime.support.bean.CommentsToMeBean;
 import com.joewoo.ontime.support.info.AcquireCount;
@@ -47,7 +45,7 @@ public class SingleWeiboCommentsFragment extends Fragment {
     private String weiboID;
     private TextView tv;
     private List<CommentsBean> comments;
-    private SingleWeiboCmtsListViewAdapter adapter;
+    private SingleWeiboCmtsAdapter adapter;
 
     public void showComments(String weiboID) {
         new CommentsShow(weiboID, mHandler).start();
@@ -116,7 +114,7 @@ public class SingleWeiboCommentsFragment extends Fragment {
             }
         });
 
-        adapter = new SingleWeiboCmtsListViewAdapter(act);
+        adapter = new SingleWeiboCmtsAdapter(act);
 
     }
 

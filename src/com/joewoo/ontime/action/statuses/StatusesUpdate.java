@@ -1,12 +1,10 @@
 package com.joewoo.ontime.action.statuses;
 
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
-import com.joewoo.ontime.support.bean.WeiboBackBean;
+import com.joewoo.ontime.support.error.ErrorCheck;
 import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
 
@@ -14,10 +12,11 @@ import java.util.HashMap;
 
 import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
 import static com.joewoo.ontime.support.info.Defines.GOT_UPDATE_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_UPDATE_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.STATUS;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
-public class StatusesUpdate extends AsyncTask<String, Integer, String> {
+public class StatusesUpdate extends Thread{
 
     private String status;
     private Handler mHandler;
@@ -27,12 +26,7 @@ public class StatusesUpdate extends AsyncTask<String, Integer, String> {
         this.mHandler = handler;
     }
 
-    @Override
-    protected void onPreExecute() {
-    }
-
-    @Override
-    protected String doInBackground(String... params) {
+    public void run() {
         Log.e(TAG, "StatusesUpdate Weibo Thread START");
         String httpResult = null;
 
@@ -47,28 +41,21 @@ public class StatusesUpdate extends AsyncTask<String, Integer, String> {
 
         } catch (Exception e) {
             e.printStackTrace();
+            mHandler.obtainMessage(GOT_UPDATE_INFO_FAIL, "发布失败").sendToTarget();
         }
 
-        return httpResult;
+//        Log.e(TAG, result);
+
+        if(ErrorCheck.getError(httpResult) == null) {
+                mHandler.sendEmptyMessage(GOT_UPDATE_INFO);
+        }else {
+            mHandler.obtainMessage(GOT_UPDATE_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();
+        }
+
     }
 
-    @Override
-    protected void onProgressUpdate(Integer... progress) {
 
-    }
 
-    @Override
-    protected void onPostExecute(String result) {
-        Log.e(TAG, result);
-        Gson gson = new Gson();
-        WeiboBackBean j = gson.fromJson(result, WeiboBackBean.class);
 
-        if (mHandler != null)
-            mHandler.obtainMessage(GOT_UPDATE_INFO, j).sendToTarget();
-    }
-
-    @Override
-    protected void onCancelled() {
-    }
 
 }

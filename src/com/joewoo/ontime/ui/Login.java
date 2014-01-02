@@ -47,10 +47,6 @@ public class Login extends Activity {
     SharedPreferences uids;
     SharedPreferences.Editor uidsE;
 
-//    private MyMaidSQLHelper sqlHelper = new MyMaidSQLHelper(Login.this, MyMaidSQLHelper.SQL_NAME, null,
-//            MyMaidSQLHelper.SQL_VERSION);
-//    private SQLiteDatabase sql;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,26 +57,62 @@ public class Login extends Activity {
 
         wv_login = (WebView) findViewById(R.id.wv_login);
         wv_login.getSettings().setJavaScriptEnabled(true);
-        wv_login.loadUrl(URLHelper.AUTH);
 
         uids = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
         uidsE = uids.edit();
 
-//        sql = sqlHelper.getWritableDatabase();
+
+
+
+
+
+
+
+
+
+
+        // 加载网页
+        wv_login.loadUrl(URLHelper.AUTH);
 
         wv_login.setWebViewClient(new WebViewClient() {
 
+            // 监听返回的网址
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 Log.e(TAG, "onPageStarted URL: " + url);
                 setProgressBarIndeterminateVisibility(true);
+
+                // 判断是不是以Callback的网址开头
+                // 在【微博开放平台】-【应用信息】-【高级信息】里可以设置Callback网址
                 if (url.startsWith(URLHelper.CALLBACK)) {
+
+                    // 是的话停止加载新网页
                     view.cancelLongPress();
                     view.stopLoading();
+
+                    // 输出auth_code看一下
+                    // url.substring(url.indexOf("=") + 1) 就是截取auth_code的代码
                     Log.e(TAG, "Auth Code: " + url.substring(url.indexOf("=") + 1));
+
+                    // 用截取到auth_code来获得AccessToken，AccessToken为新线程，获得服务器响应后用Handler给Activity传回有关信息
+                    // AccessToken在 action.auth 里
                     new AccessToken(url.substring(url.indexOf("=") + 1), mHandler).start();
                 }
-//				super.onPageStarted(view, url, favicon);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             }
 
             @Override

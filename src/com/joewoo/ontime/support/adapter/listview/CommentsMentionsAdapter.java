@@ -8,32 +8,34 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.support.bean.StatusesBean;
+import com.joewoo.ontime.support.bean.CommentsBean;
 
 import java.util.List;
 
-public class MainListViewAdapter extends BaseAdapter {
+/**
+ * Created by JoeWoo on 13-12-18.
+ */
+public class CommentsMentionsAdapter extends BaseAdapter {
 
-    private List<StatusesBean> statuses;
+    private List<CommentsBean> comments;
     private Context context;
 
-    public MainListViewAdapter(Context context) {
+    public CommentsMentionsAdapter(Context context) {
         this.context = context;
-
     }
 
-    public void setData(List<StatusesBean> statuses) {
-        this.statuses = statuses;
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return statuses.get(position);
+    public void setData(List<CommentsBean> comments) {
+        this.comments = comments;
     }
 
     @Override
     public int getCount() {
-        return statuses.size();
+        return comments.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return comments.get(position);
     }
 
     @Override
@@ -41,16 +43,28 @@ public class MainListViewAdapter extends BaseAdapter {
         return position;
     }
 
+    public class ViewHolder {
+        public TextView tv_scr_name;
+        public TextView tv_text;
+        public TextView tv_rt_rl;
+        public TextView tv_rt_scr_name;
+        public TextView tv_rt;
+        public TextView tv_source;
+        public TextView tv_crt_at;
+        public TextView tv_cmt_cnt;
+        public TextView tv_rpos_cnt;
+        public TextView tv_img;
+//        public TextView tv_blank;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Log.e(TAG, "getView");
 
-        ViewHolder holder;
+        ViewHolder holder = null;
 
         if (convertView == null) {
 
             holder = new ViewHolder();
-
             convertView = LayoutInflater.from(context).inflate(R.layout.friendstimeline_lv,
                     null);
 
@@ -82,8 +96,10 @@ public class MainListViewAdapter extends BaseAdapter {
             holder.tv_rpos_cnt = (TextView) convertView
                     .findViewById(R.id.friendstimeline_reposts_count);
 
+
             holder.tv_img = (TextView) convertView
                     .findViewById(R.id.friendstimeline_have_image);
+
 
             convertView.setTag(holder);
 
@@ -92,25 +108,22 @@ public class MainListViewAdapter extends BaseAdapter {
         }
 
 
+        CommentsBean c = comments.get(position);
 
-        StatusesBean s = statuses.get(position);
-
-        if (s.getPicURLs().size() == 1) {
+        if (c.getStatus().getPicURLs().size() == 1) {
             holder.tv_img.setVisibility(View.VISIBLE);
             holder.tv_img.setBackgroundResource(R.drawable.image_dark);
-        } else if (s.getPicURLs().size() > 1) {
+        } else if (c.getStatus().getPicURLs().size() > 1) {
             holder.tv_img.setVisibility(View.VISIBLE);
             holder.tv_img.setBackgroundResource(R.drawable.muilt_image);
         } else
             holder.tv_img.setVisibility(View.GONE);
 
-        holder.tv_scr_name.setText(s.getUser().getScreenName());
+        holder.tv_scr_name.setText(c.getUser().getScreenName());
 
-//        holder.tv_text.setText(CheckMentionsURLTopic.getSpannableString(s.getText(), context));
-        holder.tv_text.setText(s.getText());
+        holder.tv_text.setText(c.getText());
 
-        if (s.getRetweetedStatus() == null) {
-
+        if (c.getStatus().getRetweetedStatus() == null) {
             holder.tv_rt_rl.setVisibility(View.GONE);
             holder.tv_rt_scr_name.setVisibility(View.GONE);
             holder.tv_rt.setVisibility(View.GONE);
@@ -118,25 +131,19 @@ public class MainListViewAdapter extends BaseAdapter {
             holder.tv_rt_scr_name.setVisibility(View.VISIBLE);
             holder.tv_rt.setVisibility(View.VISIBLE);
             holder.tv_rt_rl.setVisibility(View.VISIBLE);
-//            holder.tv_rt.setText(CheckMentionsURLTopic.getSpannableString(s.getRetweetedStatus().getText(), context));
-            holder.tv_rt.setText(s.getRetweetedStatus().getText());
-            if (s.getRetweetedStatus().getUser() != null) { // 微博已被删除
-                holder.tv_rt_scr_name.setText(s.getRetweetedStatus().getUser().getScreenName());
-                if (s.getRetweetedStatus().getPicURLs().size() == 1) {
-                    holder.tv_img.setVisibility(View.VISIBLE);
-                    holder.tv_img.setBackgroundResource(R.drawable.image_dark);
-                } else if (s.getRetweetedStatus().getPicURLs().size() > 1) {
-                    holder.tv_img.setVisibility(View.VISIBLE);
-                    holder.tv_img.setBackgroundResource(R.drawable.muilt_image);
-                } else
-                    holder.tv_img.setVisibility(View.GONE);
-            } else {
-                holder.tv_rt_scr_name.setText("……");
-            }
-
+            holder.tv_rt_scr_name.setText(c.getStatus().getRetweetedStatus().getUser().getScreenName());
+            holder.tv_rt.setText(c.getStatus().getRetweetedStatus().getText());
+            if (c.getStatus().getRetweetedStatus().getPicURLs().size() == 1) {
+                holder.tv_img.setVisibility(View.VISIBLE);
+                holder.tv_img.setBackgroundResource(R.drawable.image_dark);
+            } else if (c.getStatus().getRetweetedStatus().getPicURLs().size() > 1) {
+                holder.tv_img.setVisibility(View.VISIBLE);
+                holder.tv_img.setBackgroundResource(R.drawable.muilt_image);
+            } else
+                holder.tv_img.setVisibility(View.GONE);
         }
 
-        String source = s.getSource();
+        String source = c.getSource();
         holder.tv_source.setText(" · " + source);
         if (source.equals(context.getString(R.string.app_name_cn))) {
             holder.tv_source.setTextColor(context.getResources().getColor(R.color.textGrey));
@@ -145,12 +152,16 @@ public class MainListViewAdapter extends BaseAdapter {
             holder.tv_source.setShadowLayer(0, 0, 0, 0);
         }
 
-        holder.tv_crt_at.setText(s.getCreatedAt());
+        holder.tv_crt_at.setText(c.getStatus().getCreatedAt());
 
-        holder.tv_cmt_cnt.setText(String.valueOf(s.getCommentsCount()));
+        holder.tv_cmt_cnt.setText(String.valueOf(c.getStatus().getCommentsCount()));
 
-        holder.tv_rpos_cnt.setText(String.valueOf(s.getRepostsCount()));
+        holder.tv_rpos_cnt.setText(String.valueOf(c.getStatus().getRepostsCount()));
+
+        holder.tv_crt_at.setText(c.getCreatedAt());
+
 
         return convertView;
+
     }
 }

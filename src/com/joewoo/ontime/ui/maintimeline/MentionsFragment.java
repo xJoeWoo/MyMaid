@@ -22,7 +22,7 @@ import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.comments.CommentsMentions;
 import com.joewoo.ontime.action.remind.RemindUnreadCount;
 import com.joewoo.ontime.action.statuses.StatusesMentions;
-import com.joewoo.ontime.support.adapter.listview.CommentsMentionsListViewAdapter;
+import com.joewoo.ontime.support.adapter.listview.CommentsMentionsAdapter;
 import com.joewoo.ontime.support.adapter.listview.MainListViewAdapter;
 import com.joewoo.ontime.support.bean.CommentsBean;
 import com.joewoo.ontime.support.bean.StatusesBean;
@@ -70,7 +70,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
     private MainTimelineActivity act;
     private boolean isNormalMention = true;
     private MainListViewAdapter mainAdapter;
-    private CommentsMentionsListViewAdapter commentsAdapter;
+    private CommentsMentionsAdapter commentsAdapter;
 
     @Override
     public void onRefreshStarted(View view) {
@@ -132,7 +132,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                 if (isNormalMention) {
                     i.putExtra(STATUS_BEAN, statuses.get(arg2 - lv.getHeaderViewsCount()));
                 } else {
-                    i.putExtra(WEIBO_ID, comments.get(arg2 - lv.getHeaderViewsCount()).getId());
+                    i.putExtra(WEIBO_ID, comments.get(arg2 - lv.getHeaderViewsCount()).getStatus().getId());
                 }
                 startActivity(i);
                 return false;
@@ -160,7 +160,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
         });
 
         mainAdapter = new MainListViewAdapter(act);
-        commentsAdapter = new CommentsMentionsListViewAdapter(act);
+        commentsAdapter = new CommentsMentionsAdapter(act);
         lv.addHeaderView(new MainTimelineHeaderView(act), null, false);
     }
 

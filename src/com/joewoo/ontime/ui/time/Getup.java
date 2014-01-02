@@ -139,7 +139,7 @@ public class Getup extends Activity {
 						+ w.getTemp3() + "。离高考还有#" + leftDays + "天#、#"
 						+ leftTime + "秒#。 " + sentence + "" + "  (๑>◡<๑) @JouYiu ~";
 
-				new StatusesUpdate(getupWeibo, mHandler).execute();
+//				new StatusesUpdate(getupWeibo, mHandler).execute();
 
 				break;
 

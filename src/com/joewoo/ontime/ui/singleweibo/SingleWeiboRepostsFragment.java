@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.statuses.StatusesRepostTimeline;
-import com.joewoo.ontime.support.adapter.listview.SingleWeiboMensListViewAdapter;
+import com.joewoo.ontime.support.adapter.listview.SingleWeiboMensAdapter;
 import com.joewoo.ontime.support.bean.RepostTimelineBean;
 import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.info.AcquireCount;
@@ -43,7 +43,7 @@ public class SingleWeiboRepostsFragment extends Fragment {
     private ProgressBar pb;
     private String weiboID;
     private TextView tv;
-    private SingleWeiboMensListViewAdapter adapter;
+    private SingleWeiboMensAdapter adapter;
     private List<StatusesBean> statuses;
 
     public void showReposts(String weiboID){
@@ -138,11 +138,9 @@ public class SingleWeiboRepostsFragment extends Fragment {
             @Override
             public void onScroll(AbsListView view, int arg1, int arg2, int arg3) {
 
-
                 // 滚到到尾刷新
                 if (view.getCount() > (Integer.valueOf(AcquireCount.REPOSTS_TIMELINE_COUNT) - 2) && !act.isFreshing() && statuses != null && statuses.size() > 6 && view.getLastVisiblePosition() > (view.getCount() - 6)) {
                     Log.e(TAG, "到底");
-                    // 获取后会删除第一项，所以获取数+1
                     new StatusesRepostTimeline(weiboID, statuses.get(view.getCount() - 1).getId(), mHandler).start();
                     act.setFreshing(true);
                 }
@@ -153,7 +151,7 @@ public class SingleWeiboRepostsFragment extends Fragment {
             }
         });
 
-        adapter = new SingleWeiboMensListViewAdapter(act);
+        adapter = new SingleWeiboMensAdapter(act);
 	}
 
     private void setListView(List<StatusesBean> statuses) {

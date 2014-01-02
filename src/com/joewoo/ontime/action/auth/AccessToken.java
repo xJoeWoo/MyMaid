@@ -41,10 +41,10 @@ public class AccessToken extends Thread {
 
             hm = null;
 
-            WeiboBackBean j = new Gson()
+            WeiboBackBean b = new Gson()
                     .fromJson(httpResult, WeiboBackBean.class);
 
-            mHandler.obtainMessage(GOT_ACCESS_TOKEN, j).sendToTarget();
+            mHandler.obtainMessage(GOT_ACCESS_TOKEN, b).sendToTarget();
 
 
         } catch (Exception e) {

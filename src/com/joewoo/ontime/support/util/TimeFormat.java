@@ -32,13 +32,13 @@ public final class TimeFormat {
             int statusDay = c.get(Calendar.DAY_OF_YEAR);
 //            Log.e(TAG, "Status day: " + String.valueOf(statusDay));
 
-            if(currentDay - statusDay < 1) {
+            if(currentDay - statusDay < 1 && currentDay - statusDay >= 0) {
                 return GMTTime.substring(11, 16);
-            } else if (currentDay - statusDay < 2) {
+            } else if (currentDay - statusDay < 2 && currentDay - statusDay >= 0) {
                 return GlobalContext.getResString(R.string.time_yesterday) + GMTTime.substring(11, 16);
-            } else if(currentDay - statusDay < 3) {
+            } else if(currentDay - statusDay < 3 && currentDay - statusDay >= 0) {
                 return GlobalContext.getResString(R.string.time_2_days_ago) + GMTTime.substring(11, 16);
-            } else if(currentDay - statusDay < 4) {
+            } else if(currentDay - statusDay < 4 && currentDay - statusDay >= 0) {
                 return GlobalContext.getResString(R.string.time_3_days_ago) + GMTTime.substring(11, 16);
             } else {
                 return String.valueOf(c.get(Calendar.MONTH) + 1) + "-" + String.valueOf(c.get(Calendar.DAY_OF_MONTH)) + " · " + GMTTime.substring(11, 16);

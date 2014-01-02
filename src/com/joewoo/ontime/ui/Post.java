@@ -29,19 +29,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.action.statuses.StatusesUpdate;
 import com.joewoo.ontime.action.statuses.StatusesUpload;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
 import com.joewoo.ontime.support.net.NetworkStatus;
+import com.joewoo.ontime.support.service.post.PostService;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
-import com.joewoo.ontime.support.util.IDtoMID;
 
 import static com.joewoo.ontime.support.info.Defines.ACT_GOT_AT;
 import static com.joewoo.ontime.support.info.Defines.ACT_GOT_PHOTO;
-import static com.joewoo.ontime.support.info.Defines.DRAFT;
-import static com.joewoo.ontime.support.info.Defines.GOT_UPDATE_INFO;
-import static com.joewoo.ontime.support.info.Defines.GOT_UPLOAD_INFO;
 import static com.joewoo.ontime.support.info.Defines.IS_FRAG_POST;
 import static com.joewoo.ontime.support.info.Defines.KEY_AT_USER;
 import static com.joewoo.ontime.support.info.Defines.LASTUID;
@@ -54,6 +50,7 @@ import static com.joewoo.ontime.support.info.Defines.MENU_POST;
 import static com.joewoo.ontime.support.info.Defines.MENU_TOPIC;
 import static com.joewoo.ontime.support.info.Defines.PREFERENCES;
 import static com.joewoo.ontime.support.info.Defines.PROFILE_IMAGE;
+import static com.joewoo.ontime.support.info.Defines.STATUS;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
 public class Post extends Activity {
@@ -72,11 +69,18 @@ public class Post extends Activity {
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
 
-//	MyMaidSQLHelper sqlHelper = new MyMaidSQLHelper(Post.this, MyMaidSQLHelper.SQL_NAME, null,
-//            MyMaidSQLHelper.SQL_VERSION);
-//	SQLiteDatabase sql;
+//    @Override
+//    protected void onNewIntent(Intent intent) {
+//        super.onNewIntent(intent);
+//
+//        if(intent.getBooleanExtra(PostService.POST_STATUS, false)) {
+//            sent = true;
+//            clearDraft();
+//            finish();
+//        }
+//    }
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -353,12 +357,21 @@ public class Post extends Activity {
 
 						new StatusesUpload(et_post.getText().toString(), filePath,
 								pb_post, mHandler).execute();
-					else
-						new StatusesUpdate(et_post.getText().toString(), mHandler).execute();
+					else {
+
+                        // TODO:
+
+                        Intent ii = new Intent(Post.this, PostService.class);
+                        ii.putExtra(STATUS, et_post.getText().toString());
+
+                        startService(ii);
+
+                        finish();
+                    }
 
 					setProgressBarIndeterminateVisibility(true);
 					sending = true;
-					invalidateOptionsMenu(); // 刷新ActionBar
+					invalidateOptionsMenu();
 				} else {
 					Toast.makeText(Post.this, R.string.toast_say_sth,
 							Toast.LENGTH_SHORT).show();
@@ -426,64 +439,61 @@ public class Post extends Activity {
 			setProgressBarIndeterminateVisibility(false);
 			invalidateOptionsMenu();
 
-			switch (msg.what) {
-			case GOT_UPDATE_INFO: {
-				final WeiboBackBean update = (WeiboBackBean) msg.obj;
-
-				if (update.getId() == null) {
-					checkError(update);
-				} else {
-					clearDraft();
-					tv_post_info.setVisibility(View.VISIBLE);
-					tv_post_info.startAnimation(a_in);
-					tv_post_info.setText(getResources().getString(R.string.post_send_success_part_1)
-							+ update.getCreatedAt()
-							+ getResources().getString(R.string.post_send_success_part_2)
-							+ update.getId()
-							+ getResources().getString(R.string.post_send_success_part_3));
-					tv_post_info.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							String mid = IDtoMID.Id2Mid(update.getId());
-							Uri link = Uri.parse("http://weibo.com/"
-									+ GlobalContext.getUID() + "/" + mid);
-							startActivity(new Intent(Intent.ACTION_VIEW, link));
-						}
-					});
-
-					editor.putString(DRAFT, "");
-					editor.commit();
-				}
-				break;
-			}
-			case GOT_UPLOAD_INFO: {
-				final WeiboBackBean upload = (WeiboBackBean) msg.obj;
-				if (upload.getId() == null) {
-					checkError(upload);
-				} else {
-					clearDraft();
-					final String picURL = upload.getOriginalPic();
-					tv_post_info.setVisibility(View.VISIBLE);
-					tv_post_info.startAnimation(a_in);
-					tv_post_info.setText(getResources().getString(R.string.post_send_success_part_1)
-							+ upload.getCreatedAt()
-							+ getResources().getString(R.string.post_send_success_part_2)
-							+ upload.getId()
-							+ getResources().getString(R.string.post_send_success_part_img) + picURL
-							+ getResources().getString(R.string.post_send_success_part_3));
-					tv_post_info.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							String mid = IDtoMID.Id2Mid(upload.getId());
-							Uri link = Uri.parse("http://weibo.com/"
-									+ GlobalContext.getUID() + "/" + mid);
-							startActivity(new Intent(Intent.ACTION_VIEW, link));
-						}
-					});
-				}
-				break;
-			}
-			}
+//			switch (msg.what) {
+//			case GOT_UPDATE_INFO: {
+//				final WeiboBackBean update = (WeiboBackBean) msg.obj;
+//
+//				if (update.getId() == null) {
+//					checkError(update);
+//				} else {
+//					clearDraft();
+//					tv_post_info.setVisibility(View.VISIBLE);
+//					tv_post_info.startAnimation(a_in);
+//					tv_post_info.setText(getResources().getString(R.string.post_send_success_part_1)
+//							+ update.getCreatedAt()
+//							+ getResources().getString(R.string.post_send_success_part_2)
+//							+ update.getId()
+//							+ getResources().getString(R.string.post_send_success_part_3));
+//					tv_post_info.setOnClickListener(new View.OnClickListener() {
+//						@Override
+//						public void onClick(View v) {
+//							String mid = IDtoMID.Id2Mid(update.getId());
+//							Uri link = Uri.parse("http://weibo.com/"
+//									+ GlobalContext.getUID() + "/" + mid);
+//							startActivity(new Intent(Intent.ACTION_VIEW, link));
+//						}
+//					});
+//				}
+//				break;
+//			}
+//			case GOT_UPLOAD_INFO: {
+//				final WeiboBackBean upload = (WeiboBackBean) msg.obj;
+//				if (upload.getId() == null) {
+//					checkError(upload);
+//				} else {
+//					clearDraft();
+//					final String picURL = upload.getOriginalPic();
+//					tv_post_info.setVisibility(View.VISIBLE);
+//					tv_post_info.startAnimation(a_in);
+//					tv_post_info.setText(getResources().getString(R.string.post_send_success_part_1)
+//							+ upload.getCreatedAt()
+//							+ getResources().getString(R.string.post_send_success_part_2)
+//							+ upload.getId()
+//							+ getResources().getString(R.string.post_send_success_part_img) + picURL
+//							+ getResources().getString(R.string.post_send_success_part_3));
+//					tv_post_info.setOnClickListener(new View.OnClickListener() {
+//						@Override
+//						public void onClick(View v) {
+//							String mid = IDtoMID.Id2Mid(upload.getId());
+//							Uri link = Uri.parse("http://weibo.com/"
+//									+ GlobalContext.getUID() + "/" + mid);
+//							startActivity(new Intent(Intent.ACTION_VIEW, link));
+//						}
+//					});
+//				}
+//				break;
+//			}
+//			}
 		}
 	};
 
@@ -551,7 +561,6 @@ public class Post extends Activity {
 	protected void onPause() {
 		Log.e(TAG, "PAUSE");
 		super.onPause();
-
 		saveDraft();
 	}
 

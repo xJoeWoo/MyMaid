@@ -16,7 +16,7 @@
     <string name="title_act_comment">Comment</string>
     <string name="title_act_login">Login</string>
     <string name="title_act_single_user">User</string>
-    <string name="title_act_single_weibo">Post</string>
+    <string name="title_act_single_weibo">Status</string>
     <string name="title_act_post">Post</string>
     <string name="title_frag_single_weibo">Post</string>
     <string name="title_frag_single_weibo_comments">Comment</string>
@@ -123,6 +123,11 @@
     <string name="time_yesterday">Yesterday ·&#160;</string>
     <string name="time_2_days_ago">2 days ago ·&#160;</string>
     <string name="time_3_days_ago">3 days ago ·&#160;</string>
+
+    <string name="notify_post_posting">Posting Weibo…</string>
+    <string name="notify_post_fail">Post Failed</string>
+    <string name="notify_post_sending_pic">Uploading Photo…</string>
+    <string name="notify_post_success">Successfully Posted</string>
 
 	<!-- <string name=""></string>
 	<string name=""></string>

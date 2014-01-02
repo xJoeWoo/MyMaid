@@ -16,12 +16,12 @@ import java.util.List;
 /**
  * Created by JoeWoo on 13-12-21.
  */
-public class SingleWeiboMensListViewAdapter extends BaseAdapter {
+public class SingleWeiboMensAdapter extends BaseAdapter {
 
     private Context context;
     private List<StatusesBean> statuses;
 
-    public SingleWeiboMensListViewAdapter(Context context) {
+    public SingleWeiboMensAdapter(Context context) {
         this.context = context;
     }
 

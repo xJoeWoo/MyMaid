@@ -122,6 +122,11 @@
     <string name="time_2_days_ago">前天 ·&#160;</string>
     <string name="time_3_days_ago">大前天 ·&#160;</string>
 
+    <string name="notify_post_posting">正在发送微博…</string>
+    <string name="notify_post_fail">微博发送失败</string>
+    <string name="notify_post_sending_pic">正在上传图片…</string>
+    <string name="notify_post_success">微博发送成功</string>
+
 	<!-- <string name=""></string>
 	<string name=""></string>
 	<string name=""></string> -->
