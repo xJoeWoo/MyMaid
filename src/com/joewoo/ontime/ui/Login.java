@@ -3,9 +3,6 @@ package com.joewoo.ontime.ui;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,7 +18,6 @@ import android.widget.Toast;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.action.auth.AccessToken;
-import com.joewoo.ontime.action.friendships.FriendsIDs;
 import com.joewoo.ontime.action.user.UserShow;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
 import com.joewoo.ontime.support.net.ProfileImage;
@@ -31,21 +27,15 @@ import com.joewoo.ontime.ui.maintimeline.MainTimelineActivity;
 
 import static com.joewoo.ontime.support.info.Defines.GOT_ACCESS_TOKEN;
 import static com.joewoo.ontime.support.info.Defines.GOT_ACCESS_TOKEN_FAIL;
-import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_IDS_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_PROFILEIMG_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_SHOW_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_SHOW_INFO_FAIL;
-import static com.joewoo.ontime.support.info.Defines.LASTUID;
-import static com.joewoo.ontime.support.info.Defines.LOG_DEVIDER;
-import static com.joewoo.ontime.support.info.Defines.PREFERENCES;
+import static com.joewoo.ontime.support.info.Defines.LOGIN_FROM_POST;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
 public class Login extends Activity {
 
     public WebView wv_login;
-
-    SharedPreferences uids;
-    SharedPreferences.Editor uidsE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,19 +47,6 @@ public class Login extends Activity {
 
         wv_login = (WebView) findViewById(R.id.wv_login);
         wv_login.getSettings().setJavaScriptEnabled(true);
-
-        uids = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
-        uidsE = uids.edit();
-
-
-
-
-
-
-
-
-
-
 
         // 加载网页
         wv_login.loadUrl(URLHelper.AUTH);
@@ -98,20 +75,6 @@ public class Login extends Activity {
                     // AccessToken在 action.auth 里
                     new AccessToken(url.substring(url.indexOf("=") + 1), mHandler).start();
                 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             }
 
@@ -147,7 +110,7 @@ public class Login extends Activity {
                 case GOT_SHOW_INFO: {
                     WeiboBackBean show = (WeiboBackBean) msg.obj;
                     GlobalContext.setScreenName(show.getScreenName());
-                    new ProfileImage(show.getProfileImageUrl(), mHandler)
+                    new ProfileImage(show.getAvatarLarge(), mHandler)
                             .start();
                     show = null;
                     break;
@@ -155,71 +118,45 @@ public class Login extends Activity {
 
                 case GOT_PROFILEIMG_INFO: {
 
-                    Cursor c = GlobalContext.getSQL().query(MyMaidSQLHelper.tableName, new String[]{
-                            MyMaidSQLHelper.UID, MyMaidSQLHelper.ACCESS_TOKEN,
-                            MyMaidSQLHelper.SCREEN_NAME}, MyMaidSQLHelper.UID + "=?",
-                            new String[]{GlobalContext.getUID()}, null, null, null);
+                    GlobalContext.setProfileImg((byte[]) msg.obj);
 
                     ContentValues cv = new ContentValues();
 
                     cv.put(MyMaidSQLHelper.ACCESS_TOKEN, GlobalContext.getAccessToken());
                     cv.put(MyMaidSQLHelper.SCREEN_NAME, GlobalContext.getScreenName());
-                    cv.put(MyMaidSQLHelper.PROFILEIMG, (byte[]) msg.obj);
+                    cv.put(MyMaidSQLHelper.PROFILE_IMG, (byte[]) msg.obj);
 
-                    if (c.getCount() > 0)// 查询到已经存在UID（已经登录）
-                    {
+                    if (GlobalContext.getSQL().query(MyMaidSQLHelper.USER_TABLE, null, MyMaidSQLHelper.UID + "=?",
+                            new String[]{GlobalContext.getUID()}, null, null, null).getCount() > 0) {// 查询到已经存在UID（已经登录）
 
                         Log.e(MyMaidSQLHelper.TAG_SQL, "Got login info");
 
-                        if (GlobalContext.getSQL().update(MyMaidSQLHelper.tableName, cv, MyMaidSQLHelper.UID
+                        if (GlobalContext.getSQL().update(MyMaidSQLHelper.USER_TABLE, cv, MyMaidSQLHelper.UID
                                 + "='" + GlobalContext.getUID() + "'", null) != 0) {
                             Log.e(MyMaidSQLHelper.TAG_SQL, "SQL login info Updated");
                         }
 
-                        c.moveToFirst();
-                        Log.e(MyMaidSQLHelper.TAG_SQL, MyMaidSQLHelper.UID + c.getString(c.getColumnIndex(MyMaidSQLHelper.UID)));
-                        Log.e(MyMaidSQLHelper.TAG_SQL, MyMaidSQLHelper.ACCESS_TOKEN + c.getString(c.getColumnIndex(MyMaidSQLHelper.ACCESS_TOKEN)));
-                        Log.e(MyMaidSQLHelper.TAG_SQL, MyMaidSQLHelper.SCREEN_NAME + c.getString(c.getColumnIndex(MyMaidSQLHelper.SCREEN_NAME)));
+
 
                     } else {// 否则插入登录信息
 
                         cv.put(MyMaidSQLHelper.UID, GlobalContext.getUID());
 
-                        GlobalContext.getSQL().insert(MyMaidSQLHelper.tableName, null, cv);
+                        GlobalContext.getSQL().insert(MyMaidSQLHelper.USER_TABLE, null, cv);
 
-                        Cursor cursor = GlobalContext.getSQL().query(MyMaidSQLHelper.tableName, null, null,
-                                null, null, null, null);
                         Log.e(MyMaidSQLHelper.TAG_SQL, "Inserted");
-                        Log.e(MyMaidSQLHelper.TAG_SQL, "Display all data:");
-                        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-                                .moveToNext()) {
-                            Log.e(MyMaidSQLHelper.TAG_SQL, "No. " + cursor.getInt(0));
-                            Log.e(MyMaidSQLHelper.TAG_SQL, MyMaidSQLHelper.UID + cursor.getString(c.getColumnIndex(MyMaidSQLHelper.UID)));
-                            Log.e(MyMaidSQLHelper.TAG_SQL,
-                                    MyMaidSQLHelper.ACCESS_TOKEN + cursor.getString(c.getColumnIndex(MyMaidSQLHelper.ACCESS_TOKEN)));
-                            Log.e(MyMaidSQLHelper.TAG_SQL,
-                                    MyMaidSQLHelper.SCREEN_NAME + cursor.getString(c.getColumnIndex(MyMaidSQLHelper.SCREEN_NAME)));
-                            Log.e(MyMaidSQLHelper.TAG_SQL, LOG_DEVIDER);
-                        }
 
                     }
 
-                    uidsE.putString(LASTUID, GlobalContext.getUID());
-                    uidsE.commit();
                     setProgressBarIndeterminateVisibility(false);
 
-                    uids = null;
-                    uidsE = null;
-                    cv = null;
-                    c = null;
+                    MyMaidSQLHelper.setLastLogin(GlobalContext.getUID());
 
-                    new FriendsIDs(false, GlobalContext.getScreenName(), GlobalContext.getSQL(), mHandler).start();
+                    if(!getIntent().getBooleanExtra(LOGIN_FROM_POST, false))
+                        startActivity(new Intent(Login.this, MainTimelineActivity.class));
+                    else
+                        startActivity(new Intent(Login.this, Post.class));
 
-                    break;
-                }
-                case GOT_FRIENDS_IDS_INFO: {
-
-                    startActivity(new Intent(Login.this, MainTimelineActivity.class));
                     finish();
                     break;
                 }
@@ -229,6 +166,7 @@ public class Login extends Activity {
             }
         }
     };
+
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {

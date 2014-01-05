@@ -1,4 +1,4 @@
-package com.joewoo.ontime.support.view;
+package com.joewoo.ontime.support.view.header;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;

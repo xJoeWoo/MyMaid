@@ -3,6 +3,7 @@ package com.joewoo.ontime.action.statuses;
 import android.os.Handler;
 import android.util.Log;
 
+import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.error.ErrorCheck;
 import com.joewoo.ontime.support.net.HttpUtility;
@@ -41,7 +42,7 @@ public class StatusesUpdate extends Thread{
 
         } catch (Exception e) {
             e.printStackTrace();
-            mHandler.obtainMessage(GOT_UPDATE_INFO_FAIL, "发布失败").sendToTarget();
+            mHandler.obtainMessage(GOT_UPDATE_INFO_FAIL, GlobalContext.getResString(R.string.notify_post_fail)).sendToTarget();
         }
 
 //        Log.e(TAG, result);

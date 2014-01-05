@@ -3,88 +3,42 @@ package com.joewoo.ontime.ui.maintimeline;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
+import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.adapter.pager.MainPagerAdapter;
-import com.joewoo.ontime.support.net.NetworkStatus;
+import com.joewoo.ontime.support.dialog.UserChooserDialog;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.ui.Login;
-import com.joewoo.ontime.R;
-import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 
 import java.util.Locale;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 
-import static com.joewoo.ontime.support.info.Defines.LASTUID;
-import static com.joewoo.ontime.support.info.Defines.PREFERENCES;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
 public class MainTimelineActivity extends FragmentActivity {
 
-    MainPagerAdapter mSectionsPagerAdapter;
-    ViewPager mViewPager;
-    boolean gotCommentsUnread;
-    boolean gotMentionsUnread;
-    BitmapDrawable profileImg;
-    byte[] profileImgBytes;
+    private MainPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
+    private boolean gotCommentsUnread;
+    private boolean gotMentionsUnread;
     private PullToRefreshAttacher mPullToRefreshAttacher;
-
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
-    Cursor c;
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.timeline_cmt_atme);
 
-        Log.e(TAG, "MyMaid START!");
+        Log.e(TAG, "MyMaid Main Activity CREATE!");
 
-        preferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
-        editor = preferences.edit();
-
-        if (preferences.getString(LASTUID, null) != null) {
-
-            String lastUid = preferences.getString(LASTUID, null);
-
-            c = GlobalContext.getSQL().query(MyMaidSQLHelper.tableName, new String[]{MyMaidSQLHelper.UID,
-                    MyMaidSQLHelper.ACCESS_TOKEN, MyMaidSQLHelper.SCREEN_NAME,
-                    MyMaidSQLHelper.DRAFT, MyMaidSQLHelper.PROFILEIMG}, MyMaidSQLHelper.UID + "=?",
-                    new String[]{lastUid}, null, null, null);
-
-            if (c.moveToFirst() && c.getCount() > 0) {
-
-                if (!setGlobalContext(c)) {
-                    Toast.makeText(MainTimelineActivity.this,
-                            R.string.toast_login_acquired, Toast.LENGTH_LONG)
-                            .show();
-                    jumpToLogin();
-                }
-
-                profileImgBytes = c.getBlob(c.getColumnIndex(MyMaidSQLHelper.PROFILEIMG));
-                profileImg = new BitmapDrawable(getResources(), BitmapFactory
-                        .decodeByteArray(profileImgBytes, 0, profileImgBytes.length));
+        if (GlobalContext.getAccessToken() != null) {
 
                 mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
 
@@ -145,23 +99,17 @@ public class MainTimelineActivity extends FragmentActivity {
                         });
 
                 mViewPager.setCurrentItem(MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS);
-            } else { // 数据库没有信息
-                Toast.makeText(MainTimelineActivity.this,
-                        R.string.toast_login_acquired, Toast.LENGTH_LONG).show();
-                jumpToLogin();
-            }
-        } else {// 不存在配置文件，需要登录
-            Toast.makeText(MainTimelineActivity.this,
-                    R.string.toast_login_acquired, Toast.LENGTH_LONG).show();
-            jumpToLogin();
+
+        } else {// 不存在用户信息，需要登录
+//            Toast.makeText(MainTimelineActivity.this,
+//                    R.string.toast_login_acquired, Toast.LENGTH_LONG).show();
+//            jumpToLogin();
+            UserChooserDialog.show(this);
+
+
+
         }
 
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-
-        return true;
     }
 
     @Override
@@ -208,29 +156,9 @@ public class MainTimelineActivity extends FragmentActivity {
         return mPullToRefreshAttacher;
     }
 
-    public SharedPreferences.Editor getEditor() {
-        return editor;
-    }
-
     private void jumpToLogin() {
         startActivity(new Intent(MainTimelineActivity.this, Login.class));
         finish();
-    }
-
-    private boolean setGlobalContext(Cursor c) {
-        try {
-            GlobalContext.setUID(c.getString(c.getColumnIndex(MyMaidSQLHelper.UID)));
-            GlobalContext.setAccessToken(c.getString(c
-                    .getColumnIndex(MyMaidSQLHelper.ACCESS_TOKEN)));
-            GlobalContext.setScreenName(c.getString(c
-                    .getColumnIndex(MyMaidSQLHelper.SCREEN_NAME)));
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-
-
     }
 
     public void setActionBarLowProfile() {
@@ -253,23 +181,5 @@ public class MainTimelineActivity extends FragmentActivity {
             getActionBar().show();
             getWindow().getDecorView().setSystemUiVisibility(View.VISIBLE);
         }
-    }
-
-    public boolean checkNetwork() {
-        if (NetworkStatus.isNetworkAvailable()) {
-            return true;
-        } else {
-            Toast.makeText(this, R.string.toast_no_network, Toast.LENGTH_SHORT).show();
-            mPullToRefreshAttacher.setRefreshing(false);
-            return false;
-        }
-    }
-
-    public BitmapDrawable getProfileImage() {
-        return profileImg;
-    }
-
-    public byte[] getProfileImgBytes() {
-        return profileImgBytes;
     }
 }

@@ -20,14 +20,14 @@ import java.util.List;
 /**
  * Created by JoeWoo on 13-12-26.
  */
-public class SingleWeiboGirdViewAdapter extends BaseAdapter {
+public class SingleWeiboPicsAdapter extends BaseAdapter {
 
     private Context context;
     private List<PicURLsBean> pics;
 
     int count;
 
-    public SingleWeiboGirdViewAdapter(Context context, List<PicURLsBean> pics) {
+    public SingleWeiboPicsAdapter(Context context, List<PicURLsBean> pics) {
         this.context = context;
         this.pics = pics;
     }
@@ -58,19 +58,15 @@ public class SingleWeiboGirdViewAdapter extends BaseAdapter {
 
             convertView = LayoutInflater.from(context).inflate(R.layout.single_weibo_grid_view,
                     null);
+
             holder.iv = (ImageView) convertView.findViewById(R.id.frag_single_weibo_grid_view_img);
 
-            String url = pics.get(position).getSquarePic();
-
-            new DownloadMuiltPic(holder.iv).execute(url);
+            new DownloadMuiltPic(holder.iv).execute(pics.get(position).getSquarePic());
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
-        count++;
-        Log.e(TAG, String.valueOf(count));
 
         return convertView;
     }

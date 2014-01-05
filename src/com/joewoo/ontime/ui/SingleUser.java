@@ -22,7 +22,7 @@ import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
 import com.joewoo.ontime.support.info.AcquireCount;
 import com.joewoo.ontime.support.net.ProfileImage;
-import com.joewoo.ontime.support.view.UserTimelineHeaderView;
+import com.joewoo.ontime.support.view.header.UserTimelineHeaderView;
 import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
 
 import java.util.List;

@@ -69,7 +69,7 @@
 	<string name="menu_add_favourite">收藏</string>
 	<string name="menu_unread">未读</string>
 	<string name="menu_coming">Coming soon…</string>
-	<string name="menu_user_statuses">个人主页</string>
+	<string name="menu_user_statuses">帐号</string>
     <string name="menu_unread_post_mentions">微博@&#160;</string>
     <string name="menu_unread_comments_mentions">\t\t评论@&#160;</string>
     <string name="menu_unread_comments">评论&#160;</string>
@@ -78,14 +78,19 @@
 	<string name="post_send_success_part_2">\nID -&#160;</string>
 	<string name="post_send_success_part_3">\n&gt; 点击这里查看微博 &lt;</string>
 	<string name="post_send_success_part_img">\n图片 -&#160;</string>
+
+
 	
 	<string name="frag_ftl_dialog_choose_account_add_account">【添加帐号…】</string>
 	<string name="frag_ftl_dialog_choose_account_logout">【登出…】</string>
 	<string name="frag_ftl_dialog_choose_account_title">帐号</string>
+    <string name="user_chooser_dialog_choosed">不是登录了嘛 （¯﹃¯）</string>
 
 	<string name="frag_ftl_dialog_confirm_logout_title">登出？</string>
 	<string name="frag_ftl_dialog_confirm_logout_btn_ok">确定</string>
 	<string name="frag_ftl_dialog_confirm_logout_btn_cancle">不要</string>
+
+
 
     <string name="frag_ftl_dialog_groups_title">分组</string>
     <string name="frag_ftl_dialog_groups_my_posts">我的微博</string>
@@ -122,10 +127,21 @@
     <string name="time_2_days_ago">前天 ·&#160;</string>
     <string name="time_3_days_ago">大前天 ·&#160;</string>
 
-    <string name="notify_post_posting">正在发送微博…</string>
+    <string name="notify_post_sending">正在发送微博…</string>
     <string name="notify_post_fail">微博发送失败</string>
     <string name="notify_post_sending_pic">正在上传图片…</string>
+    <string name="notify_post_waiting_response">等待渣浪响应…</string>
+    <string name="notify_post_upload_pic_finish">图片上传完成</string>
     <string name="notify_post_success">微博发送成功</string>
+    <string name="notify_reply_sending">回复中…</string>
+    <string name="notify_reply_fail">回复失败</string>
+    <string name="notify_reply_success">回复成功</string>
+    <string name="notify_repost_sending">转发中…</string>
+    <string name="notify_repost_fail">转发失败</string>
+    <string name="notify_repost_success">转发成功</string>
+    <string name="notify_comment_sending">评论中…</string>
+    <string name="notify_comment_fail">评论失败</string>
+    <string name="notify_comment_success">评论成功</string>
 
 	<!-- <string name=""></string>
 	<string name=""></string>

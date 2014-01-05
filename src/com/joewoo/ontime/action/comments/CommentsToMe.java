@@ -33,12 +33,10 @@ public class CommentsToMe extends Thread {
     private Handler mHandler;
     public boolean isProvidedResult = false;
     private String httpResult;
-    private SQLiteDatabase sql;
     private String maxID = null;
 
-    public CommentsToMe(boolean isProvided, SQLiteDatabase sql, Handler handler) {
+    public CommentsToMe(boolean isProvided, Handler handler) {
         this.mHandler = handler;
-        this.sql = sql;
         this.isProvidedResult = isProvided;
     }
 
@@ -55,13 +53,11 @@ public class CommentsToMe extends Thread {
             if (!fresh())
                 return;
         } else {
-            httpResult = MyMaidSQLHelper.getOneString(MyMaidSQLHelper.COMMENTS_TO_ME, sql);
+            httpResult = MyMaidSQLHelper.getOneString(MyMaidSQLHelper.COMMENTS_TO_ME);
             if (httpResult == null)
                 if (!fresh())
                     return;
         }
-
-        sql = null;
 
         if (ErrorCheck.getError(httpResult) == null) {
             List<CommentsBean> comments = new Gson().fromJson(httpResult,
@@ -110,7 +106,7 @@ public class CommentsToMe extends Thread {
 
             hm = null;
 
-            MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.COMMENTS_TO_ME, httpResult, sql);
+            MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.COMMENTS_TO_ME, httpResult);
 
             return true;
         } catch (Exception e) {

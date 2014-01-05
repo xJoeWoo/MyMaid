@@ -16,32 +16,16 @@ import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.util.TimeFormat;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
-import static com.joewoo.ontime.support.info.Defines.BLANK;
-import static com.joewoo.ontime.support.info.Defines.COMMENTS_COUNT;
-import static com.joewoo.ontime.support.info.Defines.COMMENT_ID;
 import static com.joewoo.ontime.support.info.Defines.COUNT;
-import static com.joewoo.ontime.support.info.Defines.CREATED_AT;
+import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_MENTIONS_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_MENTIONS_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_MENTIONS_INFO_FAIL;
-import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
 import static com.joewoo.ontime.support.info.Defines.MAX_ID;
-import static com.joewoo.ontime.support.info.Defines.REPOSTS_COUNT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_BMIDDLE_PIC;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_CREATED_AT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SCREEN_NAME;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SOURCE;
-import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
-import static com.joewoo.ontime.support.info.Defines.SOURCE;
 import static com.joewoo.ontime.support.info.Defines.TAG;
-import static com.joewoo.ontime.support.info.Defines.TEXT;
-import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
-import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_MENTIONS_ADD_INFO;
 
 /**
  * Created by JoeWoo on 13-10-26.
@@ -52,12 +36,10 @@ public class CommentsMentions extends Thread {
     private Handler mHandler;
     public boolean isProvidedResult = false;
     private String httpResult;
-    private SQLiteDatabase sql;
     private String maxID;
 
-    public CommentsMentions(boolean isProvided, SQLiteDatabase sql, Handler handler) {
+    public CommentsMentions(boolean isProvided,  Handler handler) {
         this.mHandler = handler;
-        this.sql = sql;
         this.isProvidedResult = isProvided;
     }
 
@@ -73,7 +55,7 @@ public class CommentsMentions extends Thread {
             if (!fresh())
                 return;
         } else {
-            httpResult = MyMaidSQLHelper.getOneString(MyMaidSQLHelper.COMMENTS_MENTIONS, sql);
+            httpResult = MyMaidSQLHelper.getOneString(MyMaidSQLHelper.COMMENTS_MENTIONS);
             if (httpResult == null)
                 if (!fresh())
                     return;
@@ -131,7 +113,7 @@ public class CommentsMentions extends Thread {
 
             hm = null;
 
-            MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.COMMENTS_MENTIONS, httpResult, sql);
+            MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.COMMENTS_MENTIONS, httpResult);
 
             return true;
         } catch (Exception e) {

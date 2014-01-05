@@ -1,6 +1,5 @@
 package com.joewoo.ontime.action.statuses;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.util.Log;
 
@@ -32,7 +31,6 @@ public class StatusesFriendsTimeLine extends Thread {
     private Handler mHandler;
     public boolean isProvidedResult = false;
     private String httpResult;
-    private SQLiteDatabase sql;
     private String max_id = null;
 
     public StatusesFriendsTimeLine(String max_id, Handler handler) {
@@ -40,10 +38,9 @@ public class StatusesFriendsTimeLine extends Thread {
         this.max_id = max_id;
     }
 
-    public StatusesFriendsTimeLine(boolean isProvided, SQLiteDatabase sql, Handler handler) {
+    public StatusesFriendsTimeLine(boolean isProvided, Handler handler) {
         this.mHandler = handler;
         this.isProvidedResult = isProvided;
-        this.sql = sql;
     }
 
     @Override
@@ -56,14 +53,12 @@ public class StatusesFriendsTimeLine extends Thread {
                 if (!fresh())
                     return;
             } else {
-                httpResult = MyMaidSQLHelper.getOneString(MyMaidSQLHelper.FRIENDS_TIMELINE, sql);
-
+                httpResult = MyMaidSQLHelper.getOneString(MyMaidSQLHelper.FRIENDS_TIMELINE);
                 if (httpResult == null)
                     if (!fresh())
                         return;
             }
 
-            sql = null;
 
             if (ErrorCheck.getError(httpResult) == null) {
 
@@ -99,9 +94,12 @@ public class StatusesFriendsTimeLine extends Thread {
                         s.getRetweetedStatus().setCreatedAt(TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
 
                         source = s.getRetweetedStatus().getSource();
-                        source = source.substring(source.indexOf(">") + 1,
-                                source.indexOf("</a>"));
-                        s.getRetweetedStatus().setSource(source);
+
+                        if(source != null) {
+                            source = source.substring(source.indexOf(">") + 1,
+                                    source.indexOf("</a>"));
+                            s.getRetweetedStatus().setSource(source);
+                        }
                     }
 
 
@@ -153,7 +151,7 @@ public class StatusesFriendsTimeLine extends Thread {
 
             hm = null;
 
-            MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.FRIENDS_TIMELINE, httpResult, sql);
+            MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.FRIENDS_TIMELINE, httpResult);
 
             return true;
 

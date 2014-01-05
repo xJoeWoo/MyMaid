@@ -1,81 +1,60 @@
 package com.joewoo.ontime.action.statuses;
 
-import java.util.HashMap;
-
-import com.google.gson.Gson;
-import com.joewoo.ontime.action.URLHelper;
-import com.joewoo.ontime.support.bean.WeiboBackBean;
-import com.joewoo.ontime.support.net.ImageNetworkListener;
-import com.joewoo.ontime.support.net.HttpUtility;
-import com.joewoo.ontime.support.util.GlobalContext;
-
-import static com.joewoo.ontime.support.info.Defines.*;
-
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.ProgressBar;
 
-public class StatusesUpload extends AsyncTask<String, Integer, String> implements ImageNetworkListener.UploadProgressListener {
+import com.joewoo.ontime.R;
+import com.joewoo.ontime.action.URLHelper;
+import com.joewoo.ontime.support.error.ErrorCheck;
+import com.joewoo.ontime.support.net.HttpUtility;
+import com.joewoo.ontime.support.net.ImageNetworkListener;
+import com.joewoo.ontime.support.util.GlobalContext;
+
+import java.util.HashMap;
+
+import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
+import static com.joewoo.ontime.support.info.Defines.GOT_UPLOAD_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_UPLOAD_INFO_FAIL;
+import static com.joewoo.ontime.support.info.Defines.STATUS;
+import static com.joewoo.ontime.support.info.Defines.TAG;
+
+public class StatusesUpload extends Thread {
 
     private String status;
     private String filePath;
-    private ProgressBar pb;
     private Handler mHandler;
+    private ImageNetworkListener.UploadProgressListener listener;
 
-    public StatusesUpload(String status, String filePath, ProgressBar pb,
-                          Handler handler) {
+    public StatusesUpload(String status, String filePath, ImageNetworkListener.UploadProgressListener listener, Handler handler) {
         this.status = status;
         this.filePath = filePath;
-        this.pb = pb;
         this.mHandler = handler;
+        this.listener = listener;
     }
 
-    @Override
-    protected void onPreExecute() {
-    }
 
-    @Override
-    protected String doInBackground(String... params) {
+    public void run() {
         Log.e(TAG, "Statuses Upload Weibo Thread START");
+        String httpResult = null;
         try {
             HashMap<String, String> hm = new HashMap<String, String>();
 
             hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
             hm.put(STATUS, status);
 
-            return new HttpUtility().executeUploadImageTask(URLHelper.UPLOAD, hm
-                    , filePath, PIC, this);
+            httpResult = new HttpUtility().executeUploadImageTask(URLHelper.UPLOAD, hm, filePath, listener);
 
 
         } catch (Exception e) {
             e.printStackTrace();
-            mHandler.sendEmptyMessage(GOT_UPLOAD_INFO_FAIL);
-            return null;
+            mHandler.obtainMessage(GOT_UPLOAD_INFO_FAIL, GlobalContext.getResString(R.string.notify_post_fail));
+        }
+
+        if(ErrorCheck.getError(httpResult) == null) {
+            mHandler.sendEmptyMessage(GOT_UPLOAD_INFO);
+        }else {
+            mHandler.obtainMessage(GOT_UPLOAD_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();
         }
     }
 
-    @Override
-    protected void onProgressUpdate(Integer... progress) {
-        pb.setProgress(progress[0]);
-    }
-
-    @Override
-    protected void onPostExecute(String result) {
-        Log.e(TAG, result);
-        Gson gson = new Gson();
-        WeiboBackBean j = gson.fromJson(result, WeiboBackBean.class);
-
-        mHandler.obtainMessage(GOT_UPLOAD_INFO, j).sendToTarget();
-    }
-
-    @Override
-    public void uploadProgress(int data, int contentLength) {
-        publishProgress((int) (((float) data / (float) contentLength) * 100) + 1);
-    }
-
-    @Override
-    public void waitResponse() {
-
-    }
 }

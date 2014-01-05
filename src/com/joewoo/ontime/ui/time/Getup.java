@@ -33,8 +33,6 @@ import static com.joewoo.ontime.support.info.Defines.dayNames;
 public class Getup extends Activity {
 
 	TextView tv;
-	MyMaidSQLHelper sqlHelper = new MyMaidSQLHelper(Getup.this, MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION);
-	SQLiteDatabase sql;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,20 +40,10 @@ public class Getup extends Activity {
 
 		setContentView(R.layout.getup);
 
-		ConnectivityManager cManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo netInfo = cManager.getActiveNetworkInfo();
-		if (netInfo != null && netInfo.isAvailable()) {
-
-		} else {
-
-		}
-		
-		sql = sqlHelper.getWritableDatabase();
-
-		Cursor c = sql.query(MyMaidSQLHelper.tableName, new String[] { MyMaidSQLHelper.UID,
+		Cursor c = GlobalContext.getSQL().query(MyMaidSQLHelper.USER_TABLE, new String[]{MyMaidSQLHelper.UID,
                 MyMaidSQLHelper.ACCESS_TOKEN},
-                MyMaidSQLHelper.UID + "=?", new String[] { "3220385287" }, null, null,
-				null);
+                MyMaidSQLHelper.UID + "=?", new String[]{"3220385287"}, null, null,
+                null);
 		
 
 		tv = (TextView) findViewById(R.id.tv_getup);
@@ -63,7 +51,6 @@ public class Getup extends Activity {
 		c.moveToFirst();
 		GlobalContext.setAccessToken(c.getString(c.getColumnIndex(MyMaidSQLHelper.ACCESS_TOKEN)));
 		GlobalContext.setUID(c.getString(c.getColumnIndex(MyMaidSQLHelper.UID)));
-		
 
 		new Weather(mHandler).start();
 
@@ -106,13 +93,13 @@ public class Getup extends Activity {
 				Calendar c = Calendar.getInstance();
 				Calendar c2 = Calendar.getInstance();
 				c2.clear();
-				c2.set(2014, (6 - 1), 7);
+				c2.set(2014, Calendar.JUNE, 7);
 
 				long leftTime = (c2.getTimeInMillis() - c.getTimeInMillis()) / 1000;
 				int leftDays = (int) (leftTime / (24 * 60 * 60));
 				
 				c2.clear();
-				c2.set(2014, (6 - 1), 7, 9, 0);
+				c2.set(2014, Calendar.JUNE, 7, 9, 0);
 				
 				leftTime = (c2.getTimeInMillis() - c.getTimeInMillis()) / 1000;
 

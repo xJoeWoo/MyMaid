@@ -2,9 +2,15 @@ package com.joewoo.ontime.support.util;
 
 import android.app.Application;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
+
+import static com.joewoo.ontime.support.info.Defines.TAG;
 
 /**
  * Created by JoeWoo on 13-11-21.
@@ -12,23 +18,45 @@ import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 public final class GlobalContext extends Application{
 
     private static GlobalContext globalContext;
-    private static String ACCESS_TOKEN;
-    private static String UID;
-    private static String SCREEN_NAME;
-    private static String PIC_PATH;
-    private static String WORDS;
-
-    private static long[] FRIENDS_IDS;
+    private static String accessToken;
+    private static String uid;
+    private static String screenName;
+    private static String picFilePath;
+    private static String draft;
+    private static BitmapDrawable profileImg;
 
     private static SQLiteDatabase sql;
 
     @Override
     public void onCreate() {
+        Log.e(TAG, "MyMaid START!");
         super.onCreate();
+
         globalContext = this;
 
         sql = new MyMaidSQLHelper(GlobalContext.getAppContext(),
                 MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION).getWritableDatabase();
+
+
+        Cursor c = sql.query(MyMaidSQLHelper.USER_TABLE, new String[]{MyMaidSQLHelper.PROFILE_IMG, MyMaidSQLHelper.UID, MyMaidSQLHelper.SCREEN_NAME, MyMaidSQLHelper.DRAFT, MyMaidSQLHelper.ACCESS_TOKEN, MyMaidSQLHelper.PIC_FILE_PATH}, MyMaidSQLHelper.LAST_LOGIN + "=?", new String[]{"1"}, null, null, null);
+
+
+        if(c != null && c.getCount() > 0 && c.moveToFirst()) {
+            setUID(c.getString(c.getColumnIndex(MyMaidSQLHelper.UID)));
+            setAccessToken(c.getString(c.getColumnIndex(MyMaidSQLHelper.ACCESS_TOKEN)));
+            setScreenName(c.getString(c.getColumnIndex(MyMaidSQLHelper.SCREEN_NAME)));
+            setProfileImg(c.getBlob(c.getColumnIndex(MyMaidSQLHelper.PROFILE_IMG)));
+            Log.e(TAG, getScreenName());
+            try {
+                setDraft(c.getString(c.getColumnIndex(MyMaidSQLHelper.DRAFT)));
+                setPicPath(c.getString(c.getColumnIndex(MyMaidSQLHelper.PIC_FILE_PATH)));
+            } catch (Exception e){
+                Log.e(TAG, "No Draft or Pic");
+            }
+        } else {
+            Log.e(TAG, "No Last Login User Info");
+        }
+
     }
 
     public static SQLiteDatabase getSQL() {
@@ -37,14 +65,6 @@ public final class GlobalContext extends Application{
 
     public static String getResString(int resId) {
         return getAppContext().getString(resId);
-    }
-
-    public static long[] getFriendsIDs() {
-        return FRIENDS_IDS;
-    }
-
-    public static void setFriendsIDs(long[] friendsIDs) {
-        GlobalContext.FRIENDS_IDS = friendsIDs;
     }
 
     public static GlobalContext getInstance() {
@@ -56,43 +76,64 @@ public final class GlobalContext extends Application{
     }
 
     public static String getAccessToken() {
-        return ACCESS_TOKEN;
+        return accessToken;
     }
 
     public static void setAccessToken(String accessToken) {
-        ACCESS_TOKEN = accessToken;
+        GlobalContext.accessToken = accessToken;
     }
 
     public static String getUID() {
-        return UID;
+        return uid;
     }
 
     public static void setUID(String UID) {
-        GlobalContext.UID = UID;
+        GlobalContext.uid = UID;
     }
 
     public static String getScreenName() {
-        return SCREEN_NAME;
+        return screenName;
     }
 
     public static void setScreenName(String screenName) {
-        SCREEN_NAME = screenName;
+        GlobalContext.screenName = screenName;
     }
 
     public static String getPicPath() {
-        return PIC_PATH;
+        return picFilePath;
     }
 
     public static void setPicPath(String picPath) {
-        PIC_PATH = picPath;
+        GlobalContext.picFilePath = picPath;
     }
 
-    public static String getWords() {
-        return WORDS;
+    public static String getDraft() {
+        return draft;
     }
 
-    public static void setWords(String words) {
-        WORDS = words;
+    public static void setDraft(String draft) {
+        GlobalContext.draft = draft;
+    }
+
+    public static BitmapDrawable getProfileImg() {
+        return profileImg;
+    }
+
+    public static void setProfileImg(byte[] img) {
+        if(img != null)
+            GlobalContext.profileImg = new BitmapDrawable(getAppContext().getResources(), BitmapFactory
+                    .decodeByteArray(img, 0, img.length));
+        else
+            GlobalContext.profileImg = null;
+    }
+
+    public static void clear() {
+        setDraft(null);
+        setPicPath(null);
+        setUID(null);
+        setAccessToken(null);
+        setScreenName(null);
+        setProfileImg(null);
     }
 
 }

@@ -70,7 +70,7 @@
 	<string name="menu_add_favourite">FAVOURITE</string>
 	<string name="menu_unread">UNREAD COUNT</string>
 	<string name="menu_coming">COMING SOON…</string>
-	<string name="menu_user_statuses">MY POSTS</string>
+	<string name="menu_user_statuses">ACCOUNTS</string>
     <string name="menu_unread_post_mentions">POSTS @&#160;</string>
     <string name="menu_unread_comments_mentions">\t\tCMTS @&#160;</string>
     <string name="menu_unread_comments">COMMENTS&#160;</string>
@@ -80,14 +80,22 @@
 	<string name="post_send_success_part_2">\nID -&#160;</string>
 	<string name="post_send_success_part_3">\n&gt; CLICK HERE TO CHECK THIS WEIBO &lt;</string>
 	<string name="post_send_success_part_img">\nPic -&#160;</string>
+
+
+
+
 	
-	<string name="frag_ftl_dialog_choose_account_add_account">ADD ACCOUNT…</string>
-	<string name="frag_ftl_dialog_choose_account_logout">LOGOUT…</string>
+	<string name="frag_ftl_dialog_choose_account_add_account">ADD</string>
+	<string name="frag_ftl_dialog_choose_account_logout">LOGOUT</string>
 	<string name="frag_ftl_dialog_choose_account_title">Accounts</string>
+    <string name="user_chooser_dialog_choosed">That\'s it （¯﹃¯）</string>
 
 	<string name="frag_ftl_dialog_confirm_logout_title">Logout?</string>
 	<string name="frag_ftl_dialog_confirm_logout_btn_ok">Yep</string>
 	<string name="frag_ftl_dialog_confirm_logout_btn_cancle">Nope</string>
+
+
+
 
     <string name="frag_ftl_dialog_groups_title">Groups</string>
     <string name="frag_ftl_dialog_groups_my_posts">My Posts</string>
@@ -124,10 +132,21 @@
     <string name="time_2_days_ago">2 days ago ·&#160;</string>
     <string name="time_3_days_ago">3 days ago ·&#160;</string>
 
-    <string name="notify_post_posting">Posting Weibo…</string>
+    <string name="notify_post_sending">Posting Weibo…</string>
     <string name="notify_post_fail">Post Failed</string>
-    <string name="notify_post_sending_pic">Uploading Photo…</string>
+    <string name="notify_post_uploding_pic">Uploading Photo…</string>
+    <string name="notify_post_waiting_response">Waiting Response…</string>
+    <string name="notify_post_upload_pic_finish">Upload Photo Finished</string>
     <string name="notify_post_success">Successfully Posted</string>
+    <string name="notify_reply_sending">Replying…</string>
+    <string name="notify_reply_fail">Reply Failed</string>
+    <string name="notify_reply_success">Successfully Replied</string>
+    <string name="notify_repost_sending">Reposting…</string>
+    <string name="notify_repost_fail">Repost Failed</string>
+    <string name="notify_repost_success">Successfully Reposted</string>
+    <string name="notify_comment_sending">Commenting…</string>
+    <string name="notify_comment_fail">Comment Failed</string>
+    <string name="notify_comment_success">Successfully Commented</string>
 
 	<!-- <string name=""></string>
 	<string name=""></string>

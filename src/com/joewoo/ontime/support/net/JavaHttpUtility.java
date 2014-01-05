@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
+import static com.joewoo.ontime.support.info.Defines.PIC;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
 /**
@@ -100,7 +101,7 @@ public final class JavaHttpUtility {
         return imgBytes;
     }
 
-    public String doUploadFile(String urlStr, Map<String, String> param, String path, String imageParamName, final ImageNetworkListener.UploadProgressListener listener) throws Exception {
+    public String doUploadFile(String urlStr, Map<String, String> param, String path, final ImageNetworkListener.UploadProgressListener listener) throws Exception {
         String BOUNDARYSTR = getBoundry();
 
         File targetFile = new File(path);
@@ -111,7 +112,7 @@ public final class JavaHttpUtility {
         try {
             barry = ("--" + BOUNDARYSTR + "--\r\n").getBytes("UTF-8");
 
-            sendStr = getBoundaryMessage(BOUNDARYSTR, param, imageParamName, new File(path).getName(), "image/png");
+            sendStr = getBoundaryMessage(BOUNDARYSTR, param, PIC, new File(path).getName(), "image/png");
             contentLength = sendStr.getBytes("UTF-8").length + (int) targetFile.length() + 2 * barry.length;
         } catch (Exception e) {
             e.printStackTrace();
@@ -187,7 +188,6 @@ public final class JavaHttpUtility {
             if (listener != null) {
                 listener.waitResponse();
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();

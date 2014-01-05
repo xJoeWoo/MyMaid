@@ -23,8 +23,9 @@ import com.joewoo.ontime.support.adapter.listview.CommentsToMeAdapter;
 import com.joewoo.ontime.support.bean.CommentsBean;
 import com.joewoo.ontime.support.bean.UnreadCountBean;
 import com.joewoo.ontime.support.info.AcquireCount;
+import com.joewoo.ontime.support.net.NetworkStatus;
 import com.joewoo.ontime.support.util.GlobalContext;
-import com.joewoo.ontime.support.view.MainTimelineHeaderView;
+import com.joewoo.ontime.support.view.header.MainTimelineHeaderView;
 import com.joewoo.ontime.ui.CommentRepost;
 import com.joewoo.ontime.ui.Post;
 import com.joewoo.ontime.ui.SingleUser;
@@ -41,12 +42,10 @@ import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_TO_ME_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_TO_ME_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.GOT_SET_REMIND_COUNT_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.GOT_UNREAD_COUNT_INFO;
-import static com.joewoo.ontime.support.info.Defines.IS_FRAG_POST;
 import static com.joewoo.ontime.support.info.Defines.IS_REPLY;
 import static com.joewoo.ontime.support.info.Defines.MENU_POST;
 import static com.joewoo.ontime.support.info.Defines.MENU_PROFILE_IMAGE;
 import static com.joewoo.ontime.support.info.Defines.MENU_UNREAD_COUNT;
-import static com.joewoo.ontime.support.info.Defines.PROFILE_IMAGE;
 import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
@@ -63,7 +62,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
     @Override
     public void onRefreshStarted(View view) {
         Log.e(TAG, "Refresh Comments");
-        if ((act).checkNetwork())
+        if (NetworkStatus.check(true))
             refreshComments();
     }
 
@@ -89,7 +88,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        new CommentsToMe(true, GlobalContext.getSQL(), mHandler).start();
+        new CommentsToMe(true, mHandler).start();
 
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -142,7 +141,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
 
         try {
             menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_coming)
-                    .setIcon(act.getProfileImage())
+                    .setIcon(GlobalContext.getProfileImg())
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -169,11 +168,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
                 break;
             }
             case MENU_POST: {
-                Intent i = new Intent();
-                i.setClass(act, Post.class);
-                i.putExtra(IS_FRAG_POST, true);
-                i.putExtra(PROFILE_IMAGE, act.getProfileImgBytes());
-                startActivity(i);
+                startActivity(new Intent(act, Post.class));
                 break;
             }
             case MENU_UNREAD_COUNT: {
@@ -243,7 +238,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
     }
 
     public void refreshComments() {
-        new CommentsToMe(false, GlobalContext.getSQL(), mHandler).start();
+        new CommentsToMe(false, mHandler).start();
         mPullToRefreshAttacher.setRefreshing(true);
     }
 

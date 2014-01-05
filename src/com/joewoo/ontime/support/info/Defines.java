@@ -165,7 +165,5 @@ public class Defines {
 	public final static int MENU_STATUSES_DESTROY = 20;
     public final static int MENU_COPY_TEXT = 21;
 
-
-	public final static int CONNECT_TIMEOUT = 5000;
-	public final static int READ_TIMEOUT = 5000;
+    public final static String LOGIN_FROM_POST = "login_from_post";
 }

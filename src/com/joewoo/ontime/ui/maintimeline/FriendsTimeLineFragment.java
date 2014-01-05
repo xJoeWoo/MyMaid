@@ -1,12 +1,6 @@
 package com.joewoo.ontime.ui.maintimeline;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,11 +22,11 @@ import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.statuses.StatusesFriendsTimeLine;
 import com.joewoo.ontime.support.adapter.listview.MainListViewAdapter;
 import com.joewoo.ontime.support.bean.StatusesBean;
-import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
+import com.joewoo.ontime.support.dialog.UserChooserDialog;
+import com.joewoo.ontime.support.net.NetworkStatus;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.util.IDtoMID;
-import com.joewoo.ontime.support.view.MainTimelineHeaderView;
-import com.joewoo.ontime.ui.Login;
+import com.joewoo.ontime.support.view.header.MainTimelineHeaderView;
 import com.joewoo.ontime.ui.Post;
 import com.joewoo.ontime.ui.SingleUser;
 import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
@@ -46,14 +40,9 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefres
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_INFO_FAIL;
-import static com.joewoo.ontime.support.info.Defines.IS_FRAG_POST;
-import static com.joewoo.ontime.support.info.Defines.LASTUID;
-import static com.joewoo.ontime.support.info.Defines.LOG_DEVIDER;
 import static com.joewoo.ontime.support.info.Defines.MENU_POST;
 import static com.joewoo.ontime.support.info.Defines.MENU_PROFILE_IMAGE;
 import static com.joewoo.ontime.support.info.Defines.MENU_UNREAD_COUNT;
-import static com.joewoo.ontime.support.info.Defines.PREFERENCES;
-import static com.joewoo.ontime.support.info.Defines.PROFILE_IMAGE;
 import static com.joewoo.ontime.support.info.Defines.RESULT_DESTROYED_WEIBO;
 import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
 import static com.joewoo.ontime.support.info.Defines.STATUS_BEAN;
@@ -63,22 +52,17 @@ import static com.joewoo.ontime.support.info.Defines.TAG;
 
 public class FriendsTimeLineFragment extends Fragment implements OnRefreshListener {
 
-    List<StatusesBean> statuses;
-    ListView lv;
-    MainListViewAdapter mAdapter;
+    private List<StatusesBean> statuses;
+    private ListView lv;
+    private MainListViewAdapter mAdapter;
     private PullToRefreshAttacher mPullToRefreshAttacher;
     private MainTimelineActivity act;
-//    private boolean freshedFriendsIDs = false;
 
     @Override
     public void onRefreshStarted(View view) {
         Log.e(TAG, "Refresh StatusesFriendsTimeLine");
-        if (act.checkNetwork()) {
+        if (NetworkStatus.check(true)) {
             refreshFriendsTimeLine();
-//            if(!freshedFriendsIDs) {
-//                new FriendsIDs(false, GlobalContext.getScreenName(), GlobalContext.getSQL(), null).start();
-//                freshedFriendsIDs = true;
-//            }
         }
     }
 
@@ -104,9 +88,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        new StatusesFriendsTimeLine(true, GlobalContext.getSQL(), mHandler).start();
-
-//        new FriendsIDs(true, GlobalContext.getScreenName(), GlobalContext.getSQL(), mHandler).start();
+        new StatusesFriendsTimeLine(true, mHandler).start();
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -174,7 +156,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
 
         try {
             menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_user_statuses)
-                    .setIcon(act.getProfileImage())
+                    .setIcon(GlobalContext.getProfileImg())
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         } catch (Exception e) {
             Log.e(TAG, "Profile image length: (Timeline) ERROR!");
@@ -199,153 +181,122 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                 break;
             }
             case MENU_POST: {
-                Intent i = new Intent();
-                i.setClass(act, Post.class);
-                i.putExtra(IS_FRAG_POST, true);
-                i.putExtra(PROFILE_IMAGE, act.getProfileImgBytes());
-                startActivity(i);
+                startActivity(new Intent(act, Post.class));
                 break;
             }
             case MENU_PROFILE_IMAGE: {
 
-                Cursor cursor = GlobalContext.getSQL().query(MyMaidSQLHelper.tableName, new String[]{
-                        MyMaidSQLHelper.UID, MyMaidSQLHelper.SCREEN_NAME}, null, null, null,
-                        null, null);
-                Log.e(MyMaidSQLHelper.TAG_SQL, "Queried users");
+                UserChooserDialog.show(act);
 
-                if (cursor.getCount() > 0) {
-                    final String[] singleUid = new String[cursor.getCount() + 2];
-                    final String[] singleUser = new String[cursor.getCount() + 2];
-
-                    for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
-                            .moveToNext()) {
-
-                        singleUid[cursor.getPosition()] = cursor.getString(0);
-                        singleUser[cursor.getPosition()] = cursor.getString(1);
-                        Log.e(TAG, "Cursor position - " + cursor.getPosition());
-                        Log.e(TAG, "Single Uid - "
-                                + singleUid[cursor.getPosition()]);
-                        Log.e(TAG,
-                                "Single User - " + singleUser[cursor.getPosition()]);
-                        Log.e(TAG, LOG_DEVIDER);
-                    }
-
-                    singleUser[cursor.getCount()] = act
-                            .getResources()
-                            .getString(
-                                    R.string.frag_ftl_dialog_choose_account_add_account);
-                    singleUid[cursor.getCount()] = "0";
-
-                    singleUser[cursor.getCount() + 1] = act
-                            .getResources().getString(
-                                    R.string.frag_ftl_dialog_choose_account_logout);
-                    singleUid[cursor.getCount() + 1] = "1";
-
-                    new AlertDialog.Builder(act)
-                            .setTitle(R.string.frag_ftl_dialog_choose_account_title)
-                            .setItems(singleUser, new OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-
-                                    SharedPreferences uids = act
-                                            .getSharedPreferences(PREFERENCES,
-                                                    Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor uidsE = uids.edit();
-
-                                    Log.e(TAG, "Chose UID: " + singleUid[which]);
-                                    Log.e(TAG, "Chose Screen Name: "
-                                            + singleUid[which]);
-
-                                    if (!singleUid[which].equals("0")
-                                            && !singleUid[which].equals("1")) {
-                                        uidsE.putString(LASTUID, singleUid[which]);
-                                        uidsE.commit();
-                                        act.finish();
-                                        startActivity(new Intent(act,
-                                                MainTimelineActivity.class));
-                                    } else if (singleUid[which].equals("0")) {
-                                        startActivity(new Intent(act,
-                                                Login.class));
-                                        act.finish();
-                                    } else if (singleUid[which].equals("1")) {
-
-                                        new AlertDialog.Builder(act,
-                                                AlertDialog.THEME_HOLO_LIGHT)
-                                                .setTitle(
-                                                        R.string.frag_ftl_dialog_confirm_logout_title)
-                                                .setPositiveButton(
-                                                        R.string.frag_ftl_dialog_confirm_logout_btn_ok,
-                                                        new OnClickListener() {
-
-                                                            @Override
-                                                            public void onClick(
-                                                                    DialogInterface dialog,
-                                                                    int which) {
-                                                                SharedPreferences.Editor editor = (act)
-                                                                        .getEditor();
-
-                                                                editor.putString(
-                                                                        LASTUID, "");
-                                                                editor.commit();
-
-                                                                if (GlobalContext.getSQL().delete(
-                                                                        MyMaidSQLHelper.tableName,
-                                                                        MyMaidSQLHelper.UID
-                                                                                + "=?",
-                                                                        new String[]{GlobalContext.getUID()}) > 0) {
-                                                                    Log.e(MyMaidSQLHelper.TAG_SQL,
-                                                                            "LOGOUT - Cleared user info");
-
-                                                                    Toast.makeText(
-                                                                            act,
-                                                                            "<(￣︶￣)>",
-                                                                            Toast.LENGTH_SHORT)
-                                                                            .show();
-                                                                    startActivity(new Intent(
-                                                                            act,
-                                                                            Login.class));
-                                                                    act
-                                                                            .finish();
-                                                                }
-                                                            }
-                                                        })
-                                                .setNegativeButton(
-                                                        R.string.frag_ftl_dialog_confirm_logout_btn_cancle,
-                                                        null).show();
-                                    }
-                                }
-                            }).setNegativeButton(android.R.string.cancel, null).show();
-                } else {
-
-                }
+//                Cursor cursor = GlobalContext.getSQL().query(MyMaidSQLHelper.USER_TABLE, new String[]{
+//                        MyMaidSQLHelper.UID, MyMaidSQLHelper.SCREEN_NAME}, null, null, null,
+//                        null, null);
+//                Log.e(MyMaidSQLHelper.TAG_SQL, "Queried users");
+//
+//                if (cursor.getCount() > 0) {
+//                    final String[] singleUid = new String[cursor.getCount() + 2];
+//                    final String[] singleUser = new String[cursor.getCount() + 2];
+//
+//                    for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor
+//                            .moveToNext()) {
+//
+//                        singleUid[cursor.getPosition()] = cursor.getString(0);
+//                        singleUser[cursor.getPosition()] = cursor.getString(1);
+//                        Log.e(TAG, "Cursor position - " + cursor.getPosition());
+//                        Log.e(TAG, "Single Uid - "
+//                                + singleUid[cursor.getPosition()]);
+//                        Log.e(TAG,
+//                                "Single User - " + singleUser[cursor.getPosition()]);
+//                        Log.e(TAG, LOG_DEVIDER);
+//                    }
+//
+//                    singleUser[cursor.getCount()] = act
+//                            .getResources()
+//                            .getString(
+//                                    R.string.frag_ftl_dialog_choose_account_add_account);
+//                    singleUid[cursor.getCount()] = "0";
+//
+//                    singleUser[cursor.getCount() + 1] = act
+//                            .getResources().getString(
+//                                    R.string.frag_ftl_dialog_choose_account_logout);
+//                    singleUid[cursor.getCount() + 1] = "1";
+//
+//                    new AlertDialog.Builder(act)
+//                            .setTitle(R.string.frag_ftl_dialog_choose_account_title)
+//                            .setItems(singleUser, new OnClickListener() {
+//
+//                                @Override
+//                                public void onClick(DialogInterface dialog,
+//                                                    int which) {
+//
+//                                    Log.e(TAG, "Chose UID: " + singleUid[which]);
+//                                    Log.e(TAG, "Chose Screen Name: "
+//                                            + singleUid[which]);
+//
+//                                    if (!singleUid[which].equals("0")
+//                                            && !singleUid[which].equals("1")) {
+//
+//                                        act.finish();
+//                                        startActivity(new Intent(act,
+//                                                MainTimelineActivity.class));
+//                                    } else if (singleUid[which].equals("0")) {
+//                                        startActivity(new Intent(act,
+//                                                Login.class));
+//                                        act.finish();
+//                                    } else if (singleUid[which].equals("1")) {
+//
+//                                        new AlertDialog.Builder(act,
+//                                                AlertDialog.THEME_HOLO_LIGHT)
+//                                                .setTitle(
+//                                                        R.string.frag_ftl_dialog_confirm_logout_title)
+//                                                .setPositiveButton(
+//                                                        R.string.frag_ftl_dialog_confirm_logout_btn_ok,
+//                                                        new OnClickListener() {
+//
+//                                                            @Override
+//                                                            public void onClick(
+//                                                                    DialogInterface dialog,
+//                                                                    int which) {
+//
+//                                                                if (GlobalContext.getSQL().delete(
+//                                                                        MyMaidSQLHelper.USER_TABLE,
+//                                                                        MyMaidSQLHelper.UID
+//                                                                                + "=?",
+//                                                                        new String[]{GlobalContext.getUID()}) > 0) {
+//                                                                    Log.e(MyMaidSQLHelper.TAG_SQL,
+//                                                                            "LOGOUT - Cleared user info");
+//
+//                                                                    Toast.makeText(
+//                                                                            act,
+//                                                                            "<(￣︶￣)>",
+//                                                                            Toast.LENGTH_SHORT)
+//                                                                            .show();
+//                                                                    startActivity(new Intent(
+//                                                                            act,
+//                                                                            Login.class));
+//                                                                    act
+//                                                                            .finish();
+//                                                                }
+//                                                            }
+//                                                        })
+//                                                .setNegativeButton(
+//                                                        R.string.frag_ftl_dialog_confirm_logout_btn_cancle,
+//                                                        null).show();
+//                                    }
+//                                }
+//                            }).setNegativeButton(android.R.string.cancel, null).show();
+//                } else {
+//
+//                }
 
                 break;
             }
             case MENU_UNREAD_COUNT: {
-//                String[] groups = {act.getString(R.string.frag_ftl_dialog_groups_my_posts), act.getString(R.string.frag_ftl_dialog_groups_coming_soon)};
-//                new AlertDialog.Builder(act).setTitle(R.string.frag_ftl_dialog_groups_title).setItems(groups, new OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        Log.e(TAG, String.valueOf(i));
-//                        switch (i) {
-//                            case 0: {
-                if (act.checkNetwork()) {
+                if (NetworkStatus.check(true)) {
                     Intent ii = new Intent(act, SingleUser.class);
                     ii.putExtra(SCREEN_NAME, GlobalContext.getScreenName());
                     startActivity(ii);
                 }
-//                                break;
-//                            }
-//                            case 1: {
-//                                Toast.makeText(act, "TAT", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    }
-//                }).setNegativeButton(android.R.string.cancel, null).show();
-////
-
                 break;
             }
         }
@@ -413,7 +364,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
     }
 
     public void refreshFriendsTimeLine() {
-        new StatusesFriendsTimeLine(false, GlobalContext.getSQL(), mHandler).start();
+        new StatusesFriendsTimeLine(false, mHandler).start();
         mPullToRefreshAttacher.setRefreshing(true);
     }
 

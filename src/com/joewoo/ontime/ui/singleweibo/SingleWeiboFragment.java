@@ -20,7 +20,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.support.adapter.gridview.SingleWeiboGirdViewAdapter;
+import com.joewoo.ontime.support.adapter.gridview.SingleWeiboPicsAdapter;
 import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.menu.CopyTextContextualMenu;
 import com.joewoo.ontime.support.net.DownloadPic;
@@ -79,7 +79,6 @@ public class SingleWeiboFragment extends Fragment {
 
         act = (SingleWeiboActivity) getActivity();
         act.setSingleWeiboFragment();
-
 
     }
 
@@ -203,7 +202,7 @@ public class SingleWeiboFragment extends Fragment {
         if (status.getPicURLs() != null && status.getPicURLs().size() > 1) {
             // 原创多图微博
 
-            gv.setAdapter(new SingleWeiboGirdViewAdapter(act, status.getPicURLs()));
+            gv.setAdapter(new SingleWeiboPicsAdapter(act, status.getPicURLs()));
 
             gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -219,7 +218,7 @@ public class SingleWeiboFragment extends Fragment {
             lp.width = 10000;
             tv_rt_rl.setLayoutParams(lp);
 
-            gv.setAdapter(new SingleWeiboGirdViewAdapter(act, status.getRetweetedStatus().getPicURLs()));
+            gv.setAdapter(new SingleWeiboPicsAdapter(act, status.getRetweetedStatus().getPicURLs()));
 
             gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override

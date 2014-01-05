@@ -17,52 +17,26 @@ import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.util.TimeFormat;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
-import static com.joewoo.ontime.support.info.Defines.BLANK;
-import static com.joewoo.ontime.support.info.Defines.BMIDDLE_PIC;
-import static com.joewoo.ontime.support.info.Defines.COMMENTS_COUNT;
 import static com.joewoo.ontime.support.info.Defines.COUNT;
-import static com.joewoo.ontime.support.info.Defines.CREATED_AT;
+import static com.joewoo.ontime.support.info.Defines.GOT_MENTIONS_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_MENTIONS_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_MENTIONS_INFO_FAIL;
-import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
 import static com.joewoo.ontime.support.info.Defines.MAX_ID;
-import static com.joewoo.ontime.support.info.Defines.PIC_URLS;
-import static com.joewoo.ontime.support.info.Defines.PROFILE_IMAGE_URL;
-import static com.joewoo.ontime.support.info.Defines.REPOSTS_COUNT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_BMIDDLE_PIC;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_COMMENTS_COUNT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_CREATED_AT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_REPOSTS_COUNT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SCREEN_NAME;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SOURCE;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_THUMBNAIL_PIC;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_UID;
-import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
-import static com.joewoo.ontime.support.info.Defines.SOURCE;
 import static com.joewoo.ontime.support.info.Defines.TAG;
-import static com.joewoo.ontime.support.info.Defines.TEXT;
-import static com.joewoo.ontime.support.info.Defines.THUMBNAIL_PIC;
-import static com.joewoo.ontime.support.info.Defines.UID;
-import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
-import static com.joewoo.ontime.support.info.Defines.GOT_MENTIONS_ADD_INFO;
 
 public class StatusesMentions extends Thread {
 
     private Handler mHandler;
     public boolean isProvidedResult = false;
     private String httpResult;
-    private SQLiteDatabase sql;
     private String maxID = null;
 
-    public StatusesMentions(boolean isProvided, SQLiteDatabase sql, Handler handler) {
+    public StatusesMentions(boolean isProvided, Handler handler) {
         this.mHandler = handler;
-        this.sql = sql;
         this.isProvidedResult = isProvided;
     }
 
@@ -80,25 +54,16 @@ public class StatusesMentions extends Thread {
             if (!fresh())
                 return;
         } else {
-            httpResult = MyMaidSQLHelper.getOneString(MyMaidSQLHelper.MENTIONS, sql);
+            httpResult = MyMaidSQLHelper.getOneString(MyMaidSQLHelper.MENTIONS);
             if (httpResult == null)
                 if (!fresh())
                     return;
         }
 
-        sql = null;
-
         if (ErrorCheck.getError(httpResult) == null) {
 
             List<StatusesBean> statuses = new Gson().fromJson(httpResult,
                     MentionsBean.class).getStatuses();
-
-//            ArrayList<HashMap<String, String>> text = new ArrayList<HashMap<String, String>>();
-
-//            HashMap<String, String> hm = new HashMap<String, String>();
-//            hm.put(BLANK, " ");
-//            text.add(hm);
-//            hm = null;
 
             String source;
 
@@ -141,7 +106,7 @@ public class StatusesMentions extends Thread {
 
     private boolean fresh() {
         try {
-            HashMap<String, String> hm = new HashMap<String, String>();
+            HashMap<String, String> hm = new HashMap<>();
             hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
 
             if (maxID == null) {
@@ -155,7 +120,7 @@ public class StatusesMentions extends Thread {
 
             hm = null;
 
-            MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.MENTIONS, httpResult, sql);
+            MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.MENTIONS, httpResult);
 
             return true;
 

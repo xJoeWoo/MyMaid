@@ -28,7 +28,6 @@ public final class ProfileImage extends Thread {
         Log.e(TAG, "Profile Image Thread START");
 
         try {
-
             byte[] bytes = new HttpUtility().executeDownloadImageTask(url, null);
 
             Bitmap bm = BitmapRoundCorner.toRoundCorner(BitmapFactory.decodeByteArray(bytes, 0, bytes.length), 90);
@@ -42,6 +41,7 @@ public final class ProfileImage extends Thread {
                     .sendToTarget();
 
             bm.recycle();
+            baos.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
