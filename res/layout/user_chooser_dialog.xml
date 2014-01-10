@@ -14,8 +14,8 @@
         android:id="@+id/user_chooser_dialog_gv"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:numColumns="auto_fit"
-        android:columnWidth="100dp"
+        android:numColumns="2"
+        android:columnWidth="90dp"
         android:stretchMode="columnWidth"
         android:choiceMode="singleChoice"
         android:gravity="center"/>

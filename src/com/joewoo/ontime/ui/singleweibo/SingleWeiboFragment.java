@@ -31,10 +31,10 @@ import com.joewoo.ontime.ui.SingleUser;
 
 import java.io.File;
 
-import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 import static com.joewoo.ontime.support.info.Defines.TEMP_IMAGE_NAME;
 import static com.joewoo.ontime.support.info.Defines.TEMP_IMAGE_PATH;
+import static com.joewoo.ontime.support.info.Defines.USER_BEAN;
 
 public class SingleWeiboFragment extends Fragment {
 
@@ -131,19 +131,19 @@ public class SingleWeiboFragment extends Fragment {
         tv_screen_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jumpToSingleUser(status.getUser().getScreenName());
+                jumpToSingleUser();
             }
         });
         tv_created_at.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jumpToSingleUser(status.getUser().getScreenName());
+                jumpToSingleUser();
             }
         });
         tv_source.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                jumpToSingleUser(status.getUser().getScreenName());
+                jumpToSingleUser();
             }
         });
 
@@ -178,19 +178,19 @@ public class SingleWeiboFragment extends Fragment {
             tv_rt_screen_name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    jumpToRetweetedUser(status.getRetweetedStatus().getUser().getScreenName());
+                    jumpToRetweetedUser();
                 }
             });
             tv_rt_source.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    jumpToRetweetedUser(status.getRetweetedStatus().getUser().getScreenName());
+                    jumpToRetweetedUser();
                 }
             });
             tv_rt_created_at.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    jumpToRetweetedUser(status.getRetweetedStatus().getUser().getScreenName());
+                    jumpToRetweetedUser();
                 }
             });
 
@@ -301,16 +301,16 @@ public class SingleWeiboFragment extends Fragment {
         gv = (GridView) v.findViewById(R.id.frag_single_weibo_pics_grid);
     }
 
-    private void jumpToSingleUser(String screenName) {
-        Intent it = new Intent(act, SingleUser.class);
-        it.putExtra(SCREEN_NAME, screenName);
-        startActivity(it);
+    private void jumpToSingleUser() {
+        Intent ii = new Intent(act, SingleUser.class);
+        ii.putExtra(USER_BEAN, status.getUser());
+        startActivity(ii);
     }
 
-    private void jumpToRetweetedUser(String retweetedScreenName) {
-        Intent it = new Intent(act, SingleUser.class);
-        it.putExtra(SCREEN_NAME, retweetedScreenName);
-        startActivity(it);
+    private void jumpToRetweetedUser() {
+        Intent ii = new Intent(act, SingleUser.class);
+        ii.putExtra(USER_BEAN, status.getRetweetedStatus().getUser());
+        startActivity(ii);
     }
 
     private void jumpToGallery() {

@@ -6,27 +6,26 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 
-import com.joewoo.ontime.action.statuses.StatusesUpload;
+import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.support.net.ImageNetworkListener;
-import com.joewoo.ontime.support.notification.MyMaidNotification;
+import com.joewoo.ontime.support.notification.MyMaidNotificationHelper;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.ui.Post;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.joewoo.ontime.support.info.Defines.FILE_PATH;
 import static com.joewoo.ontime.support.info.Defines.GOT_UPLOAD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_UPLOAD_INFO_FAIL;
+import static com.joewoo.ontime.support.info.Defines.STATUS;
 
 /**
  * Created by JoeWoo on 14-1-3.
  */
 public class UploadService extends Service implements ImageNetworkListener.UploadProgressListener {
 
-    public final static String STATUS = "status";
-    public final static String FILE_PATH = "file_path";
-
-    private MyMaidNotification mNotification;
+    private MyMaidNotificationHelper mNotification;
 
     private Handler handler = new Handler() {
         @Override
@@ -41,7 +40,7 @@ public class UploadService extends Service implements ImageNetworkListener.Uploa
                         public void run() {
                             mNotification.setRemove();
                         }
-                    }, MyMaidNotification.NOTIFICATION_SHOW_TIME);
+                    }, MyMaidNotificationHelper.SUCCESS_NOTIFICATION_SHOW_TIME);
                     break;
                 }
                 case GOT_UPLOAD_INFO_FAIL: {
@@ -62,8 +61,9 @@ public class UploadService extends Service implements ImageNetworkListener.Uploa
 
         String status = intent.getStringExtra(STATUS);
 
-        new StatusesUpload(status, intent.getStringExtra(FILE_PATH), this, handler).start();
-        mNotification = new MyMaidNotification(MyMaidNotification.UPLOAD, status, this);
+        MyMaidActionHelper.statusesUpload(status, intent.getStringExtra(FILE_PATH), this, handler);
+
+        mNotification = new MyMaidNotificationHelper(MyMaidNotificationHelper.UPLOAD, status, this);
         mNotification.setSending();
 
         return super.onStartCommand(intent, flags, startId);

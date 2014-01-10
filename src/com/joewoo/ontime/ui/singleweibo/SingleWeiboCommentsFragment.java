@@ -28,12 +28,12 @@ import com.joewoo.ontime.ui.SingleUser;
 import java.util.List;
 
 import static com.joewoo.ontime.support.info.Defines.COMMENT_ID;
-import static com.joewoo.ontime.support.info.Defines.GOT_COMMNETS_SHOW_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMNETS_SHOW_ADD_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_COMMNETS_SHOW_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMNETS_SHOW_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.IS_REPLY;
-import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
 import static com.joewoo.ontime.support.info.Defines.TAG;
+import static com.joewoo.ontime.support.info.Defines.USER_BEAN;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
 
@@ -73,6 +73,8 @@ public class SingleWeiboCommentsFragment extends Fragment {
 
         act = (SingleWeiboActivity) getActivity();
 
+        lv.setFastScrollAlwaysVisible(true);
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -90,7 +92,7 @@ public class SingleWeiboCommentsFragment extends Fragment {
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int arg2, long arg3) {
                 Intent i = new Intent(act, SingleUser.class);
-                i.putExtra(SCREEN_NAME, comments.get(arg2).getUser().getScreenName());
+                i.putExtra(USER_BEAN, comments.get(arg2).getUser());
                 startActivity(i);
                 return false;
             }

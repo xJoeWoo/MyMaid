@@ -73,7 +73,7 @@ public final class JavaHttpUtility {
             while ((byteread = in.read(buffer)) != -1) {
                 
                 if (currentThread.isInterrupted()) {
-                    Log.e(TAG, "Cancelled");
+                    Log.e(TAG, "Download Photo Cancelled");
                     throw new Exception();
                 }
 
@@ -112,7 +112,7 @@ public final class JavaHttpUtility {
         try {
             barry = ("--" + BOUNDARYSTR + "--\r\n").getBytes("UTF-8");
 
-            sendStr = getBoundaryMessage(BOUNDARYSTR, param, PIC, new File(path).getName(), "image/png");
+            sendStr = getBoundaryMessage(BOUNDARYSTR, param, PIC, targetFile.getName(), "image/png");
             contentLength = sendStr.getBytes("UTF-8").length + (int) targetFile.length() + 2 * barry.length;
         } catch (Exception e) {
             e.printStackTrace();
@@ -209,7 +209,7 @@ public final class JavaHttpUtility {
             StringBuilder sb = new StringBuilder(urlStr);
             sb.append("?").append(encodeParamFromMap(param));
 
-            Log.e(TAG, "URL to connect: " + sb.toString());
+            Log.e(TAG, "URL to GET: " + sb.toString());
             URL url = new URL(sb.toString());
             conn = (HttpURLConnection) url.openConnection();
 
@@ -235,6 +235,9 @@ public final class JavaHttpUtility {
 
     public String doPost(String urlStr, Map<String, String> param) throws Exception {
         try {
+
+            Log.e(TAG, "URL to POST: " + urlStr);
+            Log.e(TAG, "POST Param: " + encodeParamFromMap(param));
 
             URL url = new URL(urlStr);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();

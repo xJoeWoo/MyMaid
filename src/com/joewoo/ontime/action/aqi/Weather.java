@@ -1,4 +1,4 @@
-package com.joewoo.ontime.action;
+package com.joewoo.ontime.action.aqi;
 
 import android.os.Handler;
 import android.util.Log;

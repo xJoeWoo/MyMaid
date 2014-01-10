@@ -23,21 +23,14 @@ public class UserChooserAdapter extends BaseAdapter {
 
     private Context context;
     private Cursor cursor;
-    private boolean haveLastLogin;
 
     public UserChooserAdapter(Context context) {
         this.context = context;
         cursor = GlobalContext.getSQL().query(MyMaidSQLHelper.USER_TABLE, new String[]{MyMaidSQLHelper.SCREEN_NAME, MyMaidSQLHelper.PROFILE_IMG, MyMaidSQLHelper.UID, MyMaidSQLHelper.ACCESS_TOKEN, MyMaidSQLHelper.DRAFT, MyMaidSQLHelper.PIC_FILE_PATH}, null, null, null, null, null);
-
-        haveLastLogin = GlobalContext.getSQL().query(MyMaidSQLHelper.USER_TABLE, null, MyMaidSQLHelper.LAST_LOGIN + "=?", new String[]{"1"}, null, null, null).getCount() > 0;
     }
 
     public int getUsersCount() {
         return cursor.getCount();
-    }
-
-    public boolean haveLastLogin() {
-        return haveLastLogin;
     }
 
     public Cursor getCursor() {
@@ -47,7 +40,7 @@ public class UserChooserAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         Log.e("XXX", "Users Count: " + String.valueOf(cursor.getCount()));
-        if(haveLastLogin)
+        if(GlobalContext.getSQL().query(MyMaidSQLHelper.USER_TABLE, null, MyMaidSQLHelper.LAST_LOGIN + "=?", new String[]{"1"}, null, null, null).getCount() > 0)
             return cursor.getCount() + 2;
         else
             return cursor.getCount() + 1;
@@ -82,8 +75,8 @@ public class UserChooserAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         try{
-        if (cursor != null && cursor.moveToFirst()) {
 
+        if (cursor != null && cursor.moveToFirst()) {
 
             if (cursor.getCount() - position > 0) {
 

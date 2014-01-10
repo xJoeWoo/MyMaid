@@ -15,13 +15,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.action.statuses.StatusesUserTimeLine;
-import com.joewoo.ontime.action.user.UserShow;
+import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.support.adapter.listview.MainListViewAdapter;
 import com.joewoo.ontime.support.bean.StatusesBean;
-import com.joewoo.ontime.support.bean.WeiboBackBean;
+import com.joewoo.ontime.support.bean.UserBean;
 import com.joewoo.ontime.support.info.AcquireCount;
-import com.joewoo.ontime.support.net.ProfileImage;
 import com.joewoo.ontime.support.view.header.UserTimelineHeaderView;
 import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
 
@@ -30,7 +28,6 @@ import java.util.List;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 
 import static com.joewoo.ontime.support.info.Defines.GOT_PROFILEIMG_INFO;
-import static com.joewoo.ontime.support.info.Defines.GOT_SHOW_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_SHOW_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.GOT_USER_TIMELINE_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_USER_TIMELINE_INFO;
@@ -43,22 +40,62 @@ import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
 import static com.joewoo.ontime.support.info.Defines.STATUS_BEAN;
 import static com.joewoo.ontime.support.info.Defines.STATUS_BEAN_POSITION;
 import static com.joewoo.ontime.support.info.Defines.TAG;
+import static com.joewoo.ontime.support.info.Defines.USER_BEAN;
 
 public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefreshListener {
 
     private ListView lv;
     private List<StatusesBean> statuses;
-    private String screenName = null;
-    private String followersCount = null;
-    private String friendsCount = null;
-    private String statusesCount = null;
     private PullToRefreshAttacher mPullToRefreshAttacher;
     private MainListViewAdapter mAdapter;
     private UserTimelineHeaderView headerView;
+    private UserBean user;
+    private Handler mHandler = new Handler() {
+        @SuppressWarnings("unchecked")
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case GOT_PROFILEIMG_INFO: {
+                    headerView.setImageView((byte[]) msg.obj);
+                    break;
+                }
+                case GOT_USER_TIMELINE_INFO: {
+                    statuses = (List<StatusesBean>) msg.obj;
+
+                    if(user == null) {
+                        user = statuses.get(0).getUser();
+                        MyMaidActionHelper.profileImage(user.getAvatarLarge(), mHandler);
+                    }
+
+                    getActionBar().setTitle(user.getScreenName());
+                    headerView.setDescription(user.getLocation() + "\n\n" + user.getDescription());
+
+                    setListView(statuses);
+                    mPullToRefreshAttacher.setRefreshing(false);
+                    break;
+                }
+                case GOT_USER_TIMELINE_ADD_INFO: {
+                    statuses.addAll((List<StatusesBean>) msg.obj);
+                    setListView(statuses);
+                    mPullToRefreshAttacher.setRefreshing(false);
+                    break;
+                }
+                case GOT_USER_TIMELINE_INFO_FAIL:
+                case GOT_SHOW_INFO_FAIL: {
+                    Toast.makeText(SingleUser.this, (String) msg.obj, Toast.LENGTH_SHORT)
+                            .show();
+                    mPullToRefreshAttacher.setRefreshing(false);
+                    if (msg.what == GOT_SHOW_INFO_FAIL)
+                        finish();
+                    break;
+                }
+            }
+            invalidateOptionsMenu();
+        }
+    };
 
     @Override
     public void onRefreshStarted(View view) {
-
         refreshTimeLine();
     }
 
@@ -68,19 +105,20 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
         setContentView(R.layout.singleuser);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setDisplayShowHomeEnabled(false);
-//        getActionBar().hide();
         findViews();
         lv.setDivider(null);
         mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
         mPullToRefreshAttacher.setRefreshing(true);
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        screenName = getIntent().getStringExtra(SCREEN_NAME);
-        setTitle(screenName);
-
-        refreshTimeLine();
-
+        user = getIntent().getParcelableExtra(USER_BEAN);
         headerView = new UserTimelineHeaderView(this);
+
+        if(user != null) {
+            refreshTimeLine();
+        } else {
+            MyMaidActionHelper.statusUserTimeLine(getIntent().getStringExtra(SCREEN_NAME), mHandler);
+        }
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -89,7 +127,7 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
 
                 StatusesBean b = statuses.get(arg2 - lv.getHeaderViewsCount());
 
-                if(b.getRetweetedStatus() != null && b.getRetweetedStatus().getUser() == null)
+                if (b.getRetweetedStatus() != null && b.getRetweetedStatus().getUser() == null)
                     return; // 微博已被删除不继续进行
 
                 Intent ii = new Intent(SingleUser.this, SingleWeiboActivity.class);
@@ -106,7 +144,7 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
                 // 滚到到尾刷新
                 if (view.getCount() > (Integer.valueOf(AcquireCount.USER_TIMELINE_COUNT) - 2) && view.getLastVisiblePosition() > (view.getCount() - 6) && !mPullToRefreshAttacher.isRefreshing() && statuses != null) {
                     Log.e(TAG, "到底");
-                    new StatusesUserTimeLine(screenName, statuses.get(view.getCount() - 1 - ((ListView) view).getHeaderViewsCount()).getId(), mHandler).start();
+                    MyMaidActionHelper.statusUserTimeLine(user.getScreenName(), statuses.get(view.getCount() - 1 - ((ListView) view).getHeaderViewsCount()).getId(), mHandler);
                     mPullToRefreshAttacher.setRefreshing(true);
                 }
             }
@@ -119,62 +157,6 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
         mAdapter = new MainListViewAdapter(this);
         lv.addHeaderView(headerView, null, false);
     }
-
-    private Handler mHandler = new Handler() {
-        @SuppressWarnings("unchecked")
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case GOT_SHOW_INFO: {
-                    WeiboBackBean b = (WeiboBackBean) msg.obj;
-
-                    followersCount = b.getFollowersCount();
-                    friendsCount = b.getFriendsCount();
-                    statusesCount = b.getStatusesCount();
-
-                    headerView.setDescription(b.getLocation() + "\n\n" + b.getDescription());
-
-                    new ProfileImage(b.getAvatarLarge(), mHandler)
-                            .start();
-                    break;
-                }
-                case GOT_PROFILEIMG_INFO: {
-//                    byte[] img = (byte[]) msg.obj;
-//                    getActionBar().setLogo(
-//                            new BitmapDrawable(getResources(), BitmapFactory
-//                                    .decodeByteArray(img, 0, img.length)));
-                    headerView.setImageView((byte[]) msg.obj);
-                    break;
-                }
-                case GOT_USER_TIMELINE_INFO: {
-                    statuses = (List<StatusesBean>) msg.obj;
-                    setListView(statuses);
-                    mPullToRefreshAttacher.setRefreshing(false);
-                    break;
-                }
-                case GOT_USER_TIMELINE_ADD_INFO: {
-                    statuses.addAll((List<StatusesBean>) msg.obj);
-                    setListView(statuses);
-                    mPullToRefreshAttacher.setRefreshing(false);
-                    break;
-                }
-                case GOT_USER_TIMELINE_INFO_FAIL: {
-                    Toast.makeText(SingleUser.this, (String) msg.obj, Toast.LENGTH_SHORT)
-                            .show();
-                    mPullToRefreshAttacher.setRefreshing(false);
-                    break;
-                }
-                case GOT_SHOW_INFO_FAIL: {
-                    Toast.makeText(SingleUser.this, (String) msg.obj, Toast.LENGTH_SHORT)
-                            .show();
-                    mPullToRefreshAttacher.setRefreshing(false);
-                    finish();
-                    break;
-                }
-            }
-            invalidateOptionsMenu();
-        }
-    };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -195,26 +177,25 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
 
-        if (friendsCount == null)
-            menu.add(0, MENU_FRIENDS_COUNT, 0, "").setShowAsAction(
-                    MenuItem.SHOW_AS_ACTION_ALWAYS);
-        else
-            menu.add(0, MENU_FRIENDS_COUNT, 0, getResources().getString(R.string.menu_fan_xxx) + friendsCount)
+        if (user != null) {
+            menu.add(0, MENU_FRIENDS_COUNT, 0, getResources().getString(R.string.menu_fan_xxx) + user.getFriendsCount())
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        if (followersCount == null)
-            menu.add(0, MENU_FOLLOWERS_COUNT, 0, "").setShowAsAction(
-                    MenuItem.SHOW_AS_ACTION_ALWAYS);
-        else
-            menu.add(0, MENU_FOLLOWERS_COUNT, 0, followersCount + getResources().getString(R.string.menu_xxx_fans))
+            menu.add(0, MENU_FOLLOWERS_COUNT, 0, user.getFollowersCount() + getResources().getString(R.string.menu_xxx_fans))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        if (statusesCount == null)
-            menu.add(0, MENU_STATUSES_COUNT, 0, "").setShowAsAction(
-                    MenuItem.SHOW_AS_ACTION_ALWAYS);
-        else
-            menu.add(0, MENU_STATUSES_COUNT, 0, statusesCount + getResources().getString(R.string.menu_xxx_statuses))
+            menu.add(0, MENU_STATUSES_COUNT, 0, user.getStatusesCount() + getResources().getString(R.string.menu_xxx_statuses))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        } else {
+            menu.add(0, MENU_FRIENDS_COUNT, 0, getResources().getString(R.string.menu_fan_xxx))
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+            menu.add(0, MENU_FOLLOWERS_COUNT, 0, getResources().getString(R.string.menu_xxx_fans))
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+            menu.add(0, MENU_STATUSES_COUNT, 0, getResources().getString(R.string.menu_xxx_statuses))
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
 
         return true;
     }
@@ -248,7 +229,7 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
 
     private void setListView(List<StatusesBean> statuses) {
         mAdapter.setData(statuses);
-        if(lv.getAdapter() == null)
+        if (lv.getAdapter() == null)
             lv.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
     }
@@ -260,8 +241,8 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
     }
 
     private void refreshTimeLine() {
-        Log.e(TAG, "Screen Name: " + screenName);
-        new StatusesUserTimeLine(screenName, mHandler).start();
-        new UserShow(screenName, mHandler).start();
+        Log.e(TAG, "Screen Name: " + user.getScreenName());
+        MyMaidActionHelper.statusUserTimeLine(user.getScreenName(), mHandler);
+        MyMaidActionHelper.profileImage(user.getAvatarLarge(), mHandler);
     }
 }

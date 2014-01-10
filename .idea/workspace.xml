@@ -38,6 +38,12 @@
           <theme>@android:style/Theme.Holo.Light</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/res/layout/user_chooser_dialog_gv.xml">
+        <config>
+          <device>Nexus S</device>
+          <theme>@style/Theme.Mymaid</theme>
+        </config>
+      </layout>
     </layouts>
   </component>
   <component name="AndroidLogFilters">
@@ -112,54 +118,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="GlobalContext.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/util/GlobalContext.java">
+      <file leaf-file-name="MyMaidActionHelper.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/MyMaidActionHelper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="114" column="36" selection-start="3474" selection-end="3474" vertical-scroll-proportion="0.0" vertical-offset="1452" max-vertical-offset="2175">
+            <state line="23" column="35" selection-start="993" selection-end="993" vertical-scroll-proportion="0.0" vertical-offset="37" max-vertical-offset="1500">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CommentsReply.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/comments/CommentsReply.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="56" column="102" selection-start="1910" selection-end="1910" vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="870">
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#2287#2288#0" expanded="true" />
-                <element signature="e#2313#2314#0" expanded="true" />
-                <element signature="e#2469#2470#0" expanded="true" />
-                <element signature="e#2505#2506#0" expanded="true" />
-                <element signature="e#2655#2656#0" expanded="true" />
-                <element signature="e#2689#2690#0" expanded="true" />
-                <element signature="e#2750#2751#0" expanded="true" />
-                <element signature="e#2805#2806#0" expanded="true" />
-                <element signature="e#2842#2843#0" expanded="true" />
-                <element signature="e#2868#2869#0" expanded="true" />
-                <element signature="e#2913#2914#0" expanded="true" />
-                <element signature="e#2952#2953#0" expanded="true" />
-                <element signature="e#2996#2997#0" expanded="true" />
-                <element signature="e#3029#3030#0" expanded="true" />
-                <element signature="e#3088#3089#0" expanded="true" />
-                <element signature="e#3141#3142#0" expanded="true" />
-                <element signature="e#3182#3183#0" expanded="true" />
-                <element signature="e#3216#3217#0" expanded="true" />
-                <element signature="e#3269#3270#0" expanded="true" />
-                <element signature="e#3320#3321#0" expanded="true" />
-                <element signature="e#3359#3360#0" expanded="true" />
-                <element signature="e#3387#3388#0" expanded="true" />
-                <element signature="e#3436#3437#0" expanded="true" />
-                <element signature="e#3479#3480#0" expanded="true" />
-                <element signature="e#3531#3532#0" expanded="true" />
-                <element signature="e#3564#3565#0" expanded="true" />
+                <element signature="e#2106#2134#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Post.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/Post.java">
+      <file leaf-file-name="DownloadPic.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/net/DownloadPic.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="293" column="30" selection-start="11073" selection-end="11073" vertical-scroll-proportion="0.0" vertical-offset="2959" max-vertical-offset="3510">
-              <folding>
-                <element signature="method#findViews#0;class#Post#0" expanded="false" />
-                <element signature="method#onActivityResult#0;class#Post#0" expanded="false" />
-                <element signature="method#getFilePath#0;class#Post#0" expanded="false" />
-                <element signature="method#jumpToLogin#0;class#Post#0" expanded="false" />
-                <element signature="method#insertString#0;class#Post#0" expanded="false" />
-              </folding>
+            <state line="148" column="9" selection-start="4965" selection-end="4965" vertical-scroll-proportion="0.0" vertical-offset="1686" max-vertical-offset="2280">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -167,7 +150,7 @@
       <file leaf-file-name="AndroidManifest.xml" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="36" selection-start="205" selection-end="205" vertical-scroll-proportion="0.12552302" vertical-offset="0" max-vertical-offset="1155">
+            <state line="3" column="27" selection-start="167" selection-end="167" vertical-scroll-proportion="0.07413509" vertical-offset="0" max-vertical-offset="1170">
               <folding />
             </state>
           </provider>
@@ -188,56 +171,56 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/singleweibo/SingleWeiboRepostsFragment.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesRepostTimeline.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/services/PostService.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/services/PostServiceConnection.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/service/ServiceIDs.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/info/AcquireCount.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/service/post/PostServiceConnection.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/util/TimeFormat.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/net/HttpUtility.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesUpdate.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/notification/NotificationManager.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/service/post/PostService.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/service/post/UpdateService.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesUpload.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/net/ProfileImage.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/net/NetworkStatus.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/info/Defines.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/net/JavaHttpUtility.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/friendships/FriendsIDs.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/CommentsToMeFragment.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/comments/CommentsToMe.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesMentions.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/comments/CommentsMentions.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/MentionsFragment.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/time/Getup.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesFriendsTimeLine.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/dialog/UsersChooserDialog.java" />
-        <option value="$PROJECT_DIR$/res/layout/users_chooser_dialog.xml" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/adapter/listview/ViewHolder.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/adapter/gridview/SingleWeiboPicsAdapter.java" />
-        <option value="$PROJECT_DIR$/res/layout/user_chooser_dialog_gv.xml" />
         <option value="$PROJECT_DIR$/res/layout/user_chooser_dialog.xml" />
-        <option value="$PROJECT_DIR$/res/layout/user_chooser_dialog_footer.xml" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/view/footer/UserChooserDialogFooterView.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/singleweibo/SingleWeiboFragment.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/FriendsTimeLineFragment.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/UserChooser.java" />
-        <option value="$PROJECT_DIR$/res/layout/timeline_cmt_atme.xml" />
-        <option value="$PROJECT_DIR$/res/values/strings.xml" />
-        <option value="$PROJECT_DIR$/res/values-zh/strings.xml" />
+        <option value="$PROJECT_DIR$/res/layout/user_chooser_dialog_gv.xml" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/bean/aqi/AQIBean.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/URLHelper.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/bean/aqi/AQIDetailsBean.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/AQI/AQIDetails.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/aqi/AQIDetails.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/notification/MyMaidNotification.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/service/MyMaidServiceManager.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/net/HttpUtility.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/Post.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/service/MyMaidServiceHelper.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/service/ReplyService.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/service/RepostService.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/service/UpdateService.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/service/UploadService.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/MainTimelineActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/adapter/gridview/UserChooserAdapter.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/Login.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/dialog/UserChooserDialog.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/service/CommentCreateService.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/notification/MyMaidNotificationHelper.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/util/TimeFormat.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/singleweibo/SingleWeiboActivity.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/CommentRepost.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/info/Defines.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/singleweibo/SingleWeiboFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/singleweibo/SingleWeiboRepostsFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/singleweibo/SingleWeiboCommentsFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/bean/UserBean.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/MentionsFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/SingleUser.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/CommentsToMeFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/remind/RemindSetCount.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/comments/CommentsToMe.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/comments/CommentsMentions.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesMentions.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/sql/MyMaidSQLHelper.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/util/GlobalContext.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/Post.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/adapter/gridview/UserChooserAdapter.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/MainTimelineActivity.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/dialog/UserChooserDialog.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesFriendsTimeLine.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/MyMaidActionHelper.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/FriendsTimeLineFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/net/JavaHttpUtility.java" />
+        <option value="$PROJECT_DIR$/res/values-zh/strings.xml" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/comments/CommentsCreate.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesRepost.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesUpdate.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesUpload.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/comments/CommentsReply.java" />
+        <option value="$PROJECT_DIR$/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/net/DownloadPic.java" />
         <option value="$PROJECT_DIR$/AndroidManifest.xml" />
       </list>
     </option>
@@ -371,192 +354,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyMaid" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyMaid" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyMaid" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyMaid" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyMaid" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ontime" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ui" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyMaid" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyMaid" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ontime" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ui" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="maintimeline" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyMaid" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyMaid" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ontime" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="support" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyMaid" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyMaid" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ontime" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="support" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="util" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyMaid" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyMaid" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ontime" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="support" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sql" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyMaid" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyMaid" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ontime" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="support" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dialog" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyMaid" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyMaid" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ontime" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
       <pane id="PackagesPane">
         <subPane>
           <PATH>
@@ -1007,6 +804,394 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ontime" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ui" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ontime" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ui" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="singleweibo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ontime" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ui" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="maintimeline" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ontime" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="support" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ontime" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="support" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ontime" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="support" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="notification" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ontime" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="support" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="net" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ontime" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="support" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dialog" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ontime" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="support" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bean" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ontime" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="action" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ontime" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="action" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="remind" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ontime" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="action" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="comments" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="values-zh" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="values-v11" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="values" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1049,11 +1234,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.joewoo.ontime.support.service" />
       <recent name="com.joewoo.ontime.support.adapter.listview" />
       <recent name="com.joewoo.ontime.support.view" />
       <recent name="com.joewoo.ontime.support.net" />
       <recent name="com.joewoo.ontime.tools" />
-      <recent name="com.joewoo.ontime.bean" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="F:\GitHub\MyMaid\res\drawable" />
@@ -1362,35 +1547,35 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="54" y="-8" width="978" height="784" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" x="154" y="92" width="778" height="584" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32969433" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32911393" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.329653" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.125" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6313291" sideWeight="0.4366812" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2489083" sideWeight="0.52910054" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24781659" sideWeight="0.123809524" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2888889" sideWeight="0.7328482" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20347004" sideWeight="0.5633188" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.06466877" sideWeight="0.7328482" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.9637224" sideWeight="0.5633188" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2489083" sideWeight="0.47089946" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2489083" sideWeight="0.63315696" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3286026" sideWeight="0.636076" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="combo" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24781659" sideWeight="0.87460315" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23028392" sideWeight="0.5893971" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22555205" sideWeight="0.5893971" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" x="154" y="92" width="778" height="584" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32897604" sideWeight="0.636076" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32897604" sideWeight="0.875" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3984127" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32911393" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
     </layout>
@@ -1443,424 +1628,424 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesUserTimeLine.java">
+    <entry file="file://F:/Android/android-sdk/sources/android-19/android/net/Uri.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="23" selection-start="3778" selection-end="3842" vertical-scroll-proportion="0.0" vertical-offset="865" max-vertical-offset="2400" />
+        <state line="49" column="22" selection-start="1747" selection-end="1747" vertical-scroll-proportion="0.3319838" vertical-offset="91" max-vertical-offset="34665" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesFriendsTimeLine.java">
+    <entry file="file://F:/Android/android-sdk/sources/android-19/android/content/Intent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="95" column="68" selection-start="3308" selection-end="3308" vertical-scroll-proportion="0.31739962" vertical-offset="899" max-vertical-offset="2190" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/friendstimeline_lv.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.8117647" vertical-offset="414" max-vertical-offset="3360">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/fragment_singleweibo.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="171" column="8" selection-start="8320" selection-end="8494" vertical-scroll-proportion="0.59607846" vertical-offset="2261" max-vertical-offset="2925">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/adapter/listview/MainListViewAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="151" column="72" selection-start="5393" selection-end="5393" vertical-scroll-proportion="3.623327" vertical-offset="190" max-vertical-offset="2250">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/values/styles.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="561">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/values/styles_mymaid.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-1.1759082" vertical-offset="615" max-vertical-offset="1725">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/values/themes_mymaid.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="536">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/user_timeline_header.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="630">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/friendstimeline.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="510">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable/lv_item_bg.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="536">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/adapter/listview/ViewHolder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="24" selection-start="644" selection-end="644" vertical-scroll-proportion="0.61567163" vertical-offset="0" max-vertical-offset="536">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://F:/Android/android-sdk/sources/android-19/java/lang/String.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1657" column="19" selection-start="61396" selection-end="61396" vertical-scroll-proportion="0.0" vertical-offset="24276" max-vertical-offset="30390">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://F:/Android/android-sdk/sources/android-19/java/lang/Integer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="19" selection-start="1326" selection-end="1326" vertical-scroll-proportion="-16.512428" vertical-offset="8891" max-vertical-offset="10650" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/net/DownloadPic.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="80" column="19" selection-start="2666" selection-end="2666" vertical-scroll-proportion="0.48948374" vertical-offset="509" max-vertical-offset="2265" />
-      </provider>
-    </entry>
-    <entry file="file://F:/Android/android-sdk/sources/android-19/android/widget/TextView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3655" column="22" selection-start="130264" selection-end="130264" vertical-scroll-proportion="0.33333334" vertical-offset="51827" max-vertical-offset="135240">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/view/header/UserTimelineHeaderView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="13" selection-start="369" selection-end="369" vertical-scroll-proportion="0.13701431" vertical-offset="38" max-vertical-offset="675">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/view/header/MainTimelineHeaderView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="91" selection-start="545" selection-end="619" vertical-scroll-proportion="0.42944786" vertical-offset="0" max-vertical-offset="525">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/user_chooser_dialog_gv.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="4" selection-start="196" selection-end="313" vertical-scroll-proportion="0.073529415" vertical-offset="25" max-vertical-offset="540">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/singleweibo/SingleWeiboFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="80" column="37" selection-start="2631" selection-end="2631" vertical-scroll-proportion="0.7566462" vertical-offset="320" max-vertical-offset="3945">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://F:/Android/android-sdk/sources/android-19/android/widget/Adapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="53" column="8" selection-start="1825" selection-end="1825" vertical-scroll-proportion="0.33333334" vertical-offset="386" max-vertical-offset="2115" />
-      </provider>
-    </entry>
-    <entry file="file://F:/Android/android-sdk/platforms/android-19/data/res/layout/select_dialog_item.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="32" selection-start="1350" selection-end="1350" vertical-scroll-proportion="0.8578856" vertical-offset="0" max-vertical-offset="645" />
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://F:/Android/android-sdk/sources/android-19/com/android/internal/app/AlertController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="748" column="24" selection-start="26968" selection-end="26968" vertical-scroll-proportion="-4.00339" vertical-offset="12682" max-vertical-offset="13740" />
-      </provider>
-    </entry>
-    <entry file="file://F:/Android/android-sdk/platforms/android-19/data/res/values/themes.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1756" column="17" selection-start="114149" selection-end="114149" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="28050" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/adapter/gridview/SingleWeiboPicsAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="68" column="9" selection-start="1771" selection-end="1771" vertical-scroll-proportion="0.0" vertical-offset="437" max-vertical-offset="960" />
-      </provider>
-    </entry>
-    <entry file="file://F:/Android/android-sdk/sources/android-19/android/app/Dialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="82" column="39" selection-start="3146" selection-end="3146" vertical-scroll-proportion="-10.057851" vertical-offset="4146" max-vertical-offset="17760">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/single_weibo_grid_view.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="423">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://F:/Android/android-sdk/sources/android-19/android/app/AlertDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="525" column="23" selection-start="20212" selection-end="20212" vertical-scroll-proportion="0.0" vertical-offset="7010" max-vertical-offset="13395" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/user_chooser_dialog.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="75" selection-start="190" selection-end="190" vertical-scroll-proportion="0.0" vertical-offset="45" max-vertical-offset="420">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable-hdpi/ic_user_chooser_dialog_add.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/getup.xml">
-      <provider editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="476">
-          <folding />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://F:/Android/android-sdk/platforms/android-19/data/res/values/attrs.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="787" column="20" selection-start="44069" selection-end="44069" vertical-scroll-proportion="0.33333334" vertical-offset="11644" max-vertical-offset="92475">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/time/Getup.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="35" selection-start="1302" selection-end="1302" vertical-scroll-proportion="0.4017857" vertical-offset="0" max-vertical-offset="1665">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/timeline_cmt_atme.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="0" selection-start="336" selection-end="336" vertical-scroll-proportion="0.19946809" vertical-offset="0" max-vertical-offset="376">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="46" selection-start="3779" selection-end="3779" vertical-scroll-proportion="-5.2" vertical-offset="950" max-vertical-offset="2430">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/values-zh/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="40" selection-start="3339" selection-end="3339" vertical-scroll-proportion="0.79036146" vertical-offset="737" max-vertical-offset="2355">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/FriendsTimeLineFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="179" column="0" selection-start="7096" selection-end="7096" vertical-scroll-proportion="0.36144578" vertical-offset="2415" max-vertical-offset="5325">
+        <state line="5175" column="27" selection-start="225993" selection-end="225993" vertical-scroll-proportion="152.09514" vertical-offset="1980" max-vertical-offset="108915">
           <folding>
             <element signature="imports" expanded="false" />
-            <element signature="method#setListView#0;class#FriendsTimeLineFragment#0" expanded="false" />
-            <element signature="method#clearListViewItem#0;class#FriendsTimeLineFragment#0" expanded="false" />
-            <element signature="method#refreshFriendsTimeLine#0;class#FriendsTimeLineFragment#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://F:/Android/android-sdk/sources/android-19/java/io/File.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="174" column="11" selection-start="6375" selection-end="6375" vertical-scroll-proportion="0.3319838" vertical-offset="2041" max-vertical-offset="17340" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/net/HttpUtility.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="42" selection-start="672" selection-end="672" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="480">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/Post.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="238" column="44" selection-start="8946" selection-end="8946" vertical-scroll-proportion="0.6570946" vertical-offset="2656" max-vertical-offset="4230">
+          <folding>
+            <element signature="method#getFilePath#0;class#Post#0" expanded="false" />
+            <element signature="method#jumpToLogin#0;class#Post#0" expanded="false" />
+            <element signature="method#onPause#0;class#Post#0" expanded="false" />
+            <element signature="method#insertString#0;class#Post#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/service/RepostService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="45" column="56" selection-start="1630" selection-end="1630" vertical-scroll-proportion="0.0625" vertical-offset="263" max-vertical-offset="1035">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/service/UpdateService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="23" selection-start="1394" selection-end="1435" vertical-scroll-proportion="0.19848771" vertical-offset="195" max-vertical-offset="1050">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/notification/MyMaidNotification.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="139" column="21" selection-start="4810" selection-end="4810" vertical-scroll-proportion="0.0" vertical-offset="1551" max-vertical-offset="2145">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/service/UploadService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="44" selection-start="1228" selection-end="1228" vertical-scroll-proportion="0.0" vertical-offset="194" max-vertical-offset="1050">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/singleweibo/SingleWeiboActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="13" selection-start="2120" selection-end="2120" vertical-scroll-proportion="-0.3843212" vertical-offset="321" max-vertical-offset="2910">
-          <folding>
-            <element signature="method#onOptionsItemSelected#0;class#SingleWeiboActivity#0" expanded="false" />
-            <element signature="method#setSingleWeibo#0;class#SingleWeiboActivity#0" expanded="false" />
-            <element signature="class#11040:11939" expanded="false" />
-            <element signature="method#setCommentsCount#0;class#SingleWeiboActivity#0" expanded="false" />
-            <element signature="method#setRepostsCount#0;class#SingleWeiboActivity#0" expanded="false" />
-            <element signature="method#checkPlural#0;class#SingleWeiboActivity#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://F:/Android/android-sdk/sources/android-19/android/database/sqlite/SQLiteDatabase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1195" column="18" selection-start="50980" selection-end="50980" vertical-scroll-proportion="0.3318584" vertical-offset="17100" max-vertical-offset="32310">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/adapter/gridview/UserChooserAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="39" selection-start="1597" selection-end="1597" vertical-scroll-proportion="0.07012987" vertical-offset="663" max-vertical-offset="1815">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3253#3304#0" expanded="true" />
-            <element signature="e#3530#3576#0" expanded="true" />
-            <element signature="e#3757#3808#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/Login.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="168" column="0" selection-start="6384" selection-end="6384" vertical-scroll-proportion="0.6571429" vertical-offset="1688" max-vertical-offset="2400">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/dialog/UserChooserDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="24" selection-start="1605" selection-end="1605" vertical-scroll-proportion="-0.48427674" vertical-offset="651" max-vertical-offset="1245">
-          <folding>
-            <element signature="e#2890#2926#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/MainTimelineActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="106" column="41" selection-start="4770" selection-end="4770" vertical-scroll-proportion="0.6477987" vertical-offset="1236" max-vertical-offset="2790">
+        <state line="41" column="56" selection-start="1439" selection-end="1439" vertical-scroll-proportion="0.38344595" vertical-offset="313" max-vertical-offset="1215">
           <folding>
             <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://F:/Android/android-sdk/sources/android-19/android/graphics/drawable/BitmapDrawable.java">
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/service/UploadService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="118" column="11" selection-start="4379" selection-end="4379" vertical-scroll-proportion="0.33333334" vertical-offset="1101" max-vertical-offset="9645">
+        <state line="42" column="56" selection-start="1533" selection-end="1533" vertical-scroll-proportion="0.1706081" vertical-offset="184" max-vertical-offset="1020">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/adapter/listview/MainListViewAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="13" selection-start="364" selection-end="364" vertical-scroll-proportion="-3.605327" vertical-offset="1549" max-vertical-offset="2250">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/bean/CommentsBean.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="13" selection-start="54" selection-end="54" vertical-scroll-proportion="0.06315789" vertical-offset="0" max-vertical-offset="525">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/info/Defines.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="55" selection-start="475" selection-end="475" vertical-scroll-proportion="0.4025974" vertical-offset="24" max-vertical-offset="2700">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/singleweibo/SingleWeiboRepostsFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="132" column="36" selection-start="4685" selection-end="4685" vertical-scroll-proportion="0.34862384" vertical-offset="1183" max-vertical-offset="1920">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/singleweibo/SingleWeiboCommentsFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="94" column="36" selection-start="3564" selection-end="3564" vertical-scroll-proportion="0.36803874" vertical-offset="643" max-vertical-offset="1995">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/singleweibo/SingleWeiboFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="304" column="36" selection-start="11566" selection-end="11566" vertical-scroll-proportion="0.33171913" vertical-offset="3673" max-vertical-offset="4365">
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/util/TimeFormat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="0" selection-start="790" selection-end="790" vertical-scroll-proportion="0.1891892" vertical-offset="233" max-vertical-offset="825" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/bean/WeiboBackBean.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="19" selection-start="467" selection-end="478" vertical-scroll-proportion="0.446281" vertical-offset="0" max-vertical-offset="1395">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/bean/UserBean.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="68" column="35" selection-start="1434" selection-end="1434" vertical-scroll-proportion="1.5248227" vertical-offset="0" max-vertical-offset="915">
+          <folding>
+            <element signature="method#UserBean#0;class#UserBean#0" expanded="false" />
+            <element signature="class#2023:2292" expanded="false" />
+            <element signature="method#writeToParcel#0;class#UserBean#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/SingleUser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="73" column="64" selection-start="3224" selection-end="3224" vertical-scroll-proportion="0.5945946" vertical-offset="98" max-vertical-offset="3150">
+          <folding>
+            <element signature="e#2348#2378#0" expanded="true" />
+            <element signature="e#4963#5704#0" expanded="true" />
+            <element signature="e#5693#5694#0" expanded="true" />
+            <element signature="e#7346#7393#0" expanded="true" />
+            <element signature="e#7567#7615#0" expanded="true" />
+            <element signature="e#7762#7814#0" expanded="true" />
+            <element signature="e#7950#7997#0" expanded="true" />
+            <element signature="e#8119#8167#0" expanded="true" />
+            <element signature="e#8288#8340#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/remind/RemindUnreadCount.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="11" selection-start="816" selection-end="816" vertical-scroll-proportion="0.2231405" vertical-offset="0" max-vertical-offset="675">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/remind/RemindSetCount.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="41" selection-start="647" selection-end="647" vertical-scroll-proportion="0.1646489" vertical-offset="67" max-vertical-offset="705">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesMentions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="100" column="81" selection-start="3535" selection-end="3535" vertical-scroll-proportion="0.23141892" vertical-offset="973" max-vertical-offset="1710" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/comments/CommentsMentions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="91" column="89" selection-start="3157" selection-end="3157" vertical-scroll-proportion="0.23141892" vertical-offset="853" max-vertical-offset="1605">
+          <folding>
+            <element signature="e#3286#3314#0" expanded="false" />
+            <element signature="e#4176#4204#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/comments/CommentsToMe.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="85" column="79" selection-start="3058" selection-end="3058" vertical-scroll-proportion="0.4527027" vertical-offset="617" max-vertical-offset="1470">
+          <folding>
+            <element signature="e#3957#4026#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/CommentsToMeFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="235" column="0" selection-start="9375" selection-end="9375" vertical-scroll-proportion="4.3530407" vertical-offset="63" max-vertical-offset="3045">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://F:/Android/android-sdk/sources/android-19/android/widget/GridView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="168" column="16" selection-start="5493" selection-end="5493" vertical-scroll-proportion="2.3026316" vertical-offset="1135" max-vertical-offset="33810">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/sql/MyMaidSQLHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="104" column="34" selection-start="4832" selection-end="4832" vertical-scroll-proportion="0.15261044" vertical-offset="1349" max-vertical-offset="2400">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/Login.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="13" selection-start="1395" selection-end="1395" vertical-scroll-proportion="0.11741683" vertical-offset="0" max-vertical-offset="2400">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/util/GlobalContext.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="114" column="36" selection-start="3474" selection-end="3474" vertical-scroll-proportion="0.0" vertical-offset="1452" max-vertical-offset="2175">
+        <state line="125" column="49" selection-start="3803" selection-end="3803" vertical-scroll-proportion="1.8875502" vertical-offset="320" max-vertical-offset="1485">
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2287#2288#0" expanded="true" />
-            <element signature="e#2313#2314#0" expanded="true" />
-            <element signature="e#2469#2470#0" expanded="true" />
-            <element signature="e#2505#2506#0" expanded="true" />
-            <element signature="e#2655#2656#0" expanded="true" />
-            <element signature="e#2689#2690#0" expanded="true" />
-            <element signature="e#2750#2751#0" expanded="true" />
-            <element signature="e#2805#2806#0" expanded="true" />
-            <element signature="e#2842#2843#0" expanded="true" />
-            <element signature="e#2868#2869#0" expanded="true" />
-            <element signature="e#2913#2914#0" expanded="true" />
-            <element signature="e#2952#2953#0" expanded="true" />
-            <element signature="e#2996#2997#0" expanded="true" />
-            <element signature="e#3029#3030#0" expanded="true" />
-            <element signature="e#3088#3089#0" expanded="true" />
-            <element signature="e#3141#3142#0" expanded="true" />
-            <element signature="e#3182#3183#0" expanded="true" />
-            <element signature="e#3216#3217#0" expanded="true" />
-            <element signature="e#3269#3270#0" expanded="true" />
-            <element signature="e#3320#3321#0" expanded="true" />
-            <element signature="e#3359#3360#0" expanded="true" />
-            <element signature="e#3387#3388#0" expanded="true" />
-            <element signature="e#3436#3437#0" expanded="true" />
-            <element signature="e#3479#3480#0" expanded="true" />
-            <element signature="e#3531#3532#0" expanded="true" />
-            <element signature="e#3564#3565#0" expanded="true" />
+            <element signature="method#getResString#0;class#GlobalContext#0" expanded="false" />
+            <element signature="method#getAppContext#0;class#GlobalContext#0" expanded="false" />
+            <element signature="method#setProfileImg#0;class#GlobalContext#0" expanded="false" />
+            <element signature="method#setSmallProfileImg#0;class#GlobalContext#0" expanded="false" />
+            <element signature="method#clear#0;class#GlobalContext#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/sql/MyMaidSQLHelper.java">
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/adapter/gridview/UserChooserAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="139" column="26" selection-start="6183" selection-end="6183" vertical-scroll-proportion="0.33333334" vertical-offset="1930" max-vertical-offset="2655">
+        <state line="77" column="0" selection-start="2420" selection-end="2420" vertical-scroll-proportion="0.0" vertical-offset="952" max-vertical-offset="1500" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/MainTimelineActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="167" column="94" selection-start="6472" selection-end="6472" vertical-scroll-proportion="1.2330097" vertical-offset="1870" max-vertical-offset="2760">
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#1943#1978#0" expanded="true" />
+            <element signature="e#2131#2178#0" expanded="true" />
+            <element signature="e#2331#2376#0" expanded="true" />
+            <element signature="e#2668#4299#0" expanded="true" />
+            <element signature="e#4276#4277#0" expanded="true" />
+            <element signature="e#6077#6078#0" expanded="true" />
+            <element signature="e#6122#6123#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/Post.java">
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/dialog/UserChooserDialog.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="293" column="30" selection-start="11073" selection-end="11073" vertical-scroll-proportion="0.0" vertical-offset="2948" max-vertical-offset="3510">
+        <state line="90" column="29" selection-start="4055" selection-end="4055" vertical-scroll-proportion="0.6102362" vertical-offset="725" max-vertical-offset="1380">
           <folding>
-            <element signature="method#findViews#0;class#Post#0" expanded="false" />
-            <element signature="method#onActivityResult#0;class#Post#0" expanded="false" />
-            <element signature="method#getFilePath#0;class#Post#0" expanded="false" />
-            <element signature="method#jumpToLogin#0;class#Post#0" expanded="false" />
-            <element signature="method#insertString#0;class#Post#0" expanded="false" />
+            <element signature="e#3373#4202#0" expanded="true" />
+            <element signature="e#4179#4180#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesFriendsTimeLine.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="43" selection-start="1646" selection-end="1646" vertical-scroll-proportion="0.42920354" vertical-offset="436" max-vertical-offset="2505">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#4623#4656#0" expanded="true" />
+            <element signature="e#5468#5501#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/FriendsTimeLineFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="185" column="38" selection-start="7328" selection-end="7328" vertical-scroll-proportion="3.8385828" vertical-offset="0" max-vertical-offset="3195">
+          <folding>
+            <element signature="e#6538#6565#0" expanded="false" />
+            <element signature="e#6908#6926#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/notification/MyMaidNotificationHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="119" column="0" selection-start="4065" selection-end="4065" vertical-scroll-proportion="0.0" vertical-offset="214" max-vertical-offset="735">
+          <folding>
+            <element signature="method#MyMaidNotificationHelper#0;class#MyMaidNotificationHelper#0" expanded="false" />
+            <element signature="method#setSending#0;class#MyMaidNotificationHelper#0" expanded="false" />
+            <element signature="method#setProgress#0;class#MyMaidNotificationHelper#0" expanded="false" />
+            <element signature="method#setWaitResponse#0;class#MyMaidNotificationHelper#0" expanded="false" />
+            <element signature="method#setSuccess#0;class#MyMaidNotificationHelper#0" expanded="false" />
+            <element signature="method#setFail#0;class#MyMaidNotificationHelper#0" expanded="false" />
+            <element signature="method#setRemove#0;class#MyMaidNotificationHelper#0" expanded="false" />
+            <element signature="method#setAQI#0;class#MyMaidNotificationHelper#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/service/ReplyService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="71" selection-start="1861" selection-end="1861" vertical-scroll-proportion="0.0" vertical-offset="107" max-vertical-offset="1035">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/net/JavaHttpUtility.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="75" column="47" selection-start="2509" selection-end="2509" vertical-scroll-proportion="0.4978166" vertical-offset="597" max-vertical-offset="5460">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/values-zh/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="124" column="50" selection-start="5948" selection-end="5948" vertical-scroll-proportion="0.74097663" vertical-offset="1511" max-vertical-offset="2370">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/CommentRepost.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="168" column="52" selection-start="6071" selection-end="6071" vertical-scroll-proportion="0.0" vertical-offset="1724" max-vertical-offset="3495">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/service/MyMaidServiceHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="46" column="69" selection-start="1805" selection-end="1805" vertical-scroll-proportion="0.0" vertical-offset="307" max-vertical-offset="765">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/service/CommentCreateService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="69" column="37" selection-start="2464" selection-end="2464" vertical-scroll-proportion="0.0" vertical-offset="470" max-vertical-offset="1020">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/comments/CommentsCreate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="60" column="127" selection-start="2061" selection-end="2096" vertical-scroll-proportion="0.5895197" vertical-offset="405" max-vertical-offset="930">
+          <folding>
+            <element signature="e#2061#2096#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesRepost.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="58" column="119" selection-start="2053" selection-end="2053" vertical-scroll-proportion="0.65502185" vertical-offset="330" max-vertical-offset="870">
+          <folding>
+            <element signature="e#2018#2053#0" expanded="true" />
+            <element signature="e#2234#2263#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesUpdate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="44" column="119" selection-start="1505" selection-end="1505" vertical-scroll-proportion="0.6462882" vertical-offset="139" max-vertical-offset="735">
+          <folding>
+            <element signature="e#1470#1505#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesUpload.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="49" column="119" selection-start="1811" selection-end="1811" vertical-scroll-proportion="0.7008734" vertical-offset="174" max-vertical-offset="765">
+          <folding>
+            <element signature="e#1776#1811#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/MyMaidActionHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="35" selection-start="993" selection-end="993" vertical-scroll-proportion="0.0" vertical-offset="37" max-vertical-offset="1500">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="130" column="0" selection-start="6796" selection-end="6796" vertical-scroll-proportion="0.36518046" vertical-offset="1778" max-vertical-offset="2445">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/singleweibo/SingleWeiboActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="227" column="60" selection-start="8888" selection-end="8888" vertical-scroll-proportion="5.430131" vertical-offset="213" max-vertical-offset="4410">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/MentionsFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="177" column="0" selection-start="7456" selection-end="7456" vertical-scroll-proportion="0.15283842" vertical-offset="1625" max-vertical-offset="4260">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/comments/CommentsReply.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="56" column="102" selection-start="1910" selection-end="1910" vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="870">
+          <folding>
+            <element signature="e#2106#2134#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/net/DownloadPic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="148" column="9" selection-start="4965" selection-end="4965" vertical-scroll-proportion="0.0" vertical-offset="1686" max-vertical-offset="2280">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="36" selection-start="205" selection-end="205" vertical-scroll-proportion="0.12552302" vertical-offset="0" max-vertical-offset="1155">
+        <state line="3" column="27" selection-start="167" selection-end="167" vertical-scroll-proportion="0.07413509" vertical-offset="0" max-vertical-offset="1170">
           <folding />
         </state>
       </provider>

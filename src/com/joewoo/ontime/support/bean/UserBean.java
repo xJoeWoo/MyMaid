@@ -13,6 +13,7 @@ public class UserBean implements Parcelable{
     private String friends_count;
     private String statuses_count;
     private String favourites_count;
+    private String description;
     private boolean follow_me;
     private String avatar_large;
     private String avatar_hd;
@@ -21,8 +22,12 @@ public class UserBean implements Parcelable{
         return id;
     }
 
-    public String getLoaction() {
+    public String getLocation() {
         return location;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getFollowersCount() {
@@ -70,6 +75,7 @@ public class UserBean implements Parcelable{
         friends_count = parcel.readString();
         statuses_count = parcel.readString();
         favourites_count = parcel.readString();
+        description = parcel.readString();
         follow_me = parcel.readByte() != 0;
         avatar_large = parcel.readString();
         avatar_hd = parcel.readString();
@@ -102,6 +108,7 @@ public class UserBean implements Parcelable{
         dest.writeString(friends_count);
         dest.writeString(statuses_count);
         dest.writeString(favourites_count);
+        dest.writeString(description);
         dest.writeByte((byte) (follow_me ? 1 : 0));
         dest.writeString(avatar_large);
         dest.writeString(avatar_hd);

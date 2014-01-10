@@ -30,6 +30,7 @@
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_mymaid</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Mymaid</item>
 
+        <item name="android:cacheColorHint">@color/highlightPink</item>
         <item name="android:fastScrollThumbDrawable">@drawable/fastscroll_thumb_holo</item>
         <item name="android:editTextStyle">@style/EditTextMyMaid</item>
         <item name="android:buttonStyle">@style/ButtonMyMaid</item>

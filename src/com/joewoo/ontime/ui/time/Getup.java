@@ -1,12 +1,8 @@
 package com.joewoo.ontime.ui.time;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,8 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.action.Weather;
-import com.joewoo.ontime.action.statuses.StatusesUpdate;
+import com.joewoo.ontime.action.aqi.Weather;
 import com.joewoo.ontime.support.bean.WeatherBean;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
 import com.joewoo.ontime.support.info.GetupSentences;

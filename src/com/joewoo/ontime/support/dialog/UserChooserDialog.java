@@ -1,6 +1,7 @@
 package com.joewoo.ontime.support.dialog;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,10 +42,12 @@ public class UserChooserDialog {
 
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 Log.e(TAG, "User Chose " + String.valueOf(position));
 
                 if (usersCount - position > 0) {
+
+                    dialog.cancel();
 
                     Cursor c = uAdapter.getCursor();
 
@@ -66,40 +69,37 @@ public class UserChooserDialog {
 
                         act.finish();
                         act.startActivity(new Intent(act, MainTimelineActivity.class));
+
                     } else {
                         Toast.makeText(act, R.string.user_chooser_dialog_choosed, Toast.LENGTH_SHORT).show();
                     }
 
                 } else if (usersCount - position <= 0) {
-                    if (usersCount - position == -1) {
-                        if (GlobalContext.getSQL().delete(MyMaidSQLHelper.USER_TABLE, MyMaidSQLHelper.LAST_LOGIN + "=?",
-                                new String[]{"1"}) > 0) {
-                            Log.e(MyMaidSQLHelper.TAG_SQL, "LOGOUT - Cleared user info");
-                            Toast.makeText(act, "<(￣︶￣)>", Toast.LENGTH_SHORT).show();
-                            GlobalContext.clear();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(act);
+
+                    builder.setTitle(R.string.frag_ftl_dialog_confirm_logout_title);
+                    builder.setPositiveButton(R.string.frag_ftl_dialog_confirm_logout_btn_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog2, int which) {
+
+                            if (GlobalContext.getSQL().delete(MyMaidSQLHelper.USER_TABLE, MyMaidSQLHelper.LAST_LOGIN + "=?",
+                                    new String[]{"1"}) > 0) {
+                                Log.e(MyMaidSQLHelper.TAG_SQL, "LOGOUT - Cleared user info");
+                                Toast.makeText(act, "<(￣︶￣)>", Toast.LENGTH_SHORT).show();
+                                GlobalContext.clear();
+                                dialog.cancel();
+                            }
+                            act.finish();
+                            act.startActivity(new Intent(act, Login.class));
                         }
-                    }
-                    act.finish();
-                    act.startActivity(new Intent(act, Login.class));
+                    });
+                    builder.setNegativeButton(R.string.frag_ftl_dialog_confirm_logout_btn_cancle, null);
+
+                    builder.show();
                 }
-                dialog.cancel();
             }
         }
         );
-
-        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                Log.e("XXX", "onCancel");
-            }
-        });
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                Log.e("XXX", "onDismiss");
-            }
-        });
 
         dialog.show();
     }

@@ -1,20 +1,11 @@
 package com.joewoo.ontime.ui;
 
-import static com.joewoo.ontime.support.info.Defines.*;
-
-import com.joewoo.ontime.R;
-import com.joewoo.ontime.action.comments.CommentsCreate;
-import com.joewoo.ontime.action.comments.CommentsReply;
-import com.joewoo.ontime.action.statuses.StatusesRepost;
-import com.joewoo.ontime.support.bean.WeiboBackBean;
-
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -25,17 +16,35 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.joewoo.ontime.R;
+import com.joewoo.ontime.support.service.MyMaidServiceHelper;
+
+import static com.joewoo.ontime.support.info.Defines.ACT_GOT_AT;
+import static com.joewoo.ontime.support.info.Defines.COMMENT;
+import static com.joewoo.ontime.support.info.Defines.COMMENT_ID;
+import static com.joewoo.ontime.support.info.Defines.IS_COMMENT;
+import static com.joewoo.ontime.support.info.Defines.IS_REPLY;
+import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
+import static com.joewoo.ontime.support.info.Defines.KEY_AT_USER;
+import static com.joewoo.ontime.support.info.Defines.MENU_AT;
+import static com.joewoo.ontime.support.info.Defines.MENU_EMOTION;
+import static com.joewoo.ontime.support.info.Defines.MENU_LETTERS;
+import static com.joewoo.ontime.support.info.Defines.MENU_POST;
+import static com.joewoo.ontime.support.info.Defines.MENU_TOPIC;
+import static com.joewoo.ontime.support.info.Defines.STATUS;
+import static com.joewoo.ontime.support.info.Defines.TAG;
+import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
+
 @SuppressLint("HandlerLeak")
 public class CommentRepost extends Activity {
 
-    long downTime;
-    EditText et;
-    boolean sending;
-    String weibo_id;
-    String comment_id;
-    boolean isComment;
-    boolean isReply;
-    boolean isRepost;
+    private long downTime;
+    private EditText et;
+    private String weiboID;
+    private String commentID;
+    private boolean isComment;
+    private boolean isReply;
+    private boolean isRepost;
 
     @Override
     public void onBackPressed() {
@@ -50,8 +59,9 @@ public class CommentRepost extends Activity {
         setContentView(R.layout.comment);
 
         setProgressBarIndeterminateVisibility(false);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setDisplayShowTitleEnabled(true);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
         et = (EditText) findViewById(R.id.comment_et);
 
         Intent i = getIntent();
@@ -60,26 +70,34 @@ public class CommentRepost extends Activity {
         isReply = i.getBooleanExtra(IS_REPLY, false);
         isRepost = i.getBooleanExtra(IS_REPOST, false);
 
-        weibo_id = i.getStringExtra(WEIBO_ID);
-
         if (isRepost) {
-            setTitle(R.string.title_act_repost);
-            if (i.getStringExtra(TEXT) != null) {
-                et.setText(i.getStringExtra(TEXT));
-                et.setSelection(0);
+            actionBar.setTitle(R.string.title_act_repost);
+            if (i.getStringExtra(STATUS) != null) {
+                et.setText(i.getStringExtra(STATUS));
             }
             et.setHint(R.string.comment_repost_repost);
         } else if (isReply) {
-            setTitle(R.string.title_act_reply);
-            comment_id = i.getStringExtra(COMMENT_ID);
+            if (i.getStringExtra(COMMENT) != null) {
+                et.setText(i.getStringExtra(COMMENT));
+            }
+            actionBar.setTitle(R.string.title_act_reply);
+            commentID = i.getStringExtra(COMMENT_ID);
         } else if (isComment) {
-            setTitle(R.string.title_act_comment);
+            if(i.getStringExtra(COMMENT) != null) {
+                et.setText(i.getStringExtra(COMMENT));
+            }
+            actionBar.setTitle(R.string.title_act_comment);
+        } else {
+            finish();
+            return;
         }
 
-        if (weibo_id != null)
-            Log.e(TAG, "Weibo to comment id: " + weibo_id);
-        if (comment_id != null)
-            Log.e(TAG, "Replay comment id: " + comment_id);
+        weiboID = i.getStringExtra(WEIBO_ID);
+
+        if (weiboID != null)
+            Log.e(TAG, "Weibo to comment id: " + weiboID);
+        if (commentID != null)
+            Log.e(TAG, "Replay comment id: " + commentID);
 
         et.addTextChangedListener(new TextWatcher() {
             @Override
@@ -116,15 +134,9 @@ public class CommentRepost extends Activity {
 
         menu.add(0, MENU_TOPIC, 0, R.string.menu_topic);
 
-        if (!sending) {
-            menu.add(0, MENU_POST, 0, R.string.menu_post)
+        menu.add(0, MENU_POST, 0, R.string.menu_post)
                     .setIcon(R.drawable.social_send_now)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        } else {
-            // menu.add(0, MENU_POST, 0, R.string.action_post).setEnabled(false)
-            // .setIcon(R.drawable.send)
-            // .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        }
 
         return true;
     }
@@ -150,28 +162,23 @@ public class CommentRepost extends Activity {
 
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
-                if (et.getText() != null && !et.getText().toString().trim().equals("")) {
-                    sending = true;
+                
+                if (et.getText() != null && !et.getText().toString().equals("")) {
 
                     if (isComment)
-                        new CommentsCreate(et.getText().toString(), weibo_id,
-                                mHandler).start();
+                        MyMaidServiceHelper.commentCreate(et.getText().toString(), weiboID);
                     else if (isRepost)
-                        new StatusesRepost(et.getText().toString(), weibo_id,
-                                mHandler).start();
+                        MyMaidServiceHelper.repost(et.getText().toString(), weiboID);
                     else if (isReply)
-                        new CommentsReply(et.getText().toString(), weibo_id,
-                                comment_id, false, mHandler).start();
+                        MyMaidServiceHelper.reply(et.getText().toString(), weiboID, commentID);
 
-                    setProgressBarIndeterminateVisibility(true);
-
+                    finish();
                 } else if(isRepost) {
-                    sending = true;
 
-                    new StatusesRepost(getString(R.string.comment_repost_repost), weibo_id,
-                            mHandler).start();
+                    MyMaidServiceHelper.repost(getString(R.string.comment_repost_repost), weiboID);
 
-                    setProgressBarIndeterminateVisibility(true);
+                    finish();
+
                 } else {
                     Toast.makeText(CommentRepost.this, R.string.toast_say_sth, Toast.LENGTH_SHORT)
                             .show();
@@ -179,19 +186,6 @@ public class CommentRepost extends Activity {
 
                 break;
             }
-//		case 1000: {
-//			if (!"".equals(et.getText().toString().trim())) {
-//				sending = true;
-//				rfBar(); // 刷新ActionBar
-//				new StatusesRepost(et.getText().toString(), weibo_id, mHandler)
-//						.start();
-//				setProgressBarIndeterminateVisibility(true);
-//			} else {
-//				Toast.makeText(CommentRepost.this, "说点什么吧", Toast.LENGTH_SHORT)
-//						.show();
-//			}
-//			break;
-//		}
             case MENU_AT: {
 
                 startActivityForResult(new Intent(CommentRepost.this, At.class),
@@ -212,23 +206,23 @@ public class CommentRepost extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            sending = false;
-            setProgressBarIndeterminateVisibility(false);
-            invalidateOptionsMenu();
-            Toast.makeText(CommentRepost.this, (String) msg.obj,
-                    Toast.LENGTH_SHORT).show();
-            switch (msg.what) {
-                case GOT_COMMENT_CREATE_INFO:
-                case GOT_REPOST_INFO:
-                case GOT_REPLY_INFO:
-                    finish();
-                    break;
-            }
-        }
-    };
+//    private Handler mHandler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            sending = false;
+//            setProgressBarIndeterminateVisibility(false);
+//            invalidateOptionsMenu();
+//            Toast.makeText(CommentRepost.this, (String) msg.obj,
+//                    Toast.LENGTH_SHORT).show();
+//            switch (msg.what) {
+//                case GOT_COMMENT_CREATE_INFO:
+//                case GOT_REPOST_INFO:
+//                case GOT_REPLY_INFO:
+//                    finish();
+//                    break;
+//            }
+//        }
+//    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

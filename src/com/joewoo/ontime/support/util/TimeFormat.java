@@ -12,7 +12,7 @@ import java.util.TimeZone;
  */
 public final class TimeFormat {
 
-    private static final SimpleDateFormat format = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy");
+    private static final SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
     private static final Calendar cc = Calendar.getInstance();
     private static int currentDay;
 

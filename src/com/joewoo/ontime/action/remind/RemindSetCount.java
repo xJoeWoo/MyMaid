@@ -13,10 +13,10 @@ import static com.joewoo.ontime.support.info.Defines.TAG;
 
 public class RemindSetCount extends Thread {
 
-    public final static String CommentsCount = "cmt";
-    public final static String MentionsCount = "mention_status";
-    public final static String CommentMentionsCount = "mention_cmt";
-    public final static String FollowersCount = "follower";
+    public final static String COMMENTS_COUNT = "cmt";
+    public final static String MENTIONS_COUNT = "mention_status";
+    public final static String COMMENT_MENTIONS_COUNT = "mention_cmt";
+    public final static String FOLLOWERS_COUNT = "follower";
 
     private String type;
 

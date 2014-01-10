@@ -6,10 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -113,11 +109,12 @@ public class DownloadPic extends AsyncTask<String, Integer, Bitmap> implements I
             } catch (Exception e) {
                 Log.e(TAG, "Download Pic AsyncTask FAILED");
                 e.printStackTrace();
+                return null;
             }
 
         } else {
             Log.e(TAG, "GIF image...");
-            image = null;
+            return null;
         }
 
         return image;

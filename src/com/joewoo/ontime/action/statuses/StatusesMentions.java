@@ -1,11 +1,11 @@
 package com.joewoo.ontime.action.statuses;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.joewoo.ontime.R;
+import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.action.remind.RemindSetCount;
 import com.joewoo.ontime.support.bean.MentionsBean;
@@ -76,14 +76,15 @@ public class StatusesMentions extends Thread {
                         source.indexOf("</a>"));
                 s.setSource(source);
 
-                if (s.getRetweetedStatus() != null) {
+                if (s.getRetweetedStatus() != null && s.getRetweetedStatus().getUser() != null) {
 
                     s.getRetweetedStatus().setCreatedAt(TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
 
-                    source = s.getRetweetedStatus().getSource();
-                    source = source.substring(source.indexOf(">") + 1,
-                            source.indexOf("</a>"));
-                    s.getRetweetedStatus().setSource(source);
+                        source = s.getRetweetedStatus().getSource();
+                        source = source.substring(source.indexOf(">") + 1,
+                                source.indexOf("</a>"));
+                        s.getRetweetedStatus().setSource(source);
+
                 }
 
             }
@@ -97,7 +98,7 @@ public class StatusesMentions extends Thread {
             }
 
             if (!isProvidedResult && maxID == null)
-                new RemindSetCount(RemindSetCount.MentionsCount).start();
+                MyMaidActionHelper.remindSetCount(RemindSetCount.MENTIONS_COUNT);
 
         } else {
             mHandler.obtainMessage(GOT_MENTIONS_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();

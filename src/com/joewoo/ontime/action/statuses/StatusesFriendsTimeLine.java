@@ -31,11 +31,11 @@ public class StatusesFriendsTimeLine extends Thread {
     private Handler mHandler;
     public boolean isProvidedResult = false;
     private String httpResult;
-    private String max_id = null;
+    private String maxID = null;
 
-    public StatusesFriendsTimeLine(String max_id, Handler handler) {
+    public StatusesFriendsTimeLine(String maxID, Handler handler) {
         this.mHandler = handler;
-        this.max_id = max_id;
+        this.maxID = maxID;
     }
 
     public StatusesFriendsTimeLine(boolean isProvided, Handler handler) {
@@ -89,17 +89,14 @@ public class StatusesFriendsTimeLine extends Thread {
                             source.indexOf("</a>"));
                     s.setSource(source);
 
-                    if (s.getRetweetedStatus() != null) {
+                    if (s.getRetweetedStatus() != null && s.getRetweetedStatus().getUser() != null) {
 
                         s.getRetweetedStatus().setCreatedAt(TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
 
                         source = s.getRetweetedStatus().getSource();
-
-                        if(source != null) {
                             source = source.substring(source.indexOf(">") + 1,
                                     source.indexOf("</a>"));
                             s.getRetweetedStatus().setSource(source);
-                        }
                     }
 
 
@@ -115,7 +112,7 @@ public class StatusesFriendsTimeLine extends Thread {
                     statuses.remove(adPosition);
 
 
-                if (max_id == null)
+                if (maxID == null)
                     mHandler.obtainMessage(GOT_FRIENDS_TIMELINE_INFO, statuses)
                             .sendToTarget();
                 else {
@@ -140,11 +137,11 @@ public class StatusesFriendsTimeLine extends Thread {
             HashMap<String, String> hm = new HashMap<>();
             hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
 
-            if (max_id == null) {
+            if (maxID == null) {
                 hm.put(COUNT, AcquireCount.FRIENDS_TIMELINE_COUNT);
             } else {
                 hm.put(COUNT, AcquireCount.FRIENDS_TIMELINE_ADD_COUNT);
-                hm.put(MAX_ID, max_id);
+                hm.put(MAX_ID, maxID);
             }
 
             httpResult = new HttpUtility().executeGetTask(URLHelper.FRIENDS_TIMELINE, hm);

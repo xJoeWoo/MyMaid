@@ -47,7 +47,8 @@ public class StatusesUpload extends Thread {
 
         } catch (Exception e) {
             e.printStackTrace();
-            mHandler.obtainMessage(GOT_UPLOAD_INFO_FAIL, GlobalContext.getResString(R.string.notify_post_fail));
+            mHandler.obtainMessage(GOT_UPLOAD_INFO_FAIL, GlobalContext.getResString(R.string.error_network_not_avaiable)).sendToTarget();
+            return;
         }
 
         if(ErrorCheck.getError(httpResult) == null) {

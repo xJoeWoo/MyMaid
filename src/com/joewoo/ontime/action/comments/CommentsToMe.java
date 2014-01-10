@@ -1,11 +1,11 @@
 package com.joewoo.ontime.action.comments;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.joewoo.ontime.R;
+import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.action.remind.RemindSetCount;
 import com.joewoo.ontime.support.bean.CommentsBean;
@@ -83,7 +83,7 @@ public class CommentsToMe extends Thread {
             }
 
             if (!isProvidedResult && maxID == null)
-                new RemindSetCount(RemindSetCount.CommentsCount).start();
+                MyMaidActionHelper.remindSetCount(RemindSetCount.COMMENTS_COUNT);
 
         } else {
             mHandler.obtainMessage(GOT_COMMENTS_TO_ME_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();

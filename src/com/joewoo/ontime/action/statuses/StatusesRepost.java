@@ -1,29 +1,22 @@
 package com.joewoo.ontime.action.statuses;
 
-import static com.joewoo.ontime.support.info.Defines.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
-
 import android.os.Handler;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.URLHelper;
-import com.joewoo.ontime.support.bean.WeiboBackBean;
 import com.joewoo.ontime.support.error.ErrorCheck;
 import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
+
+import java.util.HashMap;
+
+import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
+import static com.joewoo.ontime.support.info.Defines.GOT_REPOST_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_REPOST_INFO_FAIL;
+import static com.joewoo.ontime.support.info.Defines.STATUS;
+import static com.joewoo.ontime.support.info.Defines.TAG;
+import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
 public class StatusesRepost extends Thread {
     private String weibo_id;
@@ -63,7 +56,7 @@ public class StatusesRepost extends Thread {
 
         } catch (Exception e) {
             e.printStackTrace();
-            mHandler.obtainMessage(GOT_REPOST_INFO_FAIL, GlobalContext.getResString(R.string.toast_repost_fail)).sendToTarget();
+            mHandler.obtainMessage(GOT_REPOST_INFO_FAIL, GlobalContext.getResString(R.string.error_network_not_avaiable)).sendToTarget();
             return;
         }
 

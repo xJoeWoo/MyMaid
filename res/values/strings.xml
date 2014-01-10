@@ -127,6 +127,7 @@
     <string name="error_weibo_not_exist">Target weibo does not exist</string>
     <string name="error_in_block">You\'re in block</string>
     <string name="error_unknown">&lt;(ll°д°ll)&gt;! Unknown error</string>
+    <string name="error_network_not_avaiable">Network problem</string>
 
     <string name="time_yesterday">Yesterday ·&#160;</string>
     <string name="time_2_days_ago">2 days ago ·&#160;</string>
@@ -134,7 +135,7 @@
 
     <string name="notify_post_sending">Posting Weibo…</string>
     <string name="notify_post_fail">Post Failed</string>
-    <string name="notify_post_uploding_pic">Uploading Photo…</string>
+    <string name="notify_post_uploading_pic">Uploading Photo…</string>
     <string name="notify_post_waiting_response">Waiting Response…</string>
     <string name="notify_post_upload_pic_finish">Upload Photo Finished</string>
     <string name="notify_post_success">Successfully Posted</string>
@@ -144,9 +145,9 @@
     <string name="notify_repost_sending">Reposting…</string>
     <string name="notify_repost_fail">Repost Failed</string>
     <string name="notify_repost_success">Successfully Reposted</string>
-    <string name="notify_comment_sending">Commenting…</string>
-    <string name="notify_comment_fail">Comment Failed</string>
-    <string name="notify_comment_success">Successfully Commented</string>
+    <string name="notify_comment_create_sending">Commenting…</string>
+    <string name="notify_comment_create_fail">Comment Failed</string>
+    <string name="notify_comment_create_success">Successfully Commented</string>
 
 	<!-- <string name=""></string>
 	<string name=""></string>

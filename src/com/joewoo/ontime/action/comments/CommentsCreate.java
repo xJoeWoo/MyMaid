@@ -58,7 +58,7 @@ public class CommentsCreate extends Thread {
         } catch (Exception e) {
             Log.e(TAG, "Comment Create Thread FAILED");
             e.printStackTrace();
-            mHandler.obtainMessage(GOT_COMMENT_CREATE_INFO_FAIL, GlobalContext.getResString(R.string.toast_comment_fail)).sendToTarget();
+            mHandler.obtainMessage(GOT_COMMENT_CREATE_INFO_FAIL, GlobalContext.getResString(R.string.error_network_not_avaiable)).sendToTarget();
             return;
         }
 

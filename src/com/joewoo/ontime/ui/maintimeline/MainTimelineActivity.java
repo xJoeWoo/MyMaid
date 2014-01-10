@@ -3,7 +3,6 @@ package com.joewoo.ontime.ui.maintimeline;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -12,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.joewoo.ontime.R;
+import com.joewoo.ontime.action.aqi.AQIDetails;
 import com.joewoo.ontime.support.adapter.pager.MainPagerAdapter;
 import com.joewoo.ontime.support.dialog.UserChooserDialog;
 import com.joewoo.ontime.support.util.GlobalContext;
@@ -38,74 +38,75 @@ public class MainTimelineActivity extends FragmentActivity {
 
         Log.e(TAG, "MyMaid Main Activity CREATE!");
 
+        new AQIDetails().start();
+
         if (GlobalContext.getAccessToken() != null) {
 
-                mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
+            mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
 
-                final ActionBar actionBar = getActionBar();
-                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-                // actionBar.setDisplayHomeAsUpEnabled(true);
-                actionBar.setDisplayShowTitleEnabled(false);
-                actionBar.setDisplayShowHomeEnabled(false);
+            final ActionBar actionBar = getActionBar();
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+            // actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(false);
 
-                mViewPager = (ViewPager) findViewById(R.id.pager);
-                mViewPager.setOffscreenPageLimit(3);
+            mViewPager = (ViewPager) findViewById(R.id.pager);
+            mViewPager.setOffscreenPageLimit(3);
 
-                actionBar.addTab(actionBar.newTab()
-                        .setText(getString(R.string.title_frag_atme).toUpperCase(Locale.US))
-                        .setTabListener(tabListener));
-                actionBar.addTab(actionBar.newTab()
-                        .setText(getString(R.string.title_frag_friends_timeline).toUpperCase(Locale.US))
-                        .setTabListener(tabListener));
-                actionBar.addTab(actionBar.newTab()
-                        .setText(getString(R.string.title_frag_comments_to_me).toUpperCase(Locale.US))
-                        .setTabListener(tabListener));
+            actionBar.addTab(actionBar.newTab()
+                    .setText(getString(R.string.title_frag_atme).toUpperCase(Locale.US))
+                    .setTabListener(tabListener));
+            actionBar.addTab(actionBar.newTab()
+                    .setText(getString(R.string.title_frag_friends_timeline).toUpperCase(Locale.US))
+                    .setTabListener(tabListener));
+            actionBar.addTab(actionBar.newTab()
+                    .setText(getString(R.string.title_frag_comments_to_me).toUpperCase(Locale.US))
+                    .setTabListener(tabListener));
 
-                mSectionsPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
-                mViewPager.setAdapter(mSectionsPagerAdapter);
+            mSectionsPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
+            mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
-                mViewPager
-                        .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-                            @Override
-                            public void onPageSelected(int arg0) {
-                                actionBar.setSelectedNavigationItem(arg0);
-                                Log.e(TAG, "Page: " + String.valueOf(arg0));
-                                switch (arg0) {
-                                    case MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS: {
+            mViewPager
+                    .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+                        @Override
+                        public void onPageSelected(int arg0) {
+                            actionBar.setSelectedNavigationItem(arg0);
+                            Log.e(TAG, "Page: " + String.valueOf(arg0));
+                            switch (arg0) {
+                                case MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS: {
 
-                                        break;
+                                    break;
+                                }
+                                case MainPagerAdapter.FRAG_COMMENTS_POS: {
+                                    if (!gotCommentsUnread) {
+                                        mSectionsPagerAdapter.getCommentsFrag()
+                                                .getUnreadCommentsCount();
+                                        gotCommentsUnread = true;
                                     }
-                                    case MainPagerAdapter.FRAG_COMMENTS_POS: {
-                                        if (!gotCommentsUnread) {
-                                            mSectionsPagerAdapter.getCommentsFrag()
-                                                    .getUnreadCommentsCount();
-                                            gotCommentsUnread = true;
-                                        }
-                                        setActionBarVisible();
-                                        break;
+                                    setActionBarVisible();
+                                    break;
+                                }
+                                case MainPagerAdapter.FRAG_MENTIONS_POS: {
+                                    if (!gotMentionsUnread) {
+                                        mSectionsPagerAdapter.getMentionsFrag()
+                                                .getUnreadMentionsCount();
+                                        gotMentionsUnread = true;
                                     }
-                                    case MainPagerAdapter.FRAG_MENTIONS_POS: {
-                                        if (!gotMentionsUnread) {
-                                            mSectionsPagerAdapter.getMentionsFrag()
-                                                    .getUnreadMentionsCount();
-                                            gotMentionsUnread = true;
-                                        }
-                                        setActionBarVisible();
-                                        break;
-                                    }
+                                    setActionBarVisible();
+                                    break;
                                 }
                             }
-                        });
+                        }
+                    });
 
-                mViewPager.setCurrentItem(MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS);
+            mViewPager.setCurrentItem(MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS);
 
         } else {// 不存在用户信息，需要登录
 //            Toast.makeText(MainTimelineActivity.this,
 //                    R.string.toast_login_acquired, Toast.LENGTH_LONG).show();
 //            jumpToLogin();
             UserChooserDialog.show(this);
-
 
 
         }
@@ -164,15 +165,7 @@ public class MainTimelineActivity extends FragmentActivity {
     public void setActionBarLowProfile() {
         if (getActionBar().isShowing()) {
             getActionBar().hide();
-            switch (Build.VERSION.SDK_INT) {
-                case Build.VERSION_CODES.KITKAT:
-                    getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE);
-                    break;
-
-                default:
-                    getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
-                    break;
-            }
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         }
     }
 

@@ -1,7 +1,6 @@
 package com.joewoo.ontime.action;
 
 import com.joewoo.ontime.support.info.Defines;
-import com.joewoo.ontime.support.util.GlobalContext;
 
 /**
  * Created by JoeWoo on 13-10-19.
@@ -38,4 +37,7 @@ public class URLHelper {
     public final static String COMMENTS_MENTIONS = "https://api.weibo.com/2/comments/mentions.json";
     public final static String FRIENDS_IDS = "https://api.weibo.com/2/friendships/friends/ids.json";
     public final static String STATUSES_SHOW = "https://api.weibo.com/2/statuses/show.json";
+
+    public final static String AQI_DETAILS = "http://www.pm25.in/api/querys/aqi_details.json";
+
 }

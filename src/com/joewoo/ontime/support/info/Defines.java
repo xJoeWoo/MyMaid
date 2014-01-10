@@ -7,9 +7,12 @@ public class Defines {
     public final static String APP_KEY = "462564571";
     public final static String APP_SECRET = "f08ee7c15ba9afced27b3b916126f5ac";
 
+    public final static String PM25_APP_KEY = "egcFicmNaR6JpWNcYS84";
+
     public final static int RESULT_DESTROYED_WEIBO = 2;
 
     public final static String STATUS_BEAN = "status_bean";
+    public final static String USER_BEAN = "user_bean";
     public final static String STATUS_BEAN_POSITION = "bean_position";
 
     public final static String TEMP_IMAGE_NAME = "tmp.png";
@@ -82,6 +85,7 @@ public class Defines {
     public final static String COUNT = "count";
     public final static String MAX_ID = "max_id";
 	public final static String STATUS = "status";
+    public final static String FILE_PATH = "file_path";
 	public final static String PIC = "pic";
 	public final static String AUTH_CODE = "auth_code";
 	public final static String UID = "uid";
@@ -107,6 +111,7 @@ public class Defines {
 	public final static String WEIBO_ID = "id";
     public final static String REPOST_WEIBO_ID = "repost_weibo_id";
 	public final static String COMMENT_ID = "comment_id";
+    public final static String COMMENT = "comment";
 	public final static String IS_COMMENT = "isComment";
 	public final static String HAVE_PIC = "havePic";
 	public final static String RETWEETED_STATUS_HAVE_PIC = "retweeted_status_havePic";

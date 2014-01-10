@@ -107,6 +107,8 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
 
         new StatusesMentions(true, mHandler).start();
 
+        lv.setFastScrollAlwaysVisible(true);
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -114,7 +116,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                 Intent i = new Intent();
                 i.setClass(act, CommentRepost.class);
                 i.putExtra(IS_COMMENT, true);
-                if(isNormalMention)
+                if (isNormalMention)
                     i.putExtra(WEIBO_ID, statuses.get(arg2 - lv.getHeaderViewsCount()).getId());
                 else
                     i.putExtra(WEIBO_ID, comments.get(arg2 - lv.getHeaderViewsCount()).getId());
@@ -126,6 +128,13 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int arg2, long arg3) {
+
+                StatusesBean b = statuses.get(arg2 - lv.getHeaderViewsCount());
+
+                if (isNormalMention)
+                    if (b.getRetweetedStatus() != null && b.getRetweetedStatus().getUser() == null)
+                        return false; // 微博已被删除不继续进行
+
                 Intent i = new Intent(act, SingleWeiboActivity.class);
                 if (isNormalMention) {
                     i.putExtra(STATUS_BEAN, statuses.get(arg2 - lv.getHeaderViewsCount()));
@@ -167,13 +176,9 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
 
         menu.clear();
 
-        try {
-            menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_coming)
-                    .setIcon(GlobalContext.getProfileImg())
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_coming)
+                .setIcon(GlobalContext.getSmallProfileImg())
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         if (unreadCount == null)
             menu.add(0, MENU_UNREAD_COUNT, 0, R.string.menu_unread)
@@ -307,7 +312,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
     }
 
     private void setAdapter(boolean isNormalMention) {
-        if(lv.getAdapter() == null) {
+        if (lv.getAdapter() == null) {
             if (isNormalMention)
                 lv.setAdapter(mainAdapter);
             else
@@ -315,7 +320,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
         } else {
             Log.e(TAG, "isNor: " + String.valueOf(isNormalMention));
             Log.e(TAG, "Adapter: " + String.valueOf(lv.getAdapter() == mainAdapter ? "1" : "0"));
-            if(!isNormalMention && lv.getAdapter() != mainAdapter)
+            if (!isNormalMention && lv.getAdapter() != mainAdapter)
                 lv.setAdapter(commentsAdapter);
             else if (isNormalMention && lv.getAdapter() != commentsAdapter)
                 lv.setAdapter(mainAdapter);
@@ -330,7 +335,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
     }
 
     public void refreshMentions() {
-        new StatusesMentions(false,  mHandler).start();
+        new StatusesMentions(false, mHandler).start();
         mPullToRefreshAttacher.setRefreshing(true);
     }
 
@@ -339,6 +344,8 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
         mPullToRefreshAttacher.setRefreshing(true);
     }
 
-    public void scrollListViewToTop() { lv.smoothScrollToPosition(0); }
+    public void scrollListViewToTop() {
+        lv.smoothScrollToPosition(0);
+    }
 
 }

@@ -17,8 +17,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.action.comments.CommentsToMe;
-import com.joewoo.ontime.action.remind.RemindUnreadCount;
+import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.support.adapter.listview.CommentsToMeAdapter;
 import com.joewoo.ontime.support.bean.CommentsBean;
 import com.joewoo.ontime.support.bean.UnreadCountBean;
@@ -88,8 +87,9 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        new CommentsToMe(true, mHandler).start();
+        MyMaidActionHelper.commentsToMe(true, mHandler);
 
+        lv.setFastScrollAlwaysVisible(true);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -107,6 +107,12 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int arg2, long arg3) {
+
+                CommentsBean c = comments.get(arg2 - lv.getHeaderViewsCount());
+
+                if (c.getStatus().getRetweetedStatus() != null && c.getStatus().getRetweetedStatus().getUser() == null)
+                    return false; // 微博已被删除不继续进行
+
                 Intent i = new Intent(act, SingleWeiboActivity.class);
                 i.putExtra(WEIBO_ID, comments.get(arg2 - lv.getHeaderViewsCount()).getStatus().getId());
                 startActivity(i);
@@ -120,7 +126,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
                 if (view.getCount() > (Integer.valueOf(AcquireCount.COMMENTS_TO_ME_COUNT) - 2) && view.getLastVisiblePosition() > (view.getCount() - 6) && !mPullToRefreshAttacher.isRefreshing() && comments != null) {
                     Log.e(TAG, "到底");
                     // 获取后会删除第一项，所以获取数+1
-                    new CommentsToMe(comments.get(view.getCount() - 1 - lv.getHeaderViewsCount()).getStatus().getId(), mHandler).start();
+                    MyMaidActionHelper.commentsToMe(comments.get(view.getCount() - 1 - lv.getHeaderViewsCount()).getStatus().getId(), mHandler);
                     mPullToRefreshAttacher.setRefreshing(true);
                 }
             }
@@ -139,13 +145,9 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
     public void onPrepareOptionsMenu(Menu menu) {
         menu.clear();
 
-        try {
-            menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_coming)
-                    .setIcon(GlobalContext.getProfileImg())
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        menu.add(0, MENU_PROFILE_IMAGE, 0, R.string.menu_coming)
+                .setIcon(GlobalContext.getSmallProfileImg())
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         if (unreadCount == null)
             menu.add(0, MENU_UNREAD_COUNT, 0, R.string.menu_unread)
@@ -177,8 +179,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
             }
             case MENU_PROFILE_IMAGE: {
                 if (GlobalContext.getUID().equals("1665287983")) {
-                    Intent i = new Intent();
-                    i.setClass(act, SingleUser.class);
+                    Intent i = new Intent(act, SingleUser.class);
                     i.putExtra(SCREEN_NAME, "VongCamCam");
                     startActivity(i);
                 } else {
@@ -202,8 +203,8 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
                     break;
                 }
                 case GOT_COMMENTS_TO_ME_INFO_FAIL: {
-                        Toast.makeText(act, (String) msg.obj,
-                                Toast.LENGTH_SHORT).show();
+                    Toast.makeText(act, (String) msg.obj,
+                            Toast.LENGTH_SHORT).show();
                     break;
                 }
                 case GOT_UNREAD_COUNT_INFO: {
@@ -234,20 +235,22 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
     };
 
     public void getUnreadCommentsCount() {
-        new RemindUnreadCount(mHandler).start();
+        MyMaidActionHelper.remindUnreadCount(mHandler);
     }
 
     public void refreshComments() {
-        new CommentsToMe(false, mHandler).start();
+        MyMaidActionHelper.commentsToMe(false, mHandler);
         mPullToRefreshAttacher.setRefreshing(true);
     }
 
     private void setListView(List<CommentsBean> comments) {
         mAdapter.setData(comments);
-        if(lv.getAdapter() == null)
+        if (lv.getAdapter() == null)
             lv.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
     }
 
-    public void scrollListViewToTop() { lv.smoothScrollToPosition(0); }
+    public void scrollListViewToTop() {
+        lv.smoothScrollToPosition(0);
+    }
 }

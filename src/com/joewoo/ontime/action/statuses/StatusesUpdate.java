@@ -17,7 +17,7 @@ import static com.joewoo.ontime.support.info.Defines.GOT_UPDATE_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.STATUS;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
-public class StatusesUpdate extends Thread{
+public class StatusesUpdate extends Thread {
 
     private String status;
     private Handler mHandler;
@@ -29,7 +29,7 @@ public class StatusesUpdate extends Thread{
 
     public void run() {
         Log.e(TAG, "StatusesUpdate Weibo Thread START");
-        String httpResult = null;
+        String httpResult;
 
         try {
             HashMap<String, String> hm = new HashMap<String, String>();
@@ -42,7 +42,8 @@ public class StatusesUpdate extends Thread{
 
         } catch (Exception e) {
             e.printStackTrace();
-            mHandler.obtainMessage(GOT_UPDATE_INFO_FAIL, GlobalContext.getResString(R.string.notify_post_fail)).sendToTarget();
+            mHandler.obtainMessage(GOT_UPDATE_INFO_FAIL, GlobalContext.getResString(R.string.error_network_not_avaiable)).sendToTarget();
+            return;
         }
 
 //        Log.e(TAG, result);
@@ -54,9 +55,4 @@ public class StatusesUpdate extends Thread{
         }
 
     }
-
-
-
-
-
 }

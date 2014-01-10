@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -19,8 +20,7 @@ import android.widget.Toast;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.net.NetworkStatus;
-import com.joewoo.ontime.support.service.UpdateService;
-import com.joewoo.ontime.support.service.UploadService;
+import com.joewoo.ontime.support.service.MyMaidServiceHelper;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 
@@ -41,6 +41,31 @@ public class Post extends Activity {
 
     private EditText et_post;
     private long downTime = 0;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(intent.getAction()) && type != null) {// 分享到此Activity
+            if (type.startsWith("text/")) { // 传入文件为文字
+                Log.e(TAG, "Share TEXT");
+                String text = intent.getStringExtra(Intent.EXTRA_TEXT);
+                if (text != null) {
+                    et_post.setText(text);
+                    et_post.setSelection(text.length());
+                }
+            } else if (type.startsWith("image/")) { // 传入文件为图片
+                Log.e(TAG, "Share PHOTO");
+                Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                if (uri != null) {
+                    GlobalContext.setPicPath(getFilePath(uri));
+                }
+                invalidateOptionsMenu();
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +103,9 @@ public class Post extends Activity {
             }
         }
 
-        Log.e(TAG, GlobalContext.getDraft());
-        Log.e(TAG, et_post.getText().toString());
-
         if (GlobalContext.getAccessToken() != null) {
             String draft = GlobalContext.getDraft();
-            if (draft != null && i.getStringExtra(Intent.EXTRA_TEXT) == null) {
+            if (draft != null && et_post.getText() != null && !et_post.getText().toString().equals("")) {
                 et_post.setText(draft);
                 et_post.setSelection(draft.length());
             }
@@ -176,10 +198,24 @@ public class Post extends Activity {
             }
             case MENU_ADD: {
                 if (GlobalContext.getPicPath() == null) {
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(intent, ACT_GOT_PHOTO);
+
+                    Intent ii = new Intent();
+
+                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+
+                    ii.setType("image/*");
+                    ii.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(ii, ACT_GOT_PHOTO);
+
+                    } else {
+
+                    //TODO
+
+                        ii.setAction(Intent.ACTION_PICK);
+                        ii.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(ii, ACT_GOT_PHOTO);
+                    }
+
                 } else {
                     if (System.currentTimeMillis() - downTime > 2000) {
                         Toast.makeText(Post.this,
@@ -197,16 +233,12 @@ public class Post extends Activity {
                 if (NetworkStatus.check(true)) {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(et_post.getWindowToken(), 0);
-                    if (et_post.getText() != null) {
+                    if (et_post.getText() != null && !et_post.getText().toString().equals("")) {
+                        String status = et_post.getText().toString();
                         if (GlobalContext.getPicPath() != null) {
-                            Intent ii = new Intent(Post.this, UploadService.class);
-                            ii.putExtra(UploadService.STATUS, et_post.getText().toString());
-                            ii.putExtra(UploadService.FILE_PATH, GlobalContext.getPicPath());
-                            startService(ii);
+                            MyMaidServiceHelper.upload(status);
                         } else {
-                            Intent ii = new Intent(Post.this, UpdateService.class);
-                            ii.putExtra(UpdateService.STATUS, et_post.getText().toString());
-                            startService(ii);
+                            MyMaidServiceHelper.update(status);
                         }
                         finish();
                     } else {
@@ -255,6 +287,7 @@ public class Post extends Activity {
                     break;
                 }
                 case ACT_GOT_PHOTO: {
+                    Log.e(TAG, data.getData().toString());
                     GlobalContext.setPicPath(getFilePath(data.getData()));
                     invalidateOptionsMenu();
                     break;

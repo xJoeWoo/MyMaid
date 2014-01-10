@@ -2,7 +2,6 @@ package com.joewoo.ontime.action.comments;
 
 import android.os.Handler;
 import android.util.Log;
-import android.widget.GridLayout;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.URLHelper;
@@ -55,7 +54,7 @@ public class CommentsReply extends Thread {
 
         } catch (Exception e) {
             e.printStackTrace();
-            mHandler.obtainMessage(GOT_REPLY_INFO_FAIL, GlobalContext.getResString(R.string.toast_reply_fail)).sendToTarget();
+            mHandler.obtainMessage(GOT_REPLY_INFO_FAIL, GlobalContext.getResString(R.string.error_network_not_avaiable)).sendToTarget();
             return;
         }
 

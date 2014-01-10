@@ -35,10 +35,10 @@ import static com.joewoo.ontime.support.info.Defines.MENU_COMMENT_CREATE;
 import static com.joewoo.ontime.support.info.Defines.MENU_FAVOURITE_CREATE;
 import static com.joewoo.ontime.support.info.Defines.MENU_REPOST;
 import static com.joewoo.ontime.support.info.Defines.MENU_STATUSES_DESTROY;
+import static com.joewoo.ontime.support.info.Defines.STATUS;
 import static com.joewoo.ontime.support.info.Defines.STATUS_BEAN;
 import static com.joewoo.ontime.support.info.Defines.STATUS_BEAN_POSITION;
 import static com.joewoo.ontime.support.info.Defines.TAG;
-import static com.joewoo.ontime.support.info.Defines.TEXT;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
 
@@ -224,22 +224,22 @@ public class SingleWeiboActivity extends FragmentActivity {
                 break;
             }
             case MENU_REPOST: {
-                Intent it = new Intent();
-                it.setClass(SingleWeiboActivity.this, CommentRepost.class);
+                Intent ii = new Intent();
+                ii.setClass(SingleWeiboActivity.this, CommentRepost.class);
                 if (status.getRetweetedStatus() != null)
-                    it.putExtra(TEXT, "//@" + status.getUser().getScreenName() + ":"
+                    ii.putExtra(STATUS, "//@" + status.getUser().getScreenName() + ":"
                             + status.getText());
-                it.putExtra(IS_REPOST, true);
-                it.putExtra(WEIBO_ID, status.getId());
-                startActivity(it);
+                ii.putExtra(IS_REPOST, true);
+                ii.putExtra(WEIBO_ID, status.getId());
+                startActivity(ii);
                 break;
             }
             case MENU_COMMENT_CREATE: {
-                Intent it = new Intent();
-                it.setClass(SingleWeiboActivity.this, CommentRepost.class);
-                it.putExtra(IS_COMMENT, true);
-                it.putExtra(WEIBO_ID, status.getId());
-                startActivity(it);
+                Intent ii = new Intent();
+                ii.setClass(SingleWeiboActivity.this, CommentRepost.class);
+                ii.putExtra(IS_COMMENT, true);
+                ii.putExtra(WEIBO_ID, status.getId());
+                startActivity(ii);
                 break;
             }
             case MENU_FAVOURITE_CREATE: {
