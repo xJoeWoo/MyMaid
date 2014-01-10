@@ -118,39 +118,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MyMaidActionHelper.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/MyMaidActionHelper.java">
+      <file leaf-file-name="UserChooserDialog.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/dialog/UserChooserDialog.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="35" selection-start="993" selection-end="993" vertical-scroll-proportion="0.0" vertical-offset="37" max-vertical-offset="1500">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CommentsReply.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/comments/CommentsReply.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="56" column="102" selection-start="1910" selection-end="1910" vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="870">
+            <state line="67" column="46" selection-start="2734" selection-end="2734" vertical-scroll-proportion="0.0" vertical-offset="258" max-vertical-offset="1395">
               <folding>
-                <element signature="e#2106#2134#0" expanded="true" />
+                <element signature="e#942#987#0" expanded="true" />
+                <element signature="e#2967#3003#0" expanded="true" />
+                <element signature="e#3429#3474#0" expanded="true" />
+                <element signature="e#3523#3569#0" expanded="true" />
+                <element signature="e#4461#4511#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DownloadPic.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/net/DownloadPic.java">
+      <file leaf-file-name="MyMaidSQLHelper.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/sql/MyMaidSQLHelper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="148" column="9" selection-start="4965" selection-end="4965" vertical-scroll-proportion="0.0" vertical-offset="1686" max-vertical-offset="2280">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AndroidManifest.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="27" selection-start="167" selection-end="167" vertical-scroll-proportion="0.07413509" vertical-offset="0" max-vertical-offset="1170">
+            <state line="99" column="26" selection-start="4528" selection-end="4528" vertical-scroll-proportion="-37.5" vertical-offset="1200" max-vertical-offset="2400">
               <folding />
             </state>
           </provider>
@@ -198,17 +184,14 @@
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/singleweibo/SingleWeiboCommentsFragment.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/bean/UserBean.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/MentionsFragment.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/SingleUser.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/CommentsToMeFragment.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/remind/RemindSetCount.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/comments/CommentsToMe.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/comments/CommentsMentions.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesMentions.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/sql/MyMaidSQLHelper.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/util/GlobalContext.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/adapter/gridview/UserChooserAdapter.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/MainTimelineActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/dialog/UserChooserDialog.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/statuses/StatusesFriendsTimeLine.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/action/MyMaidActionHelper.java" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/FriendsTimeLineFragment.java" />
@@ -222,6 +205,9 @@
         <option value="$PROJECT_DIR$/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/net/DownloadPic.java" />
         <option value="$PROJECT_DIR$/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/ui/SingleUser.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/util/GlobalContext.java" />
+        <option value="$PROJECT_DIR$/src/com/joewoo/ontime/support/dialog/UserChooserDialog.java" />
       </list>
     </option>
   </component>
@@ -940,6 +926,32 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="util" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="MyMaid" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ontime" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="support" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="service" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -1546,7 +1558,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="54" y="-8" width="978" height="784" extended-state="6" />
+    <frame x="54" y="-8" width="978" height="784" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32969433" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1560,7 +1572,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24781659" sideWeight="0.123809524" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.06466877" sideWeight="0.7328482" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.9637224" sideWeight="0.5633188" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.9637224" sideWeight="0.5633188" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2489083" sideWeight="0.47089946" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2489083" sideWeight="0.63315696" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3286026" sideWeight="0.636076" order="8" side_tool="false" content_ui="tabs" />
@@ -1735,7 +1747,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/util/TimeFormat.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="0" selection-start="790" selection-end="790" vertical-scroll-proportion="0.1891892" vertical-offset="233" max-vertical-offset="825" />
+        <state line="28" column="0" selection-start="790" selection-end="790" vertical-scroll-proportion="0.1891892" vertical-offset="233" max-vertical-offset="825">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/bean/WeiboBackBean.java">
@@ -1752,23 +1766,6 @@
             <element signature="method#UserBean#0;class#UserBean#0" expanded="false" />
             <element signature="class#2023:2292" expanded="false" />
             <element signature="method#writeToParcel#0;class#UserBean#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/SingleUser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="73" column="64" selection-start="3224" selection-end="3224" vertical-scroll-proportion="0.5945946" vertical-offset="98" max-vertical-offset="3150">
-          <folding>
-            <element signature="e#2348#2378#0" expanded="true" />
-            <element signature="e#4963#5704#0" expanded="true" />
-            <element signature="e#5693#5694#0" expanded="true" />
-            <element signature="e#7346#7393#0" expanded="true" />
-            <element signature="e#7567#7615#0" expanded="true" />
-            <element signature="e#7762#7814#0" expanded="true" />
-            <element signature="e#7950#7997#0" expanded="true" />
-            <element signature="e#8119#8167#0" expanded="true" />
-            <element signature="e#8288#8340#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1825,13 +1822,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/sql/MyMaidSQLHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="104" column="34" selection-start="4832" selection-end="4832" vertical-scroll-proportion="0.15261044" vertical-offset="1349" max-vertical-offset="2400">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/Login.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="35" column="13" selection-start="1395" selection-end="1395" vertical-scroll-proportion="0.11741683" vertical-offset="0" max-vertical-offset="2400">
@@ -1839,22 +1829,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/util/GlobalContext.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="125" column="49" selection-start="3803" selection-end="3803" vertical-scroll-proportion="1.8875502" vertical-offset="320" max-vertical-offset="1485">
-          <folding>
-            <element signature="method#getResString#0;class#GlobalContext#0" expanded="false" />
-            <element signature="method#getAppContext#0;class#GlobalContext#0" expanded="false" />
-            <element signature="method#setProfileImg#0;class#GlobalContext#0" expanded="false" />
-            <element signature="method#setSmallProfileImg#0;class#GlobalContext#0" expanded="false" />
-            <element signature="method#clear#0;class#GlobalContext#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/adapter/gridview/UserChooserAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="77" column="0" selection-start="2420" selection-end="2420" vertical-scroll-proportion="0.0" vertical-offset="952" max-vertical-offset="1500" />
+        <state line="77" column="0" selection-start="2420" selection-end="2420" vertical-scroll-proportion="0.0" vertical-offset="952" max-vertical-offset="1500">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/maintimeline/MainTimelineActivity.java">
@@ -1869,16 +1848,6 @@
             <element signature="e#4276#4277#0" expanded="true" />
             <element signature="e#6077#6078#0" expanded="true" />
             <element signature="e#6122#6123#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/dialog/UserChooserDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="90" column="29" selection-start="4055" selection-end="4055" vertical-scroll-proportion="0.6102362" vertical-offset="725" max-vertical-offset="1380">
-          <folding>
-            <element signature="e#3373#4202#0" expanded="true" />
-            <element signature="e#4179#4180#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1999,13 +1968,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/MyMaidActionHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="35" selection-start="993" selection-end="993" vertical-scroll-proportion="0.0" vertical-offset="37" max-vertical-offset="1500">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="130" column="0" selection-start="6796" selection-end="6796" vertical-scroll-proportion="0.36518046" vertical-offset="1778" max-vertical-offset="2445">
@@ -2027,25 +1989,80 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/net/DownloadPic.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="148" column="9" selection-start="4965" selection-end="4965" vertical-scroll-proportion="0.26767677" vertical-offset="1686" max-vertical-offset="2280">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/comments/CommentsReply.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="56" column="102" selection-start="1910" selection-end="1910" vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="870">
+        <state line="56" column="102" selection-start="1910" selection-end="1910" vertical-scroll-proportion="0.6919192" vertical-offset="204" max-vertical-offset="870">
           <folding>
             <element signature="e#2106#2134#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/net/DownloadPic.java">
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/action/MyMaidActionHelper.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="148" column="9" selection-start="4965" selection-end="4965" vertical-scroll-proportion="0.0" vertical-offset="1686" max-vertical-offset="2280">
+        <state line="23" column="35" selection-start="993" selection-end="993" vertical-scroll-proportion="0.19023569" vertical-offset="37" max-vertical-offset="1500">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="27" selection-start="167" selection-end="167" vertical-scroll-proportion="0.07413509" vertical-offset="0" max-vertical-offset="1170">
+        <state line="4" column="36" selection-start="205" selection-end="205" vertical-scroll-proportion="0.098846786" vertical-offset="0" max-vertical-offset="1170">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/ui/SingleUser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="120" column="58" selection-start="4899" selection-end="4899" vertical-scroll-proportion="1.882155" vertical-offset="22" max-vertical-offset="3120">
+          <folding>
+            <element signature="e#2348#2378#0" expanded="true" />
+            <element signature="e#7410#7457#0" expanded="true" />
+            <element signature="e#7631#7679#0" expanded="true" />
+            <element signature="e#7826#7878#0" expanded="true" />
+            <element signature="e#8014#8061#0" expanded="true" />
+            <element signature="e#8183#8231#0" expanded="true" />
+            <element signature="e#8352#8404#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/util/GlobalContext.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="0" selection-start="1585" selection-end="1585" vertical-scroll-proportion="0.42424244" vertical-offset="228" max-vertical-offset="1485">
+          <folding>
+            <element signature="method#getResString#0;class#GlobalContext#0" expanded="false" />
+            <element signature="method#getAppContext#0;class#GlobalContext#0" expanded="false" />
+            <element signature="method#setProfileImg#0;class#GlobalContext#0" expanded="false" />
+            <element signature="method#setSmallProfileImg#0;class#GlobalContext#0" expanded="false" />
+            <element signature="method#clear#0;class#GlobalContext#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/dialog/UserChooserDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="67" column="46" selection-start="2734" selection-end="2734" vertical-scroll-proportion="0.0" vertical-offset="258" max-vertical-offset="1395">
+          <folding>
+            <element signature="e#942#987#0" expanded="true" />
+            <element signature="e#2967#3003#0" expanded="true" />
+            <element signature="e#3429#3474#0" expanded="true" />
+            <element signature="e#3523#3569#0" expanded="true" />
+            <element signature="e#4461#4511#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/joewoo/ontime/support/sql/MyMaidSQLHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="99" column="26" selection-start="4528" selection-end="4528" vertical-scroll-proportion="-37.5" vertical-offset="1200" max-vertical-offset="2400">
           <folding />
         </state>
       </provider>

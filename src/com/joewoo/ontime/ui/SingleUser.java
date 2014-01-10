@@ -64,10 +64,11 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
 
                     if(user == null) {
                         user = statuses.get(0).getUser();
+                        getActionBar().setTitle(user.getScreenName());
                         MyMaidActionHelper.profileImage(user.getAvatarLarge(), mHandler);
                     }
 
-                    getActionBar().setTitle(user.getScreenName());
+
                     headerView.setDescription(user.getLocation() + "\n\n" + user.getDescription());
 
                     setListView(statuses);
@@ -117,6 +118,7 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
         if(user != null) {
             refreshTimeLine();
         } else {
+            getActionBar().setTitle(user.getScreenName());
             MyMaidActionHelper.statusUserTimeLine(getIntent().getStringExtra(SCREEN_NAME), mHandler);
         }
 

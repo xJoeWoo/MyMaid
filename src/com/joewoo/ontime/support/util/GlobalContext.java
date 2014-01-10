@@ -42,8 +42,8 @@ public final class GlobalContext extends Application {
 
         Cursor c = sql.query(MyMaidSQLHelper.USER_TABLE, new String[]{MyMaidSQLHelper.PROFILE_IMG, MyMaidSQLHelper.UID, MyMaidSQLHelper.SCREEN_NAME, MyMaidSQLHelper.DRAFT, MyMaidSQLHelper.ACCESS_TOKEN, MyMaidSQLHelper.PIC_FILE_PATH}, MyMaidSQLHelper.LAST_LOGIN + "=?", new String[]{"1"}, null, null, null);
 
-
         if (c != null && c.getCount() > 0 && c.moveToFirst()) {
+            Log.e(TAG, "Last Login Count: " + String.valueOf(c.getCount()));
             setUID(c.getString(c.getColumnIndex(MyMaidSQLHelper.UID)));
             setAccessToken(c.getString(c.getColumnIndex(MyMaidSQLHelper.ACCESS_TOKEN)));
             setScreenName(c.getString(c.getColumnIndex(MyMaidSQLHelper.SCREEN_NAME)));

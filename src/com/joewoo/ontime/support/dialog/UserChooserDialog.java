@@ -74,7 +74,12 @@ public class UserChooserDialog {
                         Toast.makeText(act, R.string.user_chooser_dialog_choosed, Toast.LENGTH_SHORT).show();
                     }
 
-                } else if (usersCount - position <= 0) {
+                } else if(usersCount - position == 0) {
+                    dialog.cancel();
+                    act.finish();
+                    act.startActivity(new Intent(act, Login.class));
+
+                } else if (usersCount - position == -1) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(act);
 
                     builder.setTitle(R.string.frag_ftl_dialog_confirm_logout_title);
@@ -82,8 +87,8 @@ public class UserChooserDialog {
                         @Override
                         public void onClick(DialogInterface dialog2, int which) {
 
-                            if (GlobalContext.getSQL().delete(MyMaidSQLHelper.USER_TABLE, MyMaidSQLHelper.LAST_LOGIN + "=?",
-                                    new String[]{"1"}) > 0) {
+                            if (GlobalContext.getSQL().delete(MyMaidSQLHelper.USER_TABLE, MyMaidSQLHelper.UID + "=?",
+                                    new String[]{GlobalContext.getUID()}) > 0) {
                                 Log.e(MyMaidSQLHelper.TAG_SQL, "LOGOUT - Cleared user info");
                                 Toast.makeText(act, "<(￣︶￣)>", Toast.LENGTH_SHORT).show();
                                 GlobalContext.clear();
@@ -94,7 +99,6 @@ public class UserChooserDialog {
                         }
                     });
                     builder.setNegativeButton(R.string.frag_ftl_dialog_confirm_logout_btn_cancle, null);
-
                     builder.show();
                 }
             }
