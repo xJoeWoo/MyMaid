@@ -3,11 +3,13 @@ package com.joewoo.ontime.action;
 import android.os.Handler;
 
 import com.joewoo.ontime.action.comments.CommentsCreate;
+import com.joewoo.ontime.action.comments.CommentsMentions;
 import com.joewoo.ontime.action.comments.CommentsReply;
 import com.joewoo.ontime.action.comments.CommentsToMe;
 import com.joewoo.ontime.action.remind.RemindSetCount;
 import com.joewoo.ontime.action.remind.RemindUnreadCount;
 import com.joewoo.ontime.action.statuses.StatusesFriendsTimeLine;
+import com.joewoo.ontime.action.statuses.StatusesMentions;
 import com.joewoo.ontime.action.statuses.StatusesRepost;
 import com.joewoo.ontime.action.statuses.StatusesUpdate;
 import com.joewoo.ontime.action.statuses.StatusesUpload;
@@ -100,6 +102,30 @@ public class MyMaidActionHelper {
 
     public static Thread statusesFriendsTimeLine(boolean isProvided, Handler handler) {
         Thread thread = new StatusesFriendsTimeLine(isProvided, handler);
+        thread.start();
+        return thread;
+    }
+
+    public static Thread statusesMentions(boolean isProvided, Handler handler) {
+        Thread thread = new StatusesMentions(isProvided, handler);
+        thread.start();
+        return thread;
+    }
+
+    public static Thread statusesMentions(String maxID, Handler handler) {
+        Thread thread = new StatusesMentions(maxID, handler);
+        thread.start();
+        return thread;
+    }
+
+    public static Thread commentsMentions(String maxID, Handler handler) {
+        Thread thread = new CommentsMentions(maxID, handler);
+        thread.start();
+        return thread;
+    }
+
+    public static Thread commentsMentions(boolean isProvided, Handler handler) {
+        Thread thread = new CommentsMentions(isProvided, handler);
         thread.start();
         return thread;
     }

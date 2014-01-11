@@ -140,6 +140,7 @@ public class SingleWeiboCommentsFragment extends Fragment {
                             tv.setVisibility(View.VISIBLE);
                             tv.setText(R.string.frag_single_weibo_no_comments);
                         } else {
+                            tv.setVisibility(View.GONE);
                             setListView(comments);
                         }
                     }

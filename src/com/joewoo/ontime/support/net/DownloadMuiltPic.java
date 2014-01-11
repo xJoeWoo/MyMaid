@@ -2,9 +2,7 @@ package com.joewoo.ontime.support.net;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -62,7 +60,7 @@ public class DownloadMuiltPic extends AsyncTask<String, Integer, Bitmap> {
             iv.setImageBitmap(bitmap);
             iv.startAnimation(in);
         } else {
-//            iv.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
+            iv.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
         }
     }
 }

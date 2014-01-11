@@ -71,6 +71,7 @@ public class SingleWeiboRepostsFragment extends Fragment {
                             tv.setVisibility(View.VISIBLE);
                             tv.setText(R.string.frag_single_weibo_no_reposts);
                         } else {
+                            tv.setVisibility(View.GONE);
                             setListView(statuses);
                         }
                     }
@@ -130,6 +131,7 @@ public class SingleWeiboRepostsFragment extends Fragment {
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int arg2, long arg3) {
                 Intent i = new Intent(act, SingleUser.class);
+//                i.putExtra(STATUS_BEAN, statuses.get(arg2));
                 i.putExtra(USER_BEAN, statuses.get(arg2).getUser());
                 startActivity(i);
                 return false;

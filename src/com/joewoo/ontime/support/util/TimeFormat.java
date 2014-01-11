@@ -5,6 +5,7 @@ import com.joewoo.ontime.R;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -12,7 +13,7 @@ import java.util.TimeZone;
  */
 public final class TimeFormat {
 
-    private static final SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
+    private static final SimpleDateFormat format = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy", Locale.US);
     private static final Calendar cc = Calendar.getInstance();
     private static int currentDay;
 

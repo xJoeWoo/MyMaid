@@ -67,7 +67,7 @@ public class DownloadPic extends AsyncTask<String, Integer, Bitmap> implements I
         Log.e(TAG, "Download Pic AsyncTask START");
         Log.e(TAG, "Pic URL - " + params[0]);
 
-        Bitmap image = null;
+        Bitmap image;
 
         if (!params[0].endsWith(".gif")) {
             try {
@@ -148,8 +148,9 @@ public class DownloadPic extends AsyncTask<String, Integer, Bitmap> implements I
             return;
         }
 
+        iv.setVisibility(View.VISIBLE);
+
         if (bitmap != null) {
-            iv.setVisibility(View.VISIBLE);
             iv.setImageBitmap(bitmap);
         } else {
             if (tv != null) {

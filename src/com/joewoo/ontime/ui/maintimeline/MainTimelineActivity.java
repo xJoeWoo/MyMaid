@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.action.aqi.AQIDetails;
 import com.joewoo.ontime.support.adapter.pager.MainPagerAdapter;
 import com.joewoo.ontime.support.dialog.UserChooserDialog;
 import com.joewoo.ontime.support.util.GlobalContext;
@@ -38,7 +37,7 @@ public class MainTimelineActivity extends FragmentActivity {
 
         Log.e(TAG, "MyMaid Main Activity CREATE!");
 
-        new AQIDetails().start();
+//        new AQIDetails().start();
 
         if (GlobalContext.getAccessToken() != null) {
 
@@ -102,13 +101,8 @@ public class MainTimelineActivity extends FragmentActivity {
 
             mViewPager.setCurrentItem(MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS);
 
-        } else {// 不存在用户信息，需要登录
-//            Toast.makeText(MainTimelineActivity.this,
-//                    R.string.toast_login_acquired, Toast.LENGTH_LONG).show();
-//            jumpToLogin();
+        } else {// 不存在用户信息
             UserChooserDialog.show(this);
-
-
         }
 
     }

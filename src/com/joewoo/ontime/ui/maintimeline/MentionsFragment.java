@@ -19,8 +19,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.joewoo.ontime.R;
+import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.action.comments.CommentsMentions;
-import com.joewoo.ontime.action.remind.RemindUnreadCount;
 import com.joewoo.ontime.action.statuses.StatusesMentions;
 import com.joewoo.ontime.support.adapter.listview.CommentsMentionsAdapter;
 import com.joewoo.ontime.support.adapter.listview.MainListViewAdapter;
@@ -105,7 +105,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                 .getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
-        new StatusesMentions(true, mHandler).start();
+        MyMaidActionHelper.statusesMentions(true, mHandler);
 
         lv.setFastScrollAlwaysVisible(true);
 
@@ -153,9 +153,9 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                 if (view.getCount() > (Integer.valueOf(AcquireCount.MENTIONS_COUNT) - 2) && view.getLastVisiblePosition() > (view.getCount() - 6) && !mPullToRefreshAttacher.isRefreshing() && statuses != null) {
                     Log.e(TAG, "到底");
                     if (isNormalMention)
-                        new StatusesMentions(statuses.get(view.getCount() - 1 - lv.getHeaderViewsCount()).getId(), mHandler).start();
+                        MyMaidActionHelper.statusesMentions(statuses.get(view.getCount() - 1 - lv.getHeaderViewsCount()).getId(), mHandler);
                     else
-                        new CommentsMentions(comments.get(view.getCount() - 1 - lv.getHeaderViewsCount()).getId(), mHandler).start();
+                        MyMaidActionHelper.commentsMentions(comments.get(view.getCount() - 1 - lv.getHeaderViewsCount()).getId(), mHandler);
                     mPullToRefreshAttacher.setRefreshing(true);
                 }
             }
@@ -331,16 +331,16 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
     }
 
     public void getUnreadMentionsCount() {
-        new RemindUnreadCount(mHandler).start();
+        MyMaidActionHelper.remindUnreadCount(mHandler);
     }
 
     public void refreshMentions() {
-        new StatusesMentions(false, mHandler).start();
+        MyMaidActionHelper.statusesMentions(false, mHandler);
         mPullToRefreshAttacher.setRefreshing(true);
     }
 
     public void refreshCommentsMentions() {
-        new CommentsMentions(false, mHandler).start();
+        MyMaidActionHelper.commentsMentions(false, mHandler);
         mPullToRefreshAttacher.setRefreshing(true);
     }
 

@@ -83,8 +83,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
 
         act = (MainTimelineActivity) getActivity();
 
-        mPullToRefreshAttacher = (act)
-                .getPullToRefreshAttacher();
+        mPullToRefreshAttacher = act.getPullToRefreshAttacher();
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
         MyMaidActionHelper.commentsToMe(true, mHandler);

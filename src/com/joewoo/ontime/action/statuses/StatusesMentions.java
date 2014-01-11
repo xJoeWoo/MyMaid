@@ -76,11 +76,13 @@ public class StatusesMentions extends Thread {
                         source.indexOf("</a>"));
                 s.setSource(source);
 
+
                 if (s.getRetweetedStatus() != null && s.getRetweetedStatus().getUser() != null) {
 
                     s.getRetweetedStatus().setCreatedAt(TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
 
-                        source = s.getRetweetedStatus().getSource();
+
+                    source = s.getRetweetedStatus().getSource();
                         source = source.substring(source.indexOf(">") + 1,
                                 source.indexOf("</a>"));
                         s.getRetweetedStatus().setSource(source);

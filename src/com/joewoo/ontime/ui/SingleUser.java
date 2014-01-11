@@ -116,9 +116,9 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
         headerView = new UserTimelineHeaderView(this);
 
         if(user != null) {
+            getActionBar().setTitle(user.getScreenName());
             refreshTimeLine();
         } else {
-            getActionBar().setTitle(user.getScreenName());
             MyMaidActionHelper.statusUserTimeLine(getIntent().getStringExtra(SCREEN_NAME), mHandler);
         }
 

@@ -1,7 +1,6 @@
 package com.joewoo.ontime.support.adapter.gridview;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +11,6 @@ import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.adapter.listview.ViewHolder;
 import com.joewoo.ontime.support.bean.PicURLsBean;
 import com.joewoo.ontime.support.net.DownloadMuiltPic;
-
-import static com.joewoo.ontime.support.info.Defines.TAG;
 
 import java.util.List;
 
@@ -56,7 +53,7 @@ public class SingleWeiboPicsAdapter extends BaseAdapter {
 
             holder = new ViewHolder();
 
-            convertView = LayoutInflater.from(context).inflate(R.layout.single_weibo_grid_view,
+            convertView = LayoutInflater.from(context).inflate(R.layout.single_weibo_gv,
                     null);
 
             holder.iv = (ImageView) convertView.findViewById(R.id.frag_single_weibo_grid_view_img);
