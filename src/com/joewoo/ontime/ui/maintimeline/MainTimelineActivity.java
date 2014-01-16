@@ -65,13 +65,12 @@ public class MainTimelineActivity extends FragmentActivity {
             mSectionsPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
             mViewPager.setAdapter(mSectionsPagerAdapter);
 
-
             mViewPager
                     .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
                         @Override
                         public void onPageSelected(int arg0) {
-                            actionBar.setSelectedNavigationItem(arg0);
-                            Log.e(TAG, "Page: " + String.valueOf(arg0));
+                            if(arg0 < mSectionsPagerAdapter.getCount() - 1)
+                                actionBar.setSelectedNavigationItem(arg0);
                             switch (arg0) {
                                 case MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS: {
 
@@ -93,6 +92,10 @@ public class MainTimelineActivity extends FragmentActivity {
                                         gotMentionsUnread = true;
                                     }
                                     setActionBarVisible();
+                                    break;
+                                }
+                                case MainPagerAdapter.FRAG_SETTINGS_POS: {
+                                    actionBar.hide();
                                     break;
                                 }
                             }

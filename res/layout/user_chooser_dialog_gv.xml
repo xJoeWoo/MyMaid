@@ -26,6 +26,7 @@
         android:layout_marginTop="4dp"
         android:textSize="15sp"
         android:layout_below="@+id/user_chooser_dialog_iv"
+        android:singleLine="true"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

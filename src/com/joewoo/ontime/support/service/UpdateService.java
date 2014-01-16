@@ -10,7 +10,6 @@ import android.util.Log;
 import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.support.notification.MyMaidNotificationHelper;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
-import com.joewoo.ontime.ui.Post;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -44,9 +43,9 @@ public class UpdateService extends Service {
                 }
                 case GOT_UPDATE_INFO_FAIL: {
                     mNotification.setFail((String) msg.obj);
-                    Intent i = new Intent(UpdateService.this, Post.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(i);
+//                    Intent i = new Intent(UpdateService.this, Post.class);
+//                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    startActivity(i);
                     break;
                 }
             }

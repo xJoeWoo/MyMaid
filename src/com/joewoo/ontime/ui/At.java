@@ -1,9 +1,5 @@
 package com.joewoo.ontime.ui;
 
-import com.joewoo.ontime.R;
-import com.joewoo.ontime.action.search.suggestions.SuggestionsAt;
-import com.joewoo.ontime.support.bean.AtSuggestionBean;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -20,7 +16,13 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 
-import static com.joewoo.ontime.support.info.Defines.*;
+import com.joewoo.ontime.R;
+import com.joewoo.ontime.action.MyMaidActionHelper;
+import com.joewoo.ontime.support.bean.AtSuggestionBean;
+
+import static com.joewoo.ontime.support.info.Defines.GOT_AT_SUGGESTIONS_INFO;
+import static com.joewoo.ontime.support.info.Defines.KEY_AT_USER;
+import static com.joewoo.ontime.support.info.Defines.TAG;
 
 @SuppressLint({"NewApi", "HandlerLeak"})
 public class At extends Activity {
@@ -49,8 +51,8 @@ public class At extends Activity {
                 Bundle data = new Bundle();
                 data.putString(KEY_AT_USER, at);
                 i.putExtras(data);
-                At.this.setResult(RESULT_OK, i);
-                At.this.finish();
+                setResult(RESULT_OK, i);
+                finish();
             }
         });
     }
@@ -86,7 +88,7 @@ public class At extends Activity {
                 String user = searchView.getQuery().toString().trim();
                 if (!"".equals(user)) {
                     Log.e(TAG, user);
-                    new SuggestionsAt(user, mHandler, At.this).start();
+                    MyMaidActionHelper.suggestionsAt(user, mHandler, At.this);
                     pb.setVisibility(View.VISIBLE);
                 }
                 return false;

@@ -132,7 +132,7 @@ public class CommentRepost extends Activity {
                 .setIcon(R.drawable.ic_menu_emoticons)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(0, MENU_TOPIC, 0, R.string.menu_topic);
+//        menu.add(0, MENU_TOPIC, 0, R.string.menu_topic);
 
         menu.add(0, MENU_POST, 0, R.string.menu_post)
                     .setIcon(R.drawable.social_send_now)

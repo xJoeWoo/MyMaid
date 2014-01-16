@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="?android:attr/actionBarSize"
+    android:paddingLeft="@dimen/friends_timeline_horizontal_margin"
+    android:paddingRight="@dimen/friends_timeline_horizontal_margin"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:paddingTop="96dp"
+        android:id="@+id/frag_setting_rl">
+
+        <com.joewoo.ontime.support.view.MyMaidSettingView
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/frag_setting_2"
+            android:gravity="center" />
+
+        <com.joewoo.ontime.support.view.MyMaidSettingView
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/frag_setting_3"
+            android:layout_toRightOf="@+id/frag_setting_2"
+            android:gravity="center" />
+
+        </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MyMaid"
+        android:id="@+id/frag_setting_tv_app_name"
+        android:layout_below="@+id/frag_setting_rl"
+        android:textSize="40sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="96dp" />
+
+
+</RelativeLayout>

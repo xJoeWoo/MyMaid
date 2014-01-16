@@ -169,6 +169,7 @@ public class Defines {
 	public final static int MENU_STATUSES_COUNT = 19;
 	public final static int MENU_STATUSES_DESTROY = 20;
     public final static int MENU_COPY_TEXT = 21;
+    public final static int MENU_FAVOURITE_DESTORY = 22;
 
     public final static String LOGIN_FROM_POST = "login_from_post";
 }

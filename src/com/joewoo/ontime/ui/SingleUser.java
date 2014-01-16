@@ -28,7 +28,6 @@ import java.util.List;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 
 import static com.joewoo.ontime.support.info.Defines.GOT_PROFILEIMG_INFO;
-import static com.joewoo.ontime.support.info.Defines.GOT_SHOW_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.GOT_USER_TIMELINE_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_USER_TIMELINE_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_USER_TIMELINE_INFO_FAIL;
@@ -81,13 +80,11 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
                     mPullToRefreshAttacher.setRefreshing(false);
                     break;
                 }
-                case GOT_USER_TIMELINE_INFO_FAIL:
-                case GOT_SHOW_INFO_FAIL: {
+                case GOT_USER_TIMELINE_INFO_FAIL: {
                     Toast.makeText(SingleUser.this, (String) msg.obj, Toast.LENGTH_SHORT)
                             .show();
                     mPullToRefreshAttacher.setRefreshing(false);
-                    if (msg.what == GOT_SHOW_INFO_FAIL)
-                        finish();
+                    finish();
                     break;
                 }
             }

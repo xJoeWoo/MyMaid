@@ -2,6 +2,7 @@ package com.joewoo.ontime.support.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -10,7 +11,6 @@ import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.support.net.ImageNetworkListener;
 import com.joewoo.ontime.support.notification.MyMaidNotificationHelper;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
-import com.joewoo.ontime.ui.Post;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -45,9 +45,9 @@ public class UploadService extends Service implements ImageNetworkListener.Uploa
                 }
                 case GOT_UPLOAD_INFO_FAIL: {
                     mNotification.setFail((String) msg.obj);
-                    Intent i = new Intent(UploadService.this, Post.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(i);
+//                    Intent i = new Intent(UploadService.this, Post.class);
+//                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    startActivity(i);
                     break;
                 }
             }
@@ -64,7 +64,7 @@ public class UploadService extends Service implements ImageNetworkListener.Uploa
         MyMaidActionHelper.statusesUpload(status, intent.getStringExtra(FILE_PATH), this, handler);
 
         mNotification = new MyMaidNotificationHelper(MyMaidNotificationHelper.UPLOAD, status, this);
-        mNotification.setSending();
+        mNotification.setSending(BitmapFactory.decodeFile(intent.getStringExtra(FILE_PATH)));
 
         return super.onStartCommand(intent, flags, startId);
     }

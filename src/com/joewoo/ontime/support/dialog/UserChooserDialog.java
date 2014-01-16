@@ -17,8 +17,10 @@ import com.joewoo.ontime.support.adapter.gridview.UserChooserAdapter;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.ui.Login;
+import com.joewoo.ontime.ui.Post;
 import com.joewoo.ontime.ui.maintimeline.MainTimelineActivity;
 
+import static com.joewoo.ontime.support.info.Defines.LOGIN_FROM_POST;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
 /**
@@ -68,7 +70,12 @@ public class UserChooserDialog {
                         MyMaidSQLHelper.setLastLogin(GlobalContext.getUID());
 
                         act.finish();
-                        act.startActivity(new Intent(act, MainTimelineActivity.class));
+
+                        if(act instanceof Post)
+                            act.startActivity(new Intent(act, Post.class));
+                        else
+                            act.startActivity(new Intent(act, MainTimelineActivity.class));
+
 
                     } else {
                         Toast.makeText(act, R.string.user_chooser_dialog_choosed, Toast.LENGTH_SHORT).show();
@@ -76,8 +83,13 @@ public class UserChooserDialog {
 
                 } else if(usersCount - position == 0) {
                     dialog.cancel();
+                    Intent i = new Intent(act, Login.class);
+
+                    if(act instanceof Post)
+                        i.putExtra(LOGIN_FROM_POST, true);
+
                     act.finish();
-                    act.startActivity(new Intent(act, Login.class));
+                    act.startActivity(i);
 
                 } else if (usersCount - position == -1) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(act);

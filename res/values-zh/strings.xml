@@ -21,6 +21,10 @@
     <string name="title_frag_single_weibo">微博</string>
     <string name="title_frag_single_weibo_comments">评论</string>
     <string name="title_frag_single_weibo_reposts">转发</string>
+    <string name="title_search">搜索</string>
+    <string name="title_settings">设置</string>
+    <string name="title_about">关于</string>
+    <string name="title_check_update">更新</string>
 	
 	<string name="toast_press_again_to_clear_text">再按一次清除文字</string>
 	<string name="toast_press_again_to_clear_img">再按一次删除图片</string>
@@ -67,6 +71,7 @@
 	<string name="menu_xxx_statuses">&#160;博</string>
 	<string name="menu_delete">删除</string>
 	<string name="menu_add_favourite">收藏</string>
+    <string name="menu_delete_favourite">取消收藏</string>
 	<string name="menu_unread">未读</string>
 	<string name="menu_coming">Coming soon…</string>
 	<string name="menu_user_statuses">帐号</string>
@@ -123,6 +128,7 @@
     <string name="error_in_block">被博主拉黑…</string>
     <string name="error_unknown">&lt;(ll°д°ll)&gt;! 未知错误</string>
     <string name="error_network_not_avaiable">网络错误</string>
+    <string name="error_favourited">已经收藏了</string>
 
     <string name="time_yesterday">昨天 ·&#160;</string>
     <string name="time_2_days_ago">前天 ·&#160;</string>
@@ -143,6 +149,11 @@
     <string name="notify_comment_create_sending">评论中…</string>
     <string name="notify_comment_create_fail">评论失败</string>
     <string name="notify_comment_create_success">评论成功</string>
+    <string name="notify_resend">重新发送</string>
+
+    <string name="dialog_about_title">关于</string>
+    <string name="dialog_about_message">感谢使用“自家用女仆”！\n\nBug多提示少是本软件的特色\n\n关于什么的就懒得写了 (///▽///)</string>
+    <string name="dialog_about_cancle">返回</string>
 
 	<!-- <string name=""></string>
 	<string name=""></string>

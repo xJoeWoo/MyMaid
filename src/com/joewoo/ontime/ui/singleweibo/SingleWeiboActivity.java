@@ -13,9 +13,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.action.favorites.FavoritesCreate;
-import com.joewoo.ontime.action.statuses.StatusesDestroy;
-import com.joewoo.ontime.action.statuses.StatusesShow;
+import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.support.adapter.pager.SingleWeiboPagerAdapter;
 import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.util.GlobalContext;
@@ -60,14 +58,13 @@ public class SingleWeiboActivity extends FragmentActivity {
     private int repostsCount;
     private int commentsCount;
     private String weiboID = null;
-    private boolean isFreshing;
 
     public void setSingleWeiboFragment() {
         if (status != null) {
             setSingleWeibo(false);
         } else {
             mSectionsPagerAdapter.getSingleWeiboFrag().setViewHide();
-            new StatusesShow(weiboID, mHandler).start();
+            MyMaidActionHelper.statusesShow(weiboID, mHandler);
         }
     }
 
@@ -151,9 +148,6 @@ public class SingleWeiboActivity extends FragmentActivity {
         @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
-
-            setProgressBarIndeterminateVisibility(false);
-
             switch (msg.what) {
                 case GOT_STATUSES_SHOW_INFO: {
                     status = (StatusesBean) msg.obj;
@@ -185,6 +179,7 @@ public class SingleWeiboActivity extends FragmentActivity {
                 }
 
             }
+            invalidateOptionsMenu();
         }
 
     };
@@ -200,9 +195,10 @@ public class SingleWeiboActivity extends FragmentActivity {
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
 
-        menu.add(0, MENU_FAVOURITE_CREATE, 0, R.string.menu_add_favourite)
-                .setIcon(R.drawable.rating_favorite)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        if(status != null) 
+            menu.add(0, MENU_FAVOURITE_CREATE, 0, R.string.menu_add_favourite)
+                    .setIcon(R.drawable.rating_favorite)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(0, MENU_REPOST, 0, R.string.menu_repost)
                 .setIcon(R.drawable.social_reply)
@@ -213,7 +209,6 @@ public class SingleWeiboActivity extends FragmentActivity {
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         return true;
-
     }
 
     @Override
@@ -243,9 +238,7 @@ public class SingleWeiboActivity extends FragmentActivity {
                 break;
             }
             case MENU_FAVOURITE_CREATE: {
-                new FavoritesCreate(status.getId(), mHandler)
-                        .start();
-                setProgressBarIndeterminateVisibility(true);
+                MyMaidActionHelper.favouriteCreate(status.getId(), mHandler);
                 break;
             }
             case MENU_STATUSES_DESTROY: {
@@ -255,9 +248,7 @@ public class SingleWeiboActivity extends FragmentActivity {
                             Toast.LENGTH_SHORT).show();
                     downTime = System.currentTimeMillis();
                 } else {
-                    new StatusesDestroy(status.getId(), mHandler)
-                            .start();
-                    setProgressBarIndeterminateVisibility(true);
+                    MyMaidActionHelper.statusesDestroy(status.getId(), mHandler);
                 }
 
                 break;
@@ -307,14 +298,6 @@ public class SingleWeiboActivity extends FragmentActivity {
 
         }
     };
-
-    public boolean isFreshing() {
-        return isFreshing;
-    }
-
-    public void setFreshing(boolean isFreshing) {
-        this.isFreshing = isFreshing;
-    }
 
     public void setCommentsCount(int commentsCount) {
         this.commentsCount = commentsCount;

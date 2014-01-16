@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.action.statuses.StatusesRepostTimeline;
+import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.support.adapter.listview.SingleWeiboMensAdapter;
 import com.joewoo.ontime.support.bean.RepostTimelineBean;
 import com.joewoo.ontime.support.bean.StatusesBean;
@@ -45,9 +45,10 @@ public class SingleWeiboRepostsFragment extends Fragment {
     private TextView tv;
     private SingleWeiboMensAdapter adapter;
     private List<StatusesBean> statuses;
+    private boolean isFreshing;
 
     public void showReposts(String weiboID){
-        new StatusesRepostTimeline(weiboID, mHandler).start();
+        MyMaidActionHelper.statusesRepostTimeline(weiboID, mHandler);
         pb.setVisibility(View.VISIBLE);
         this.weiboID = weiboID;
     }
@@ -57,7 +58,7 @@ public class SingleWeiboRepostsFragment extends Fragment {
         public void handleMessage(Message msg) {
 
             pb.setVisibility(View.GONE);
-            act.setFreshing(false);
+            isFreshing = false;
 
             switch (msg.what) {
                 case GOT_REPOST_TIMELINE_INFO: {
@@ -143,10 +144,10 @@ public class SingleWeiboRepostsFragment extends Fragment {
             public void onScroll(AbsListView view, int arg1, int arg2, int arg3) {
 
                 // 滚到到尾刷新
-                if (view.getCount() > (Integer.valueOf(AcquireCount.REPOSTS_TIMELINE_COUNT) - 2) && !act.isFreshing() && statuses != null && statuses.size() > 6 && view.getLastVisiblePosition() > (view.getCount() - 6)) {
+                if (view.getCount() > (Integer.valueOf(AcquireCount.REPOSTS_TIMELINE_COUNT) - 2) && !isFreshing && statuses != null && statuses.size() > 6 && view.getLastVisiblePosition() > (view.getCount() - 6)) {
                     Log.e(TAG, "到底");
-                    new StatusesRepostTimeline(weiboID, statuses.get(view.getCount() - 1).getId(), mHandler).start();
-                    act.setFreshing(true);
+                    MyMaidActionHelper.statusesRepostTimeline(weiboID, statuses.get(view.getCount() - 1).getId(), mHandler);
+                    isFreshing = true;
                 }
             }
 

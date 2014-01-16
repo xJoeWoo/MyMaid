@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.action.comments.CommentsShow;
+import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.support.adapter.listview.SingleWeiboCmtsAdapter;
 import com.joewoo.ontime.support.bean.CommentsBean;
 import com.joewoo.ontime.support.bean.CommentsToMeBean;
@@ -46,9 +46,10 @@ public class SingleWeiboCommentsFragment extends Fragment {
     private TextView tv;
     private List<CommentsBean> comments;
     private SingleWeiboCmtsAdapter adapter;
+    private boolean isFreshing;
 
     public void showComments(String weiboID) {
-        new CommentsShow(weiboID, mHandler).start();
+        MyMaidActionHelper.commentsShow(weiboID, mHandler);
         pb.setVisibility(View.VISIBLE);
         this.weiboID = weiboID;
     }
@@ -104,10 +105,10 @@ public class SingleWeiboCommentsFragment extends Fragment {
 
 
                 // 滚到到尾刷新
-                if (view.getCount() > (Integer.valueOf(AcquireCount.COMMENTS_SHOW_COUNT) - 2) && !act.isFreshing() && comments != null && comments.size() > 6 && view.getLastVisiblePosition() > (view.getCount() - 6)) {
+                if (view.getCount() > (Integer.valueOf(AcquireCount.COMMENTS_SHOW_COUNT) - 2) && !isFreshing && comments != null && comments.size() > 6 && view.getLastVisiblePosition() > (view.getCount() - 6)) {
                     Log.e(TAG, "到底");
-                    new CommentsShow(weiboID, comments.get(view.getCount() - 1).getId(), mHandler).start();
-                    act.setFreshing(true);
+                    MyMaidActionHelper.commentsShow(weiboID, comments.get(view.getCount() - 1).getId(), mHandler);
+                    isFreshing = true;
                 }
             }
 
@@ -126,7 +127,7 @@ public class SingleWeiboCommentsFragment extends Fragment {
         public void handleMessage(Message msg) {
 
             pb.setVisibility(View.GONE);
-            act.setFreshing(false);
+            isFreshing = false;
 
             switch (msg.what) {
                 case GOT_COMMNETS_SHOW_INFO: {

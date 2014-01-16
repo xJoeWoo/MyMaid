@@ -114,6 +114,9 @@ public class ErrorCheck {
                 case 20205:
                     return GlobalContext.getResString(R.string.error_in_block);
 
+                case 20704:
+                    return GlobalContext.getResString(R.string.error_favourited);
+
                 default:
                     return GlobalContext.getResString(R.string.error_unknown);
             }

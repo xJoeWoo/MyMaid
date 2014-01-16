@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.joewoo.ontime.R;
+import com.joewoo.ontime.support.dialog.UserChooserDialog;
 import com.joewoo.ontime.support.net.NetworkStatus;
 import com.joewoo.ontime.support.service.MyMaidServiceHelper;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
@@ -27,7 +28,6 @@ import com.joewoo.ontime.support.util.GlobalContext;
 import static com.joewoo.ontime.support.info.Defines.ACT_GOT_AT;
 import static com.joewoo.ontime.support.info.Defines.ACT_GOT_PHOTO;
 import static com.joewoo.ontime.support.info.Defines.KEY_AT_USER;
-import static com.joewoo.ontime.support.info.Defines.LOGIN_FROM_POST;
 import static com.joewoo.ontime.support.info.Defines.MENU_ADD;
 import static com.joewoo.ontime.support.info.Defines.MENU_AT;
 import static com.joewoo.ontime.support.info.Defines.MENU_CLEAR_DRAFT;
@@ -105,13 +105,12 @@ public class Post extends Activity {
 
         if (GlobalContext.getAccessToken() != null) {
             String draft = GlobalContext.getDraft();
-            if (draft != null && et_post.getText() != null && !et_post.getText().toString().equals("")) {
+            if (draft != null && et_post.getText() != null && et_post.getText().toString().equals("")) {
                 et_post.setText(draft);
                 et_post.setSelection(draft.length());
             }
         } else {
-            jumpToLogin();
-            return;
+            UserChooserDialog.show(this);
         }
 
         et_post.addTextChangedListener(new TextWatcher() {
@@ -167,13 +166,13 @@ public class Post extends Activity {
                 .setIcon(R.drawable.ic_menu_emoticons)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(0, MENU_TOPIC, 0, R.string.menu_topic);
+//        menu.add(0, MENU_TOPIC, 0, R.string.menu_topic);
 
         menu.add(0, MENU_POST, 0, R.string.menu_post)
                 .setIcon(R.drawable.social_send_now)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(0, MENU_CLEAR_DRAFT, 0, R.string.menu_draft_clear);
+//        menu.add(0, MENU_CLEAR_DRAFT, 0, R.string.menu_draft_clear);
 
         return true;
     }
@@ -230,7 +229,7 @@ public class Post extends Activity {
                 break;
             }
             case MENU_POST: {
-                if (NetworkStatus.check(true)) {
+//                if (NetworkStatus.check(true)) {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(et_post.getWindowToken(), 0);
                     if (et_post.getText() != null && !et_post.getText().toString().equals("")) {
@@ -245,13 +244,15 @@ public class Post extends Activity {
                         Toast.makeText(Post.this, R.string.toast_say_sth,
                                 Toast.LENGTH_SHORT).show();
                     }
-                }
+//                }
                 break;
             }
             case MENU_CLEAR_DRAFT: {
-                GlobalContext.setDraft(null);
+                GlobalContext.clearDraft();
+                et_post.setText("");
                 Toast.makeText(Post.this, R.string.toast_clear_draft_success,
                         Toast.LENGTH_SHORT).show();
+                invalidateOptionsMenu();
                 break;
             }
             case MENU_AT: {
@@ -309,13 +310,6 @@ public class Post extends Activity {
         cursor.close();
         Log.e(TAG, "File Path: " + filePath);
         return filePath;
-    }
-
-    private void jumpToLogin() {
-        Intent ii = new Intent(Post.this, Login.class);
-        ii.putExtra(LOGIN_FROM_POST, true);
-        startActivity(ii);
-        finish();
     }
 
     @Override

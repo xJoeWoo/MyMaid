@@ -153,4 +153,9 @@ public final class GlobalContext extends Application {
         setProfileImg(null);
     }
 
+    public static void clearDraft() {
+        setDraft(null);
+        setPicPath(null);
+    }
+
 }

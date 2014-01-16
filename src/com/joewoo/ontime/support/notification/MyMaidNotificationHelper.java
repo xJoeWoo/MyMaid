@@ -1,12 +1,18 @@
 package com.joewoo.ontime.support.notification;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.support.v4.app.NotificationCompat;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.bean.aqi.AQIBean;
 import com.joewoo.ontime.support.util.GlobalContext;
+import com.joewoo.ontime.ui.Post;
 
 /**
  * Created by JoeWoo on 14-1-3.
@@ -24,6 +30,7 @@ public class MyMaidNotificationHelper {
 
     private int what = -1;
     private String status;
+    private NotificationCompat.BigPictureStyle bigPictureStyle;
 
     private long downTime = 0;
 
@@ -71,14 +78,8 @@ public class MyMaidNotificationHelper {
         nBuilder.setOngoing(true);
         nBuilder.setContentText("\"" + status + "\"");
         switch (what) {
-            case UPDATE:
-            case UPLOAD: {
-//                nBuilder.setContentIntent(PendingIntent.getActivity(context, 0, new Intent(context, Post.class), 0));
-                if (what == UPLOAD) {
-                    nBuilder.setProgress(100, 0, false);
-                    nManager.notify(UPLOAD, nBuilder.build());
-                } else
-                    nManager.notify(UPDATE, nBuilder.build());
+            case UPDATE: {
+                nManager.notify(UPDATE, nBuilder.build());
                 break;
             }
 
@@ -97,6 +98,19 @@ public class MyMaidNotificationHelper {
         }
     }
 
+    public void setSending(Bitmap b) {
+        if (what == UPLOAD) {
+            nBuilder.setProgress(100, 0, false);
+            bigPictureStyle = new NotificationCompat.BigPictureStyle();
+            nBuilder.setLargeIcon(ThumbnailUtils.extractThumbnail(b, 80, 80));
+            bigPictureStyle.bigLargeIcon(BitmapFactory.decodeResource(GlobalContext.getAppContext().getResources(), R.drawable.ic_stat_notify));
+            bigPictureStyle.setBuilder(nBuilder);
+            bigPictureStyle.bigPicture(ThumbnailUtils.extractThumbnail(b, 400, 300));
+            nBuilder.setStyle(bigPictureStyle);
+            nManager.notify(UPLOAD, nBuilder.build());
+        }
+    }
+
     public void setProgress(int progress) {
         if (what == UPLOAD && System.currentTimeMillis() - downTime > PROGRESS_UPDATE_DELAY) {
             downTime = System.currentTimeMillis();
@@ -107,7 +121,7 @@ public class MyMaidNotificationHelper {
     }
 
     public void setWaitResponse() {
-        if(what == UPLOAD) {
+        if (what == UPLOAD) {
             nBuilder.setContentTitle(GlobalContext.getResString(R.string.notify_post_waiting_response));
             nBuilder.setContentText(GlobalContext.getResString(R.string.notify_post_upload_pic_finish));
             nBuilder.setTicker(GlobalContext.getResString(R.string.notify_post_upload_pic_finish));
@@ -158,21 +172,25 @@ public class MyMaidNotificationHelper {
     public void setFail(String error) {
         nBuilder.setOngoing(false);
         nBuilder.setContentText(error);
+        nBuilder.setAutoCancel(true);
         switch (what) {
             case UPDATE:
             case UPLOAD: {
+                nBuilder.addAction(R.drawable.ic_stat_resend, GlobalContext.getResString(R.string.notify_resend), PendingIntent.getActivity(GlobalContext.getAppContext(), 0, new Intent(GlobalContext.getAppContext(), Post.class), 0));
                 nBuilder.setTicker(GlobalContext.getResString(R.string.notify_post_fail));
                 nBuilder.setContentTitle(GlobalContext.getResString(R.string.notify_post_fail));
                 if (what == UPLOAD) {
+                    bigPictureStyle.setSummaryText(error);
                     nBuilder.setProgress(0, 0, false);
                     nBuilder.setContentInfo(null);
+                    nManager.cancel(UPLOAD);
                     nManager.notify(UPLOAD, nBuilder.build());
-                } else
+                } else {
                     nManager.notify(UPDATE, nBuilder.build());
+                }
                 break;
             }
-            case REPLY:
-            {
+            case REPLY: {
                 nBuilder.setTicker(GlobalContext.getResString(R.string.notify_reply_fail));
                 nBuilder.setContentTitle(GlobalContext.getResString(R.string.notify_reply_fail));
                 nManager.notify(REPLY, nBuilder.build());
