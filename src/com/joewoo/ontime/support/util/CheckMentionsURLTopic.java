@@ -13,7 +13,7 @@ import static com.joewoo.ontime.support.info.Defines.TAG;
 /**
  * Created by JoeWoo on 13-11-21.
  */
-public final class CheckMentionsURLTopic {
+public class CheckMentionsURLTopic {
 
     public static SpannableString getSpannableString(String str, Context context) {
         str = str + " ";

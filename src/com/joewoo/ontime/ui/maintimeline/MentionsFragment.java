@@ -62,9 +62,65 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
 
     private List<StatusesBean> statuses;
     private List<CommentsBean> comments;
-    ListView lv;
-    String unreadCount;
-    String unreadCommentMentionsCount;
+    private ListView lv;
+    private String unreadCount;
+    private String unreadCommentMentionsCount;
+    private Handler mHandler = new Handler() {
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void handleMessage(Message msg) {
+            // act.setProgressBarIndeterminateVisibility(false);
+            mPullToRefreshAttacher.setRefreshComplete();
+            switch (msg.what) {
+                case GOT_MENTIONS_INFO: {
+                    statuses = (List<StatusesBean>) msg.obj;
+                    setListView(statuses);
+                    break;
+                }
+                case GOT_COMMENTS_MENTIONS_INFO_FAIL:
+                case GOT_MENTIONS_INFO_FAIL: {
+                    if(msg.obj != null)
+                        Toast.makeText(act, (String) msg.obj, Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                case GOT_UNREAD_COUNT_INFO: {
+                    UnreadCountBean b = (UnreadCountBean) msg.obj;
+                    if (b.getMentionStatusCount() != null) {
+                        unreadCount = b.getMentionStatusCount();
+                        unreadCommentMentionsCount = b.getMentionCmtCount();
+                    } else
+                        Toast.makeText(act,
+                                R.string.toast_unread_count_fail,
+                                Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                case GOT_MENTIONS_ADD_INFO: {
+                    statuses.addAll((List<StatusesBean>) msg.obj);
+                    setListView(statuses);
+                    break;
+                }
+                case GOT_COMMENTS_MENTIONS_ADD_INFO: {
+                    comments.addAll((List<CommentsBean>) msg.obj);
+                    setCommentsListView(comments);
+                    break;
+                }
+                case GOT_COMMENTS_MENTIONS_INFO: {
+                    comments = (List<CommentsBean>) msg.obj;
+                    setCommentsListView(comments);
+                    break;
+                }
+                case GOT_SET_REMIND_COUNT_INFO_FAIL: {
+                    Toast.makeText(act,
+                            R.string.toast_clear_unread_count_fail,
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                }
+            }
+            act.invalidateOptionsMenu();
+        }
+
+    };
     private PullToRefreshAttacher mPullToRefreshAttacher;
     private MainTimelineActivity act;
     private boolean isNormalMention = true;
@@ -81,7 +137,8 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                 Log.e(TAG, "Refresh Comments StatusesMentions");
                 refreshCommentsMentions();
             }
-        }
+        } else
+            mHandler.sendEmptyMessage(GOT_MENTIONS_INFO_FAIL);
     }
 
     @Override
@@ -241,63 +298,6 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
         act.invalidateOptionsMenu();
         return super.onOptionsItemSelected(item);
     }
-
-    private Handler mHandler = new Handler() {
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public void handleMessage(Message msg) {
-            // act.setProgressBarIndeterminateVisibility(false);
-            mPullToRefreshAttacher.setRefreshComplete();
-            switch (msg.what) {
-                case GOT_MENTIONS_INFO: {
-                    statuses = (List<StatusesBean>) msg.obj;
-                    setListView(statuses);
-                    break;
-                }
-                case GOT_COMMENTS_MENTIONS_INFO_FAIL:
-                case GOT_MENTIONS_INFO_FAIL: {
-                    Toast.makeText(act, (String) msg.obj,
-                            Toast.LENGTH_SHORT).show();
-                    break;
-                }
-                case GOT_UNREAD_COUNT_INFO: {
-                    UnreadCountBean b = (UnreadCountBean) msg.obj;
-                    if (b.getMentionStatusCount() != null) {
-                        unreadCount = b.getMentionStatusCount();
-                        unreadCommentMentionsCount = b.getMentionCmtCount();
-                    } else
-                        Toast.makeText(act,
-                                R.string.toast_unread_count_fail,
-                                Toast.LENGTH_SHORT).show();
-                    break;
-                }
-                case GOT_MENTIONS_ADD_INFO: {
-                    statuses.addAll((List<StatusesBean>) msg.obj);
-                    setListView(statuses);
-                    break;
-                }
-                case GOT_COMMENTS_MENTIONS_ADD_INFO: {
-                    comments.addAll((List<CommentsBean>) msg.obj);
-                    setCommentsListView(comments);
-                    break;
-                }
-                case GOT_COMMENTS_MENTIONS_INFO: {
-                    comments = (List<CommentsBean>) msg.obj;
-                    setCommentsListView(comments);
-                    break;
-                }
-                case GOT_SET_REMIND_COUNT_INFO_FAIL: {
-                    Toast.makeText(act,
-                            R.string.toast_clear_unread_count_fail,
-                            Toast.LENGTH_SHORT).show();
-                    break;
-                }
-            }
-            act.invalidateOptionsMenu();
-        }
-
-    };
 
     private void setListView(List<StatusesBean> statuses) {
         mainAdapter.setData(statuses);

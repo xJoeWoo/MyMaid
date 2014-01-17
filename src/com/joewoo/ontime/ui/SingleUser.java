@@ -20,6 +20,7 @@ import com.joewoo.ontime.support.adapter.listview.MainListViewAdapter;
 import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.bean.UserBean;
 import com.joewoo.ontime.support.info.AcquireCount;
+import com.joewoo.ontime.support.net.NetworkStatus;
 import com.joewoo.ontime.support.view.header.UserTimelineHeaderView;
 import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
 
@@ -67,7 +68,6 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
                         MyMaidActionHelper.profileImage(user.getAvatarLarge(), mHandler);
                     }
 
-
                     headerView.setDescription(user.getLocation() + "\n\n" + user.getDescription());
 
                     setListView(statuses);
@@ -81,8 +81,8 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
                     break;
                 }
                 case GOT_USER_TIMELINE_INFO_FAIL: {
-                    Toast.makeText(SingleUser.this, (String) msg.obj, Toast.LENGTH_SHORT)
-                            .show();
+                    if(msg.obj != null)
+                        Toast.makeText(SingleUser.this, (String) msg.obj, Toast.LENGTH_SHORT).show();
                     mPullToRefreshAttacher.setRefreshing(false);
                     finish();
                     break;
@@ -94,7 +94,10 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
 
     @Override
     public void onRefreshStarted(View view) {
-        refreshTimeLine();
+        if(NetworkStatus.check(true))
+            refreshTimeLine();
+        else
+            mHandler.sendEmptyMessage(GOT_USER_TIMELINE_INFO_FAIL);
     }
 
     @Override

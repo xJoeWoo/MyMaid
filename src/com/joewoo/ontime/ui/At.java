@@ -1,6 +1,5 @@
 package com.joewoo.ontime.ui;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,7 +23,6 @@ import static com.joewoo.ontime.support.info.Defines.GOT_AT_SUGGESTIONS_INFO;
 import static com.joewoo.ontime.support.info.Defines.KEY_AT_USER;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
-@SuppressLint({"NewApi", "HandlerLeak"})
 public class At extends Activity {
 
     ListView lv;

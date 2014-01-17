@@ -3,7 +3,7 @@ package com.joewoo.ontime.support.net;
 /**
  * Created by JoeWoo on 13-11-23.
  */
-public final class ImageNetworkListener {
+public class ImageNetworkListener {
 
     public interface UploadProgressListener {
         public void uploadProgress(int transferred, int contentLength);

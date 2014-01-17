@@ -16,7 +16,7 @@ import static com.joewoo.ontime.support.info.Defines.TAG;
 /**
  * Created by JoeWoo on 13-11-21.
  */
-public final class GlobalContext extends Application {
+public class GlobalContext extends Application {
 
     private static GlobalContext globalContext;
     private static String accessToken;

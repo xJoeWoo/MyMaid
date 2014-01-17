@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * Created by JoeWoo on 13-11-23.
  */
-public final class HttpUtility {
+public class HttpUtility {
 
     public String executeGetTask(String urlStr, Map<String, String> param) throws Exception {
         return new JavaHttpUtility().doGet(urlStr, param);

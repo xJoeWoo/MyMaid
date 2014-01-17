@@ -53,6 +53,32 @@ import static com.joewoo.ontime.support.info.Defines.TAG;
 public class FriendsTimeLineFragment extends Fragment implements OnRefreshListener {
 
     private List<StatusesBean> statuses;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            mPullToRefreshAttacher.setRefreshComplete();
+            switch (msg.what) {
+
+                case GOT_FRIENDS_TIMELINE_INFO: {
+                    statuses = (List<StatusesBean>) msg.obj;
+                    setListView(statuses);
+                    break;
+                }
+                case GOT_FRIENDS_TIMELINE_ADD_INFO: {
+                    statuses.addAll((List<StatusesBean>) msg.obj);
+                    setListView(statuses);
+                    break;
+                }
+                case GOT_FRIENDS_TIMELINE_INFO_FAIL: {
+                    if(msg.obj != null)
+                        Toast.makeText(act, (String) msg.obj, Toast.LENGTH_SHORT).show();
+                    break;
+                }
+            }
+            act.invalidateOptionsMenu();
+        }
+
+    };
     private ListView lv;
     private MainListViewAdapter mAdapter;
     private PullToRefreshAttacher mPullToRefreshAttacher;
@@ -61,9 +87,10 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
     @Override
     public void onRefreshStarted(View view) {
         Log.e(TAG, "Refresh StatusesFriendsTimeLine");
-        if (NetworkStatus.check(true)) {
+        if (NetworkStatus.check(true))
             refreshFriendsTimeLine();
-        }
+        else
+            mHandler.sendEmptyMessage(GOT_FRIENDS_TIMELINE_INFO_FAIL);
     }
 
     @Override
@@ -199,34 +226,6 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
         act.invalidateOptionsMenu();
         return super.onOptionsItemSelected(item);
     }
-
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            mPullToRefreshAttacher.setRefreshComplete();
-            switch (msg.what) {
-
-                case GOT_FRIENDS_TIMELINE_INFO: {
-                    statuses = (List<StatusesBean>) msg.obj;
-                    setListView(statuses);
-                    break;
-                }
-                case GOT_FRIENDS_TIMELINE_ADD_INFO: {
-                    statuses.addAll((List<StatusesBean>) msg.obj);
-                    setListView(statuses);
-                    break;
-                }
-                case GOT_FRIENDS_TIMELINE_INFO_FAIL: {
-                    Toast.makeText(act,
-                            (String) msg.obj, Toast.LENGTH_SHORT)
-                            .show();
-                    break;
-                }
-            }
-            act.invalidateOptionsMenu();
-        }
-
-    };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

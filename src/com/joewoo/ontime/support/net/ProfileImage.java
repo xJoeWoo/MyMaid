@@ -13,7 +13,7 @@ import java.io.ByteArrayOutputStream;
 import static com.joewoo.ontime.support.info.Defines.GOT_PROFILEIMG_INFO;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
-public final class ProfileImage extends Thread {
+public class ProfileImage extends Thread {
 
     private String url;
     private Handler mHandler;

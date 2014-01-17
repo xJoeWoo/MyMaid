@@ -11,7 +11,7 @@ import com.joewoo.ontime.support.util.GlobalContext;
 /**
  * Created by JoeWoo on 13-11-21.
  */
-public final class NetworkStatus {
+public class NetworkStatus {
 
     public static boolean check(boolean showToast) {
         NetworkInfo netInfo = ((ConnectivityManager) GlobalContext.getAppContext().getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();

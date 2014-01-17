@@ -11,7 +11,7 @@ import java.util.TimeZone;
 /**
  * Created by JoeWoo on 13-11-29.
  */
-public final class TimeFormat {
+public class TimeFormat {
 
     private static final SimpleDateFormat format = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy", Locale.US);
     private static final Calendar cc = Calendar.getInstance();
