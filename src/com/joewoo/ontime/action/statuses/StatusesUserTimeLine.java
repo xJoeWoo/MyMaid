@@ -52,13 +52,12 @@ public class StatusesUserTimeLine extends Thread {
             HashMap<String, String> hm = new HashMap<String, String>();
             hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
             hm.put(SCREEN_NAME, screenName);
+            hm.put(COUNT, AcquireCount.USER_TIMELINE_COUNT);
 
-            if(maxID == null) {
-                hm.put(COUNT, AcquireCount.USER_TIMELINE_COUNT);
-            } else {
-                hm.put(COUNT, AcquireCount.USER_TIMELINE_ADD_COUNT);
+            if(maxID != null) {
                 hm.put(MAX_ID, maxID);
             }
+
 
             httpResult = new HttpUtility().executeGetTask(URLHelper.USER_TIMELINE, hm);
 

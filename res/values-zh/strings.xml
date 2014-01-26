@@ -155,6 +155,17 @@
     <string name="dialog_about_message">感谢使用“自家用女仆”！\n\nBug多提示少是本软件的特色\n\n关于什么的就懒得写了 (///▽///)</string>
     <string name="dialog_about_cancle">返回</string>
 
+    <string name="setting_network_title">网络</string>
+    <string name="setting_network_acquire_count">获取数</string>
+    <string name="setting_network_acquire_count_friends_timeline">微博</string>
+    <string name="setting_network_acquire_count_mentions">提及</string>
+    <string name="setting_network_acquire_count_comments_to_me">评论</string>
+    <string name="setting_network_acquire_count_comments_mentions">评论@</string>
+    <string name="setting_ui_title">界面</string>
+    <string name="setting_ui_dark_mode">暗黑主题</string>
+    <string name="setting_other_title">其他</string>
+    <string name="setting_other_check_update">检查更新</string>
+
 	<!-- <string name=""></string>
 	<string name=""></string>
 	<string name=""></string> -->

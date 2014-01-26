@@ -94,19 +94,17 @@ public class CommentsToMe extends Thread {
         try {
             HashMap<String, String> hm = new HashMap<String, String>();
             hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+            hm.put(COUNT, AcquireCount.COMMENTS_TO_ME_COUNT);
 
-            if (maxID == null)
-                hm.put(COUNT, AcquireCount.COMMENTS_TO_ME_COUNT);
-            else {
-                hm.put(COUNT, AcquireCount.COMMENTS_TO_ME_ADD_COUNT);
+            if (maxID != null)
                 hm.put(MAX_ID, maxID);
-            }
 
             httpResult = new HttpUtility().executeGetTask(URLHelper.COMMENTS_TO_ME, hm);
 
             hm = null;
 
-            MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.COMMENTS_TO_ME, httpResult);
+            if(maxID == null)
+                MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.COMMENTS_TO_ME, httpResult);
 
             return true;
         } catch (Exception e) {

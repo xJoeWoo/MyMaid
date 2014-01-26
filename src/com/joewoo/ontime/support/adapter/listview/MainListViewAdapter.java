@@ -33,7 +33,10 @@ public class MainListViewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return statuses.size();
+        if(statuses != null)
+            return statuses.size();
+        else
+            return 0;
     }
 
     @Override
@@ -51,8 +54,7 @@ public class MainListViewAdapter extends BaseAdapter {
 
             holder = new ViewHolder();
 
-            convertView = LayoutInflater.from(context).inflate(R.layout.friendstimeline_lv,
-                    null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.lv_main_timeline, null);
 
             // Find views
             holder.tv_scr_name = (TextView) convertView
@@ -139,8 +141,8 @@ public class MainListViewAdapter extends BaseAdapter {
         String source = s.getSource();
         holder.tv_source.setText(" · " + source);
         if (source.equals(context.getString(R.string.app_name_cn))) {
-            holder.tv_source.setTextColor(context.getResources().getColor(R.color.textGrey));
-            holder.tv_source.setShadowLayer(20, 0, 0, context.getResources().getColor(R.color.sourcePink));
+            holder.tv_source.setTextColor(context.getResources().getColor(R.color.greyText));
+            holder.tv_source.setShadowLayer(20, 0, 0, context.getResources().getColor(R.color.pinkSource));
         } else {
             holder.tv_source.setShadowLayer(0, 0, 0, 0);
         }

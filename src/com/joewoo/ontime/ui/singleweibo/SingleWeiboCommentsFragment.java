@@ -58,7 +58,7 @@ public class SingleWeiboCommentsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_singleweibo_comments_reposts, container, false);
+        View v = inflater.inflate(R.layout.frag_single_weibo_comments_reposts, container, false);
 
         lv = (ListView) v.findViewById(R.id.lv_single_weibo_comments);
         pb = (ProgressBar) v.findViewById(R.id.pb_single_weibo_comments);

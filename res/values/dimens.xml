@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
@@ -5,9 +6,23 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="lv_retweet_rl_top_margin">22dp</dimen>
 
+    <dimen name="lv_main_screnn_name_left_margin">8dp</dimen>
+    <dimen name="lv_main_text_left_margin">8dp</dimen>
+    <dimen name="lv_main_text_right_margin">8dp</dimen>
+    <dimen name="lv_main_retweet_rl_left_margin">8dp</dimen>
+    <dimen name="lv_main_retweet_rl_right_margin">8dp</dimen>
+    <dimen name="lv_main_retweet_text_left_margin">8dp</dimen>
+    <dimen name="lv_main_retweet_screen_name_left_margin">8dp</dimen>
+    <dimen name="lv_main_time_left_margin">8dp</dimen>
+    <dimen name="lv_main_comments_count_right_margin">8dp</dimen>
+    <dimen name="lv_main_bottom_info_top_margin">8dp</dimen>
+    <dimen name="lv_main_bottom_margin">12dp</dimen>
+
     <dimen name="friends_timeline_horizontal_margin">10dp</dimen>
     <dimen name="friends_timeline_vertical_margin">5dp</dimen>
-<!--     <dimen name="activity_horizontal_margin_ori">16dp</dimen> -->
-<!--     <dimen name="activity_vertical_margin_ori">16dp</dimen> -->
+    <!--     <dimen name="activity_horizontal_margin_ori">16dp</dimen> -->
+    <!--     <dimen name="activity_vertical_margin_ori">16dp</dimen> -->
+
+    <dimen name="actionBarSizewithStatusBarSize">48dp</dimen>
 
 </resources>

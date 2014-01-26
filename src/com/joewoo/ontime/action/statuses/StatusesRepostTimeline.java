@@ -53,11 +53,9 @@ public class StatusesRepostTimeline extends Thread {
             HashMap<String, String> hm = new HashMap<>();
             hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
             hm.put(WEIBO_ID, weiboID);
+            hm.put(COUNT, AcquireCount.REPOSTS_TIMELINE_COUNT);
 
-            if(maxID == null) {
-                hm.put(COUNT, AcquireCount.REPOSTS_TIMELINE_COUNT);
-            } else {
-                hm.put(COUNT, AcquireCount.REPOSTS_TIMELINE_ADD_COUNT);
+            if(maxID != null) {
                 hm.put(MAX_ID, maxID);
             }
 

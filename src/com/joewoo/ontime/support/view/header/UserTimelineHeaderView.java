@@ -22,7 +22,7 @@ public class UserTimelineHeaderView extends RelativeLayout {
     public UserTimelineHeaderView(Context context) {
         super(context);
 
-        View v = LayoutInflater.from(context).inflate(R.layout.user_timeline_header, null);
+        View v = LayoutInflater.from(context).inflate(R.layout.lv_header_user_timeline, null);
 
         addView(v);
 
@@ -35,7 +35,9 @@ public class UserTimelineHeaderView extends RelativeLayout {
         iv.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
     }
 
-    public void setDescription(String str) { tv_description.setText(str); }
+    public void setDescription(String str) {
+        tv_description.setText(str);
+    }
 
     public void hide() {
         rl.setVisibility(GONE);

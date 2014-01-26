@@ -53,6 +53,8 @@ public class BitmapSaveAsFile {
             return true;
         } catch (Exception e) {
             return false;
+        } finally {
+            bitmap.recycle();
         }
     }
 

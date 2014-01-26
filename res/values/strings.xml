@@ -161,6 +161,23 @@
     <string name="dialog_about_message">Thanks for using MyMaid!\n\nBugs could occur anytime and everywhere XD\n\nAnd I feel that\'s all my About (///▽///)</string>
     <string name="dialog_about_cancle">Back</string>
 
+    <string name="setting_network_title">Network</string>
+    <string name="setting_network_acquire_count">Acquire Counts</string>
+    <string name="setting_network_acquire_count_friends_timeline">Weibos</string>
+    <string name="setting_network_acquire_count_mentions">Mentions</string>
+    <string name="setting_network_acquire_count_comments_to_me">Comments</string>
+    <string name="setting_network_acquire_count_comments_mentions">Comments\' Mentions</string>
+    <string name="setting_network_acquire_count_friends_timeline_key">key_weibos</string>
+    <string name="setting_network_acquire_count_mentions_key">key_mentions</string>
+    <string name="setting_network_acquire_count_comments_to_me_key">key_comments</string>
+    <string name="setting_network_acquire_count_comments_mentions_key">key_comments_mentions</string>
+    <string name="setting_ui_title">Interface</string>
+    <string name="setting_ui_dark_mode">Dark Theme</string>
+    <string name="setting_ui_dark_mode_key">key_dark_mode</string>
+    <string name="setting_other_title">Other</string>
+    <string name="setting_other_check_update">Check Update</string>
+    <string name="setting_other_check_update_key">Acquire Counts</string>
+
 
 	<!-- <string name=""></string>
 	<string name=""></string>

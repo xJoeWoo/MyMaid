@@ -1,4 +1,4 @@
-package com.joewoo.ontime.support.net;
+package com.joewoo.ontime.support.image;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,20 +9,25 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.joewoo.ontime.R;
+import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
+
+import java.util.HashSet;
 
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
 /**
  * Created by JoeWoo on 13-12-26.
  */
-public class DownloadMuiltPic extends AsyncTask<String, Integer, Bitmap> {
+public class DownloadSinglePhotoInGridView extends AsyncTask<String, Integer, Bitmap> {
 
     private ImageView iv;
     private Animation in;
+    private HashSet<DownloadSinglePhotoInGridView> tasksHashSet;
 
-    public DownloadMuiltPic(ImageView iv) {
+    public DownloadSinglePhotoInGridView(ImageView iv, HashSet<DownloadSinglePhotoInGridView> tasksHashSet) {
         this.iv = iv;
+        this.tasksHashSet = tasksHashSet;
     }
 
     @Override
@@ -33,10 +38,12 @@ public class DownloadMuiltPic extends AsyncTask<String, Integer, Bitmap> {
     @Override
     protected Bitmap doInBackground(String... params) {
 
-        Log.e(TAG, "Download Muilt Pic AsyncTask START");
-        Log.e(TAG, "Pic URL - " + params[0]);
+        String imageUrl = params[0];
 
-        if(!params[0].endsWith(".gif")){
+        Log.e(TAG, "Download Single Photo AsyncTask START");
+        Log.e(TAG, "Pic URL - " + imageUrl);
+
+        if(!imageUrl.endsWith(".gif")){
             byte[] bytes;
 
             try {
@@ -62,5 +69,6 @@ public class DownloadMuiltPic extends AsyncTask<String, Integer, Bitmap> {
         } else {
             iv.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
         }
+        tasksHashSet.remove(this);
     }
 }

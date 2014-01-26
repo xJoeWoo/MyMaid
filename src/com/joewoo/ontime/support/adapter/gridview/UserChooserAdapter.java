@@ -39,11 +39,17 @@ public class UserChooserAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+
         Log.e("XXX", "Users Count: " + String.valueOf(cursor.getCount()));
-        if(GlobalContext.getSQL().query(MyMaidSQLHelper.USER_TABLE, null, MyMaidSQLHelper.LAST_LOGIN + "=?", new String[]{"1"}, null, null, null).getCount() > 0)
+        Cursor lastLoginCursor = GlobalContext.getSQL().query(MyMaidSQLHelper.USER_TABLE, null, MyMaidSQLHelper.LAST_LOGIN + "=?", new String[]{"1"}, null, null, null);
+        if(lastLoginCursor.getCount() > 0) {
+            lastLoginCursor.close();
             return cursor.getCount() + 2;
-        else
+        }
+        else {
+            lastLoginCursor.close();
             return cursor.getCount() + 1;
+        }
     }
 
     @Override
@@ -65,7 +71,7 @@ public class UserChooserAdapter extends BaseAdapter {
 
             holder = new ViewHolder();
 
-            convertView = LayoutInflater.from(context).inflate(R.layout.user_chooser_dialog_gv, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.gv_user_chooser_dialog, null);
 
             holder.iv = (ImageView) convertView.findViewById(R.id.user_chooser_dialog_iv);
             holder.tv_scr_name = (TextView) convertView.findViewById(R.id.user_chooser_dialog_scr_name);

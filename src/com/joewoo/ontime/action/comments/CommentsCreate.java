@@ -53,8 +53,6 @@ public class CommentsCreate extends Thread {
 
             httpResult = new HttpUtility().executePostTask(URLHelper.COMMENT_CREATE, hm);
 
-            hm = null;
-
         } catch (Exception e) {
             Log.e(TAG, "Comment Create Thread FAILED");
             e.printStackTrace();

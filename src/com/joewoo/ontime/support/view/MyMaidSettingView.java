@@ -27,7 +27,7 @@ public class MyMaidSettingView extends RelativeLayout{
 
 //        this.context = context;
 //
-//        View v = LayoutInflater.from(context).inflate(R.layout.mymaid_setting, null);
+//        View v = LayoutInflater.from(context).inflate(R.layout.view_setting, null);
 //
 //        addView(v);
 //
@@ -43,9 +43,9 @@ public class MyMaidSettingView extends RelativeLayout{
         this.context = context;
 
         LayoutInflater inflater=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.mymaid_setting, this);
+        inflater.inflate(R.layout.view_setting, this);
 
-//        View v = LayoutInflater.from(context).inflate(R.layout.mymaid_setting, null);
+//        View v = LayoutInflater.from(context).inflate(R.layout.view_setting, null);
 
 //        addView(v);
 

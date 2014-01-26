@@ -7,8 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.util.Log;
+import android.view.WindowManager;
 
+import com.joewoo.ontime.support.setting.MyMaidSettingHelper;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 
 import static com.joewoo.ontime.support.info.Defines.TAG;
@@ -37,8 +40,7 @@ public class GlobalContext extends Application {
 
         globalContext = this;
 
-        sql = new MyMaidSQLHelper(GlobalContext.getAppContext(),
-                MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION).getWritableDatabase();
+        sql = new MyMaidSQLHelper(GlobalContext.getAppContext(), MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION).getWritableDatabase();
 
         Cursor c = sql.query(MyMaidSQLHelper.USER_TABLE, new String[]{MyMaidSQLHelper.PROFILE_IMG, MyMaidSQLHelper.UID, MyMaidSQLHelper.SCREEN_NAME, MyMaidSQLHelper.DRAFT, MyMaidSQLHelper.ACCESS_TOKEN, MyMaidSQLHelper.PIC_FILE_PATH}, MyMaidSQLHelper.LAST_LOGIN + "=?", new String[]{"1"}, null, null, null);
 
@@ -59,6 +61,8 @@ public class GlobalContext extends Application {
         } else {
             Log.e(TAG, "No Last Login User Info");
         }
+
+        MyMaidSettingHelper.load();
 
     }
 

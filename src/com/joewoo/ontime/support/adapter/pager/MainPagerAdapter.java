@@ -4,10 +4,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.joewoo.ontime.ui.maintimeline.AboutFragment;
 import com.joewoo.ontime.ui.maintimeline.CommentsToMeFragment;
 import com.joewoo.ontime.ui.maintimeline.FriendsTimeLineFragment;
 import com.joewoo.ontime.ui.maintimeline.MentionsFragment;
-import com.joewoo.ontime.ui.maintimeline.SettingFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 		mFragments.add(new MentionsFragment());
         mFragments.add(new FriendsTimeLineFragment());
         mFragments.add(new CommentsToMeFragment());
-        mFragments.add(new SettingFragment());
+        mFragments.add(new AboutFragment());
 	}
 
 	@Override

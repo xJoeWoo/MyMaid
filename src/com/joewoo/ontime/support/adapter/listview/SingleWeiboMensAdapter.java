@@ -52,7 +52,7 @@ public class SingleWeiboMensAdapter extends BaseAdapter {
         if (convertView == null) {
 
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.comments_repsots_show_lv,
+            convertView = LayoutInflater.from(context).inflate(R.layout.lv_single_weibo_comments_repsots,
                     null);
 
             holder.tv_scr_name = (TextView) convertView

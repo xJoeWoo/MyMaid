@@ -24,7 +24,6 @@ import com.joewoo.ontime.support.bean.UnreadCountBean;
 import com.joewoo.ontime.support.info.AcquireCount;
 import com.joewoo.ontime.support.net.NetworkStatus;
 import com.joewoo.ontime.support.util.GlobalContext;
-import com.joewoo.ontime.support.view.header.MainTimelineHeaderView;
 import com.joewoo.ontime.ui.CommentRepost;
 import com.joewoo.ontime.ui.Post;
 import com.joewoo.ontime.ui.SingleUser;
@@ -112,7 +111,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        View v = inflater.inflate(R.layout.friendstimeline, container, false);
+        View v = inflater.inflate(R.layout.frag_main, container, false);
 
         lv = (ListView) v.findViewById(R.id.lv_friends_timeline);
         lv.setDivider(null);
@@ -131,7 +130,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
 
         MyMaidActionHelper.commentsToMe(true, mHandler);
 
-        lv.setFastScrollAlwaysVisible(true);
+//        lv.setFastScrollAlwaysVisible(true);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -180,7 +179,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
         });
 
         mAdapter = new CommentsToMeAdapter(act);
-        lv.addHeaderView(new MainTimelineHeaderView(act), null, false);
+        lv.addHeaderView(LayoutInflater.from(act).inflate(R.layout.lv_header_main_timeline, null), null, false);
     }
 
     @Override

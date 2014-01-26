@@ -103,7 +103,7 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.singleuser);
+        setContentView(R.layout.act_single_user);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setDisplayShowHomeEnabled(false);
         findViews();

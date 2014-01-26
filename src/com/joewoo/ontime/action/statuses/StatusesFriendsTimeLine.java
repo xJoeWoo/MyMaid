@@ -136,11 +136,9 @@ public class StatusesFriendsTimeLine extends Thread {
         try {
             HashMap<String, String> hm = new HashMap<>();
             hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+            hm.put(COUNT, AcquireCount.FRIENDS_TIMELINE_COUNT);
 
-            if (maxID == null) {
-                hm.put(COUNT, AcquireCount.FRIENDS_TIMELINE_COUNT);
-            } else {
-                hm.put(COUNT, AcquireCount.FRIENDS_TIMELINE_ADD_COUNT);
+            if (maxID != null) {
                 hm.put(MAX_ID, maxID);
             }
 
@@ -148,7 +146,8 @@ public class StatusesFriendsTimeLine extends Thread {
 
             hm = null;
 
-            MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.FRIENDS_TIMELINE, httpResult);
+            if(maxID == null)
+                MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.FRIENDS_TIMELINE, httpResult);
 
             return true;
 

@@ -33,6 +33,8 @@ import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
@@ -83,6 +85,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
     private MainListViewAdapter mAdapter;
     private PullToRefreshAttacher mPullToRefreshAttacher;
     private MainTimelineActivity act;
+    private MainTimelineHeaderView header;
 
     @Override
     public void onRefreshStarted(View view) {
@@ -97,7 +100,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        View v = inflater.inflate(R.layout.friendstimeline, container, false);
+        View v = inflater.inflate(R.layout.frag_main, container, false);
 
         lv = (ListView) v.findViewById(R.id.lv_friends_timeline);
         lv.setDivider(null);
@@ -117,7 +120,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
 
         MyMaidActionHelper.statusesFriendsTimeLine(true, mHandler);
 
-        lv.setFastScrollAlwaysVisible(true);
+//        lv.setFastScrollAlwaysVisible(true);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -152,6 +155,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
 
         lv.setOnScrollListener(new OnScrollListener() {
             int mLastFirstVisibleItem = 0;
+            int headerHeight = -1;
 
             @Override
             public void onScroll(AbsListView view, int arg1, int arg2, int arg3) {
@@ -169,10 +173,29 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                 // 滚到到尾刷新
                 if (view.getLastVisiblePosition() > (view.getCount() - 6) && !mPullToRefreshAttacher.isRefreshing() && statuses != null) {
                     Log.e(TAG, "到底");
-                    // 获取后会删除第一项，所以获取数+1
                     MyMaidActionHelper.statusesFriendsTimeLine(statuses.get(view.getCount() - 1 - lv.getHeaderViewsCount()).getId(), mHandler);
                     mPullToRefreshAttacher.setRefreshing(true);
                 }
+
+//                if(arg1 == 0) {
+//                    try {
+//
+//                        if(headerHeight == -1)
+//                            headerHeight = view.getChildAt(0).getHeight();
+//
+//                        int pos = headerHeight + view.getChildAt(0).getTop();
+//                        float percent = (float)pos / (float)headerHeight;
+//
+//                        header.setAlpha(percent * 2);
+//
+//                        act.getActionBar().
+//
+//
+//                    } catch (Exception ignored) { }
+//                }
+
+
+
             }
 
             @Override
@@ -181,7 +204,9 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
         });
 
         mAdapter = new MainListViewAdapter(act);
-        lv.addHeaderView(new MainTimelineHeaderView(act), null, false);
+        header = new MainTimelineHeaderView(act);
+        lv.addHeaderView(header, null, false);
+        lv.setAdapter(mAdapter);
     }
 
     @Override

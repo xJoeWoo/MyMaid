@@ -100,7 +100,7 @@ public class MyMaidSQLHelper extends SQLiteOpenHelper {
     public static boolean setLastLogin(String uid) {
 
         Cursor c = GlobalContext.getSQL().query(USER_TABLE, new String[]{MyMaidSQLHelper.UID}, null, null, null, null, null);
-        if (c != null && c.getCount() > 0 && c.moveToFirst()) {
+        if (c != null && c.getCount() > 0) {
             ContentValues cv = new ContentValues();
             cv.put(LAST_LOGIN, 0);
 

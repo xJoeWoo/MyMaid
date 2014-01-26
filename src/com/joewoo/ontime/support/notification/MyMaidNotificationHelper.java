@@ -25,7 +25,7 @@ public class MyMaidNotificationHelper {
     public static final int REPLY = 3;
     public static final int REPOST = 4;
 
-    public static int PROGRESS_UPDATE_DELAY = 30;
+    public static int PROGRESS_UPDATE_DELAY = 100;
     public static int SUCCESS_NOTIFICATION_SHOW_TIME = 2 * 1000;
 
     private int what = -1;

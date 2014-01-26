@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ActionBar.Transparent.Mymaid" parent="ActionBar.Transparent.Inner">
+        <item name="android:backgroundStacked">@drawable/ab_transparent_mymaid_up_level_19</item>
+    </style>
+
+</resources>

@@ -1,4 +1,4 @@
-package com.joewoo.ontime.support.net;
+package com.joewoo.ontime.support.image;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.joewoo.ontime.support.image.BitmapRoundCorner;
+import com.joewoo.ontime.support.net.HttpUtility;
 
 import static com.joewoo.ontime.support.info.Defines.TAG;
 

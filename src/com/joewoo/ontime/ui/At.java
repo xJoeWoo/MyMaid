@@ -33,7 +33,7 @@ public class At extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.at);
+        setContentView(R.layout.act_at);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
 

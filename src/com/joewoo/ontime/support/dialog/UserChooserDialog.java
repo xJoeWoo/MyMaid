@@ -33,7 +33,7 @@ public class UserChooserDialog {
         final Dialog dialog = new Dialog(act);
 
         dialog.setTitle(R.string.frag_ftl_dialog_choose_account_title);
-        dialog.setContentView(R.layout.user_chooser_dialog);
+        dialog.setContentView(R.layout.dialog_user_chooser);
 
         GridView gv = (GridView) dialog.findViewById(R.id.user_chooser_dialog_gv);
 

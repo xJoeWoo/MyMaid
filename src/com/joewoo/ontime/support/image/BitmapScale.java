@@ -30,9 +30,6 @@ public class BitmapScale {
             bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
         }
 
-//        Log.i(TAG, width + " width");
-//        Log.i(TAG, height + " height");
-
         return bitmap;
     }
 
@@ -48,7 +45,7 @@ public class BitmapScale {
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
     }
 
-    public static int calculateInSampleSize(
+    private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;

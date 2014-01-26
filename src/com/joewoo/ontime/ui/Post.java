@@ -72,7 +72,7 @@ public class Post extends Activity {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.post);
+        setContentView(R.layout.act_post);
         setProgressBarIndeterminateVisibility(false);
         findViews();
 

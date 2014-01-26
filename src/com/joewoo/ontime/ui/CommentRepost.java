@@ -56,7 +56,7 @@ public class CommentRepost extends Activity {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.comment);
+        setContentView(R.layout.act_comment_repost);
 
         setProgressBarIndeterminateVisibility(false);
         ActionBar actionBar = getActionBar();

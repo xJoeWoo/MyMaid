@@ -33,7 +33,7 @@ public class Getup extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.getup);
+		setContentView(R.layout.act_getup);
 
 		Cursor c = GlobalContext.getSQL().query(MyMaidSQLHelper.USER_TABLE, new String[]{MyMaidSQLHelper.UID,
                 MyMaidSQLHelper.ACCESS_TOKEN},

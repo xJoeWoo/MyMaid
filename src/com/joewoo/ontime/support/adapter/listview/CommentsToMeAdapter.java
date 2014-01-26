@@ -49,7 +49,7 @@ public class CommentsToMeAdapter extends BaseAdapter {
         if (convertView == null) {
 
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.comments_to_me_lv,
+            convertView = LayoutInflater.from(context).inflate(R.layout.lv_comments_to_me,
                     null);
 
             holder.tv_scr_name = (TextView) convertView
@@ -102,8 +102,8 @@ public class CommentsToMeAdapter extends BaseAdapter {
         holder.tv_source.setText(" · " + source);
 
         if (source.equals(context.getString(R.string.app_name_cn))) {
-            holder.tv_source.setTextColor(context.getResources().getColor(R.color.textGrey));
-            holder.tv_source.setShadowLayer(20, 0, 0, context.getResources().getColor(R.color.sourcePink));
+            holder.tv_source.setTextColor(context.getResources().getColor(R.color.greyText));
+            holder.tv_source.setShadowLayer(20, 0, 0, context.getResources().getColor(R.color.pinkSource));
         } else {
             holder.tv_source.setShadowLayer(0, 0, 0, 0);
         }

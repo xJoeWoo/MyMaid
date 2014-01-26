@@ -3,12 +3,14 @@ package com.joewoo.ontime.ui.maintimeline;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.adapter.pager.MainPagerAdapter;
@@ -33,7 +35,7 @@ public class MainTimelineActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.timeline_cmt_atme);
+        setContentView(R.layout.act_main);
 
         Log.e(TAG, "MyMaid Main Activity CREATE!");
 
@@ -48,6 +50,8 @@ public class MainTimelineActivity extends FragmentActivity {
             // actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayShowHomeEnabled(false);
+
+            Log.e(TAG, "dimen: " + String.valueOf(getResources().getDimension(R.dimen.actionBarSizewithStatusBarSize)));
 
             mViewPager = (ViewPager) findViewById(R.id.pager);
             mViewPager.setOffscreenPageLimit(3);
@@ -111,6 +115,16 @@ public class MainTimelineActivity extends FragmentActivity {
     }
 
     @Override
+    protected void onResume() {
+        setActionBarVisible();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
+        super.onResume();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
@@ -162,7 +176,8 @@ public class MainTimelineActivity extends FragmentActivity {
     public void setActionBarLowProfile() {
         if (getActionBar().isShowing()) {
             getActionBar().hide();
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         }
     }
 

@@ -111,11 +111,9 @@ public class StatusesMentions extends Thread {
         try {
             HashMap<String, String> hm = new HashMap<>();
             hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+            hm.put(COUNT, AcquireCount.MENTIONS_COUNT);
 
-            if (maxID == null) {
-                hm.put(COUNT, AcquireCount.MENTIONS_COUNT);
-            } else {
-                hm.put(COUNT, AcquireCount.MENTIONS_ADD_COUNT);
+            if (maxID != null) {
                 hm.put(MAX_ID, maxID);
             }
 
@@ -123,7 +121,8 @@ public class StatusesMentions extends Thread {
 
             hm = null;
 
-            MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.MENTIONS, httpResult);
+            if(maxID == null)
+                MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.MENTIONS, httpResult);
 
             return true;
 

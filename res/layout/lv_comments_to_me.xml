@@ -13,7 +13,7 @@
         android:id="@+id/friendstimeline_rl2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="16dp"
+        android:paddingBottom="@dimen/lv_main_bottom_margin"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:background="@drawable/view_bg_2">
@@ -34,11 +34,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_marginTop="16dp"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="@dimen/lv_main_screnn_name_left_margin"
             android:text="用户名"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
 
@@ -49,12 +48,12 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/comments_to_me_screen_name"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:lineSpacingExtra="4dp"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/lv_main_text_left_margin"
+            android:layout_marginRight="@dimen/lv_main_text_right_margin"
             android:text="正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文正文"
-            android:textSize="15sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/comments_to_me_status_rl"
@@ -64,8 +63,8 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/comments_to_me_text"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/lv_main_retweet_rl_left_margin"
+            android:layout_marginRight="@dimen/lv_main_retweet_rl_right_margin"
             android:layout_marginTop="8dp"
             android:background="@drawable/text_bg_3" />
 
@@ -75,10 +74,10 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/comments_to_me_status_rl"
             android:layout_below="@+id/comments_to_me_text"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="@dimen/lv_main_retweet_screen_name_left_margin"
             android:layout_marginTop="@dimen/lv_retweet_rl_top_margin"
             android:text="用户名"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
@@ -88,11 +87,11 @@
             android:layout_alignLeft="@+id/comments_to_me_status_rl"
             android:layout_alignRight="@+id/comments_to_me_status_rl"
             android:layout_below="@+id/comments_to_me_status_screen_name"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginLeft="@dimen/lv_main_retweet_text_left_margin"
+            android:layout_marginTop="8dp"
             android:lineSpacingExtra="4dp"
             android:text="评论微博原文 评论微博原文 评论微博原文 评论微博原文 评论微博原文 评论微博原文 "
-            android:textSize="15sp" />
+            android:textSize="14sp" />
 
         <!--         <TextView -->
         <!--             android:visibility="gone" -->
@@ -128,10 +127,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/comments_to_me_status_rl"
             android:layout_alignParentLeft="true"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="16dp"
+            android:layout_marginLeft="@dimen/lv_main_time_left_margin"
+            android:layout_marginTop="@dimen/lv_main_bottom_info_top_margin"
             android:text="17:25"
-            android:textColor="@color/textGrey"
+            android:textColor="@color/greyText"
             android:textSize="12sp" />
 
         <!--         <TextView -->
@@ -149,11 +148,11 @@
             android:id="@+id/comments_to_me_source"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/lv_main_bottom_info_top_margin"
             android:layout_below="@+id/comments_to_me_status_rl"
             android:layout_toRightOf="@+id/comments_to_me_created_at"
             android:text="来源"
-            android:textColor="@color/textGrey"
+            android:textColor="@color/greyText"
             android:textSize="12sp" />
 
         <TextView
@@ -164,7 +163,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </RelativeLayout>
 

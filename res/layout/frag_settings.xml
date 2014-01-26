@@ -3,7 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="?android:attr/actionBarSize"
+    android:paddingTop="@dimen/actionBarSizewithStatusBarSize"
     android:paddingLeft="@dimen/friends_timeline_horizontal_margin"
     android:paddingRight="@dimen/friends_timeline_horizontal_margin"
     android:background="@color/white">

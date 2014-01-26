@@ -65,7 +65,7 @@ public class CommentsMentionsAdapter extends BaseAdapter {
         if (convertView == null) {
 
             holder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.friendstimeline_lv,
+            convertView = LayoutInflater.from(context).inflate(R.layout.lv_main_timeline,
                     null);
 
             // Find views
@@ -110,6 +110,9 @@ public class CommentsMentionsAdapter extends BaseAdapter {
 
         CommentsBean c = comments.get(position);
 
+        holder.tv_scr_name.setText(c.getUser().getScreenName());
+        holder.tv_text.setText(c.getText());
+
         if (c.getStatus().getPicURLs().size() == 1) {
             holder.tv_img.setVisibility(View.VISIBLE);
             holder.tv_img.setBackgroundResource(R.drawable.image_dark);
@@ -119,20 +122,15 @@ public class CommentsMentionsAdapter extends BaseAdapter {
         } else
             holder.tv_img.setVisibility(View.GONE);
 
-        holder.tv_scr_name.setText(c.getUser().getScreenName());
-
-        holder.tv_text.setText(c.getText());
-
         if (c.getStatus().getRetweetedStatus() == null) {
-            holder.tv_rt_rl.setVisibility(View.GONE);
-            holder.tv_rt_scr_name.setVisibility(View.GONE);
-            holder.tv_rt.setVisibility(View.GONE);
+            holder.tv_rt_scr_name.setText(c.getStatus().getUser().getScreenName());
+            holder.tv_rt.setText(c.getStatus().getText());
         } else {
-            holder.tv_rt_scr_name.setVisibility(View.VISIBLE);
-            holder.tv_rt.setVisibility(View.VISIBLE);
-            holder.tv_rt_rl.setVisibility(View.VISIBLE);
             holder.tv_rt_scr_name.setText(c.getStatus().getRetweetedStatus().getUser().getScreenName());
             holder.tv_rt.setText(c.getStatus().getRetweetedStatus().getText());
+
+            holder.tv_text.setText(c.getText() + "\n\n评论了@" + c.getStatus().getUser().getScreenName() + "的转发微博:" + c.getStatus().getText() + "\n");
+
             if (c.getStatus().getRetweetedStatus().getPicURLs().size() == 1) {
                 holder.tv_img.setVisibility(View.VISIBLE);
                 holder.tv_img.setBackgroundResource(R.drawable.image_dark);
@@ -146,8 +144,8 @@ public class CommentsMentionsAdapter extends BaseAdapter {
         String source = c.getSource();
         holder.tv_source.setText(" · " + source);
         if (source.equals(context.getString(R.string.app_name_cn))) {
-            holder.tv_source.setTextColor(context.getResources().getColor(R.color.textGrey));
-            holder.tv_source.setShadowLayer(20, 0, 0, context.getResources().getColor(R.color.sourcePink));
+            holder.tv_source.setTextColor(context.getResources().getColor(R.color.greyText));
+            holder.tv_source.setShadowLayer(20, 0, 0, context.getResources().getColor(R.color.pinkSource));
         } else {
             holder.tv_source.setShadowLayer(0, 0, 0, 0);
         }

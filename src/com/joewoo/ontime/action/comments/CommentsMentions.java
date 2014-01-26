@@ -101,11 +101,9 @@ public class CommentsMentions extends Thread {
         try {
             HashMap<String, String> hm = new HashMap<String, String>();
             hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
+            hm.put(COUNT, AcquireCount.COMMENTS_MENTIONS_COUNT);
 
-            if (maxID == null) {
-                hm.put(COUNT, AcquireCount.COMMENTS_MENTIONS_COUNT);
-            } else {
-                hm.put(COUNT, AcquireCount.COMMENTS_MENTIONS_ADD_COUNT);
+            if (maxID != null) {
                 hm.put(MAX_ID, maxID);
             }
 
@@ -113,7 +111,8 @@ public class CommentsMentions extends Thread {
 
             hm = null;
 
-            MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.COMMENTS_MENTIONS, httpResult);
+            if(maxID == null)
+                MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.COMMENTS_MENTIONS, httpResult);
 
             return true;
         } catch (Exception e) {

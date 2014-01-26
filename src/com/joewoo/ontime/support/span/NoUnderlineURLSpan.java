@@ -33,7 +33,7 @@ public class NoUnderlineURLSpan extends ClickableSpan {
 
     @Override
     public void updateDrawState(TextPaint ds) {
-        ds.setColor(context.getResources().getColor(R.color.highlightPink));
+        ds.setColor(context.getResources().getColor(R.color.pinkHighlightSpan));
         ds.setUnderlineText(false);
     }
 

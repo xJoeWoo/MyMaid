@@ -10,6 +10,8 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.joewoo.ontime.R;
@@ -72,7 +74,7 @@ public class SingleWeiboActivity extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.singelweibo);
+        setContentView(R.layout.act_singel_weibo);
 
         i = getIntent();
 
@@ -91,6 +93,7 @@ public class SingleWeiboActivity extends FragmentActivity {
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setBackgroundResource(R.color.pinkMyMaid);
 
         titleRepost = getResources().getString(R.string.title_frag_single_weibo_reposts).toUpperCase(Locale.US);
         titleComment = getResources().getString(R.string.title_frag_single_weibo_comments).toUpperCase(Locale.US);

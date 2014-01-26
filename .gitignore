@@ -1,5 +1,3 @@
-out/
-
 #################
 ## Eclipse
 #################
@@ -9,6 +7,7 @@ out/
 .metadata
 bin/
 tmp/
+out/
 *.tmp
 *.bak
 *.swp

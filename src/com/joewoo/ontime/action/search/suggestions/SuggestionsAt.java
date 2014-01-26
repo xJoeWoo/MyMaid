@@ -55,7 +55,7 @@ public class SuggestionsAt extends Thread {
                     listType);
 
             ArrayAdapter<AtSuggestionBean> files = new ArrayAdapter<AtSuggestionBean>(
-                    act, R.layout.at_lv, R.id.lv_tv1, events);
+                    act, R.layout.lv_at, R.id.lv_tv1, events);
 
             mHandler.obtainMessage(GOT_AT_SUGGESTIONS_INFO, files)
                     .sendToTarget();
