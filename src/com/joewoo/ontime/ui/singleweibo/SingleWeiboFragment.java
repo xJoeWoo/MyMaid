@@ -2,7 +2,6 @@ package com.joewoo.ontime.ui.singleweibo;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.LinkMovementMethod;
@@ -15,6 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -23,8 +23,8 @@ import com.joewoo.ontime.support.adapter.gridview.MuiltPhotosAdapter;
 import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.image.DownloadPhoto;
 import com.joewoo.ontime.support.image.DownloadSinglePhoto;
-import com.joewoo.ontime.support.menu.CopyTextContextualMenu;
 import com.joewoo.ontime.support.image.DownloadUserProfileImage;
+import com.joewoo.ontime.support.menu.CopyTextContextualMenu;
 import com.joewoo.ontime.support.util.CheckMentionsURLTopic;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.view.gridview.MuiltPhotosGirdView;
@@ -213,9 +213,8 @@ public class SingleWeiboFragment extends Fragment {
         if (status.getPicURLs() != null && status.getPicURLs().size() > 1) {
             // 原创多图微博
 
-            muiltPhotosAdapter = new MuiltPhotosAdapter(act, status.getPicURLs());
+            muiltPhotosAdapter = new MuiltPhotosAdapter(act, status.getPicURLs(), sv);
             gv.setAdapter(muiltPhotosAdapter);
-
             gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -224,6 +223,8 @@ public class SingleWeiboFragment extends Fragment {
                 }
             });
 
+
+
         } else if (status.getRetweetedStatus() != null && status.getRetweetedStatus().getPicURLs() != null && status.getRetweetedStatus().getPicURLs().size() > 1) {
             // 转发多图微博
 
@@ -231,10 +232,8 @@ public class SingleWeiboFragment extends Fragment {
             lp.width = 10000;
             tv_rt_rl.setLayoutParams(lp);
 
-            muiltPhotosAdapter = new MuiltPhotosAdapter(act, status.getRetweetedStatus().getPicURLs());
-
+            muiltPhotosAdapter = new MuiltPhotosAdapter(act, status.getRetweetedStatus().getPicURLs(), sv);
             gv.setAdapter(muiltPhotosAdapter);
-
             gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -242,6 +241,7 @@ public class SingleWeiboFragment extends Fragment {
                     dsp.execute(status.getRetweetedStatus().getPicURLs().get(position).getBmiddlePic());
                 }
             });
+
 
         } else if (status.getBmiddlePic() != null) {
             // 原创有图微博

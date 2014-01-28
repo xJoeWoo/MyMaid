@@ -2,6 +2,7 @@ package com.joewoo.ontime.ui.maintimeline;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -119,7 +120,6 @@ public class MainTimelineActivity extends FragmentActivity {
         setActionBarVisible();
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
         super.onResume();
     }
@@ -178,6 +178,7 @@ public class MainTimelineActivity extends FragmentActivity {
             getActionBar().hide();
             if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
                 getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+
         }
     }
 

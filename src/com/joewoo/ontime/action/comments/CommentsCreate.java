@@ -53,6 +53,10 @@ public class CommentsCreate extends Thread {
 
             httpResult = new HttpUtility().executePostTask(URLHelper.COMMENT_CREATE, hm);
 
+//            mHandler.obtainMessage(GOT_COMMENT_CREATE_INFO_FAIL, GlobalContext.getResString(R.string.error_network_not_avaiable)).sendToTarget();
+
+
+
         } catch (Exception e) {
             Log.e(TAG, "Comment Create Thread FAILED");
             e.printStackTrace();

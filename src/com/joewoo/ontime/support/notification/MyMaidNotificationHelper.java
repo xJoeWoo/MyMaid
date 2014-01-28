@@ -11,7 +11,9 @@ import android.support.v4.app.NotificationCompat;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.bean.aqi.AQIBean;
+import com.joewoo.ontime.support.info.Defines;
 import com.joewoo.ontime.support.util.GlobalContext;
+import com.joewoo.ontime.ui.CommentRepost;
 import com.joewoo.ontime.ui.Post;
 
 /**
@@ -25,10 +27,11 @@ public class MyMaidNotificationHelper {
     public static final int REPLY = 3;
     public static final int REPOST = 4;
 
-    public static int PROGRESS_UPDATE_DELAY = 100;
-    public static int SUCCESS_NOTIFICATION_SHOW_TIME = 2 * 1000;
+    public static final int PROGRESS_UPDATE_DELAY = 100;
+    public static final int SUCCESS_NOTIFICATION_SHOW_TIME = 2 * 1000;
 
     private int what = -1;
+    private Intent i;
     private String status;
     private NotificationCompat.BigPictureStyle bigPictureStyle;
 
@@ -37,30 +40,35 @@ public class MyMaidNotificationHelper {
     private NotificationCompat.Builder nBuilder;
     private NotificationManager nManager;
 
-    public MyMaidNotificationHelper(int what, String status, Context context) {
+    public MyMaidNotificationHelper(int what, Intent intent, Context context) {
         this.what = what;
-        this.status = status;
+        this.i = intent;
 
         String title = "";
 
         switch (what) {
             case UPDATE: {
+                status = i.getStringExtra(Defines.STATUS);
                 title = GlobalContext.getResString(R.string.notify_post_sending);
                 break;
             }
             case UPLOAD: {
+                status = i.getStringExtra(Defines.STATUS);
                 title = GlobalContext.getResString(R.string.notify_post_uploading_pic);
                 break;
             }
             case REPLY: {
+                status = i.getStringExtra(Defines.COMMENT);
                 title = GlobalContext.getResString(R.string.notify_reply_sending);
                 break;
             }
             case REPOST: {
+                status = i.getStringExtra(Defines.STATUS);
                 title = GlobalContext.getResString(R.string.notify_repost_sending);
                 break;
             }
             case COMMENT_CREATE: {
+                status = i.getStringExtra(Defines.COMMENT);
                 title = GlobalContext.getResString(R.string.notify_comment_create_sending);
                 break;
             }
@@ -82,7 +90,6 @@ public class MyMaidNotificationHelper {
                 nManager.notify(UPDATE, nBuilder.build());
                 break;
             }
-
             case REPOST: {
                 nManager.notify(REPOST, nBuilder.build());
                 break;
@@ -169,14 +176,16 @@ public class MyMaidNotificationHelper {
         }
     }
 
-    public void setFail(String error) {
+    public void setFail(String error, Context context) {
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.setClass(context, CommentRepost.class);
         nBuilder.setOngoing(false);
         nBuilder.setContentText(error);
         nBuilder.setAutoCancel(true);
         switch (what) {
             case UPDATE:
             case UPLOAD: {
-                nBuilder.addAction(R.drawable.ic_stat_resend, GlobalContext.getResString(R.string.notify_resend), PendingIntent.getActivity(GlobalContext.getAppContext(), 0, new Intent(GlobalContext.getAppContext(), Post.class), 0));
+                nBuilder.addAction(R.drawable.ic_stat_resend, GlobalContext.getResString(R.string.notify_resend), PendingIntent.getActivity(context, 0, new Intent(context, Post.class), 0));
                 nBuilder.setTicker(GlobalContext.getResString(R.string.notify_post_fail));
                 nBuilder.setContentTitle(GlobalContext.getResString(R.string.notify_post_fail));
                 if (what == UPLOAD) {
@@ -191,18 +200,22 @@ public class MyMaidNotificationHelper {
                 break;
             }
             case REPLY: {
+                nBuilder.setContentIntent(PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT));
                 nBuilder.setTicker(GlobalContext.getResString(R.string.notify_reply_fail));
                 nBuilder.setContentTitle(GlobalContext.getResString(R.string.notify_reply_fail));
                 nManager.notify(REPLY, nBuilder.build());
                 break;
             }
             case COMMENT_CREATE: {
+                nBuilder.setContentIntent(PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT));
                 nBuilder.setTicker(GlobalContext.getResString(R.string.notify_comment_create_fail));
                 nBuilder.setContentTitle(GlobalContext.getResString(R.string.notify_comment_create_fail));
                 nManager.notify(COMMENT_CREATE, nBuilder.build());
                 break;
             }
             case REPOST: {
+
+                nBuilder.setContentIntent(PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT));
                 nBuilder.setTicker(GlobalContext.getResString(R.string.notify_repost_fail));
                 nBuilder.setContentTitle(GlobalContext.getResString(R.string.notify_repost_fail));
                 nManager.notify(REPOST, nBuilder.build());

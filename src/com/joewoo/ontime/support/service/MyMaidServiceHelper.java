@@ -7,6 +7,9 @@ import com.joewoo.ontime.support.util.GlobalContext;
 import static com.joewoo.ontime.support.info.Defines.COMMENT;
 import static com.joewoo.ontime.support.info.Defines.COMMENT_ID;
 import static com.joewoo.ontime.support.info.Defines.FILE_PATH;
+import static com.joewoo.ontime.support.info.Defines.IS_COMMENT;
+import static com.joewoo.ontime.support.info.Defines.IS_REPLY;
+import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
 import static com.joewoo.ontime.support.info.Defines.STATUS;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
@@ -33,6 +36,7 @@ public class MyMaidServiceHelper {
         i.putExtra(COMMENT_ID, commentID);
         i.putExtra(WEIBO_ID, weiboID);
         i.putExtra(COMMENT, comment);
+        i.putExtra(IS_REPLY, true);
         GlobalContext.getAppContext().startService(i);
     }
 
@@ -40,6 +44,7 @@ public class MyMaidServiceHelper {
         Intent i = new Intent(GlobalContext.getAppContext(), RepostService.class);
         i.putExtra(STATUS, status);
         i.putExtra(WEIBO_ID, weiboID);
+        i.putExtra(IS_REPOST, true);
         GlobalContext.getAppContext().startService(i);
     }
 
@@ -47,6 +52,7 @@ public class MyMaidServiceHelper {
         Intent i = new Intent(GlobalContext.getAppContext(), CommentCreateService.class);
         i.putExtra(WEIBO_ID, weiboID);
         i.putExtra(COMMENT, comment);
+        i.putExtra(IS_COMMENT, true);
         GlobalContext.getAppContext().startService(i);
     }
 

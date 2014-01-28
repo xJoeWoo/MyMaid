@@ -42,10 +42,7 @@ public class UpdateService extends Service {
                     break;
                 }
                 case GOT_UPDATE_INFO_FAIL: {
-                    mNotification.setFail((String) msg.obj);
-//                    Intent i = new Intent(UpdateService.this, Post.class);
-//                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    startActivity(i);
+                    mNotification.setFail((String) msg.obj, UpdateService.this);
                     break;
                 }
             }
@@ -56,13 +53,9 @@ public class UpdateService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-
-        String status = intent.getStringExtra(STATUS);
-
-        MyMaidActionHelper.statusesUpdate(status, handler);
-        mNotification = new MyMaidNotificationHelper(MyMaidNotificationHelper.UPDATE, status, this);
+        MyMaidActionHelper.statusesUpdate(intent.getStringExtra(STATUS), handler);
+        mNotification = new MyMaidNotificationHelper(MyMaidNotificationHelper.UPDATE, intent, this);
         mNotification.setSending();
-
 
         return super.onStartCommand(intent, flags, startId);
     }

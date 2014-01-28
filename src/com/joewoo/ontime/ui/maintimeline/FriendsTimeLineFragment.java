@@ -237,6 +237,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
             }
             case MENU_PROFILE_IMAGE: {
                 UserChooserDialog.show(act);
+
                 break;
             }
             case MENU_UNREAD_COUNT: {

@@ -35,7 +35,6 @@ import static com.joewoo.ontime.support.info.Defines.STATUS;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
-@SuppressLint("HandlerLeak")
 public class CommentRepost extends Activity {
 
     private long downTime;
@@ -73,18 +72,24 @@ public class CommentRepost extends Activity {
         if (isRepost) {
             actionBar.setTitle(R.string.title_act_repost);
             if (i.getStringExtra(STATUS) != null) {
-                et.setText(i.getStringExtra(STATUS));
+                String status = i.getStringExtra(STATUS);
+                et.setText(status);
+                et.setSelection(status.length());
             }
             et.setHint(R.string.comment_repost_repost);
         } else if (isReply) {
             if (i.getStringExtra(COMMENT) != null) {
-                et.setText(i.getStringExtra(COMMENT));
+                String comment = i.getStringExtra(COMMENT);
+                et.setText(comment);
+                et.setSelection(comment.length());
             }
             actionBar.setTitle(R.string.title_act_reply);
             commentID = i.getStringExtra(COMMENT_ID);
         } else if (isComment) {
             if(i.getStringExtra(COMMENT) != null) {
-                et.setText(i.getStringExtra(COMMENT));
+                String comment = i.getStringExtra(COMMENT);
+                et.setText(comment);
+                et.setSelection(comment.length());
             }
             actionBar.setTitle(R.string.title_act_comment);
         } else {
@@ -243,12 +248,9 @@ public class CommentRepost extends Activity {
 
     private void insertString(String toInert, boolean toInsertEnd) {
         int selection = et.getSelectionStart();
-        Log.e(TAG, String.valueOf(selection));
         String inEt = et.getText().toString();
         String beforeSel = inEt.substring(0, selection);
         String afterSel = inEt.substring(selection);
-        Log.e(TAG, beforeSel);
-        Log.e(TAG, afterSel);
         et.setText(beforeSel + toInert + afterSel);
         if (toInsertEnd) {
             et.setSelection((beforeSel + toInert).length());

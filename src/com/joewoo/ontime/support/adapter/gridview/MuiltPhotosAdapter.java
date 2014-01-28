@@ -1,15 +1,18 @@
 package com.joewoo.ontime.support.adapter.gridview;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.bean.PicURLsBean;
 import com.joewoo.ontime.support.image.DownloadSinglePhotoInGridView;
+import com.joewoo.ontime.support.info.Defines;
 
 import java.util.HashSet;
 import java.util.List;
@@ -23,12 +26,14 @@ public class MuiltPhotosAdapter extends BaseAdapter {
     private List<PicURLsBean> pics;
     private HashSet<DownloadSinglePhotoInGridView> tasksHashSet;
     private HashSet<Integer> positionCompare;
+    private ScrollView sv;
 
-    public MuiltPhotosAdapter(Context context, List<PicURLsBean> pics) {
+    public MuiltPhotosAdapter(Context context, List<PicURLsBean> pics, ScrollView sv) {
         this.context = context;
         this.pics = pics;
         tasksHashSet = new HashSet<>();
         positionCompare = new HashSet<>();
+        this.sv = sv;
     }
 
     @Override
@@ -55,14 +60,14 @@ public class MuiltPhotosAdapter extends BaseAdapter {
                     null);
         }
 
-            ImageView iv = (ImageView) convertView.findViewById(R.id.frag_single_weibo_grid_view_img);
-            loadBitmap(pics.get(position).getSquarePic(), iv, position);
+        ImageView iv = (ImageView) convertView.findViewById(R.id.frag_single_weibo_grid_view_img);
+        loadBitmap(pics.get(position).getSquarePic(), iv, position);
 
         return convertView;
     }
 
-    private void loadBitmap(String imageUrl, ImageView iv, int position){
-        if(iv.getDrawable() == null && !positionCompare.contains(position)) {
+    private void loadBitmap(String imageUrl, ImageView iv, int position) {
+        if (!positionCompare.contains(position)) {
             DownloadSinglePhotoInGridView downloadSinglePhotoInGridView = new DownloadSinglePhotoInGridView(iv, tasksHashSet);
             tasksHashSet.add(downloadSinglePhotoInGridView);
             downloadSinglePhotoInGridView.execute(imageUrl);

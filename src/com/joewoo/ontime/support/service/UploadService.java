@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.util.Log;
 
 import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.support.net.ImageNetworkListener;
@@ -19,6 +20,7 @@ import static com.joewoo.ontime.support.info.Defines.FILE_PATH;
 import static com.joewoo.ontime.support.info.Defines.GOT_UPLOAD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_UPLOAD_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.STATUS;
+import static com.joewoo.ontime.support.info.Defines.TAG;
 
 /**
  * Created by JoeWoo on 14-1-3.
@@ -44,10 +46,7 @@ public class UploadService extends Service implements ImageNetworkListener.Uploa
                     break;
                 }
                 case GOT_UPLOAD_INFO_FAIL: {
-                    mNotification.setFail((String) msg.obj);
-//                    Intent i = new Intent(UploadService.this, Post.class);
-//                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    startActivity(i);
+                    mNotification.setFail((String) msg.obj, UploadService.this);
                     break;
                 }
             }
@@ -56,14 +55,17 @@ public class UploadService extends Service implements ImageNetworkListener.Uploa
     };
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "Upload Service DESTROY!");
+    }
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        MyMaidActionHelper.statusesUpload(intent.getStringExtra(STATUS), intent.getStringExtra(FILE_PATH), this, handler);
 
-        String status = intent.getStringExtra(STATUS);
-
-        MyMaidActionHelper.statusesUpload(status, intent.getStringExtra(FILE_PATH), this, handler);
-
-        mNotification = new MyMaidNotificationHelper(MyMaidNotificationHelper.UPLOAD, status, this);
+        mNotification = new MyMaidNotificationHelper(MyMaidNotificationHelper.UPLOAD, intent, this);
         mNotification.setSending(BitmapFactory.decodeFile(intent.getStringExtra(FILE_PATH)));
 
         return super.onStartCommand(intent, flags, startId);

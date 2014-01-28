@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class GetupSentences {
 
-	private String[] sentences = {
+	private static final String[] sentences = {
 			"新的一天，努力去追求！",
 			"叫醒你的不是闹钟而是鹰鹰！你是有多幸运~",
 			"“宠辱不惊，闲看庭前花开花落；去留无意，漫随天外云卷云舒。”~",
@@ -31,7 +31,7 @@ public class GetupSentences {
 			"“你所浪费的今天，是昨天死去的人奢望的明天。你所厌恶的现在，是未来的你回不去的曾经。”",
 			"“没有死，不等于活着！” —— 《疯狂原始人》", "“大道至简，返璞归真，知易行难。 ”", "“不想成为过客就不要只是路过！”" };
 
-	public String getSentence() {
+	public static String getSentence() {
 		int i = new Random().nextInt(sentences.length);
 		return sentences[i];
 	}

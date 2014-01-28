@@ -28,8 +28,6 @@ import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 public class RepostService extends Service {
 
     private MyMaidNotificationHelper mNotification;
-    private String status;
-    private String weiboID;
 
     private Handler handler = new Handler() {
         @Override
@@ -47,13 +45,7 @@ public class RepostService extends Service {
                     break;
                 }
                 case GOT_REPOST_INFO_FAIL: {
-                    mNotification.setFail((String) msg.obj);
-                    Intent i = new Intent(RepostService.this, CommentRepost.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    i.putExtra(WEIBO_ID, weiboID);
-                    i.putExtra(STATUS, status);
-                    i.putExtra(IS_REPOST, true);
-                    startActivity(i);
+                    mNotification.setFail((String) msg.obj, RepostService.this);
                     break;
                 }
             }
@@ -64,12 +56,9 @@ public class RepostService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        status = intent.getStringExtra(STATUS);
-        weiboID = intent.getStringExtra(WEIBO_ID);
+        MyMaidActionHelper.statusesRepost(intent.getStringExtra(STATUS), intent.getStringExtra(WEIBO_ID), handler);
 
-        MyMaidActionHelper.statusesRepost(status, weiboID, handler);
-
-        mNotification = new MyMaidNotificationHelper(MyMaidNotificationHelper.REPOST, status, this);
+        mNotification = new MyMaidNotificationHelper(MyMaidNotificationHelper.REPOST, intent, this);
         mNotification.setSending();
 
 

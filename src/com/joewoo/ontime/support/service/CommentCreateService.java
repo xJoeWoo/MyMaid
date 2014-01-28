@@ -27,8 +27,6 @@ import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 public class CommentCreateService extends Service {
 
     private MyMaidNotificationHelper mNotification;
-    private String comment;
-    private String weiboID;
 
     private Handler handler = new Handler() {
         @Override
@@ -45,13 +43,7 @@ public class CommentCreateService extends Service {
                     break;
                 }
                 case GOT_COMMENT_CREATE_INFO_FAIL: {
-                    mNotification.setFail((String) msg.obj);
-                    Intent i = new Intent(CommentCreateService.this, CommentRepost.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    i.putExtra(COMMENT, comment);
-                    i.putExtra(WEIBO_ID, weiboID);
-                    i.putExtra(IS_COMMENT, true);
-                    startActivity(i);
+                    mNotification.setFail((String) msg.obj, CommentCreateService.this);
                     break;
                 }
             }
@@ -64,11 +56,8 @@ public class CommentCreateService extends Service {
 
         Log.e(TAG, "Comment Create Service START!");
 
-        comment = intent.getStringExtra(COMMENT);
-        weiboID = intent.getStringExtra(WEIBO_ID);
-
-        MyMaidActionHelper.commentsCreate(comment, weiboID, handler);
-        mNotification = new MyMaidNotificationHelper(MyMaidNotificationHelper.COMMENT_CREATE, comment, this);
+        MyMaidActionHelper.commentsCreate(intent.getStringExtra(COMMENT), intent.getStringExtra(WEIBO_ID), handler);
+        mNotification = new MyMaidNotificationHelper(MyMaidNotificationHelper.COMMENT_CREATE, intent, this);
         mNotification.setSending();
 
         return super.onStartCommand(intent, flags, startId);

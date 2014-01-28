@@ -28,9 +28,6 @@ import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 public class ReplyService extends Service {
 
     private MyMaidNotificationHelper mNotification;
-    private String comment;
-    private String commentID;
-    private String weiboID;
 
     private Handler handler = new Handler() {
         @Override
@@ -47,14 +44,7 @@ public class ReplyService extends Service {
                     break;
                 }
                 case GOT_REPLY_INFO_FAIL: {
-                    mNotification.setFail((String) msg.obj);
-                    Intent i = new Intent(ReplyService.this, CommentRepost.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    i.putExtra(COMMENT, comment);
-                    i.putExtra(COMMENT_ID, commentID);
-                    i.putExtra(WEIBO_ID, weiboID);
-                    i.putExtra(IS_REPLY, true);
-                    startActivity(i);
+                    mNotification.setFail((String) msg.obj, ReplyService.this);
                     break;
                 }
             }
@@ -65,12 +55,8 @@ public class ReplyService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        comment = intent.getStringExtra(COMMENT);
-        commentID = intent.getStringExtra(COMMENT_ID);
-        weiboID = intent.getStringExtra(WEIBO_ID);
-
-        MyMaidActionHelper.commentsReply(comment, weiboID, commentID, false, handler);
-        mNotification = new MyMaidNotificationHelper(MyMaidNotificationHelper.REPLY, comment, this);
+        MyMaidActionHelper.commentsReply(intent.getStringExtra(COMMENT), intent.getStringExtra(WEIBO_ID), intent.getStringExtra(COMMENT_ID), false, handler);
+        mNotification = new MyMaidNotificationHelper(MyMaidNotificationHelper.REPLY, intent, this);
         mNotification.setSending();
 
         return super.onStartCommand(intent, flags, startId);
