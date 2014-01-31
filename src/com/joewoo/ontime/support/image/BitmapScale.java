@@ -2,10 +2,8 @@ package com.joewoo.ontime.support.image;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.ThumbnailUtils;
-import android.util.Log;
+
+import java.io.ByteArrayInputStream;
 
 /**
  * Created by JoeWoo on 13-11-21.
@@ -14,10 +12,10 @@ public class BitmapScale {
 
     public static Bitmap resizeBitmap(Bitmap bitmap, int maxWidth, int maxHeight) {
 
-        int originWidth  = bitmap.getWidth();
+        int originWidth = bitmap.getWidth();
         int originHeight = bitmap.getHeight();
 
-        if(originHeight < 4000 && originWidth < 4000)
+        if (originHeight < 4000 && originWidth < 4000)
             return bitmap;
 
         // 若图片过宽, 则保持长宽比缩放图片
@@ -45,6 +43,21 @@ public class BitmapScale {
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
     }
 
+    public static Bitmap scaleBitmapFromByteArrayInputStream(ByteArrayInputStream is, int reqWidth, int reqHeight) {
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 1;
+        return BitmapFactory.decodeStream(is, null, options);
+
+//        // 第一次解析将inJustDecodeBounds设置为true，来获取图片大小
+//        options.inJustDecodeBounds = true;
+//        // 调用上面定义的方法计算inSampleSize值
+//        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+//        // 使用获取到的inSampleSize值再次解析图片
+//        options.inJustDecodeBounds = false;
+//        return BitmapFactory.decodeStream(is, null, options);
+    }
+
     private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
@@ -67,7 +80,6 @@ public class BitmapScale {
 
         return inSampleSize;
     }
-
 
 
 }

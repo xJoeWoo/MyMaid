@@ -9,7 +9,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.joewoo.ontime.action.MyMaidActionHelper;
-import com.joewoo.ontime.support.net.ImageNetworkListener;
+import com.joewoo.ontime.support.listener.MyMaidListeners;
 import com.joewoo.ontime.support.notification.MyMaidNotificationHelper;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 
@@ -25,7 +25,7 @@ import static com.joewoo.ontime.support.info.Defines.TAG;
 /**
  * Created by JoeWoo on 14-1-3.
  */
-public class UploadService extends Service implements ImageNetworkListener.UploadProgressListener {
+public class UploadService extends Service implements MyMaidListeners.UploadProgressListener {
 
     private MyMaidNotificationHelper mNotification;
 

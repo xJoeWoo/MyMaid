@@ -27,9 +27,7 @@ public class Weather extends Thread {
             Log.e(TAG, httpResult);
             httpResult = httpResult.replace("{\"weatherinfo\":", "");
             httpResult = httpResult.substring(0, httpResult.length() - 1);
-            Gson gson = new Gson();
-            WeatherBean weather = gson
-                    .fromJson(httpResult, WeatherBean.class);
+            WeatherBean weather = new Gson().fromJson(httpResult, WeatherBean.class);
             mHandler.obtainMessage(GOT_WEATHER_INFO, weather).sendToTarget();
             Log.e(TAG, weather.getWeather1() + weather.getIndex_uv());
 

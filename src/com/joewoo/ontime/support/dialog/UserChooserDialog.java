@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -27,9 +26,12 @@ import static com.joewoo.ontime.support.info.Defines.TAG;
 /**
  * Created by JoeWoo on 14-1-4.
  */
-public class UserChooserDialog {
+public class UserChooserDialog implements DialogInterface.OnDismissListener {
 
-    public static void show(final Activity act) {
+    private Activity act;
+
+    public void show(final Activity act) {
+        this.act = act;
 
         final Dialog dialog = new Dialog(act);
 
@@ -72,7 +74,7 @@ public class UserChooserDialog {
 
                         act.finish();
 
-                        if(act instanceof Post)
+                        if (act instanceof Post)
                             act.startActivity(new Intent(act, Post.class));
                         else
                             act.startActivity(new Intent(act, MainTimelineActivity.class));
@@ -82,11 +84,11 @@ public class UserChooserDialog {
                         Toast.makeText(act, R.string.user_chooser_dialog_choosed, Toast.LENGTH_SHORT).show();
                     }
 
-                } else if(usersCount - position == 0) {
+                } else if (usersCount - position == 0) {
                     dialog.cancel();
                     Intent i = new Intent(act, Login.class);
 
-                    if(act instanceof Post)
+                    if (act instanceof Post)
                         i.putExtra(LOGIN_FROM_POST, true);
 
                     act.finish();
@@ -117,9 +119,14 @@ public class UserChooserDialog {
             }
         }
         );
-
+        dialog.setOnDismissListener(this);
         dialog.show();
     }
 
 
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        if (GlobalContext.getAccessToken() == null)
+            act.finish();
+    }
 }

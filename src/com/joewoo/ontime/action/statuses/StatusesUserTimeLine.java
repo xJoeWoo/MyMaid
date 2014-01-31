@@ -12,7 +12,7 @@ import com.joewoo.ontime.support.error.ErrorCheck;
 import com.joewoo.ontime.support.info.AcquireCount;
 import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
-import com.joewoo.ontime.support.util.TimeFormat;
+import com.joewoo.ontime.support.util.MyMaidUtilites;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +54,7 @@ public class StatusesUserTimeLine extends Thread {
             hm.put(SCREEN_NAME, screenName);
             hm.put(COUNT, AcquireCount.USER_TIMELINE_COUNT);
 
-            if(maxID != null) {
+            if (maxID != null) {
                 hm.put(MAX_ID, maxID);
             }
 
@@ -84,20 +84,20 @@ public class StatusesUserTimeLine extends Thread {
 
             for (StatusesBean s : statuses) {
 
-                s.setCreatedAt(TimeFormat.parse(s.getCreatedAt()));
+                s.setCreatedAt(MyMaidUtilites.TimeFormat.parse(s.getCreatedAt()));
 
                 source = s.getSource();
                 source = source.substring(source.indexOf(">") + 1,
                         source.indexOf("</a>"));
                 s.setSource(source);
 
-                if(s.getRetweetedStatus() != null) {
+                if (s.getRetweetedStatus() != null) {
 
-                    s.getRetweetedStatus().setCreatedAt(TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
+                    s.getRetweetedStatus().setCreatedAt(MyMaidUtilites.TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
 
                     source = s.getRetweetedStatus().getSource();
 
-                    if(source != null) {
+                    if (source != null) {
                         source = source.substring(source.indexOf(">") + 1,
                                 source.indexOf("</a>"));
                         s.getRetweetedStatus().setSource(source);
@@ -162,7 +162,7 @@ public class StatusesUserTimeLine extends Thread {
 //                text.add(map);
             }
 
-            if(maxID == null)
+            if (maxID == null)
                 mHandler.obtainMessage(GOT_USER_TIMELINE_INFO, statuses).sendToTarget();
             else {
                 statuses.remove(0);

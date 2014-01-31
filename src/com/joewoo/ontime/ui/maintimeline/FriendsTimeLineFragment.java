@@ -25,7 +25,7 @@ import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.dialog.UserChooserDialog;
 import com.joewoo.ontime.support.net.NetworkStatus;
 import com.joewoo.ontime.support.util.GlobalContext;
-import com.joewoo.ontime.support.util.IDtoMID;
+import com.joewoo.ontime.support.util.MyMaidUtilites;
 import com.joewoo.ontime.support.view.header.MainTimelineHeaderView;
 import com.joewoo.ontime.ui.Post;
 import com.joewoo.ontime.ui.SingleUser;
@@ -33,8 +33,6 @@ import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
@@ -72,14 +70,13 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                     break;
                 }
                 case GOT_FRIENDS_TIMELINE_INFO_FAIL: {
-                    if(msg.obj != null)
+                    if (msg.obj != null)
                         Toast.makeText(act, (String) msg.obj, Toast.LENGTH_SHORT).show();
                     break;
                 }
             }
             act.invalidateOptionsMenu();
         }
-
     };
     private ListView lv;
     private MainListViewAdapter mAdapter;
@@ -147,7 +144,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                         .parse("http://weibo.com/"
                                 + statuses.get(arg2 - lv.getHeaderViewsCount()).getUser().getId()
                                 + "/"
-                                + IDtoMID.Id2Mid(statuses.get(arg2 - lv.getHeaderViewsCount())
+                                + MyMaidUtilites.IDtoMID.Id2Mid(statuses.get(arg2 - lv.getHeaderViewsCount())
                                 .getId()))));
                 return false;
             }
@@ -195,7 +192,6 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
 //                }
 
 
-
             }
 
             @Override
@@ -236,8 +232,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                 break;
             }
             case MENU_PROFILE_IMAGE: {
-                UserChooserDialog.show(act);
-
+                new UserChooserDialog().show(act);
                 break;
             }
             case MENU_UNREAD_COUNT: {

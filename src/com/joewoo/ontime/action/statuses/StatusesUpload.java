@@ -6,8 +6,8 @@ import android.util.Log;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.support.error.ErrorCheck;
+import com.joewoo.ontime.support.listener.MyMaidListeners;
 import com.joewoo.ontime.support.net.HttpUtility;
-import com.joewoo.ontime.support.net.ImageNetworkListener;
 import com.joewoo.ontime.support.util.GlobalContext;
 
 import java.util.HashMap;
@@ -23,9 +23,9 @@ public class StatusesUpload extends Thread {
     private String status;
     private String filePath;
     private Handler mHandler;
-    private ImageNetworkListener.UploadProgressListener listener;
+    private MyMaidListeners.UploadProgressListener listener;
 
-    public StatusesUpload(String status, String filePath, ImageNetworkListener.UploadProgressListener listener, Handler handler) {
+    public StatusesUpload(String status, String filePath, MyMaidListeners.UploadProgressListener listener, Handler handler) {
         this.status = status;
         this.filePath = filePath;
         this.mHandler = handler;
@@ -51,9 +51,9 @@ public class StatusesUpload extends Thread {
             return;
         }
 
-        if(ErrorCheck.getError(httpResult) == null) {
+        if (ErrorCheck.getError(httpResult) == null) {
             mHandler.sendEmptyMessage(GOT_UPLOAD_INFO);
-        }else {
+        } else {
             mHandler.obtainMessage(GOT_UPLOAD_INFO_FAIL, ErrorCheck.getError(httpResult)).sendToTarget();
         }
     }

@@ -1,12 +1,17 @@
-package com.joewoo.ontime.support.net;
+package com.joewoo.ontime.support.listener;
 
 /**
- * Created by JoeWoo on 13-11-23.
+ * Created by Joe on 14-1-31.
  */
-public class ImageNetworkListener {
+public class MyMaidListeners {
+
+    public interface FragmentReadyListener {
+        public void fragmentReady();
+    }
 
     public interface UploadProgressListener {
         public void uploadProgress(int transferred, int contentLength);
+
         public void waitResponse();
     }
 

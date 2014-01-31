@@ -15,7 +15,7 @@ import com.joewoo.ontime.support.info.AcquireCount;
 import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
-import com.joewoo.ontime.support.util.TimeFormat;
+import com.joewoo.ontime.support.util.MyMaidUtilites;
 
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +67,7 @@ public class CommentsToMe extends Thread {
 
             for (CommentsBean c : comments) {
 
-                c.setCreatedAt(TimeFormat.parse(c.getCreatedAt()));
+                c.setCreatedAt(MyMaidUtilites.TimeFormat.parse(c.getCreatedAt()));
 
                 source = c.getSource();
                 source = source.substring(source.indexOf(">") + 1,
@@ -103,7 +103,7 @@ public class CommentsToMe extends Thread {
 
             hm = null;
 
-            if(maxID == null)
+            if (maxID == null)
                 MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.COMMENTS_TO_ME, httpResult);
 
             return true;

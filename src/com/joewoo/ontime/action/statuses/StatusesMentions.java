@@ -15,7 +15,7 @@ import com.joewoo.ontime.support.info.AcquireCount;
 import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
-import com.joewoo.ontime.support.util.TimeFormat;
+import com.joewoo.ontime.support.util.MyMaidUtilites;
 
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +69,7 @@ public class StatusesMentions extends Thread {
 
             for (StatusesBean s : statuses) {
 
-                s.setCreatedAt(TimeFormat.parse(s.getCreatedAt()));
+                s.setCreatedAt(MyMaidUtilites.TimeFormat.parse(s.getCreatedAt()));
 
                 source = s.getSource();
                 source = source.substring(source.indexOf(">") + 1,
@@ -79,13 +79,13 @@ public class StatusesMentions extends Thread {
 
                 if (s.getRetweetedStatus() != null && s.getRetweetedStatus().getUser() != null) {
 
-                    s.getRetweetedStatus().setCreatedAt(TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
+                    s.getRetweetedStatus().setCreatedAt(MyMaidUtilites.TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
 
 
                     source = s.getRetweetedStatus().getSource();
-                        source = source.substring(source.indexOf(">") + 1,
-                                source.indexOf("</a>"));
-                        s.getRetweetedStatus().setSource(source);
+                    source = source.substring(source.indexOf(">") + 1,
+                            source.indexOf("</a>"));
+                    s.getRetweetedStatus().setSource(source);
 
                 }
 
@@ -121,7 +121,7 @@ public class StatusesMentions extends Thread {
 
             hm = null;
 
-            if(maxID == null)
+            if (maxID == null)
                 MyMaidSQLHelper.saveOneString(MyMaidSQLHelper.MENTIONS, httpResult);
 
             return true;

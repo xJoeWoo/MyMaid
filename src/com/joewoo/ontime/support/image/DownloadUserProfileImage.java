@@ -6,12 +6,13 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.joewoo.ontime.support.image.BitmapRoundCorner;
 import com.joewoo.ontime.support.net.HttpUtility;
+
+import java.io.ByteArrayInputStream;
 
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
-public class DownloadUserProfileImage extends AsyncTask<String, Integer, Bitmap[]> {
+public class DownloadUserProfileImage extends AsyncTask<String, Integer, Bitmap> {
 
     private ImageView iv;
 
@@ -20,24 +21,26 @@ public class DownloadUserProfileImage extends AsyncTask<String, Integer, Bitmap[
     }
 
     @Override
-    protected Bitmap[] doInBackground(String... params) {
+    protected Bitmap doInBackground(String... params) {
 
         Log.e(TAG, "Download User Proflie Image AsyncTask START");
         Log.e(TAG, "Pic URL - " + params[0]);
 
-        Bitmap[] image = new Bitmap[2];
+        Bitmap image = null;
 
-            try {
+        try {
 
-                byte[] imgBytes = new HttpUtility().executeDownloadImageTask(params[0], null);
+//                byte[] imgBytes = new HttpUtility().executeDownloadImageTask(params[0], null);
+//
+//                image = BitmapRoundCorner.toRoundCorner(BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length), 25);
 
-                image[0] = BitmapRoundCorner.toRoundCorner(BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length), 25);
+            image = BitmapRoundCorner.toRoundCorner(BitmapFactory.decodeStream(new ByteArrayInputStream(new HttpUtility().executeDownloadImageTask(params[0], null))), 25);
 
 
-            } catch (Exception e) {
-                Log.e(TAG, "Download User Profile Image AsyncTask FAILED");
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            Log.e(TAG, "Download User Profile Image AsyncTask FAILED");
+            e.printStackTrace();
+        }
 
 
         return image;
@@ -45,10 +48,10 @@ public class DownloadUserProfileImage extends AsyncTask<String, Integer, Bitmap[
 
 
     @Override
-    protected void onPostExecute(Bitmap[] bitmap) {
+    protected void onPostExecute(Bitmap bitmap) {
 
         if (bitmap != null) {
-            iv.setImageBitmap(bitmap[0]);
+            iv.setImageBitmap(bitmap);
         }
 
         bitmap = null;

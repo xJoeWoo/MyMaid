@@ -2,6 +2,8 @@ package com.joewoo.ontime.support.net;
 
 import android.util.Log;
 
+import com.joewoo.ontime.support.listener.MyMaidListeners;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -29,14 +31,16 @@ public class JavaHttpUtility {
 
     public static final int CONNECT_TIMEOUT = 5 * 1000;
     public static final int READ_TIMEOUT = 5 * 1000;
-    
+
     public static final int UPLOAD_CONNECT_TIMEOUT = 10 * 1000;
     public static final int UPLOAD_READ_TIMEOUT = 5 * 1000;
 
     public static final int DOWNLOAD_CONNECT_TIMEOUT = 5 * 1000;
     public static final int DOWNLOAD_READ_TIMEOUT = 5 * 1000;
 
-    public byte[] doDownloadImage(String urlStr, ImageNetworkListener.DownloadProgressListener downloadListener) throws Exception{
+    public static final int DOWNLOAD_IMAGE_BUFFER_SIZE = 1024;
+
+    public byte[] doDownloadImage(String urlStr, MyMaidListeners.DownloadProgressListener downloadListener) throws Exception {
 
         InputStream in = null;
         ByteArrayOutputStream baos = null;
@@ -64,14 +68,15 @@ public class JavaHttpUtility {
             int byteread = 0;
 
             in = new BufferedInputStream(conn.getInputStream());
+            in = conn.getInputStream();
             baos = new ByteArrayOutputStream();
 
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[DOWNLOAD_IMAGE_BUFFER_SIZE];
 
             Thread currentThread = Thread.currentThread();
 
             while ((byteread = in.read(buffer)) != -1) {
-                
+
                 if (currentThread.isInterrupted()) {
                     Log.e(TAG, "Download Photo Cancelled");
                     throw new Exception();
@@ -81,10 +86,12 @@ public class JavaHttpUtility {
 
                 bytesum += byteread;
                 baos.write(buffer, 0, byteread);
+
                 if (downloadListener != null && bytetotal > 0) {
                     downloadListener.downloadProgress(bytesum, bytetotal);
                 }
             }
+            baos.flush();
 
             imgBytes = baos.toByteArray();
 
@@ -92,16 +99,17 @@ public class JavaHttpUtility {
             e.printStackTrace();
             throw e;
         } finally {
-            if(in != null)
+            if (in != null)
                 in.close();
-            if(baos != null)
+            if (baos != null)
                 baos.close();
         }
 
         return imgBytes;
+//        return in;
     }
 
-    public String doUploadFile(String urlStr, Map<String, String> param, String path, final ImageNetworkListener.UploadProgressListener listener) throws Exception {
+    public String doUploadFile(String urlStr, Map<String, String> param, String path, final MyMaidListeners.UploadProgressListener listener) throws Exception {
         String BOUNDARYSTR = getBoundry();
 
         File targetFile = new File(path);
@@ -193,9 +201,9 @@ public class JavaHttpUtility {
             e.printStackTrace();
             throw e;
         } finally {
-            if(fis != null)
+            if (fis != null)
                 fis.close();
-            if(out != null)
+            if (out != null)
                 out.close();
         }
 
@@ -227,7 +235,7 @@ public class JavaHttpUtility {
             return handleResponse(conn);
         } catch (Exception e) {
             e.printStackTrace();
-            if(conn != null)
+            if (conn != null)
                 conn.disconnect();
             throw e;
         }
@@ -275,7 +283,7 @@ public class JavaHttpUtility {
 
             Log.e(TAG, "http code: " + String.valueOf(conn.getResponseCode()));
 
-            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK)
+            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK)
                 is = conn.getInputStream();
             else
                 is = conn.getErrorStream();
@@ -312,7 +320,7 @@ public class JavaHttpUtility {
 
     private String encodeParamFromMap(Map<String, String> param) {
 
-        if(param == null)
+        if (param == null)
             return "";
 
         StringBuilder sb = new StringBuilder();
@@ -329,8 +337,7 @@ public class JavaHttpUtility {
 
             try {
                 sb.append(URLEncoder.encode(key, "UTF-8")).append("=").append(URLEncoder.encode(value, "UTF-8"));
-            } catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 

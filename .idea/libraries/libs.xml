@@ -5,6 +5,11 @@
       <root url="jar://$PROJECT_DIR$/libs/android-support-v4.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/libs/ActionBar-PullToRefresh/library/gen" />
+      <root url="file://$PROJECT_DIR$/libs/ActionBar-PullToRefresh/library/src" />
+      <root url="file://$PROJECT_DIR$/libs/PhotoView/library/gen" />
+      <root url="file://$PROJECT_DIR$/libs/PhotoView/library/src" />
+    </SOURCES>
   </library>
 </component>

@@ -110,7 +110,7 @@ public class Post extends Activity {
                 et_post.setSelection(draft.length());
             }
         } else {
-            UserChooserDialog.show(this);
+            new UserChooserDialog().show(this);
         }
 
         et_post.addTextChangedListener(new TextWatcher() {
@@ -200,15 +200,15 @@ public class Post extends Activity {
 
                     Intent ii = new Intent();
 
-                    if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
 
-                    ii.setType("image/*");
-                    ii.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(ii, ACT_GOT_PHOTO);
+                        ii.setType("image/*");
+                        ii.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(ii, ACT_GOT_PHOTO);
 
                     } else {
 
-                    //TODO
+                        //TODO
 
                         ii.setAction(Intent.ACTION_PICK);
                         ii.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -230,20 +230,20 @@ public class Post extends Activity {
             }
             case MENU_POST: {
 //                if (NetworkStatus.check(true)) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(et_post.getWindowToken(), 0);
-                    if (et_post.getText() != null && !et_post.getText().toString().equals("")) {
-                        String status = et_post.getText().toString();
-                        if (GlobalContext.getPicPath() != null) {
-                            MyMaidServiceHelper.upload(status);
-                        } else {
-                            MyMaidServiceHelper.update(status);
-                        }
-                        finish();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(et_post.getWindowToken(), 0);
+                if (et_post.getText() != null && !et_post.getText().toString().equals("")) {
+                    String status = et_post.getText().toString();
+                    if (GlobalContext.getPicPath() != null) {
+                        MyMaidServiceHelper.upload(status);
                     } else {
-                        Toast.makeText(Post.this, R.string.toast_say_sth,
-                                Toast.LENGTH_SHORT).show();
+                        MyMaidServiceHelper.update(status);
                     }
+                    finish();
+                } else {
+                    Toast.makeText(Post.this, R.string.toast_say_sth,
+                            Toast.LENGTH_SHORT).show();
+                }
 //                }
                 break;
             }
@@ -316,7 +316,7 @@ public class Post extends Activity {
     protected void onPause() {
         Log.e(TAG, "PAUSE");
         super.onPause();
-        if(et_post.getText() != null && !et_post.getText().toString().trim().equals(""))
+        if (et_post.getText() != null && !et_post.getText().toString().trim().equals(""))
             GlobalContext.setDraft(et_post.getText().toString());
         MyMaidSQLHelper.saveDraft();
     }

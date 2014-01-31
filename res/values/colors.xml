@@ -2,13 +2,13 @@
 <resources>
     <color name="mymaid">#fffcdc85</color>
 
-	<color name="grey">#ffe8e8e8</color>
+    <color name="grey">#ffe8e8e8</color>
     <color name="greyAcquireCountDialog">#ff333333</color>
-	<color name="greyText">#ff888888</color>
+    <color name="greyText">#ff888888</color>
     <color name="greySource">#ff999999</color>
-	<color name="greyBackground">#ffeeeeee</color>
+    <color name="greyBackground">#ffeeeeee</color>
 
-	<color name="pinkMyMaid">#fffbb2b2</color>
+    <color name="pinkMyMaid">#fffbb2b2</color>
     <color name="pinkSource">#fff28686</color>
     <color name="pinkHighlightSpan">#fff28686</color>
     <color name="pinkStatusBar">#fffa7070</color>
@@ -16,5 +16,7 @@
     <color name="white">#ffffffff</color>
 
     <color name="pressed_mymaid">#CCFBB2B2</color>
+
+    <color name="tranPhoto">#80000000</color>
 
 </resources>

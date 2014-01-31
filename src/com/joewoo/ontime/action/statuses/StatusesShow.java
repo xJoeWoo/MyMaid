@@ -9,34 +9,13 @@ import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.error.ErrorCheck;
 import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
-import com.joewoo.ontime.support.util.TimeFormat;
+import com.joewoo.ontime.support.util.MyMaidUtilites;
 
 import java.util.HashMap;
 
 import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
-import static com.joewoo.ontime.support.info.Defines.BMIDDLE_PIC;
-import static com.joewoo.ontime.support.info.Defines.COMMENTS_COUNT;
-import static com.joewoo.ontime.support.info.Defines.CREATED_AT;
 import static com.joewoo.ontime.support.info.Defines.GOT_STATUSES_SHOW_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_STATUSES_SHOW_INFO_FAIL;
-import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
-import static com.joewoo.ontime.support.info.Defines.PIC_URLS;
-import static com.joewoo.ontime.support.info.Defines.PROFILE_IMAGE_URL;
-import static com.joewoo.ontime.support.info.Defines.REPOSTS_COUNT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_BMIDDLE_PIC;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_COMMENTS_COUNT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_CREATED_AT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_REPOSTS_COUNT;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SCREEN_NAME;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_SOURCE;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_THUMBNAIL_PIC;
-import static com.joewoo.ontime.support.info.Defines.RETWEETED_STATUS_UID;
-import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
-import static com.joewoo.ontime.support.info.Defines.SOURCE;
-import static com.joewoo.ontime.support.info.Defines.TEXT;
-import static com.joewoo.ontime.support.info.Defines.THUMBNAIL_PIC;
-import static com.joewoo.ontime.support.info.Defines.UID;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
 /**
@@ -74,22 +53,22 @@ public class StatusesShow extends Thread {
             return;
         }
 
-        if(ErrorCheck.getError(httpResult) == null) {
+        if (ErrorCheck.getError(httpResult) == null) {
 
             String source;
 //
             StatusesBean s = new Gson().fromJson(httpResult, StatusesBean.class);
 
-            s.setCreatedAt(TimeFormat.parse(s.getCreatedAt()));
+            s.setCreatedAt(MyMaidUtilites.TimeFormat.parse(s.getCreatedAt()));
 
             source = s.getSource();
             source = source.substring(source.indexOf(">") + 1,
                     source.indexOf("</a>"));
             s.setSource(source);
 
-            if(s.getRetweetedStatus() != null) {
+            if (s.getRetweetedStatus() != null) {
 
-                s.getRetweetedStatus().setCreatedAt(TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
+                s.getRetweetedStatus().setCreatedAt(MyMaidUtilites.TimeFormat.parse(s.getRetweetedStatus().getCreatedAt()));
 
                 source = s.getRetweetedStatus().getSource();
                 source = source.substring(source.indexOf(">") + 1,

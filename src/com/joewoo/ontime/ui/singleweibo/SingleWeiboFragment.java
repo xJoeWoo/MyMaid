@@ -1,7 +1,6 @@
 package com.joewoo.ontime.ui.singleweibo;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.LinkMovementMethod;
@@ -14,7 +13,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -24,17 +22,16 @@ import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.image.DownloadPhoto;
 import com.joewoo.ontime.support.image.DownloadSinglePhoto;
 import com.joewoo.ontime.support.image.DownloadUserProfileImage;
+import com.joewoo.ontime.support.info.Defines;
+import com.joewoo.ontime.support.listener.MyMaidListeners;
 import com.joewoo.ontime.support.menu.CopyTextContextualMenu;
-import com.joewoo.ontime.support.util.CheckMentionsURLTopic;
 import com.joewoo.ontime.support.util.GlobalContext;
+import com.joewoo.ontime.support.util.MyMaidUtilites;
 import com.joewoo.ontime.support.view.gridview.MuiltPhotosGirdView;
+import com.joewoo.ontime.ui.Photo;
 import com.joewoo.ontime.ui.SingleUser;
 
-import java.io.File;
-
 import static com.joewoo.ontime.support.info.Defines.TAG;
-import static com.joewoo.ontime.support.info.Defines.TEMP_IMAGE_NAME;
-import static com.joewoo.ontime.support.info.Defines.TEMP_IMAGE_PATH;
 import static com.joewoo.ontime.support.info.Defines.USER_BEAN;
 
 public class SingleWeiboFragment extends Fragment {
@@ -42,6 +39,7 @@ public class SingleWeiboFragment extends Fragment {
     private StatusesBean status;
 
     private SingleWeiboActivity act;
+    private MyMaidListeners.FragmentReadyListener fragmentReadyListener;
 
     private TextView tv_screen_name;
     private TextView tv_created_at;
@@ -79,10 +77,14 @@ public class SingleWeiboFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         act = (SingleWeiboActivity) getActivity();
-        act.setSingleWeiboFragment();
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (fragmentReadyListener != null)
+            fragmentReadyListener.fragmentReady();
     }
 
     @Override
@@ -96,21 +98,18 @@ public class SingleWeiboFragment extends Fragment {
             Log.e(TAG, "Cancel All Thread");
             muiltPhotosAdapter.cancelAllTasks();
         }
-        if(dsp != null) {
+        if (dsp != null) {
             Log.e(TAG, "Cancel Single Photo Thread");
             dsp.cancel(true);
         }
     }
 
     public void setSingleWeibo(StatusesBean status) {
-        this.status = status;
-        setStatus();
-    }
-
-    public void setSingleWeiboWithAnim(StatusesBean status) {
-        this.in = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.in);
-        this.out = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.out);
-        setViewShow();
+        if (pb.getVisibility() == View.VISIBLE) {
+            in = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.in);
+            out = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.out);
+            setViewShow();
+        }
         this.status = status;
         setStatus();
     }
@@ -120,7 +119,7 @@ public class SingleWeiboFragment extends Fragment {
         tv_screen_name.setText(status.getUser().getScreenName());
         tv_created_at.setText(" · " + status.getCreatedAt());
 
-        tv_text.setText(CheckMentionsURLTopic.getSpannableString(status.getText(), act));
+        tv_text.setText(MyMaidUtilites.CheckMentionsURLTopic.getSpannableString(status.getText(), act));
         tv_text.setMovementMethod(LinkMovementMethod.getInstance());
 
         tv_source.setText(" · " + status.getSource());
@@ -177,7 +176,7 @@ public class SingleWeiboFragment extends Fragment {
             tv_rt_screen_name.setText(status.getRetweetedStatus().getUser().getScreenName());
             tv_rt_created_at.setText(" · " + status.getRetweetedStatus().getCreatedAt());
 
-            tv_rt_text.setText(CheckMentionsURLTopic.getSpannableString(status.getRetweetedStatus().getText(), act));
+            tv_rt_text.setText(MyMaidUtilites.CheckMentionsURLTopic.getSpannableString(status.getRetweetedStatus().getText(), act));
             tv_rt_text.setMovementMethod(LinkMovementMethod.getInstance());
 
             tv_rt_source.setText(" · " + status.getRetweetedStatus().getSource());
@@ -215,6 +214,7 @@ public class SingleWeiboFragment extends Fragment {
 
             muiltPhotosAdapter = new MuiltPhotosAdapter(act, status.getPicURLs(), sv);
             gv.setAdapter(muiltPhotosAdapter);
+
             gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -222,8 +222,6 @@ public class SingleWeiboFragment extends Fragment {
                     dsp.execute(status.getPicURLs().get(position).getBmiddlePic());
                 }
             });
-
-
 
         } else if (status.getRetweetedStatus() != null && status.getRetweetedStatus().getPicURLs() != null && status.getRetweetedStatus().getPicURLs().size() > 1) {
             // 转发多图微博
@@ -234,6 +232,7 @@ public class SingleWeiboFragment extends Fragment {
 
             muiltPhotosAdapter = new MuiltPhotosAdapter(act, status.getRetweetedStatus().getPicURLs(), sv);
             gv.setAdapter(muiltPhotosAdapter);
+
             gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -248,10 +247,13 @@ public class SingleWeiboFragment extends Fragment {
 
             dp = new DownloadPhoto(iv_image, tv_rt_rl, false, act);
             dp.execute(status.getBmiddlePic());
+
             iv_image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    jumpToGallery();
+                    Intent i = new Intent(act, Photo.class);
+                    i.putExtra(Defines.PHOTO_BYTES, act.getImageBytes());
+                    act.startActivity(i);
                 }
             });
 
@@ -260,10 +262,13 @@ public class SingleWeiboFragment extends Fragment {
 
             dp = new DownloadPhoto(iv_image, tv_rt_rl, true, act);
             dp.execute(status.getRetweetedStatus().getBmiddlePic());
+
             iv_image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    jumpToGallery();
+                    Intent i = new Intent(act, Photo.class);
+                    i.putExtra(Defines.PHOTO_BYTES, act.getImageBytes());
+                    act.startActivity(i);
                 }
             });
 
@@ -329,13 +334,6 @@ public class SingleWeiboFragment extends Fragment {
         startActivity(ii);
     }
 
-    private void jumpToGallery() {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(new File(TEMP_IMAGE_PATH, TEMP_IMAGE_NAME)), "image/*");
-        startActivity(intent);
-    }
-
     public void setViewHide() {
         sv.setVisibility(View.GONE);
         pb.setVisibility(View.VISIBLE);
@@ -348,4 +346,7 @@ public class SingleWeiboFragment extends Fragment {
         pb.startAnimation(out);
     }
 
+    public void setFragmentReadyListener(MyMaidListeners.FragmentReadyListener listener) {
+        this.fragmentReadyListener = listener;
+    }
 }

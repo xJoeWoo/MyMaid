@@ -16,6 +16,8 @@ import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.support.adapter.pager.SingleWeiboPagerAdapter;
 import com.joewoo.ontime.support.bean.StatusesBean;
+import com.joewoo.ontime.support.info.Defines;
+import com.joewoo.ontime.support.listener.MyMaidListeners;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.ui.CommentRepost;
 
@@ -23,6 +25,7 @@ import java.util.Locale;
 
 import static com.joewoo.ontime.support.info.Defines.GOT_FAVOURITE_CREATE_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_FAVOURITE_CREATE_INFO_FAIL;
+import static com.joewoo.ontime.support.info.Defines.GOT_SET_SINGLE_WEIBO_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_STATUSES_DESTROY_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_STATUSES_DESTROY_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.GOT_STATUSES_SHOW_INFO;
@@ -43,7 +46,8 @@ import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 /**
  * Created by JoeWoo on 13-10-13.
  */
-public class SingleWeiboActivity extends FragmentActivity {
+public class SingleWeiboActivity extends FragmentActivity implements MyMaidListeners.FragmentReadyListener {
+
 
     private SingleWeiboPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -53,18 +57,29 @@ public class SingleWeiboActivity extends FragmentActivity {
     private boolean isShowedReposts = false;
     private StatusesBean status = null;
     private ActionBar actionBar;
-    private String titleRepost;
-    private String titleComment;
-    private int repostsCount;
-    private int commentsCount;
+    private byte[] imgBytes;
     private String weiboID = null;
 
-    public void setSingleWeiboFragment() {
-        if (status != null) {
-            setSingleWeibo(false);
-        } else {
-            mSectionsPagerAdapter.getSingleWeiboFrag().setViewHide();
-            MyMaidActionHelper.statusesShow(weiboID, mHandler);
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putByteArray(Defines.PHOTO_BYTES, imgBytes);
+        outState.putParcelable(Defines.STATUS_BEAN, status);
+
+        Log.e(TAG, "save buddle");
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            Log.e(TAG, "load buddle");
+            imgBytes = savedInstanceState.getByteArray(Defines.PHOTO_BYTES);
+            status = savedInstanceState.getParcelable(Defines.STATUS_BEAN);
+            if (status != null)
+                Log.e(TAG, "status not null: " + status.getText());
         }
     }
 
@@ -74,76 +89,35 @@ public class SingleWeiboActivity extends FragmentActivity {
 
         setContentView(R.layout.act_singel_weibo);
 
+        Log.e(TAG, "ON CREATE");
+
+        initActionBar();
+        addPager();
+        addTabs();
+
         i = getIntent();
 
         if (i.getStringExtra(WEIBO_ID) != null) {
             weiboID = i.getStringExtra(WEIBO_ID);
-        } else {
+        } else if (i.getParcelableExtra(STATUS_BEAN) != null) {
+            Log.e(TAG, "get status from intent");
             status = i.getParcelableExtra(STATUS_BEAN);
             weiboID = status.getId();
         }
 
-        actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        // actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowHomeEnabled(false);
+        if (status == null)
+            MyMaidActionHelper.statusesShow(weiboID, mHandler);
 
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setOffscreenPageLimit(3);
-        mViewPager.setBackgroundResource(R.color.pinkMyMaid);
-
-        titleRepost = getResources().getString(R.string.title_frag_single_weibo_reposts).toUpperCase(Locale.US);
-        titleComment = getResources().getString(R.string.title_frag_single_weibo_comments).toUpperCase(Locale.US);
-
-        actionBar.addTab(actionBar.newTab()
-                .setText(titleRepost)
-                .setTabListener(tabListener));
-
-        actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.title_frag_single_weibo).toUpperCase(Locale.US))
-                .setTabListener(tabListener));
-
-        actionBar.addTab(actionBar.newTab()
-                .setText(titleComment)
-                .setTabListener(tabListener));
-
-        mSectionsPagerAdapter = new SingleWeiboPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        mViewPager
-                .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-                    @Override
-                    public void onPageSelected(int arg0) {
-                        actionBar.setSelectedNavigationItem(arg0);
-                        Log.e(TAG, "Page: " + String.valueOf(arg0));
-                        switch (arg0) {
-                            case SingleWeiboPagerAdapter.FRAG_SINGLEWEIBO_POS: {
-
-                                break;
-                            }
-                            case SingleWeiboPagerAdapter.FRAG_SINGLEWEIBOCOMMENTS_POS: {
-                                if (weiboID != null && !isShowedComments) {
-                                    mSectionsPagerAdapter.getSingleWeiboCommentsFrag().showComments(weiboID);
-                                    isShowedComments = true;
-                                }
-                                break;
-                            }
-                            case SingleWeiboPagerAdapter.FRAG_SINGLEWEIBOREPOSTS_POS: {
-                                if (status != null && !isShowedReposts) {
-                                    mSectionsPagerAdapter.getSingleWeiboRepostsFrag().showReposts(weiboID);
-                                    isShowedReposts = true;
-                                }
-                                break;
-                            }
-                        }
-                    }
-                });
-
-        mViewPager.setCurrentItem(SingleWeiboPagerAdapter.FRAG_SINGLEWEIBO_POS);
-
+        mViewPager.setCurrentItem(SingleWeiboPagerAdapter.FRAG_SINGLE_WEIBO_POS);
     }
 
+    @Override
+    public void fragmentReady() {
+        if (status != null)
+            mHandler.sendEmptyMessage(Defines.GOT_SET_SINGLE_WEIBO_INFO);
+        else
+            mSectionsPagerAdapter.getSingleWeiboFrag().setViewHide();
+    }
 
     private Handler mHandler = new Handler() {
         @SuppressWarnings("unchecked")
@@ -153,10 +127,20 @@ public class SingleWeiboActivity extends FragmentActivity {
                 case GOT_STATUSES_SHOW_INFO: {
                     status = (StatusesBean) msg.obj;
                     weiboID = status.getId();
-                    setSingleWeibo(true);
+                    mHandler.sendEmptyMessage(GOT_SET_SINGLE_WEIBO_INFO);
                     break;
                 }
+                case GOT_SET_SINGLE_WEIBO_INFO: {
 
+                    mSectionsPagerAdapter.getSingleWeiboFrag().setSingleWeibo(status);
+
+                    setCommentsCount(status.getCommentsCount());
+                    setRepostsCount(status.getCommentsCount());
+
+                    invalidateOptionsMenu();
+
+                    break;
+                }
                 case GOT_STATUSES_DESTROY_INFO: {
                     Intent ii = new Intent();
                     ii.putExtra(STATUS_BEAN_POSITION, i.getIntExtra(STATUS_BEAN_POSITION, -1));
@@ -196,7 +180,7 @@ public class SingleWeiboActivity extends FragmentActivity {
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
 
-        if(status != null) 
+        if (status != null)
             menu.add(0, MENU_FAVOURITE_CREATE, 0, R.string.menu_add_favourite)
                     .setIcon(R.drawable.rating_favorite)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -258,31 +242,15 @@ public class SingleWeiboActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setSingleWeibo(boolean withAnim) {
-
-        repostsCount = status.getRepostsCount();
-        commentsCount = status.getCommentsCount();
-
-        setCommentsCount(commentsCount);
-        setRepostsCount(repostsCount);
-
-        if (withAnim)
-            mSectionsPagerAdapter.getSingleWeiboFrag().setSingleWeiboWithAnim(status);
-        else
-            mSectionsPagerAdapter.getSingleWeiboFrag().setSingleWeibo(status);
-
-        invalidateOptionsMenu();
-    }
-
     private ActionBar.TabListener tabListener = new ActionBar.TabListener() {
 
         @Override
         public void onTabReselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
             switch (tab.getPosition()) {
-                case SingleWeiboPagerAdapter.FRAG_SINGLEWEIBOCOMMENTS_POS:
+                case SingleWeiboPagerAdapter.FRAG_SINGLE_WEIBO_COMMENTS_POS:
                     mSectionsPagerAdapter.getSingleWeiboCommentsFrag().showComments(weiboID);
                     break;
-                case SingleWeiboPagerAdapter.FRAG_SINGLEWEIBOREPOSTS_POS:
+                case SingleWeiboPagerAdapter.FRAG_SINGLE_WEIBO_REPOSTS_POS:
                     mSectionsPagerAdapter.getSingleWeiboRepostsFrag().showReposts(weiboID);
                     break;
             }
@@ -301,24 +269,88 @@ public class SingleWeiboActivity extends FragmentActivity {
     };
 
     public void setCommentsCount(int commentsCount) {
-        this.commentsCount = commentsCount;
-        checkPlural();
-        actionBar.getTabAt(SingleWeiboPagerAdapter.FRAG_SINGLEWEIBOCOMMENTS_POS).setText(this.commentsCount + " " + titleComment);
+        ActionBar.Tab tab = actionBar.getTabAt(SingleWeiboPagerAdapter.FRAG_SINGLE_WEIBO_COMMENTS_POS);
+        tab.setText(commentsCount + " " + checkPlural(getString(R.string.title_frag_single_weibo_comments), commentsCount));
     }
 
     public void setRepostsCount(int repostsCount) {
-        this.repostsCount = repostsCount;
-        checkPlural();
-        actionBar.getTabAt(SingleWeiboPagerAdapter.FRAG_SINGLEWEIBOREPOSTS_POS).setText(this.repostsCount + " " + titleRepost);
+        ActionBar.Tab tab = actionBar.getTabAt(SingleWeiboPagerAdapter.FRAG_SINGLE_WEIBO_REPOSTS_POS);
+        tab.setText(repostsCount + " " + checkPlural(getString(R.string.title_frag_single_weibo_reposts), repostsCount));
     }
 
-    private void checkPlural() {
+    private String checkPlural(String title, int count) {
         if (Locale.getDefault().getLanguage().equals("en")) {
-            if (repostsCount != 1 && !titleRepost.endsWith("S"))
-                titleRepost += "S";
-            if (commentsCount != 1 && !titleComment.endsWith("S"))
-                titleComment += "S";
+            if (count != 1 && !title.endsWith("S"))
+                title += "S";
         }
+        return title;
+    }
+
+    private void initActionBar() {
+        actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+    }
+
+    private void addPager() {
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setOffscreenPageLimit(3);
+        mSectionsPagerAdapter = new SingleWeiboPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter.getSingleWeiboFrag().setFragmentReadyListener(this);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        mViewPager
+                .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+                    @Override
+                    public void onPageSelected(int arg0) {
+                        actionBar.setSelectedNavigationItem(arg0);
+                        Log.e(TAG, "Page: " + String.valueOf(arg0));
+                        switch (arg0) {
+                            case SingleWeiboPagerAdapter.FRAG_SINGLE_WEIBO_POS: {
+
+                                break;
+                            }
+                            case SingleWeiboPagerAdapter.FRAG_SINGLE_WEIBO_COMMENTS_POS: {
+                                if (weiboID != null && !isShowedComments) {
+                                    mSectionsPagerAdapter.getSingleWeiboCommentsFrag().showComments(weiboID);
+                                    isShowedComments = true;
+                                }
+                                break;
+                            }
+                            case SingleWeiboPagerAdapter.FRAG_SINGLE_WEIBO_REPOSTS_POS: {
+                                if (status != null && !isShowedReposts) {
+                                    mSectionsPagerAdapter.getSingleWeiboRepostsFrag().showReposts(weiboID);
+                                    isShowedReposts = true;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void addTabs() {
+        actionBar.addTab(actionBar.newTab()
+                .setText(getString(R.string.title_frag_single_weibo_reposts).toUpperCase(Locale.US))
+                .setTabListener(tabListener));
+
+        actionBar.addTab(actionBar.newTab()
+                .setText(getString(R.string.title_frag_single_weibo).toUpperCase(Locale.US))
+                .setTabListener(tabListener));
+
+        actionBar.addTab(actionBar.newTab()
+                .setText(getString(R.string.title_frag_single_weibo_comments).toUpperCase(Locale.US))
+                .setTabListener(tabListener));
+    }
+
+    public void setImageBytes(byte[] bytes) {
+        imgBytes = bytes;
+        Log.e(TAG, "Set image bytes: " + String.valueOf(imgBytes.length));
+    }
+
+    public byte[] getImageBytes() {
+        return imgBytes;
     }
 
 }

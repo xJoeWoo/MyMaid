@@ -21,7 +21,7 @@ import com.joewoo.ontime.action.statuses.StatusesShow;
 import com.joewoo.ontime.action.statuses.StatusesUpdate;
 import com.joewoo.ontime.action.statuses.StatusesUpload;
 import com.joewoo.ontime.action.statuses.StatusesUserTimeLine;
-import com.joewoo.ontime.support.net.ImageNetworkListener;
+import com.joewoo.ontime.support.listener.MyMaidListeners;
 import com.joewoo.ontime.support.net.ProfileImage;
 
 /**
@@ -34,7 +34,7 @@ public class MyMaidActionHelper {
         return startThread(thread);
     }
 
-    public static Thread statusesUpload(String status, String filePath, ImageNetworkListener.UploadProgressListener listener, Handler handler) {
+    public static Thread statusesUpload(String status, String filePath, MyMaidListeners.UploadProgressListener listener, Handler handler) {
         Thread thread = new StatusesUpload(status, filePath, listener, handler);
         return startThread(thread);
     }
@@ -60,7 +60,7 @@ public class MyMaidActionHelper {
     }
 
     public static Thread statusUserTimeLine(String screenName, String maxID, Handler handler) {
-        Thread thread = new StatusesUserTimeLine(screenName, maxID ,handler);
+        Thread thread = new StatusesUserTimeLine(screenName, maxID, handler);
         return startThread(thread);
     }
 
@@ -158,7 +158,7 @@ public class MyMaidActionHelper {
         Thread thread = new SuggestionsAt(user, handler, act);
         return startThread(thread);
     }
-    
+
     private static Thread startThread(Thread thread) {
         thread.start();
         return thread;

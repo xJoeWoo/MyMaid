@@ -12,6 +12,7 @@ import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
 
+import java.io.ByteArrayInputStream;
 import java.util.HashSet;
 
 import static com.joewoo.ontime.support.info.Defines.TAG;
@@ -43,14 +44,16 @@ public class DownloadSinglePhotoInGridView extends AsyncTask<String, Integer, Bi
         Log.e(TAG, "Download Single Photo AsyncTask START");
         Log.e(TAG, "Pic URL - " + imageUrl);
 
-        if(!imageUrl.endsWith(".gif")){
-            byte[] bytes;
+        if (!imageUrl.endsWith(".gif")) {
+//            byte[] bytes;
 
             try {
 
-                bytes = new HttpUtility().executeDownloadImageTask(params[0], null);
+//                bytes = new HttpUtility().executeDownloadImageTask(params[0], null);
+//
+//                return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
-                return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                return BitmapFactory.decodeStream(new ByteArrayInputStream(new HttpUtility().executeDownloadImageTask(params[0], null)));
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -63,7 +66,7 @@ public class DownloadSinglePhotoInGridView extends AsyncTask<String, Integer, Bi
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
-        if(bitmap != null) {
+        if (bitmap != null) {
             iv.setImageBitmap(bitmap);
             iv.startAnimation(in);
         } else {

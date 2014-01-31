@@ -148,15 +148,15 @@
 
                 <ImageView
                     android:id="@+id/frag_single_weibo_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentBottom="true"
                     android:adjustViewBounds="true"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <com.joewoo.ontime.support.view.gridview.MuiltPhotosGirdView
                     android:layout_width="wrap_content"
@@ -171,12 +171,11 @@
                     android:columnWidth="90dp"
                     android:stretchMode="columnWidth"
                     android:choiceMode="singleChoice"
-                    android:gravity="center"/>
+                    android:gravity="center" />
 
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>
-
 
 
     <ProgressBar
@@ -188,7 +187,6 @@
         android:layout_centerHorizontal="true"
         android:visibility="gone"
         android:indeterminate="false" />
-
 
 
 </RelativeLayout>

@@ -2,8 +2,6 @@ package com.joewoo.ontime.ui.maintimeline;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
-import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -17,7 +15,6 @@ import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.adapter.pager.MainPagerAdapter;
 import com.joewoo.ontime.support.dialog.UserChooserDialog;
 import com.joewoo.ontime.support.util.GlobalContext;
-import com.joewoo.ontime.ui.Login;
 
 import java.util.Locale;
 
@@ -52,8 +49,6 @@ public class MainTimelineActivity extends FragmentActivity {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayShowHomeEnabled(false);
 
-            Log.e(TAG, "dimen: " + String.valueOf(getResources().getDimension(R.dimen.actionBarSizewithStatusBarSize)));
-
             mViewPager = (ViewPager) findViewById(R.id.pager);
             mViewPager.setOffscreenPageLimit(3);
 
@@ -74,7 +69,7 @@ public class MainTimelineActivity extends FragmentActivity {
                     .setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
                         @Override
                         public void onPageSelected(int arg0) {
-                            if(arg0 < mSectionsPagerAdapter.getCount() - 1)
+                            if (arg0 < mSectionsPagerAdapter.getCount() - 1)
                                 actionBar.setSelectedNavigationItem(arg0);
                             switch (arg0) {
                                 case MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS: {
@@ -110,7 +105,7 @@ public class MainTimelineActivity extends FragmentActivity {
             mViewPager.setCurrentItem(MainPagerAdapter.FRAG_FRIENDSTIMELINE_POS);
 
         } else {// 不存在用户信息
-            UserChooserDialog.show(this);
+            new UserChooserDialog().show(this);
         }
 
     }
@@ -118,7 +113,7 @@ public class MainTimelineActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         setActionBarVisible();
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
         super.onResume();
@@ -168,16 +163,10 @@ public class MainTimelineActivity extends FragmentActivity {
         return mPullToRefreshAttacher;
     }
 
-    private void jumpToLogin() {
-        startActivity(new Intent(MainTimelineActivity.this, Login.class));
-        finish();
-    }
-
     public void setActionBarLowProfile() {
         if (getActionBar().isShowing()) {
             getActionBar().hide();
-            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
-                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
 
         }
     }

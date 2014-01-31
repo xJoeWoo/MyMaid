@@ -1,5 +1,7 @@
 package com.joewoo.ontime.support.net;
 
+import com.joewoo.ontime.support.listener.MyMaidListeners;
+
 import java.util.Map;
 
 /**
@@ -15,11 +17,11 @@ public class HttpUtility {
         return new JavaHttpUtility().doPost(urlStr, param);
     }
 
-    public String executeUploadImageTask(String urlStr, Map<String, String> param, String path, ImageNetworkListener.UploadProgressListener listener) throws Exception {
+    public String executeUploadImageTask(String urlStr, Map<String, String> param, String path, MyMaidListeners.UploadProgressListener listener) throws Exception {
         return new JavaHttpUtility().doUploadFile(urlStr, param, path, listener);
     }
 
-    public byte[] executeDownloadImageTask(String urlStr, ImageNetworkListener.DownloadProgressListener listener) throws Exception {
+    public byte[] executeDownloadImageTask(String urlStr, MyMaidListeners.DownloadProgressListener listener) throws Exception {
         return new JavaHttpUtility().doDownloadImage(urlStr, listener);
     }
 
