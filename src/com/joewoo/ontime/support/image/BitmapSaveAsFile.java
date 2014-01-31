@@ -2,9 +2,11 @@ package com.joewoo.ontime.support.image;
 
 import android.graphics.Bitmap;
 
+import com.joewoo.ontime.support.util.GlobalContext;
+
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -16,12 +18,35 @@ public class BitmapSaveAsFile {
     public static final int SAVE_AS_JEPG = 2;
     public static final int SAVE_AS_WEBP = 3;
 
-    public static boolean save(Bitmap bitmap, int saveAsWhat, String filePath, String fileName) {
+    public static boolean saveToSD(Bitmap bitmap, int saveAsWhat, String filePath, String fileName) {
         return toSave(bitmap, saveAsWhat, 100, filePath, fileName);
     }
 
-    public static boolean save(Bitmap bitmap, int saveAsWhat, int quality, String filePath, String fileName) {
+    public static boolean saveToSD(Bitmap bitmap, int saveAsWhat, int quality, String filePath, String fileName) {
         return toSave(bitmap, saveAsWhat, quality, filePath, fileName);
+    }
+
+    public static File saveToData(byte[] bytes) {
+        BufferedOutputStream bos = null;
+        File cachePic = null;
+        try {
+            cachePic = new File(String.valueOf(GlobalContext.getAppContext().getCacheDir()), "cachePic.mymaid");
+            FileOutputStream fos = new FileOutputStream(cachePic);
+            bos = new BufferedOutputStream(fos);
+            bos.write(bytes);
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (bos != null) {
+                try {
+                    bos.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return cachePic;
     }
 
     private static boolean toSave(Bitmap bitmap, int saveAsWhat, int quality, String filePath, String fileName) {
@@ -31,7 +56,7 @@ public class BitmapSaveAsFile {
                 f.mkdirs();
 
             File nomedia = new File(filePath, ".nomedia");
-            if(!nomedia.exists())
+            if (!nomedia.exists())
                 nomedia.createNewFile();
             nomedia = null;
 

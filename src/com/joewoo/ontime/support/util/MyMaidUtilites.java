@@ -26,7 +26,7 @@ import static com.joewoo.ontime.support.info.Defines.TAG;
  */
 public class MyMaidUtilites {
 
-    public static void setBitmapToSingleWeibo(byte[] bytes, ImageView iv) {
+    public static void setBytesToImageView(byte[] bytes, ImageView iv) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeStream(new ByteArrayInputStream(bytes), null, options);

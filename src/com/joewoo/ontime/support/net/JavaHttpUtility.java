@@ -106,7 +106,6 @@ public class JavaHttpUtility {
         }
 
         return imgBytes;
-//        return in;
     }
 
     public String doUploadFile(String urlStr, Map<String, String> param, String path, final MyMaidListeners.UploadProgressListener listener) throws Exception {

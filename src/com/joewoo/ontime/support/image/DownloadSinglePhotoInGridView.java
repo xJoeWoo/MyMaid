@@ -38,29 +38,19 @@ public class DownloadSinglePhotoInGridView extends AsyncTask<String, Integer, Bi
 
     @Override
     protected Bitmap doInBackground(String... params) {
-
         String imageUrl = params[0];
 
         Log.e(TAG, "Download Single Photo AsyncTask START");
         Log.e(TAG, "Pic URL - " + imageUrl);
 
         if (!imageUrl.endsWith(".gif")) {
-//            byte[] bytes;
-
             try {
-
-//                bytes = new HttpUtility().executeDownloadImageTask(params[0], null);
-//
-//                return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
                 return BitmapFactory.decodeStream(new ByteArrayInputStream(new HttpUtility().executeDownloadImageTask(params[0], null)));
-
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
         }
-
         return null;
     }
 

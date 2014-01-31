@@ -146,6 +146,20 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin">
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:gravity="center"
+                    android:text="@string/frag_single_weibo_load_gif"
+                    android:textAppearance="@android:style/TextAppearance.Medium"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/grey"
+                    android:visibility="gone"
+                    android:id="@+id/tv_frag_single_weibo_load_gif" />
+
                 <ImageView
                     android:id="@+id/frag_single_weibo_image"
                     android:layout_width="match_parent"

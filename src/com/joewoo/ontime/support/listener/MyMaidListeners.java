@@ -5,10 +5,6 @@ package com.joewoo.ontime.support.listener;
  */
 public class MyMaidListeners {
 
-    public interface FragmentReadyListener {
-        public void fragmentReady();
-    }
-
     public interface UploadProgressListener {
         public void uploadProgress(int transferred, int contentLength);
 

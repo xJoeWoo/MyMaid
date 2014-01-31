@@ -47,10 +47,10 @@ public class SingleWeiboRepostsFragment extends Fragment {
     private List<StatusesBean> statuses;
     private boolean isFreshing;
 
-    public void showReposts(String weiboID){
+    public void showReposts() {
+        weiboID = act.getSingleWeiboFragment().getWeiboID();
         MyMaidActionHelper.statusesRepostTimeline(weiboID, mHandler);
         pb.setVisibility(View.VISIBLE);
-        this.weiboID = weiboID;
     }
 
     private Handler mHandler = new Handler() {
@@ -67,7 +67,7 @@ public class SingleWeiboRepostsFragment extends Fragment {
 
                     statuses = b.getReposts();
 
-                    if(statuses != null) {
+                    if (statuses != null) {
                         if (statuses.isEmpty()) {
                             tv.setVisibility(View.VISIBLE);
                             tv.setText(R.string.frag_single_weibo_no_reposts);
@@ -86,7 +86,7 @@ public class SingleWeiboRepostsFragment extends Fragment {
                     setListView(statuses);
                     break;
                 }
-                case GOT_REPOST_TIMELINE_INFO_FAIL:{
+                case GOT_REPOST_TIMELINE_INFO_FAIL: {
                     Toast.makeText(act, (String) msg.obj, Toast.LENGTH_SHORT).show();
                     break;
                 }
@@ -95,22 +95,22 @@ public class SingleWeiboRepostsFragment extends Fragment {
     };
 
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
-		View v = inflater.inflate(R.layout.frag_single_weibo_comments_reposts, container, false);
+        View v = inflater.inflate(R.layout.frag_single_weibo_comments_reposts, container, false);
 
-        lv = (ListView)v.findViewById(R.id.lv_single_weibo_comments);
-        pb = (ProgressBar)v.findViewById(R.id.pb_single_weibo_comments);
-        tv = (TextView)v.findViewById(R.id.tv_single_weibo_comments);
+        lv = (ListView) v.findViewById(R.id.lv_single_weibo_comments);
+        pb = (ProgressBar) v.findViewById(R.id.pb_single_weibo_comments);
+        tv = (TextView) v.findViewById(R.id.tv_single_weibo_comments);
 
         return v;
-	}
+    }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         act = (SingleWeiboActivity) getActivity();
 
@@ -157,11 +157,11 @@ public class SingleWeiboRepostsFragment extends Fragment {
         });
 
         adapter = new SingleWeiboMensAdapter(act);
-	}
+    }
 
     private void setListView(List<StatusesBean> statuses) {
         adapter.setData(statuses);
-        if(lv.getAdapter() == null)
+        if (lv.getAdapter() == null)
             lv.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }

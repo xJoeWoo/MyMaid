@@ -20,7 +20,7 @@ import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.action.auth.AccessToken;
 import com.joewoo.ontime.action.user.UserShow;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
-import com.joewoo.ontime.support.net.ProfileImage;
+import com.joewoo.ontime.support.image.LoginProfileImage;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.ui.maintimeline.MainTimelineActivity;
@@ -110,7 +110,7 @@ public class Login extends Activity {
                 case GOT_SHOW_INFO: {
                     WeiboBackBean show = (WeiboBackBean) msg.obj;
                     GlobalContext.setScreenName(show.getScreenName());
-                    new ProfileImage(show.getAvatarLarge(), mHandler)
+                    new LoginProfileImage(show.getAvatarLarge(), mHandler)
                             .start();
                     show = null;
                     break;
@@ -137,7 +137,6 @@ public class Login extends Activity {
                         }
 
 
-
                     } else {// 否则插入登录信息
 
                         cv.put(MyMaidSQLHelper.UID, GlobalContext.getUID());
@@ -152,7 +151,7 @@ public class Login extends Activity {
 
                     MyMaidSQLHelper.setLastLogin(GlobalContext.getUID());
 
-                    if(!getIntent().getBooleanExtra(LOGIN_FROM_POST, false))
+                    if (!getIntent().getBooleanExtra(LOGIN_FROM_POST, false))
                         startActivity(new Intent(Login.this, MainTimelineActivity.class));
                     else
                         startActivity(new Intent(Login.this, Post.class));

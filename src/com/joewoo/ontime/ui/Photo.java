@@ -5,36 +5,30 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.info.Defines;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 
 public class Photo extends Activity implements PhotoViewAttacher.OnMatrixChangedListener, PhotoViewAttacher.OnViewTapListener {
 
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == Defines.GOT_BITMAP_CREATED_INFO) {
-                setBitmap((Bitmap) msg.obj);
-                pb.setVisibility(View.GONE);
+    private GifImageView iv;
 
-            }
-        }
-    };
-    private ImageView iv;
-    private ProgressBar pb;
-
-    private PhotoViewAttacher photoViewAttacher;
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,37 +41,46 @@ public class Photo extends Activity implements PhotoViewAttacher.OnMatrixChanged
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         getActionBar().hide();
 
+        iv = (GifImageView) findViewById(R.id.iv_act_photo);
+        iv.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
-        iv = (ImageView) findViewById(R.id.iv_act_photo);
-        pb = (ProgressBar) findViewById(R.id.pb_act_photo);
-        iv.setVerticalScrollBarEnabled(true);
-        iv.setHorizontalScrollBarEnabled(true);
+        final File imgFile = (File) getIntent().getSerializableExtra(Defines.PHOTO_FILE);
+        final boolean isGIF = getIntent().getBooleanExtra(Defines.IS_GIF, false);
 
-        final byte[] imgBytes = getIntent().getByteArrayExtra(Defines.PHOTO_BYTES);
-
-        if (imgBytes != null) {
-
-            Log.e(Defines.TAG, String.valueOf(imgBytes.length));
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-//                    Bitmap bitmap1 = BitmapFactory.decodeStream(new ByteArrayInputStream(imgBytes));
-                    Bitmap bitmap1 = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length);
-                    handler.obtainMessage(Defines.GOT_BITMAP_CREATED_INFO, bitmap1).sendToTarget();
-                    bitmap1 = null;
+        if (imgFile != null) {
+            if (isGIF) {
+                setGIF(imgFile);
+            } else {
+                try {
+                    setBitmap(BitmapFactory.decodeStream(new FileInputStream(imgFile)));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            }).start();
-
-//            setBitmap(BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length));
-
+            }
         }
+
 
     }
 
     private void setBitmap(Bitmap bitmap) {
         iv.setImageBitmap(bitmap);
+        setAttach();
+    }
 
-        photoViewAttacher = new PhotoViewAttacher(iv);
+    private void setGIF(File file) {
+        try {
+            GifDrawable gifDrawable = new GifDrawable(file);
+            iv.setImageDrawable(gifDrawable);
+            gifDrawable.start();
+            setAttach();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setAttach() {
+        PhotoViewAttacher photoViewAttacher = new PhotoViewAttacher(iv);
         photoViewAttacher.setOnMatrixChangeListener(this);
         photoViewAttacher.setOnViewTapListener(this);
 
@@ -104,4 +107,5 @@ public class Photo extends Activity implements PhotoViewAttacher.OnMatrixChanged
     public void onViewTap(View view, float x, float y) {
         finish();
     }
+
 }

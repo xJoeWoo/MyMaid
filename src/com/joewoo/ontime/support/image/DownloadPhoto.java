@@ -15,7 +15,7 @@ import com.joewoo.ontime.support.listener.MyMaidListeners;
 import com.joewoo.ontime.support.net.HttpUtility;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.util.MyMaidUtilites;
-import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
+import com.joewoo.ontime.ui.singleweibo.SingleWeiboFragment;
 
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
@@ -24,17 +24,17 @@ public class DownloadPhoto extends AsyncTask<String, Integer, byte[]> implements
     private ImageView iv;
     private TextView tv;
     private boolean isRepost = false;
-    private SingleWeiboActivity act;
+    private SingleWeiboFragment frag;
     private Animation in;
     private Animation out;
     private float width;
     private ViewGroup.LayoutParams lp;
 
-    public DownloadPhoto(ImageView iv, TextView tv, boolean isRepost, SingleWeiboActivity act) {
+    public DownloadPhoto(ImageView iv, TextView tv, boolean isRepost, SingleWeiboFragment frag) {
         this.iv = iv;
         this.tv = tv;
         this.isRepost = isRepost;
-        this.act = act;
+        this.frag = frag;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class DownloadPhoto extends AsyncTask<String, Integer, byte[]> implements
 
         if (tv != null) {
             DisplayMetrics dm = new DisplayMetrics();
-            act.getWindowManager().getDefaultDisplay().getMetrics(dm);
+            frag.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
             width = ((dm.widthPixels * dm.density) - 32) / 100;
             tv.setVisibility(View.VISIBLE);
             lp = tv.getLayoutParams();
@@ -89,10 +89,8 @@ public class DownloadPhoto extends AsyncTask<String, Integer, byte[]> implements
         iv.setVisibility(View.VISIBLE);
 
         if (bytes != null) {
-            MyMaidUtilites.setBitmapToSingleWeibo(bytes, iv);
-            act.setImageBytes(bytes);
-
-
+            MyMaidUtilites.setBytesToImageView(bytes, iv);
+            frag.setImageFile(BitmapSaveAsFile.saveToData(bytes));
         } else {
             lp.width = 10000;
             tv.setLayoutParams(lp);

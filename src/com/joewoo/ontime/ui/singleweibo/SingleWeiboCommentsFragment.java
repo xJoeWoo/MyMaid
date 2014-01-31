@@ -48,10 +48,10 @@ public class SingleWeiboCommentsFragment extends Fragment {
     private SingleWeiboCmtsAdapter adapter;
     private boolean isFreshing;
 
-    public void showComments(String weiboID) {
+    public void showComments() {
+        weiboID = act.getSingleWeiboFragment().getWeiboID();
         MyMaidActionHelper.commentsShow(weiboID, mHandler);
         pb.setVisibility(View.VISIBLE);
-        this.weiboID = weiboID;
     }
 
     @Override
@@ -136,7 +136,7 @@ public class SingleWeiboCommentsFragment extends Fragment {
 
                     comments = b.getComments();
 
-                    if(comments != null) {
+                    if (comments != null) {
                         if (comments.isEmpty()) {
                             tv.setVisibility(View.VISIBLE);
                             tv.setText(R.string.frag_single_weibo_no_comments);

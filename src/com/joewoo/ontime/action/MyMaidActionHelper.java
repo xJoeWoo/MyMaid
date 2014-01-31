@@ -21,8 +21,8 @@ import com.joewoo.ontime.action.statuses.StatusesShow;
 import com.joewoo.ontime.action.statuses.StatusesUpdate;
 import com.joewoo.ontime.action.statuses.StatusesUpload;
 import com.joewoo.ontime.action.statuses.StatusesUserTimeLine;
+import com.joewoo.ontime.support.image.LoginProfileImage;
 import com.joewoo.ontime.support.listener.MyMaidListeners;
-import com.joewoo.ontime.support.net.ProfileImage;
 
 /**
  * Created by JoeWoo on 14-1-8.
@@ -65,7 +65,7 @@ public class MyMaidActionHelper {
     }
 
     public static Thread profileImage(String url, Handler handler) {
-        Thread thread = new ProfileImage(url, handler);
+        Thread thread = new LoginProfileImage(url, handler);
         return startThread(thread);
     }
 

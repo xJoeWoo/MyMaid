@@ -1,4 +1,4 @@
-package com.joewoo.ontime.support.net;
+package com.joewoo.ontime.support.image;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.util.Log;
 
-import com.joewoo.ontime.support.image.BitmapRoundCorner;
+import com.joewoo.ontime.support.net.HttpUtility;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,12 +14,12 @@ import java.io.ByteArrayOutputStream;
 import static com.joewoo.ontime.support.info.Defines.GOT_PROFILEIMG_INFO;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
-public class ProfileImage extends Thread {
+public class LoginProfileImage extends Thread {
 
     private String url;
     private Handler mHandler;
 
-    public ProfileImage(String url, Handler handler) {
+    public LoginProfileImage(String url, Handler handler) {
 
         this.url = url;
         this.mHandler = handler;
@@ -29,8 +29,6 @@ public class ProfileImage extends Thread {
         Log.e(TAG, "Profile Image Thread START");
 
         try {
-//            byte[] bytes = new HttpUtility().executeDownloadImageTask(url, null);
-
             Bitmap bm = BitmapRoundCorner.toRoundCorner(BitmapFactory.decodeStream(new ByteArrayInputStream(new HttpUtility().executeDownloadImageTask(url, null))), 90);
 
             Log.e(TAG, "GOT: Profile Image");

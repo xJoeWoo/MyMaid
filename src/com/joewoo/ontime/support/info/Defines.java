@@ -14,7 +14,8 @@ public class Defines {
     public final static String STATUS_BEAN = "status_bean";
     public final static String USER_BEAN = "user_bean";
     public final static String STATUS_BEAN_POSITION = "bean_position";
-    public final static String PHOTO_BYTES = "photo_bytes";
+    public final static String PHOTO_FILE = "photo_file";
+    public final static String IS_GIF = "is_gif";
 
     public final static String TEMP_IMAGE_NAME = "tmp.png";
     public final static String TEMP_IMAGE_PATH = Environment.getExternalStorageDirectory() + "/Android/data/com.joewoo.ontime/";
@@ -73,6 +74,7 @@ public class Defines {
     public final static int GOT_REPOST_TIMELINE_ADD_INFO = 52;
     public final static int GOT_BITMAP_CREATED_INFO = 53;
     public final static int GOT_SET_SINGLE_WEIBO_INFO = 54;
+    public final static int GOT_GIF_CREATED_INFO = 55;
 
 
     public final static int ACT_GOT_PHOTO = 1;

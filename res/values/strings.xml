@@ -7,7 +7,7 @@
     <string name="action_search">Search friends</string>
 
     <string name="et_post_hint">Tell her your Mind…</string>
-	
+
     <string name="title_frag_friends_timeline">Timeline</string>
     <string name="title_frag_atme">Mention</string>
     <string name="title_frag_comments_to_me">Comment</string>
@@ -28,79 +28,74 @@
 
 
     <string name="toast_press_again_to_clear_text">Press again to clear text</string>
-	<string name="toast_press_again_to_clear_img">Press again to clear image</string>
-	<string name="toast_press_again_to_delete_statuse">Press again to delete weibo</string>
-	<string name="toast_say_sth">Say something :)</string>
-	<string name="toast_comment_success">Commented</string>
-	<string name="toast_comment_fail">Comment failed…</string>
-	<string name="toast_repost_success">Reposted</string>
-	<string name="toast_repost_fail">Repost failed…</string>
-	<string name="toast_reply_success">Replied</string>
-	<string name="toast_reply_fail">Reply failed…</string>
-	<string name="toast_add_favourite_success">Favourited</string>
-	<string name="toast_add_favourite_fail">Fav failed…</string>
-	<string name="toast_delete_success">Deleted</string>
-	<string name="toast_delete_fail">Delete failed…</string>
-	<string name="toast_clear_draft_success">Cleared draft</string>
-	<string name="toast_access_token_fail">Authorize failed…</string>
-	<string name="toast_post_welcome_part_1">Welcome&#160;</string>
-	<string name="toast_post_welcome_part_2">&#160;user&#160;</string>
-	<string name="toast_login_acquired">Please login~</string>
-	<string name="toast_no_network">Where\'s the net…?</string>
-	<string name="toast_no_network_to_at">Maid need net…</string>
-	<string name="toast_user_timeline_fail">Acquire timeline failed…</string>
-	<string name="toast_unread_count_fail">Unread count failed…</string>
-	<string name="toast_clear_unread_count_fail">Clear unread count failed…</string>
-	<string name="toast_comments_fail">Acquire comments failed…</string>
-	<string name="toast_mentions_fail">Acquire mentions failed…</string>
+    <string name="toast_press_again_to_clear_img">Press again to clear image</string>
+    <string name="toast_press_again_to_delete_statuse">Press again to delete weibo</string>
+    <string name="toast_say_sth">Say something :)</string>
+    <string name="toast_comment_success">Commented</string>
+    <string name="toast_comment_fail">Comment failed…</string>
+    <string name="toast_repost_success">Reposted</string>
+    <string name="toast_repost_fail">Repost failed…</string>
+    <string name="toast_reply_success">Replied</string>
+    <string name="toast_reply_fail">Reply failed…</string>
+    <string name="toast_add_favourite_success">Favourited</string>
+    <string name="toast_add_favourite_fail">Fav failed…</string>
+    <string name="toast_delete_success">Deleted</string>
+    <string name="toast_delete_fail">Delete failed…</string>
+    <string name="toast_clear_draft_success">Cleared draft</string>
+    <string name="toast_access_token_fail">Authorize failed…</string>
+    <string name="toast_post_welcome_part_1">Welcome&#160;</string>
+    <string name="toast_post_welcome_part_2">&#160;user&#160;</string>
+    <string name="toast_login_acquired">Please login~</string>
+    <string name="toast_no_network">Where\'s the net…?</string>
+    <string name="toast_no_network_to_at">Maid need net…</string>
+    <string name="toast_user_timeline_fail">Acquire timeline failed…</string>
+    <string name="toast_unread_count_fail">Unread count failed…</string>
+    <string name="toast_clear_unread_count_fail">Clear unread count failed…</string>
+    <string name="toast_comments_fail">Acquire comments failed…</string>
+    <string name="toast_mentions_fail">Acquire mentions failed…</string>
     <string name="toast_repost_timeline_fail">Acquire reposts failed…</string>
     <string name="toast_coming_soon">Coming soon…</string>
     <string name="toast_statuses_show_fail">Acquire post failed…</string>
 
-	
-	<string name="menu_repost">REPOST</string>
-	<string name="menu_reply">REPLY</string>
-	<string name="menu_comment">COMMENT</string>
-	<string name="menu_at">AT</string>
-	<string name="menu_emotion">EMOTION</string>
-	<string name="menu_topic">#TOPIC#</string>
-	<string name="menu_image_add">IMAGE</string>
-	<string name="menu_image_clear">CLEAR IMAGE</string>
-	<string name="menu_post">POST NOW!</string>
-	<string name="menu_draft_clear">CLEAR DRAFT</string>
-	<string name="menu_fan_xxx">FANED&#160;</string>
-	<string name="menu_xxx_fans">&#160;FANS</string>
-	<string name="menu_xxx_statuses">&#160;POSTS</string>
-	<string name="menu_delete">DELETE</string>
-	<string name="menu_add_favourite">FAVOURITE</string>
+
+    <string name="menu_repost">REPOST</string>
+    <string name="menu_reply">REPLY</string>
+    <string name="menu_comment">COMMENT</string>
+    <string name="menu_at">AT</string>
+    <string name="menu_emotion">EMOTION</string>
+    <string name="menu_topic">#TOPIC#</string>
+    <string name="menu_image_add">IMAGE</string>
+    <string name="menu_image_clear">CLEAR IMAGE</string>
+    <string name="menu_post">POST NOW!</string>
+    <string name="menu_draft_clear">CLEAR DRAFT</string>
+    <string name="menu_fan_xxx">FANED&#160;</string>
+    <string name="menu_xxx_fans">&#160;FANS</string>
+    <string name="menu_xxx_statuses">&#160;POSTS</string>
+    <string name="menu_delete">DELETE</string>
+    <string name="menu_add_favourite">FAVOURITE</string>
     <string name="menu_delete_favourite">DELETE FAVOURITE</string>
-	<string name="menu_unread">UNREAD COUNT</string>
-	<string name="menu_coming">COMING SOON…</string>
-	<string name="menu_user_statuses">ACCOUNTS</string>
+    <string name="menu_unread">UNREAD COUNT</string>
+    <string name="menu_coming">COMING SOON…</string>
+    <string name="menu_user_statuses">ACCOUNTS</string>
     <string name="menu_unread_post_mentions">POSTS @&#160;</string>
     <string name="menu_unread_comments_mentions">\t\tCMTS @&#160;</string>
     <string name="menu_unread_comments">COMMENTS&#160;</string>
     <string name="menu_copy_text">COPY</string>
 
-	<string name="post_send_success_part_1">SUCCESS!\nPost at -&#160;</string>
-	<string name="post_send_success_part_2">\nID -&#160;</string>
-	<string name="post_send_success_part_3">\n&gt; CLICK HERE TO CHECK THIS WEIBO &lt;</string>
-	<string name="post_send_success_part_img">\nPic -&#160;</string>
+    <string name="post_send_success_part_1">SUCCESS!\nPost at -&#160;</string>
+    <string name="post_send_success_part_2">\nID -&#160;</string>
+    <string name="post_send_success_part_3">\n&gt; CLICK HERE TO CHECK THIS WEIBO &lt;</string>
+    <string name="post_send_success_part_img">\nPic -&#160;</string>
 
 
-
-
-	
-	<string name="frag_ftl_dialog_choose_account_add_account">ADD</string>
-	<string name="frag_ftl_dialog_choose_account_logout">LOGOUT</string>
-	<string name="frag_ftl_dialog_choose_account_title">Accounts</string>
+    <string name="frag_ftl_dialog_choose_account_add_account">ADD</string>
+    <string name="frag_ftl_dialog_choose_account_logout">LOGOUT</string>
+    <string name="frag_ftl_dialog_choose_account_title">Accounts</string>
     <string name="user_chooser_dialog_choosed">That\'s it （¯﹃¯）</string>
 
-	<string name="frag_ftl_dialog_confirm_logout_title">Logout?</string>
-	<string name="frag_ftl_dialog_confirm_logout_btn_ok">Yep</string>
-	<string name="frag_ftl_dialog_confirm_logout_btn_cancle">Nope</string>
-
-
+    <string name="frag_ftl_dialog_confirm_logout_title">Logout?</string>
+    <string name="frag_ftl_dialog_confirm_logout_btn_ok">Yep</string>
+    <string name="frag_ftl_dialog_confirm_logout_btn_cancle">Nope</string>
 
 
     <string name="frag_ftl_dialog_groups_title">Groups</string>
@@ -109,6 +104,7 @@
 
     <string name="frag_single_weibo_no_comments">YEP… You\'ll be the FIRST Cuckoo Bird!</string>
     <string name="frag_single_weibo_no_reposts">Ah… Why not retweet it?</string>
+    <string name="frag_single_weibo_load_gif">Hit to load GIF</string>
 
     <string name="frag_mentions_dialog_title">Mentions</string>
     <string name="frag_mentions_dialog_normal_mention">Posts Mentions</string>
@@ -116,9 +112,9 @@
 
     <string name="comment_repost_repost">Repost</string>
 
-	<string name="error_token_out_of_date">Your authorize was out of date</string>
-	<!--<string name="error_repeat_content">ERROR!\nRepeat content\nError -&#160;</string>-->
-	<string name="error_out_of_max_text_count">ERROR!\nText overflown!~\nError -&#160;</string>
+    <string name="error_token_out_of_date">Your authorize was out of date</string>
+    <!--<string name="error_repeat_content">ERROR!\nRepeat content\nError -&#160;</string>-->
+    <string name="error_out_of_max_text_count">ERROR!\nText overflown!~\nError -&#160;</string>
 
     <string name="error_token_problem">Token expired</string>
     <string name="error_auth_fail">Auth faild</string>
@@ -179,9 +175,9 @@
     <string name="setting_other_check_update_key">Acquire Counts</string>
 
 
-	<!-- <string name=""></string>
-	<string name=""></string>
-	<string name=""></string> -->
-    
+    <!-- <string name=""></string>
+    <string name=""></string>
+    <string name=""></string> -->
+
 
 </resources>

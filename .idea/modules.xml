@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/libs/GIFDrawable/library/GIFDrawable.iml" filepath="$PROJECT_DIR$/libs/GIFDrawable/library/GIFDrawable.iml" />
       <module fileurl="file://$PROJECT_DIR$/MyMaid.iml" filepath="$PROJECT_DIR$/MyMaid.iml" />
       <module fileurl="file://$PROJECT_DIR$/libs/PhotoView/library/PhotoView.iml" filepath="$PROJECT_DIR$/libs/PhotoView/library/PhotoView.iml" />
       <module fileurl="file://$PROJECT_DIR$/libs/ActionBar-PullToRefresh/library/PullToRefresh.iml" filepath="$PROJECT_DIR$/libs/ActionBar-PullToRefresh/library/PullToRefresh.iml" />

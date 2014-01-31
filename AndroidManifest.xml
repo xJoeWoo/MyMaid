@@ -58,8 +58,7 @@
         <activity
             android:name=".ui.Photo"
             android:label="Photo"
-            android:theme="@style/Theme.Transparent.Activity.Mymaid"
-            android:hardwareAccelerated="false" />
+            android:theme="@style/Theme.Transparent.Activity.Mymaid" />
 
         <activity
             android:name=".ui.Post"
@@ -80,8 +79,7 @@
         <activity
             android:label="@string/title_act_single_weibo"
             android:name=".ui.singleweibo.SingleWeiboActivity"
-            android:uiOptions="splitActionBarWhenNarrow"
-            android:hardwareAccelerated="false" />
+            android:uiOptions="splitActionBarWhenNarrow" />
 
         <service
             android:name=".support.service.UpdateService"

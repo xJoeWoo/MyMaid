@@ -15,9 +15,6 @@ import android.widget.Toast;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.support.adapter.pager.SingleWeiboPagerAdapter;
-import com.joewoo.ontime.support.bean.StatusesBean;
-import com.joewoo.ontime.support.info.Defines;
-import com.joewoo.ontime.support.listener.MyMaidListeners;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.ui.CommentRepost;
 
@@ -25,10 +22,8 @@ import java.util.Locale;
 
 import static com.joewoo.ontime.support.info.Defines.GOT_FAVOURITE_CREATE_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_FAVOURITE_CREATE_INFO_FAIL;
-import static com.joewoo.ontime.support.info.Defines.GOT_SET_SINGLE_WEIBO_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_STATUSES_DESTROY_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_STATUSES_DESTROY_INFO_FAIL;
-import static com.joewoo.ontime.support.info.Defines.GOT_STATUSES_SHOW_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_STATUSES_SHOW_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.IS_COMMENT;
 import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
@@ -37,7 +32,6 @@ import static com.joewoo.ontime.support.info.Defines.MENU_FAVOURITE_CREATE;
 import static com.joewoo.ontime.support.info.Defines.MENU_REPOST;
 import static com.joewoo.ontime.support.info.Defines.MENU_STATUSES_DESTROY;
 import static com.joewoo.ontime.support.info.Defines.STATUS;
-import static com.joewoo.ontime.support.info.Defines.STATUS_BEAN;
 import static com.joewoo.ontime.support.info.Defines.STATUS_BEAN_POSITION;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
@@ -46,42 +40,16 @@ import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 /**
  * Created by JoeWoo on 13-10-13.
  */
-public class SingleWeiboActivity extends FragmentActivity implements MyMaidListeners.FragmentReadyListener {
+public class SingleWeiboActivity extends FragmentActivity {
 
 
     private SingleWeiboPagerAdapter mSectionsPagerAdapter;
+    private SingleWeiboFragment singleWeiboFragment;
     private ViewPager mViewPager;
-    private Intent i;
     private long downTime;
     private boolean isShowedComments = false;
     private boolean isShowedReposts = false;
-    private StatusesBean status = null;
     private ActionBar actionBar;
-    private byte[] imgBytes;
-    private String weiboID = null;
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putByteArray(Defines.PHOTO_BYTES, imgBytes);
-        outState.putParcelable(Defines.STATUS_BEAN, status);
-
-        Log.e(TAG, "save buddle");
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            Log.e(TAG, "load buddle");
-            imgBytes = savedInstanceState.getByteArray(Defines.PHOTO_BYTES);
-            status = savedInstanceState.getParcelable(Defines.STATUS_BEAN);
-            if (status != null)
-                Log.e(TAG, "status not null: " + status.getText());
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,56 +63,19 @@ public class SingleWeiboActivity extends FragmentActivity implements MyMaidListe
         addPager();
         addTabs();
 
-        i = getIntent();
-
-        if (i.getStringExtra(WEIBO_ID) != null) {
-            weiboID = i.getStringExtra(WEIBO_ID);
-        } else if (i.getParcelableExtra(STATUS_BEAN) != null) {
-            Log.e(TAG, "get status from intent");
-            status = i.getParcelableExtra(STATUS_BEAN);
-            weiboID = status.getId();
-        }
-
-        if (status == null)
-            MyMaidActionHelper.statusesShow(weiboID, mHandler);
-
         mViewPager.setCurrentItem(SingleWeiboPagerAdapter.FRAG_SINGLE_WEIBO_POS);
     }
 
-    @Override
-    public void fragmentReady() {
-        if (status != null)
-            mHandler.sendEmptyMessage(Defines.GOT_SET_SINGLE_WEIBO_INFO);
-        else
-            mSectionsPagerAdapter.getSingleWeiboFrag().setViewHide();
-    }
-
     private Handler mHandler = new Handler() {
-        @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case GOT_STATUSES_SHOW_INFO: {
-                    status = (StatusesBean) msg.obj;
-                    weiboID = status.getId();
-                    mHandler.sendEmptyMessage(GOT_SET_SINGLE_WEIBO_INFO);
-                    break;
-                }
-                case GOT_SET_SINGLE_WEIBO_INFO: {
-
-                    mSectionsPagerAdapter.getSingleWeiboFrag().setSingleWeibo(status);
-
-                    setCommentsCount(status.getCommentsCount());
-                    setRepostsCount(status.getCommentsCount());
-
-                    invalidateOptionsMenu();
-
-                    break;
-                }
                 case GOT_STATUSES_DESTROY_INFO: {
                     Intent ii = new Intent();
-                    ii.putExtra(STATUS_BEAN_POSITION, i.getIntExtra(STATUS_BEAN_POSITION, -1));
+                    ii.putExtra(STATUS_BEAN_POSITION, getIntent().getIntExtra(STATUS_BEAN_POSITION, -1));
                     setResult(RESULT_OK, ii);
+                    finish();
+                    break;
                 }
                 case GOT_FAVOURITE_CREATE_INFO: {
                     Toast.makeText(SingleWeiboActivity.this,
@@ -174,13 +105,13 @@ public class SingleWeiboActivity extends FragmentActivity implements MyMaidListe
 
         menu.clear();
 
-        if (status != null && status.getUser().getScreenName() != null && status.getUser().getScreenName().equals(GlobalContext.getScreenName())) {
+        if (singleWeiboFragment.getStatus() != null && singleWeiboFragment.getStatus().getUser().getScreenName() != null && singleWeiboFragment.getStatus().getUser().getScreenName().equals(GlobalContext.getScreenName())) {
             menu.add(0, MENU_STATUSES_DESTROY, 0, R.string.menu_delete)
                     .setIcon(R.drawable.content_discard)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
 
-        if (status != null)
+        if (singleWeiboFragment.getWeiboID() != null)
             menu.add(0, MENU_FAVOURITE_CREATE, 0, R.string.menu_add_favourite)
                     .setIcon(R.drawable.rating_favorite)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -206,11 +137,11 @@ public class SingleWeiboActivity extends FragmentActivity implements MyMaidListe
             case MENU_REPOST: {
                 Intent ii = new Intent();
                 ii.setClass(SingleWeiboActivity.this, CommentRepost.class);
-                if (status.getRetweetedStatus() != null)
-                    ii.putExtra(STATUS, "//@" + status.getUser().getScreenName() + ":"
-                            + status.getText());
+                if (singleWeiboFragment.getStatus().getRetweetedStatus() != null)
+                    ii.putExtra(STATUS, "//@" + singleWeiboFragment.getStatus().getUser().getScreenName() + ":"
+                            + singleWeiboFragment.getStatus().getText());
                 ii.putExtra(IS_REPOST, true);
-                ii.putExtra(WEIBO_ID, status.getId());
+                ii.putExtra(WEIBO_ID, singleWeiboFragment.getStatus().getId());
                 startActivity(ii);
                 break;
             }
@@ -218,12 +149,12 @@ public class SingleWeiboActivity extends FragmentActivity implements MyMaidListe
                 Intent ii = new Intent();
                 ii.setClass(SingleWeiboActivity.this, CommentRepost.class);
                 ii.putExtra(IS_COMMENT, true);
-                ii.putExtra(WEIBO_ID, status.getId());
+                ii.putExtra(WEIBO_ID, singleWeiboFragment.getStatus().getId());
                 startActivity(ii);
                 break;
             }
             case MENU_FAVOURITE_CREATE: {
-                MyMaidActionHelper.favouriteCreate(status.getId(), mHandler);
+                MyMaidActionHelper.favouriteCreate(singleWeiboFragment.getStatus().getId(), mHandler);
                 break;
             }
             case MENU_STATUSES_DESTROY: {
@@ -233,7 +164,7 @@ public class SingleWeiboActivity extends FragmentActivity implements MyMaidListe
                             Toast.LENGTH_SHORT).show();
                     downTime = System.currentTimeMillis();
                 } else {
-                    MyMaidActionHelper.statusesDestroy(status.getId(), mHandler);
+                    MyMaidActionHelper.statusesDestroy(singleWeiboFragment.getStatus().getId(), mHandler);
                 }
 
                 break;
@@ -248,10 +179,10 @@ public class SingleWeiboActivity extends FragmentActivity implements MyMaidListe
         public void onTabReselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
             switch (tab.getPosition()) {
                 case SingleWeiboPagerAdapter.FRAG_SINGLE_WEIBO_COMMENTS_POS:
-                    mSectionsPagerAdapter.getSingleWeiboCommentsFrag().showComments(weiboID);
+                    mSectionsPagerAdapter.getSingleWeiboCommentsFrag().showComments();
                     break;
                 case SingleWeiboPagerAdapter.FRAG_SINGLE_WEIBO_REPOSTS_POS:
-                    mSectionsPagerAdapter.getSingleWeiboRepostsFrag().showReposts(weiboID);
+                    mSectionsPagerAdapter.getSingleWeiboRepostsFrag().showReposts();
                     break;
             }
 
@@ -297,7 +228,7 @@ public class SingleWeiboActivity extends FragmentActivity implements MyMaidListe
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setOffscreenPageLimit(3);
         mSectionsPagerAdapter = new SingleWeiboPagerAdapter(getSupportFragmentManager());
-        mSectionsPagerAdapter.getSingleWeiboFrag().setFragmentReadyListener(this);
+        singleWeiboFragment = mSectionsPagerAdapter.getSingleWeiboFrag();
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         mViewPager
@@ -312,15 +243,15 @@ public class SingleWeiboActivity extends FragmentActivity implements MyMaidListe
                                 break;
                             }
                             case SingleWeiboPagerAdapter.FRAG_SINGLE_WEIBO_COMMENTS_POS: {
-                                if (weiboID != null && !isShowedComments) {
-                                    mSectionsPagerAdapter.getSingleWeiboCommentsFrag().showComments(weiboID);
+                                if (singleWeiboFragment.getWeiboID() != null && !isShowedComments) {
+                                    mSectionsPagerAdapter.getSingleWeiboCommentsFrag().showComments();
                                     isShowedComments = true;
                                 }
                                 break;
                             }
                             case SingleWeiboPagerAdapter.FRAG_SINGLE_WEIBO_REPOSTS_POS: {
-                                if (status != null && !isShowedReposts) {
-                                    mSectionsPagerAdapter.getSingleWeiboRepostsFrag().showReposts(weiboID);
+                                if (singleWeiboFragment.getWeiboID() != null && !isShowedReposts) {
+                                    mSectionsPagerAdapter.getSingleWeiboRepostsFrag().showReposts();
                                     isShowedReposts = true;
                                 }
                                 break;
@@ -328,6 +259,8 @@ public class SingleWeiboActivity extends FragmentActivity implements MyMaidListe
                         }
                     }
                 });
+
+
     }
 
     private void addTabs() {
@@ -344,13 +277,11 @@ public class SingleWeiboActivity extends FragmentActivity implements MyMaidListe
                 .setTabListener(tabListener));
     }
 
-    public void setImageBytes(byte[] bytes) {
-        imgBytes = bytes;
-        Log.e(TAG, "Set image bytes: " + String.valueOf(imgBytes.length));
+    public Intent getActIntent() {
+        return getIntent();
     }
 
-    public byte[] getImageBytes() {
-        return imgBytes;
+    public SingleWeiboFragment getSingleWeiboFragment() {
+        return singleWeiboFragment;
     }
-
 }
