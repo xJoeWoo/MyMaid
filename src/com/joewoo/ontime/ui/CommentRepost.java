@@ -1,6 +1,5 @@
 package com.joewoo.ontime.ui;
 
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -17,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.joewoo.ontime.R;
+import com.joewoo.ontime.support.notification.MyMaidNotificationHelper;
 import com.joewoo.ontime.support.service.MyMaidServiceHelper;
 
 import static com.joewoo.ontime.support.info.Defines.ACT_GOT_AT;
@@ -70,6 +70,7 @@ public class CommentRepost extends Activity {
         isRepost = i.getBooleanExtra(IS_REPOST, false);
 
         if (isRepost) {
+            MyMaidNotificationHelper.cancel(MyMaidNotificationHelper.REPOST);
             actionBar.setTitle(R.string.title_act_repost);
             if (i.getStringExtra(STATUS) != null) {
                 String status = i.getStringExtra(STATUS);
@@ -78,6 +79,7 @@ public class CommentRepost extends Activity {
             }
             et.setHint(R.string.comment_repost_repost);
         } else if (isReply) {
+            MyMaidNotificationHelper.cancel(MyMaidNotificationHelper.REPLY);
             if (i.getStringExtra(COMMENT) != null) {
                 String comment = i.getStringExtra(COMMENT);
                 et.setText(comment);
@@ -86,7 +88,8 @@ public class CommentRepost extends Activity {
             actionBar.setTitle(R.string.title_act_reply);
             commentID = i.getStringExtra(COMMENT_ID);
         } else if (isComment) {
-            if(i.getStringExtra(COMMENT) != null) {
+            MyMaidNotificationHelper.cancel(MyMaidNotificationHelper.COMMENT_CREATE);
+            if (i.getStringExtra(COMMENT) != null) {
                 String comment = i.getStringExtra(COMMENT);
                 et.setText(comment);
                 et.setSelection(comment.length());
@@ -140,8 +143,8 @@ public class CommentRepost extends Activity {
 //        menu.add(0, MENU_TOPIC, 0, R.string.menu_topic);
 
         menu.add(0, MENU_POST, 0, R.string.menu_post)
-                    .setIcon(R.drawable.social_send_now)
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setIcon(R.drawable.social_send_now)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         return true;
     }
@@ -167,7 +170,7 @@ public class CommentRepost extends Activity {
 
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
-                
+
                 if (et.getText() != null && !et.getText().toString().equals("")) {
 
                     if (isComment)
@@ -178,7 +181,7 @@ public class CommentRepost extends Activity {
                         MyMaidServiceHelper.reply(et.getText().toString(), weiboID, commentID);
 
                     finish();
-                } else if(isRepost) {
+                } else if (isRepost) {
 
                     MyMaidServiceHelper.repost(getString(R.string.comment_repost_repost), weiboID);
 

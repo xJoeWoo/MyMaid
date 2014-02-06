@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 
-import com.joewoo.ontime.support.setting.MyMaidSettingHelper;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 
 import static com.joewoo.ontime.support.info.Defines.TAG;
@@ -58,8 +57,6 @@ public class GlobalContext extends Application {
         } else {
             Log.e(TAG, "No Last Login User Info");
         }
-
-        MyMaidSettingHelper.load();
     }
 
     public static SQLiteDatabase getSQL() {
@@ -150,11 +147,6 @@ public class GlobalContext extends Application {
         setAccessToken(null);
         setScreenName(null);
         setProfileImg(null);
-    }
-
-    public static void clearDraft() {
-        setDraft(null);
-        setPicPath(null);
     }
 
 }

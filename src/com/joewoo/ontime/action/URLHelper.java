@@ -40,4 +40,6 @@ public class URLHelper {
 
     public final static String AQI_DETAILS = "http://www.pm25.in/api/querys/aqi_details.json";
 
+    public final static String GOOGLE_GEO_CODE = "https://maps.googleapis.com/maps/api/geocode/json";
+
 }

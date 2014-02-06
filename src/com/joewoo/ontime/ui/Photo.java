@@ -26,11 +26,6 @@ public class Photo extends Activity implements PhotoViewAttacher.OnMatrixChanged
     private GifImageView iv;
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

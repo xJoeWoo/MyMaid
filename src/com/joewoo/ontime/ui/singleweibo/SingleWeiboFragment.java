@@ -35,6 +35,7 @@ import com.joewoo.ontime.ui.Photo;
 import com.joewoo.ontime.ui.SingleUser;
 
 import java.io.File;
+import java.text.DecimalFormat;
 
 import static com.joewoo.ontime.support.info.Defines.GOT_STATUSES_SHOW_INFO;
 import static com.joewoo.ontime.support.info.Defines.STATUS_BEAN;
@@ -281,7 +282,6 @@ public class SingleWeiboFragment extends Fragment {
                         dGifp.execute(status.getBmiddlePic());
                     else
                         dGifp.execute(status.getRetweetedStatus().getBmiddlePic());
-
                 }
             });
 
@@ -294,7 +294,7 @@ public class SingleWeiboFragment extends Fragment {
             gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    dsp = new DownloadSinglePhoto(tv_rt_rl, false, SingleWeiboFragment.this);
+                    dsp = new DownloadSinglePhoto(tv_rt_rl, SingleWeiboFragment.this);
                     dsp.execute(status.getPicURLs().get(position).getBmiddlePic());
                 }
             });
@@ -310,7 +310,7 @@ public class SingleWeiboFragment extends Fragment {
             gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    dsp = new DownloadSinglePhoto(tv_rt_rl, true, SingleWeiboFragment.this);
+                    dsp = new DownloadSinglePhoto(tv_rt_rl, SingleWeiboFragment.this);
                     dsp.execute(status.getRetweetedStatus().getPicURLs().get(position).getBmiddlePic());
                 }
             });
@@ -351,6 +351,8 @@ public class SingleWeiboFragment extends Fragment {
                 setFullProgress();
             }
         }
+
+        iv_image.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     private void setFullProgress() {
@@ -393,7 +395,6 @@ public class SingleWeiboFragment extends Fragment {
         tv_source = (TextView) v.findViewById(R.id.frag_single_weibo_source);
         iv_image = (ImageView) v.findViewById(R.id.frag_single_weibo_image);
         iv_profile_image = (ImageView) v.findViewById(R.id.frag_single_weibo_profile_image);
-        iv_image.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         pb = (ProgressBar) v.findViewById(R.id.frag_single_weibo_pb);
         sv = (ScrollView) v.findViewById(R.id.frag_single_weibo_sv);
         gv = (MuiltPhotosGirdView) v.findViewById(R.id.frag_single_weibo_pics_grid);
@@ -446,6 +447,21 @@ public class SingleWeiboFragment extends Fragment {
         if (isGIF)
             ii.putExtra(Defines.IS_GIF, true);
         act.startActivity(ii);
+    }
+
+    public void setGIFSize(double size) {
+
+        StringBuilder sb = new StringBuilder();
+        DecimalFormat df = new DecimalFormat("#.0");
+
+        if (size < 1024)
+            sb.append(size).append(" B");
+        else if (size < 1024 * 1024)
+            sb.append(df.format(size / 1024)).append(" KB");
+        else
+            sb.append(df.format(size / (1024 * 1024))).append(" MB");
+
+        tv_load_gif.setText(tv_load_gif.getText() + "\n(" + sb.toString() + ")");
     }
 
 }

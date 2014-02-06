@@ -1,6 +1,5 @@
 package com.joewoo.ontime.support.image;
 
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -18,14 +17,12 @@ public class DownloadSinglePhoto extends AsyncTask<String, Integer, byte[]> impl
 
     private TextView tv;
     private SingleWeiboFragment frag;
-    private boolean isRepost;
     private float width;
     private ViewGroup.LayoutParams lp;
 
-    public DownloadSinglePhoto(TextView tv, boolean isRepost, SingleWeiboFragment frag) {
+    public DownloadSinglePhoto(TextView tv, SingleWeiboFragment frag) {
         this.tv = tv;
         this.frag = frag;
-        this.isRepost = isRepost;
     }
 
     @Override
@@ -45,14 +42,8 @@ public class DownloadSinglePhoto extends AsyncTask<String, Integer, byte[]> impl
         Log.e(TAG, "Download Pic AsyncTask START");
         Log.e(TAG, "Pic URL - " + params[0]);
 
-        Bitmap image;
-
         if (!params[0].endsWith(".gif")) {
             try {
-
-//                final byte[] imgBytes = new HttpUtility().executeDownloadImageTask(params[0], this);
-//
-//                BitmapSaveAsFile.save(BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length), BitmapSaveAsFile.SAVE_AS_PNG, Defines.TEMP_IMAGE_PATH, Defines.TEMP_IMAGE_NAME);
 
                 return new HttpUtility().executeDownloadImageTask(params[0], this);
 
@@ -79,9 +70,6 @@ public class DownloadSinglePhoto extends AsyncTask<String, Integer, byte[]> impl
     @Override
     protected void onPostExecute(byte[] imgBytes) {
         if (imgBytes != null) {
-            if (!isRepost)
-                tv.setVisibility(View.INVISIBLE);
-
             frag.jumpToPhoto(BitmapSaveAsFile.saveToData(imgBytes), false);
         }
     }

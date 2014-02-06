@@ -6,7 +6,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -53,9 +53,6 @@
             android:name=".ui.SingleUser"
             android:label="@string/title_act_single_user" />
         <activity
-            android:name=".ui.settings.SettingsActivity"
-            android:label="@string/title_settings" />
-        <activity
             android:name=".ui.Photo"
             android:label="Photo"
             android:theme="@style/Theme.Transparent.Activity.Mymaid" />
@@ -95,6 +92,10 @@
             android:enabled="true" />
         <service
             android:name=".support.service.ReplyService"
+            android:enabled="true" />
+
+        <service
+            android:name=".support.service.ClearDraftService"
             android:enabled="true" />
 
 

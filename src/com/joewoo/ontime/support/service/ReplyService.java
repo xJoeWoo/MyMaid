@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.support.notification.MyMaidNotificationHelper;
-import com.joewoo.ontime.ui.CommentRepost;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -18,7 +17,6 @@ import static com.joewoo.ontime.support.info.Defines.COMMENT;
 import static com.joewoo.ontime.support.info.Defines.COMMENT_ID;
 import static com.joewoo.ontime.support.info.Defines.GOT_REPLY_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_REPLY_INFO_FAIL;
-import static com.joewoo.ontime.support.info.Defines.IS_REPLY;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
@@ -33,7 +31,7 @@ public class ReplyService extends Service {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case GOT_REPLY_INFO:{
+                case GOT_REPLY_INFO: {
                     mNotification.setSuccess();
                     new Timer().schedule(new TimerTask() {
                         @Override

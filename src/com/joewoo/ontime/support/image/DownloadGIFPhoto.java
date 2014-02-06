@@ -19,6 +19,8 @@ public class DownloadGIFPhoto extends AsyncTask<String, Integer, byte[]> impleme
     private TextView tv;
     private float width;
     private ViewGroup.LayoutParams lp;
+    private boolean isSetSize;
+    private double size;
 
     public DownloadGIFPhoto(TextView tv, SingleWeiboFragment frag) {
         this.frag = frag;
@@ -54,6 +56,10 @@ public class DownloadGIFPhoto extends AsyncTask<String, Integer, byte[]> impleme
 
     @Override
     protected void onProgressUpdate(Integer... progress) {
+        if (!isSetSize) {
+            frag.setGIFSize(size);
+            isSetSize = true;
+        }
         lp.width = (int) (width * progress[0]);
         tv.setLayoutParams(lp);
     }
@@ -67,6 +73,8 @@ public class DownloadGIFPhoto extends AsyncTask<String, Integer, byte[]> impleme
 
     @Override
     public void downloadProgress(int transferred, int contentLength) {
+        if (!isSetSize)
+            size = contentLength;
         publishProgress((int) (((double) transferred / (double) contentLength) * 100));
     }
 

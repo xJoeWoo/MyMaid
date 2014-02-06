@@ -243,6 +243,7 @@ public class JavaHttpUtility {
     public String doPost(String urlStr, Map<String, String> param) throws Exception {
         try {
 
+
             Log.e(TAG, "URL to POST: " + urlStr);
             Log.e(TAG, "POST Param: " + encodeParamFromMap(param));
 

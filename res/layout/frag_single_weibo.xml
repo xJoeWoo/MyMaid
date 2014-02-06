@@ -156,7 +156,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentBottom="true"
-                    android:background="@color/grey"
+                    android:background="@color/pinkLoadGIF"
                     android:visibility="gone"
                     android:id="@+id/tv_frag_single_weibo_load_gif" />
 

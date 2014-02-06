@@ -12,11 +12,13 @@
     <color name="pinkSource">#fff28686</color>
     <color name="pinkHighlightSpan">#fff28686</color>
     <color name="pinkStatusBar">#fffa7070</color>
+    <color name="pinkLoadGIF">#30f28686</color>
 
     <color name="white">#ffffffff</color>
 
     <color name="pressed_mymaid">#CCFBB2B2</color>
 
     <color name="tranPhoto">#d0000000</color>
+
 
 </resources>

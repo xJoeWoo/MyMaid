@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.dialog.UserChooserDialog;
 import com.joewoo.ontime.support.net.NetworkStatus;
+import com.joewoo.ontime.support.notification.MyMaidNotificationHelper;
 import com.joewoo.ontime.support.service.MyMaidServiceHelper;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
@@ -30,7 +31,6 @@ import static com.joewoo.ontime.support.info.Defines.ACT_GOT_PHOTO;
 import static com.joewoo.ontime.support.info.Defines.KEY_AT_USER;
 import static com.joewoo.ontime.support.info.Defines.MENU_ADD;
 import static com.joewoo.ontime.support.info.Defines.MENU_AT;
-import static com.joewoo.ontime.support.info.Defines.MENU_CLEAR_DRAFT;
 import static com.joewoo.ontime.support.info.Defines.MENU_EMOTION;
 import static com.joewoo.ontime.support.info.Defines.MENU_LETTERS;
 import static com.joewoo.ontime.support.info.Defines.MENU_POST;
@@ -45,6 +45,9 @@ public class Post extends Activity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+
+        MyMaidNotificationHelper.cancel(MyMaidNotificationHelper.UPDATE);
+        MyMaidNotificationHelper.cancel(MyMaidNotificationHelper.UPLOAD);
 
         String type = intent.getType();
 
@@ -133,7 +136,6 @@ public class Post extends Activity {
         setTitle(R.string.title_act_post);
         getActionBar().setLogo(GlobalContext.getProfileImg());
         getActionBar().setSubtitle(GlobalContext.getScreenName());
-
     }
 
     private void findViews() {
@@ -245,14 +247,6 @@ public class Post extends Activity {
                             Toast.LENGTH_SHORT).show();
                 }
 //                }
-                break;
-            }
-            case MENU_CLEAR_DRAFT: {
-                GlobalContext.clearDraft();
-                et_post.setText("");
-                Toast.makeText(Post.this, R.string.toast_clear_draft_success,
-                        Toast.LENGTH_SHORT).show();
-                invalidateOptionsMenu();
                 break;
             }
             case MENU_AT: {

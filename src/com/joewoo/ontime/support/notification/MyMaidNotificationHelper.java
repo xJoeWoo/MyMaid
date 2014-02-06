@@ -12,9 +12,13 @@ import android.support.v4.app.NotificationCompat;
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.bean.aqi.AQIBean;
 import com.joewoo.ontime.support.info.Defines;
+import com.joewoo.ontime.support.service.ClearDraftService;
+import com.joewoo.ontime.support.service.CommentCreateService;
+import com.joewoo.ontime.support.service.ReplyService;
+import com.joewoo.ontime.support.service.RepostService;
+import com.joewoo.ontime.support.service.UpdateService;
+import com.joewoo.ontime.support.service.UploadService;
 import com.joewoo.ontime.support.util.GlobalContext;
-import com.joewoo.ontime.ui.CommentRepost;
-import com.joewoo.ontime.ui.Post;
 
 /**
  * Created by JoeWoo on 14-1-3.
@@ -26,8 +30,9 @@ public class MyMaidNotificationHelper {
     public static final int COMMENT_CREATE = 2;
     public static final int REPLY = 3;
     public static final int REPOST = 4;
+    public static final int ALL = 99;
 
-    public static final int PROGRESS_UPDATE_DELAY = 100;
+    public static final int PROGRESS_UPDATE_DELAY = 500;
     public static final int SUCCESS_NOTIFICATION_SHOW_TIME = 2 * 1000;
 
     private int what = -1;
@@ -178,14 +183,22 @@ public class MyMaidNotificationHelper {
 
     public void setFail(String error, Context context) {
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.setClass(context, CommentRepost.class);
         nBuilder.setOngoing(false);
         nBuilder.setContentText(error);
         nBuilder.setAutoCancel(true);
         switch (what) {
             case UPDATE:
             case UPLOAD: {
-                nBuilder.addAction(R.drawable.ic_stat_resend, GlobalContext.getResString(R.string.notify_resend), PendingIntent.getActivity(context, 0, new Intent(context, Post.class), 0));
+                if (what == UPDATE) {
+                    i.setClass(context, UpdateService.class);
+                } else {
+                    i.setClass(context, UploadService.class);
+                }
+                PendingIntent againIntent = PendingIntent.getService(context, 0, i, 0);
+                PendingIntent discardIntent = PendingIntent.getService(context, 0, new Intent(context, ClearDraftService.class), 0);
+                nBuilder.setContentIntent(againIntent);
+                nBuilder.addAction(R.drawable.ic_stat_resend, GlobalContext.getResString(R.string.notify_resend), againIntent);
+                nBuilder.addAction(R.drawable.ic_stat_discard, GlobalContext.getResString(R.string.notify_discard), discardIntent);
                 nBuilder.setTicker(GlobalContext.getResString(R.string.notify_post_fail));
                 nBuilder.setContentTitle(GlobalContext.getResString(R.string.notify_post_fail));
                 if (what == UPLOAD) {
@@ -200,22 +213,30 @@ public class MyMaidNotificationHelper {
                 break;
             }
             case REPLY: {
-                nBuilder.setContentIntent(PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT));
+                i.setClass(context, ReplyService.class);
+                PendingIntent againIntent = PendingIntent.getService(context, 0, i, 0);
+                nBuilder.setContentIntent(againIntent);
+                nBuilder.addAction(R.drawable.ic_stat_resend, GlobalContext.getResString(R.string.notify_resend), againIntent);
                 nBuilder.setTicker(GlobalContext.getResString(R.string.notify_reply_fail));
                 nBuilder.setContentTitle(GlobalContext.getResString(R.string.notify_reply_fail));
                 nManager.notify(REPLY, nBuilder.build());
                 break;
             }
             case COMMENT_CREATE: {
-                nBuilder.setContentIntent(PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT));
+                i.setClass(context, CommentCreateService.class);
+                PendingIntent againIntent = PendingIntent.getService(context, 0, i, 0);
+                nBuilder.setContentIntent(againIntent);
+                nBuilder.addAction(R.drawable.ic_stat_resend, GlobalContext.getResString(R.string.notify_resend), againIntent);
                 nBuilder.setTicker(GlobalContext.getResString(R.string.notify_comment_create_fail));
                 nBuilder.setContentTitle(GlobalContext.getResString(R.string.notify_comment_create_fail));
                 nManager.notify(COMMENT_CREATE, nBuilder.build());
                 break;
             }
             case REPOST: {
-
-                nBuilder.setContentIntent(PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT));
+                i.setClass(context, RepostService.class);
+                PendingIntent againIntent = PendingIntent.getService(context, 0, i, 0);
+                nBuilder.setContentIntent(againIntent);
+                nBuilder.addAction(R.drawable.ic_stat_resend, GlobalContext.getResString(R.string.notify_resend), againIntent);
                 nBuilder.setTicker(GlobalContext.getResString(R.string.notify_repost_fail));
                 nBuilder.setContentTitle(GlobalContext.getResString(R.string.notify_repost_fail));
                 nManager.notify(REPOST, nBuilder.build());
@@ -236,4 +257,11 @@ public class MyMaidNotificationHelper {
         nManager.notify(99, nBuilder.build());
     }
 
+    public static void cancel(int what) {
+        NotificationManager nM = (NotificationManager) GlobalContext.getAppContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        if (what == ALL)
+            nM.cancelAll();
+        else
+            nM.cancel(what);
+    }
 }
