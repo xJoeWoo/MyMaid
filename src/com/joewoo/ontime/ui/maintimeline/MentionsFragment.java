@@ -20,8 +20,6 @@ import android.widget.Toast;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.MyMaidActionHelper;
-import com.joewoo.ontime.action.comments.CommentsMentions;
-import com.joewoo.ontime.action.statuses.StatusesMentions;
 import com.joewoo.ontime.support.adapter.listview.CommentsMentionsAdapter;
 import com.joewoo.ontime.support.adapter.listview.MainListViewAdapter;
 import com.joewoo.ontime.support.bean.CommentsBean;
@@ -69,29 +67,11 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
         @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
-            // act.setProgressBarIndeterminateVisibility(false);
             mPullToRefreshAttacher.setRefreshComplete();
             switch (msg.what) {
                 case GOT_MENTIONS_INFO: {
                     statuses = (List<StatusesBean>) msg.obj;
                     setListView(statuses);
-                    break;
-                }
-                case GOT_COMMENTS_MENTIONS_INFO_FAIL:
-                case GOT_MENTIONS_INFO_FAIL: {
-                    if(msg.obj != null)
-                        Toast.makeText(act, (String) msg.obj, Toast.LENGTH_SHORT).show();
-                    break;
-                }
-                case GOT_UNREAD_COUNT_INFO: {
-                    UnreadCountBean b = (UnreadCountBean) msg.obj;
-                    if (b.getMentionStatusCount() != null) {
-                        unreadCount = b.getMentionStatusCount();
-                        unreadCommentMentionsCount = b.getMentionCmtCount();
-                    } else
-                        Toast.makeText(act,
-                                R.string.toast_unread_count_fail,
-                                Toast.LENGTH_SHORT).show();
                     break;
                 }
                 case GOT_MENTIONS_ADD_INFO: {
@@ -109,10 +89,27 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                     setCommentsListView(comments);
                     break;
                 }
+                case GOT_UNREAD_COUNT_INFO: {
+                    UnreadCountBean b = (UnreadCountBean) msg.obj;
+                    if (b.getMentionStatusCount() != null) {
+                        unreadCount = b.getMentionStatusCount();
+                        unreadCommentMentionsCount = b.getMentionCmtCount();
+                    } else
+                        Toast.makeText(act,
+                                R.string.toast_unread_count_fail,
+                                Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                case GOT_COMMENTS_MENTIONS_INFO_FAIL:
+                case GOT_MENTIONS_INFO_FAIL: {
+                    if (msg.obj != null)
+                        Toast.makeText(act, (String) msg.obj, Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 case GOT_SET_REMIND_COUNT_INFO_FAIL: {
-                    Toast.makeText(act,
-                            R.string.toast_clear_unread_count_fail,
-                            Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(act,
+//                            R.string.toast_clear_unread_count_fail,
+//                            Toast.LENGTH_SHORT).show();
                     break;
                 }
             }
@@ -129,13 +126,11 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
     @Override
     public void onRefreshStarted(View view) {
         if (NetworkStatus.check(true)) {
-            if (isNormalMention) {
-                Log.e(TAG, "Refresh StatusesMentions");
+            if (isNormalMention)
                 refreshMentions();
-            } else {
-                Log.e(TAG, "Refresh Comments StatusesMentions");
+            else
                 refreshCommentsMentions();
-            }
+
         } else
             mHandler.sendEmptyMessage(GOT_MENTIONS_INFO_FAIL);
     }
@@ -208,10 +203,12 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                 // 滚到到尾刷新
                 if (view.getCount() > (Integer.valueOf(AcquireCount.MENTIONS_COUNT) - 2) && view.getLastVisiblePosition() > (view.getCount() - 6) && !mPullToRefreshAttacher.isRefreshing() && statuses != null) {
                     Log.e(TAG, "到底");
+
                     if (isNormalMention)
                         MyMaidActionHelper.statusesMentions(statuses.get(view.getCount() - 1 - lv.getHeaderViewsCount()).getId(), mHandler);
                     else
                         MyMaidActionHelper.commentsMentions(comments.get(view.getCount() - 1 - lv.getHeaderViewsCount()).getId(), mHandler);
+
                     mPullToRefreshAttacher.setRefreshing(true);
                 }
             }
@@ -269,12 +266,12 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                         switch (i) {
                             case 0: {
                                 isNormalMention = true;
-                                new StatusesMentions(true, mHandler).start();
+                                MyMaidActionHelper.statusesMentions(true, mHandler);
                                 break;
                             }
                             case 1: {
                                 isNormalMention = false;
-                                new CommentsMentions(true, mHandler).start();
+                                MyMaidActionHelper.commentsMentions(true, mHandler);
                                 break;
                             }
                         }
@@ -300,17 +297,17 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
 
     private void setListView(List<StatusesBean> statuses) {
         mainAdapter.setData(statuses);
-        setAdapter(isNormalMention);
+        setAdapter();
         mainAdapter.notifyDataSetChanged();
     }
 
     private void setCommentsListView(List<CommentsBean> comments) {
         commentsAdapter.setData(comments);
-        setAdapter(isNormalMention);
+        setAdapter();
         commentsAdapter.notifyDataSetChanged();
     }
 
-    private void setAdapter(boolean isNormalMention) {
+    private void setAdapter() {
         if (lv.getAdapter() == null) {
             if (isNormalMention)
                 lv.setAdapter(mainAdapter);

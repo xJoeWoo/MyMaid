@@ -14,7 +14,7 @@ import com.joewoo.ontime.R;
 /**
  * Created by JoeWoo on 14-1-12.
  */
-public class MyMaidSettingView extends RelativeLayout{
+public class MyMaidSettingView extends RelativeLayout {
 
     private Context context;
 
@@ -22,32 +22,13 @@ public class MyMaidSettingView extends RelativeLayout{
     private TextView tv_name;
     private ImageView iv;
 
-    public MyMaidSettingView(Context context) {
-        super(context);
-
-//        this.context = context;
-//
-//        View v = LayoutInflater.from(context).inflate(R.layout.view_setting, null);
-//
-//        addView(v);
-//
-//        tv_main = (TextView) v.findViewById(R.id.setting_tv_main);
-//        tv_name = (TextView) v.findViewById(R.id.setting_tv_name);
-//        iv = (ImageView) v.findViewById(R.id.setting_iv);
-
-    }
-
     public MyMaidSettingView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         this.context = context;
 
-        LayoutInflater inflater=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.view_setting, this);
-
-//        View v = LayoutInflater.from(context).inflate(R.layout.view_setting, null);
-
-//        addView(v);
 
         tv_main = (TextView) findViewById(R.id.setting_tv_main);
         tv_name = (TextView) findViewById(R.id.setting_tv_name);
@@ -55,7 +36,7 @@ public class MyMaidSettingView extends RelativeLayout{
     }
 
     public MyMaidSettingView setMainText(String string) {
-        tv_main.setTypeface(Typeface.createFromAsset(context.getAssets(),"fonts/Roboto-ThinItalic.ttf"));
+        tv_main.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-ThinItalic.ttf"));
         tv_main.setVisibility(VISIBLE);
         tv_main.setText(string);
         return this;

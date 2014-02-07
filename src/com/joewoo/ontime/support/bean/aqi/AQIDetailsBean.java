@@ -8,8 +8,13 @@ import java.util.List;
 public class AQIDetailsBean {
 
     private List<AQIBean> aqi;
+    private String error;
 
     public List<AQIBean> getAQIs() {
         return aqi;
+    }
+
+    public String getError() {
+        return error;
     }
 }

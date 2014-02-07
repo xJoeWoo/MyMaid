@@ -28,7 +28,7 @@ public class MyMaidSQLHelper extends SQLiteOpenHelper {
     public static final String COMMENTS_MENTIONS = "comments_mentions";
     public static final String FRIENDS_IDS = "friends_ids";
     public static final String LAST_LOGIN = "last_login";
-    public static final String COLUMN_1 = "extra_1";
+    public static final String COMMENTS_BY_ME = "extra_1";
     public static final String COLUMN_2 = "extra_2";
     public static final String COLUMN_3 = "extra_3";
     public static final String COLUMN_4 = "extra_4";
@@ -47,7 +47,7 @@ public class MyMaidSQLHelper extends SQLiteOpenHelper {
             + PIC_FILE_PATH + " varchar, " + SCREEN_NAME + " varchar, " + DRAFT
             + " varchar, " + PROFILE_IMG + " blob, " + FRIENDS_TIMELINE
             + " varchar, " + COMMENTS_TO_ME + " varchar, " + MENTIONS
-            + " varchar, " + COMMENTS_MENTIONS + " varchar, " + FRIENDS_IDS + " varchar, " + COLUMN_1 + " varchar, "
+            + " varchar, " + COMMENTS_MENTIONS + " varchar, " + FRIENDS_IDS + " varchar, " + COMMENTS_BY_ME + " varchar, "
             + COLUMN_2 + " varchar, " + COLUMN_3 + " varchar, " + COLUMN_4 + " varchar, "
             + COLUMN_5 + " varchar, " + COLUMN_6 + " varchar, " + COLUMN_7 + " varchar, "
             + COLUMN_8 + " varchar, " + COLUMN_9 + " varchar, " + COLUMN_10 + " varchar, " + LAST_LOGIN + " int);";

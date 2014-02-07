@@ -30,7 +30,7 @@ public class BitmapSaveAsFile {
         BufferedOutputStream bos = null;
         File cachePic = null;
         try {
-            cachePic = new File(String.valueOf(GlobalContext.getAppContext().getCacheDir()), "cachePic.mymaid");
+            cachePic = new File(String.valueOf(GlobalContext.getAppContext().getCacheDir()), "CachePic.mymaid");
             FileOutputStream fos = new FileOutputStream(cachePic);
             bos = new BufferedOutputStream(fos);
             bos.write(bytes);

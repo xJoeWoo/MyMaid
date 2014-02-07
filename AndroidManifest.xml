@@ -17,7 +17,8 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.Mymaid"
-        android:name=".support.util.GlobalContext">
+        android:name=".support.util.GlobalContext"
+        android:windowSoftInputMode="adjustResize">
 
 
         <activity

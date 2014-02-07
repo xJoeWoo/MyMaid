@@ -48,14 +48,10 @@ public class CommentsCreate extends Thread {
             hm.put(ACCESS_TOKEN, GlobalContext.getAccessToken());
             hm.put("comment", comment);
 
-            if(commentOri)
+            if (commentOri)
                 hm.put("comment_ori", "1");
 
-            httpResult = new HttpUtility().executePostTask(URLHelper.COMMENT_CREATE, hm);
-
-//            mHandler.obtainMessage(GOT_COMMENT_CREATE_INFO_FAIL, GlobalContext.getResString(R.string.error_network_not_avaiable)).sendToTarget();
-
-
+            httpResult = new HttpUtility().executePostTask(URLHelper.COMMENTS_CREATE, hm);
 
         } catch (Exception e) {
             Log.e(TAG, "Comment Create Thread FAILED");
@@ -64,7 +60,7 @@ public class CommentsCreate extends Thread {
             return;
         }
 
-        if(ErrorCheck.getError(httpResult) == null)
+        if (ErrorCheck.getError(httpResult) == null)
             mHandler.obtainMessage(GOT_COMMENT_CREATE_INFO, GlobalContext.getResString(R.string.toast_comment_success)).sendToTarget();
 
         else

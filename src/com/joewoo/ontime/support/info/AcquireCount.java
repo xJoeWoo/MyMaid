@@ -9,6 +9,7 @@ public class AcquireCount {
     public static String FRIENDS_TIMELINE_COUNT = "50";
     public static String MENTIONS_COUNT = "25";
     public static String COMMENTS_TO_ME_COUNT = "25";
+    public static String COMMENTS_BY_ME_COUNT = "25";
     public static String COMMENTS_SHOW_COUNT = "50";
     public static String REPOSTS_TIMELINE_COUNT = "50";
     public static String COMMENTS_MENTIONS_COUNT = "25";

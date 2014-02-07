@@ -3,7 +3,9 @@ package com.joewoo.ontime.action;
 import android.app.Activity;
 import android.os.Handler;
 
+import com.joewoo.ontime.action.comments.CommentsByMe;
 import com.joewoo.ontime.action.comments.CommentsCreate;
+import com.joewoo.ontime.action.comments.CommentsDestroy;
 import com.joewoo.ontime.action.comments.CommentsMentions;
 import com.joewoo.ontime.action.comments.CommentsReply;
 import com.joewoo.ontime.action.comments.CommentsShow;
@@ -79,6 +81,16 @@ public class MyMaidActionHelper {
         return startThread(thread);
     }
 
+    public static Thread commentsByMe(boolean isProvided, Handler handler) {
+        Thread thread = new CommentsByMe(isProvided, handler);
+        return startThread(thread);
+    }
+
+    public static Thread commentsByMe(String maxID, Handler handler) {
+        Thread thread = new CommentsByMe(maxID, handler);
+        return startThread(thread);
+    }
+
     public static Thread remindUnreadCount(Handler handler) {
         Thread thread = new RemindUnreadCount(handler);
         return startThread(thread);
@@ -131,6 +143,11 @@ public class MyMaidActionHelper {
 
     public static Thread statusesDestroy(String weiboID, Handler handler) {
         Thread thread = new StatusesDestroy(weiboID, handler);
+        return startThread(thread);
+    }
+
+    public static Thread commentsDestroy(String commentID, Handler handler) {
+        Thread thread = new CommentsDestroy(commentID, handler);
         return startThread(thread);
     }
 

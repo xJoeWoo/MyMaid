@@ -39,7 +39,6 @@ public class DownloadPhoto extends AsyncTask<String, Integer, byte[]> implements
 
     @Override
     protected void onPreExecute() {
-        // Toast.makeText(activity, "开始下载图片…", Toast.LENGTH_SHORT).show();
         in = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.in);
         out = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.out);
 

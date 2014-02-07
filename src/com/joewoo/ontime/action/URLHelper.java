@@ -22,10 +22,12 @@ public class URLHelper {
     public final static String AT_SUGGESTIONS = "https://api.weibo.com/2/search/suggestions/at_users.json";
     public final static String TOKEN = "https://api.weibo.com/oauth2/access_token";
     public final static String FRIENDS_TIMELINE = "https://api.weibo.com/2/statuses/friends_timeline.json";
-    public final static String COMMENT_CREATE = "https://api.weibo.com/2/comments/create.json";
+    public final static String COMMENTS_CREATE = "https://api.weibo.com/2/comments/create.json";
     public final static String REPOST = "https://api.weibo.com/2/statuses/repost.json";
     public final static String FAVOURITE_CREATE = "https://api.weibo.com/2/favorites/create.json";
     public final static String COMMENTS_TO_ME = "https://api.weibo.com/2/comments/to_me.json";
+    public final static String COMMENTS_BY_ME = "https://api.weibo.com/2/comments/by_me.json";
+    public final static String COMMENTS_DESTROY = "https://api.weibo.com/2/comments/destroy.json";
     public final static String MENTIONS = "https://api.weibo.com/2/statuses/mentions.json";
     public final static String REPLY = "https://api.weibo.com/2/comments/reply.json";
     public final static String UNREAD_COUNT = "https://rm.api.weibo.com/2/remind/unread_count.json";
