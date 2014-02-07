@@ -66,7 +66,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                 }
                 case GOT_FRIENDS_TIMELINE_ADD_INFO: {
                     statuses.addAll((List<StatusesBean>) msg.obj);
-                    setListView(statuses);
+                    updateListView(statuses);
                     break;
                 }
                 case GOT_FRIENDS_TIMELINE_INFO_FAIL: {
@@ -265,8 +265,11 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
 
     private void setListView(List<StatusesBean> statuses) {
         mAdapter.setData(statuses);
-        if (lv.getAdapter() == null)
-            lv.setAdapter(mAdapter);
+        lv.setAdapter(mAdapter);
+    }
+
+    private void updateListView(List<StatusesBean> statuses) {
+        mAdapter.setData(statuses);
         mAdapter.notifyDataSetChanged();
     }
 

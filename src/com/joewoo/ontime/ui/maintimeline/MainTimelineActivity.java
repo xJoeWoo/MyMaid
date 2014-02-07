@@ -12,8 +12,10 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.joewoo.ontime.R;
+import com.joewoo.ontime.action.aqi.AQIDetails;
 import com.joewoo.ontime.support.adapter.pager.MainPagerAdapter;
 import com.joewoo.ontime.support.dialog.UserChooserDialog;
+import com.joewoo.ontime.support.setting.MyMaidSettingsHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 
 import java.util.Locale;
@@ -37,7 +39,8 @@ public class MainTimelineActivity extends FragmentActivity {
 
         Log.e(TAG, "MyMaid Main Activity CREATE!");
 
-//        new AQIDetails().start();
+        if (MyMaidSettingsHelper.getBoolean(MyMaidSettingsHelper.WEATHER_STATUS))
+            new AQIDetails().start();
 
         if (GlobalContext.getAccessToken() != null) {
 

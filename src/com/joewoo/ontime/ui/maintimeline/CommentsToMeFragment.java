@@ -1,5 +1,7 @@
 package com.joewoo.ontime.ui.maintimeline;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,6 +37,11 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
 
 import static com.joewoo.ontime.support.info.Defines.COMMENT_ID;
+import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_BY_ME_ADD_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_BY_ME_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_BY_ME_INFO_FAIL;
+import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_DESTROY_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_DESTROY_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_TO_ME_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_TO_ME_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENTS_TO_ME_INFO_FAIL;
@@ -58,14 +65,22 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
         public void handleMessage(Message msg) {
             mPullToRefreshAttacher.setRefreshing(false);
             switch (msg.what) {
+                case GOT_COMMENTS_BY_ME_INFO:
                 case GOT_COMMENTS_TO_ME_INFO: {
                     comments = (List<CommentsBean>) msg.obj;
                     setListView(comments);
                     break;
                 }
-                case GOT_COMMENTS_TO_ME_INFO_FAIL: {
-                    if (msg.obj != null)
-                        Toast.makeText(act, (String) msg.obj, Toast.LENGTH_SHORT).show();
+                case GOT_COMMENTS_BY_ME_ADD_INFO:
+                case GOT_COMMENTS_TO_ME_ADD_INFO: {
+                    comments.addAll((List<CommentsBean>) msg.obj);
+                    updateListView(comments);
+                    break;
+                }
+                case GOT_COMMENTS_DESTROY_INFO: {
+                    Toast.makeText(act, R.string.toast_delete_success, Toast.LENGTH_SHORT).show();
+                    if (destroyCommentPos != -1)
+                        comments.remove(destroyCommentPos);
                     break;
                 }
                 case GOT_UNREAD_COUNT_INFO: {
@@ -78,15 +93,17 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
                                 Toast.LENGTH_SHORT).show();
                     break;
                 }
-                case GOT_COMMENTS_TO_ME_ADD_INFO: {
-                    comments.addAll((List<CommentsBean>) msg.obj);
-                    setListView(comments);
+                case GOT_COMMENTS_DESTROY_INFO_FAIL:
+                case GOT_COMMENTS_BY_ME_INFO_FAIL:
+                case GOT_COMMENTS_TO_ME_INFO_FAIL: {
+                    if (msg.obj != null)
+                        Toast.makeText(act, (String) msg.obj, Toast.LENGTH_SHORT).show();
                     break;
                 }
                 case GOT_SET_REMIND_COUNT_INFO_FAIL: {
-                    Toast.makeText(act,
-                            R.string.toast_clear_unread_count_fail,
-                            Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(act,
+//                            R.string.toast_clear_unread_count_fail,
+//                            Toast.LENGTH_SHORT).show();
                     break;
                 }
             }
@@ -94,16 +111,24 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
         }
 
     };
+
+    private boolean isCommentsToMe = true;
+
     private PullToRefreshAttacher mPullToRefreshAttacher;
     private MainTimelineActivity act;
     private CommentsToMeAdapter mAdapter;
 
+    private int destroyCommentPos = -1;
+
     @Override
     public void onRefreshStarted(View view) {
         Log.e(TAG, "Refresh Comments");
-        if (NetworkStatus.check(true))
-            refreshComments();
-        else
+        if (NetworkStatus.check(true)) {
+            if (isCommentsToMe)
+                refreshCommentsToMe();
+            else
+                refreshCommentsByMe();
+        } else
             mHandler.sendEmptyMessage(GOT_COMMENTS_TO_ME_INFO_FAIL);
     }
 
@@ -134,13 +159,24 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+            public void onItemClick(AdapterView<?> arg0, View arg1, final int arg2,
                                     long arg3) {
-                Intent i = new Intent(act, CommentRepost.class);
-                i.putExtra(IS_REPLY, true);
-                i.putExtra(WEIBO_ID, comments.get(arg2 - lv.getHeaderViewsCount()).getStatus().getId());
-                i.putExtra(COMMENT_ID, comments.get(arg2 - lv.getHeaderViewsCount()).getId());
-                startActivity(i);
+                if (isCommentsToMe) {
+                    Intent i = new Intent(act, CommentRepost.class);
+                    i.putExtra(IS_REPLY, true);
+                    i.putExtra(WEIBO_ID, comments.get(arg2 - lv.getHeaderViewsCount()).getStatus().getId());
+                    i.putExtra(COMMENT_ID, comments.get(arg2 - lv.getHeaderViewsCount()).getId());
+                    startActivity(i);
+                } else {
+                    new AlertDialog.Builder(act).setTitle(R.string.frag_comments_dialog_comment_destroy_title)
+                            .setPositiveButton(R.string.frag_ftl_dialog_confirm_logout_btn_ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    MyMaidActionHelper.commentsDestroy(comments.get(arg2 - lv.getHeaderViewsCount()).getId(), mHandler);
+                                    destroyCommentPos = arg2 - lv.getHeaderViewsCount();
+                                }
+                            }).setNegativeButton(R.string.frag_ftl_dialog_confirm_logout_btn_cancle, null).show();
+                }
             }
         });
 
@@ -157,6 +193,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
                 Intent i = new Intent(act, SingleWeiboActivity.class);
                 i.putExtra(WEIBO_ID, comments.get(arg2 - lv.getHeaderViewsCount()).getStatus().getId());
                 startActivity(i);
+
                 return false;
             }
         });
@@ -164,10 +201,14 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
         lv.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (view.getCount() > (Integer.valueOf(AcquireCount.COMMENTS_TO_ME_COUNT) - 2) && view.getLastVisiblePosition() > (view.getCount() - 6) && !mPullToRefreshAttacher.isRefreshing() && comments != null) {
+                if (view.getCount() > (Integer.valueOf(AcquireCount.COMMENTS_TO_ME_COUNT) - 5) && view.getLastVisiblePosition() > (view.getCount() - 6) && !mPullToRefreshAttacher.isRefreshing() && comments != null) {
                     Log.e(TAG, "到底");
-                    // 获取后会删除第一项，所以获取数+1
-                    MyMaidActionHelper.commentsToMe(comments.get(view.getCount() - 1 - lv.getHeaderViewsCount()).getStatus().getId(), mHandler);
+
+                    if (isCommentsToMe)
+                        MyMaidActionHelper.commentsToMe(comments.get(view.getCount() - 1 - lv.getHeaderViewsCount()).getStatus().getId(), mHandler);
+                    else
+                        MyMaidActionHelper.commentsByMe(comments.get(view.getCount() - 1 - lv.getHeaderViewsCount()).getStatus().getId(), mHandler);
+
                     mPullToRefreshAttacher.setRefreshing(true);
                 }
             }
@@ -216,6 +257,25 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
             }
             case MENU_UNREAD_COUNT: {
                 getUnreadCommentsCount();
+                String[] items = {act.getString(R.string.frag_comments_dialog_comments_to_me), act.getString(R.string.frag_comments_dialog_comments_by_me)};
+                new AlertDialog.Builder(act).setTitle(R.string.frag_comments_dialog_title).setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mPullToRefreshAttacher.setRefreshing(true);
+                        switch (i) {
+                            case 0: {
+                                isCommentsToMe = true;
+                                MyMaidActionHelper.commentsToMe(true, mHandler);
+                                break;
+                            }
+                            case 1: {
+                                isCommentsToMe = false;
+                                MyMaidActionHelper.commentsByMe(true, mHandler);
+                                break;
+                            }
+                        }
+                    }
+                }).setNegativeButton(android.R.string.cancel, null).show();
                 break;
             }
             case MENU_PROFILE_IMAGE: {
@@ -237,15 +297,23 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
         MyMaidActionHelper.remindUnreadCount(mHandler);
     }
 
-    public void refreshComments() {
+    public void refreshCommentsToMe() {
         MyMaidActionHelper.commentsToMe(false, mHandler);
+        mPullToRefreshAttacher.setRefreshing(true);
+    }
+
+    public void refreshCommentsByMe() {
+        MyMaidActionHelper.commentsByMe(false, mHandler);
         mPullToRefreshAttacher.setRefreshing(true);
     }
 
     private void setListView(List<CommentsBean> comments) {
         mAdapter.setData(comments);
-        if (lv.getAdapter() == null)
-            lv.setAdapter(mAdapter);
+        lv.setAdapter(mAdapter);
+    }
+
+    private void updateListView(List<CommentsBean> comments) {
+        mAdapter.setData(comments);
         mAdapter.notifyDataSetChanged();
     }
 

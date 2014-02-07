@@ -25,6 +25,7 @@
     <string name="title_settings">Settings</string>
     <string name="title_about">About</string>
     <string name="title_check_update">Update</string>
+    <string name="title_weather">Weather</string>
 
 
     <string name="toast_press_again_to_clear_text">Press again to clear text</string>
@@ -107,8 +108,13 @@
     <string name="frag_single_weibo_load_gif">Hit to load GIF</string>
 
     <string name="frag_mentions_dialog_title">Mentions</string>
-    <string name="frag_mentions_dialog_normal_mention">Posts Mentions</string>
-    <string name="frag_mentions_dialog_comment_mention">Comments Mentions</string>
+    <string name="frag_mentions_dialog_normal_mention">Posts</string>
+    <string name="frag_mentions_dialog_comment_mention">Comments</string>
+
+    <string name="frag_comments_dialog_title">Comments</string>
+    <string name="frag_comments_dialog_comments_to_me">To Me</string>
+    <string name="frag_comments_dialog_comments_by_me">By Me</string>
+    <string name="frag_comments_dialog_comment_destroy_title">Delete?</string>
 
     <string name="comment_repost_repost">Repost</string>
 
@@ -127,6 +133,7 @@
     <string name="error_update_success_but_wait">Update success, please wait 1~2 minutes</string>
     <string name="error_comment_not_exist">Target weibo comment does not exist</string>
     <string name="error_weibo_not_exist">Target weibo does not exist</string>
+    <string name="error_comment_not_owned">Not owned comment</string>
     <string name="error_in_block">You\'re in block</string>
     <string name="error_unknown">&lt;(ll°д°ll)&gt;! Unknown error</string>
     <string name="error_network_not_avaiable">Network problem</string>
@@ -158,6 +165,7 @@
     <string name="dialog_about_message">Thanks for using MyMaid!\n\nBugs could occur anytime and everywhere XD\n\nAnd I feel that\'s all my About (///▽///)</string>
     <string name="dialog_about_cancle">Back</string>
 
+    <string name="dialog_weather_city_et_hint">Set City</string>
 
     <!-- <string name=""></string>
     <string name=""></string>

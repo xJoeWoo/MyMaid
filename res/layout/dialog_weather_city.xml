@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/dialog_padding_top"
+    android:paddingBottom="@dimen/dialog_padding_bottom"
+    android:paddingLeft="@dimen/dialog_padding_left"
+    android:paddingRight="@dimen/dialog_padding_right">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:hint="@string/dialog_weather_city_et_hint"
+        android:id="@+id/et_dialog_weather_city"
+        android:layout_toLeftOf="@+id/sw_dialog_weather_city" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sw_dialog_weather_city"
+        android:track="@drawable/mymaid_switch_track_holo_light"
+        android:thumb="@drawable/mymaid_switch_inner_holo_light"
+        android:checked="false"
+        android:layout_alignBaseline="@+id/et_dialog_weather_city"
+        android:layout_alignBottom="@+id/et_dialog_weather_city"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

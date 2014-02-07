@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.joewoo.ontime.R;
+import com.joewoo.ontime.support.dialog.WeatherDialog;
 import com.joewoo.ontime.support.view.MyMaidSettingView;
 
 /**
@@ -19,7 +20,7 @@ import com.joewoo.ontime.support.view.MyMaidSettingView;
 public class AboutFragment extends Fragment {
 
     private MainTimelineActivity act;
-    private MyMaidSettingView settingsView;
+    private MyMaidSettingView weatherView;
     private MyMaidSettingView aboutView;
     private TextView tv;
 
@@ -28,7 +29,7 @@ public class AboutFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.frag_settings, null);
 
-        settingsView = (MyMaidSettingView) v.findViewById(R.id.frag_setting_2);
+        weatherView = (MyMaidSettingView) v.findViewById(R.id.frag_setting_2);
         aboutView = (MyMaidSettingView) v.findViewById(R.id.frag_setting_3);
 
         tv = (TextView) v.findViewById(R.id.frag_setting_tv_app_name);
@@ -44,14 +45,14 @@ public class AboutFragment extends Fragment {
 
         tv.setTypeface(Typeface.createFromAsset(act.getAssets(), "fonts/Roboto-ThinItalic.ttf"));
 
-        settingsView.setMainImg(R.drawable.ic_settings).setName(R.string.title_settings);
+        weatherView.setMainImg(R.drawable.ic_weather).setName(R.string.title_weather);
 
         aboutView.setMainImg(R.drawable.ic_about).setName(R.string.title_about);
 
-        settingsView.setOnClickListener(new View.OnClickListener() {
+        weatherView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(act, SettingsActivity.class));
+                WeatherDialog.show(false, act);
             }
         });
 

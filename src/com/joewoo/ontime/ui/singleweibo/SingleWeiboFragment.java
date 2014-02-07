@@ -171,10 +171,17 @@ public class SingleWeiboFragment extends Fragment {
 
     private void setStatus() {
         act.setCommentsCount(status.getCommentsCount());
-        act.setRepostsCount(status.getCommentsCount());
+        act.setRepostsCount(status.getRepostsCount());
 
         act.invalidateOptionsMenu();
 
+        setBasics();
+        setRetweetedStatus();
+        setImage();
+        setLongClickCopyText();
+    }
+
+    private void setBasics() {
         tv_screen_name.setText(status.getUser().getScreenName());
         tv_created_at.setText(" · " + status.getCreatedAt());
 
@@ -215,11 +222,6 @@ public class SingleWeiboFragment extends Fragment {
                 jumpToSingleUser();
             }
         });
-
-        setRetweetedStatus();
-        setImage();
-        setLongClickCopyText();
-
     }
 
     private void setRetweetedStatus() {
@@ -351,8 +353,6 @@ public class SingleWeiboFragment extends Fragment {
                 setFullProgress();
             }
         }
-
-        iv_image.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     private void setFullProgress() {
@@ -447,6 +447,7 @@ public class SingleWeiboFragment extends Fragment {
         if (isGIF)
             ii.putExtra(Defines.IS_GIF, true);
         act.startActivity(ii);
+        act.overridePendingTransition(R.anim.in, R.anim.alpha_out);
     }
 
     public void setGIFSize(double size) {

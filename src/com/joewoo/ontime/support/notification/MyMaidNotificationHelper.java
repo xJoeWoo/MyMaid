@@ -30,6 +30,7 @@ public class MyMaidNotificationHelper {
     public static final int COMMENT_CREATE = 2;
     public static final int REPLY = 3;
     public static final int REPOST = 4;
+    public static final int WEATHER = 5;
     public static final int ALL = 99;
 
     public static final int PROGRESS_UPDATE_DELAY = 500;
@@ -253,8 +254,8 @@ public class MyMaidNotificationHelper {
         nBuilder.setContentTitle(bean.getQuality() + " - pm25.in");
         nBuilder.setContentText("AQI:" + bean.getAQI() + "  首要污染物:" + bean.getPrimaryPollutant());
         nBuilder.setTicker(bean.getQuality());
-        nManager.cancel(99);
-        nManager.notify(99, nBuilder.build());
+        nManager.cancel(WEATHER);
+        nManager.notify(WEATHER, nBuilder.build());
     }
 
     public static void cancel(int what) {

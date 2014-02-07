@@ -1,6 +1,7 @@
 package com.joewoo.ontime.action.aqi;
 
 import android.os.Handler;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.joewoo.ontime.action.URLHelper;
@@ -9,6 +10,7 @@ import com.joewoo.ontime.support.bean.aqi.AQIDetailsBean;
 import com.joewoo.ontime.support.info.Defines;
 import com.joewoo.ontime.support.net.JavaHttpUtility;
 import com.joewoo.ontime.support.notification.MyMaidNotificationHelper;
+import com.joewoo.ontime.support.setting.MyMaidSettingsHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 
 import java.util.HashMap;
@@ -23,38 +25,42 @@ public class AQIDetails extends Thread {
     private String city;
 
 
-    public AQIDetails(String city) {
-        this.city = city;
-    }
-
     public AQIDetails() {
-
+        city = MyMaidSettingsHelper.getString(MyMaidSettingsHelper.WEATHER_CITY);
     }
 
     @Override
     public void run() {
+        Log.e(Defines.TAG, "AQI Details Thread START");
+
+        if (city == null || city.equals("")) {
+            Log.e(Defines.TAG, "AQI City Wrong");
+            return;
+        }
 
         String httpResult = null;
         HashMap<String, String> hm = new HashMap<>();
 
-        if (city == null)
-            hm.put("city", "zhaoqing");
-        else
-            hm.put("city", city);
+        hm.put("city", city);
         hm.put("stations", "no");
         hm.put("token", Defines.PM25_APP_KEY);
 
         try {
-            httpResult = "{\"aqi\":" + new JavaHttpUtility().doGet(URLHelper.AQI_DETAILS, hm) + "}";
+            httpResult = new JavaHttpUtility().doGet(URLHelper.AQI_DETAILS, hm);
+            if (httpResult.startsWith("["))
+                httpResult = "{\"aqi\":" + httpResult + "}";
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         if(httpResult != null) {
-            List<AQIBean> aqis = new Gson().fromJson(httpResult, AQIDetailsBean.class).getAQIs();
-            if (aqis.size() > 0 && aqis.get(0).getAQI() != null) {
-                new MyMaidNotificationHelper(99, null, GlobalContext.getAppContext()).setAQI(aqis.get(0));
+            AQIDetailsBean b = new Gson().fromJson(httpResult, AQIDetailsBean.class);
+            List<AQIBean> aqis = b.getAQIs();
+            if (b.getError() == null && aqis.size() > 0 && aqis.get(0).getAQI() != null) {
+                new MyMaidNotificationHelper(MyMaidNotificationHelper.WEATHER, null, GlobalContext.getAppContext()).setAQI(aqis.get(0));
+            } else if (b.getError() != null) {
+                Log.e(Defines.TAG, b.getError());
             }
         }
 

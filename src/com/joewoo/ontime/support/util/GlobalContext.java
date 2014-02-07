@@ -49,9 +49,15 @@ public class GlobalContext extends Application {
             Log.e(TAG, "Login: " + getScreenName());
             try {
                 setDraft(c.getString(c.getColumnIndex(MyMaidSQLHelper.DRAFT)));
-                setPicPath(c.getString(c.getColumnIndex(MyMaidSQLHelper.PIC_FILE_PATH)));
+                Log.e(TAG, c.getString(c.getColumnIndex(MyMaidSQLHelper.DRAFT)));
             } catch (Exception e) {
-                Log.e(TAG, "No Draft or Pic");
+                Log.e(TAG, "No Draft");
+            }
+            try {
+                setPicPath(c.getString(c.getColumnIndex(MyMaidSQLHelper.PIC_FILE_PATH)));
+                Log.e(TAG, c.getString(c.getColumnIndex(MyMaidSQLHelper.PIC_FILE_PATH)));
+            } catch (Exception e) {
+                Log.e(TAG, "No Pic");
             }
             c.close();
         } else {

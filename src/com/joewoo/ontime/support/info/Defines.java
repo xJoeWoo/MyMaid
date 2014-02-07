@@ -72,9 +72,11 @@ public class Defines {
     public final static int GOT_COMMENTS_TO_ME_ADD_INFO = 50;
     public final static int GOT_COMMNETS_SHOW_ADD_INFO = 51;
     public final static int GOT_REPOST_TIMELINE_ADD_INFO = 52;
-    public final static int GOT_BITMAP_CREATED_INFO = 53;
-    public final static int GOT_SET_SINGLE_WEIBO_INFO = 54;
-    public final static int GOT_GIF_CREATED_INFO = 55;
+    public final static int GOT_COMMENTS_BY_ME_INFO = 53;
+    public final static int GOT_COMMENTS_BY_ME_INFO_FAIL = 54;
+    public final static int GOT_COMMENTS_BY_ME_ADD_INFO = 55;
+    public final static int GOT_COMMENTS_DESTROY_INFO = 56;
+    public final static int GOT_COMMENTS_DESTROY_INFO_FAIL = 57;
 
 
     public final static int ACT_GOT_PHOTO = 1;

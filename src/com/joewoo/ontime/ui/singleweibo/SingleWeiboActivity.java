@@ -236,7 +236,6 @@ public class SingleWeiboActivity extends FragmentActivity {
                     @Override
                     public void onPageSelected(int arg0) {
                         actionBar.setSelectedNavigationItem(arg0);
-                        Log.e(TAG, "Page: " + String.valueOf(arg0));
                         switch (arg0) {
                             case SingleWeiboPagerAdapter.FRAG_SINGLE_WEIBO_POS: {
 

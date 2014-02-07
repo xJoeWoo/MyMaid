@@ -31,14 +31,16 @@ public class MyMaidUtilites {
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeStream(new ByteArrayInputStream(bytes), null, options);
 
-        if (options.outHeight < 2000)
+        if (options.outHeight < 500)
             options.inSampleSize = 1;
-        else if (options.outHeight < 4000)
+        else if (options.outHeight < 1000)
             options.inSampleSize = 2;
-        else if (options.outHeight < 6000)
+        else if (options.outHeight < 2000)
             options.inSampleSize = 3;
-        else
+        else if (options.outHeight < 3000)
             options.inSampleSize = 4;
+        else
+            options.inSampleSize = 5;
 
         options.inPreferredConfig = Bitmap.Config.RGB_565;
         options.inJustDecodeBounds = false;

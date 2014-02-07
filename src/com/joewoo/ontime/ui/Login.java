@@ -20,6 +20,7 @@ import com.joewoo.ontime.action.URLHelper;
 import com.joewoo.ontime.action.auth.AccessToken;
 import com.joewoo.ontime.action.user.UserShow;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
+import com.joewoo.ontime.support.dialog.WeatherDialog;
 import com.joewoo.ontime.support.image.LoginProfileImage;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
@@ -153,8 +154,9 @@ public class Login extends Activity {
 
                     if (!getIntent().getBooleanExtra(LOGIN_FROM_POST, false))
                         startActivity(new Intent(Login.this, MainTimelineActivity.class));
-                    else
-                        startActivity(new Intent(Login.this, Post.class));
+                    else {
+                        WeatherDialog.show(true, Login.this);
+                    }
 
                     finish();
                     break;

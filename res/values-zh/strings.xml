@@ -25,6 +25,8 @@
     <string name="title_settings">设置</string>
     <string name="title_about">关于</string>
     <string name="title_check_update">更新</string>
+    <string name="title_weather">天气</string>
+
 
     <string name="toast_press_again_to_clear_text">再按一次清除文字</string>
     <string name="toast_press_again_to_clear_img">再按一次删除图片</string>
@@ -108,6 +110,11 @@
     <string name="frag_mentions_dialog_normal_mention">\@我的微博</string>
     <string name="frag_mentions_dialog_comment_mention">\@我的评论</string>
 
+    <string name="frag_comments_dialog_title">评论</string>
+    <string name="frag_comments_dialog_comments_to_me">发给我的</string>
+    <string name="frag_comments_dialog_comments_by_me">我发送的</string>
+    <string name="frag_comments_dialog_comment_destroy_title">删除？</string>
+
     <string name="comment_repost_repost">转发</string>
 
     <string name="error_token_out_of_date">身份认证过期…请重新登录</string>
@@ -125,6 +132,7 @@
     <string name="error_update_success_but_wait">发布成功，请稍后1~2分钟…</string>
     <string name="error_comment_not_exist">评论不存在…</string>
     <string name="error_weibo_not_exist">微博不存在…</string>
+    <string name="error_comment_not_owned">不是自己发出…</string>
     <string name="error_in_block">被博主拉黑…</string>
     <string name="error_unknown">&lt;(ll°д°ll)&gt;! 未知错误</string>
     <string name="error_network_not_avaiable">网络错误</string>
@@ -156,6 +164,7 @@
     <string name="dialog_about_message">感谢使用“自家用女仆”！\n\nBug多提示少是本软件的特色\n\n关于什么的就懒得写了 (///▽///)</string>
     <string name="dialog_about_cancle">返回</string>
 
+    <string name="dialog_weather_city_et_hint">设置城市</string>
 
     <!-- <string name=""></string>
     <string name=""></string>

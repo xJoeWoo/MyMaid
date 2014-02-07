@@ -51,7 +51,7 @@ public class ErrorCheck {
         }
     }
 
-    private static String matchError(int code){
+    private static String matchError(int code) {
         Log.e(TAG, "Error code: " + String.valueOf(code));
         if (code > 0) {
             switch (code) {
@@ -105,6 +105,10 @@ public class ErrorCheck {
                 case 20201:
                 case 20202:
                     return GlobalContext.getResString(R.string.error_comment_not_exist);
+
+                //不是自己评论
+                case 20203:
+                    return GlobalContext.getResString(R.string.error_comment_not_owned);
 
                 // 微博不存在
                 case 20101:
