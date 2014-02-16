@@ -1,6 +1,6 @@
-package com.joewoo.ontime.support.bean;
+package com.joewoo.ontime.support.bean.weather;
 
-public class WeatherBean {
+public class WeatherForecastBean {
 
 	private String temp1;
 	private String temp2;
