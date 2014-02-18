@@ -8,9 +8,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.bean.aqi.AQIBean;
+import com.joewoo.ontime.support.bean.weather.WeatherNowBean;
 import com.joewoo.ontime.support.info.Defines;
 import com.joewoo.ontime.support.service.ClearDraftService;
 import com.joewoo.ontime.support.service.CommentCreateService;
@@ -19,6 +21,9 @@ import com.joewoo.ontime.support.service.RepostService;
 import com.joewoo.ontime.support.service.UpdateService;
 import com.joewoo.ontime.support.service.UploadService;
 import com.joewoo.ontime.support.util.GlobalContext;
+import com.joewoo.ontime.support.util.MyMaidUtilites;
+
+import java.util.Calendar;
 
 /**
  * Created by JoeWoo on 14-1-3.
@@ -250,10 +255,52 @@ public class MyMaidNotificationHelper {
         nManager.cancel(what);
     }
 
-    public void setAQI(AQIBean bean) {
-        nBuilder.setContentTitle(bean.getQuality() + " - pm25.in");
-        nBuilder.setContentText("AQI:" + bean.getAQI() + "  首要污染物:" + bean.getPrimaryPollutant());
-        nBuilder.setTicker(bean.getQuality());
+    public void setWeather(AQIBean aqiBean, WeatherNowBean weatherBean) {
+        String title = weatherBean.getTemp() + "℃ / " + aqiBean.getQuality();
+
+        NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
+        bigTextStyle.setBuilder(nBuilder);
+        StringBuilder sb = new StringBuilder();
+        if (aqiBean.getPrimaryPollutant() != null) {
+            sb.append(GlobalContext.getResString(R.string.notify_weather_air_pollutant)).append(aqiBean.getPrimaryPollutant()).append("\n");
+            nBuilder.setContentText(GlobalContext.getResString(R.string.notify_weather_air_pollutant) + aqiBean.getPrimaryPollutant());
+        } else {
+            nBuilder.setContentText(GlobalContext.getResString(R.string.notify_weather_air_aqi) + aqiBean.getAQI());
+        }
+        sb.append(GlobalContext.getResString(R.string.notify_weather_air_aqi)).append(aqiBean.getAQI()).append("\n");
+        sb.append(GlobalContext.getResString(R.string.notify_weather_wind)).append(weatherBean.getWS()).append(weatherBean.getWD()).append("\n");
+        sb.append(GlobalContext.getResString(R.string.notify_weather_humidity)).append(weatherBean.getSD()).append("\n");
+        sb.append("--------------------------------").append("\n");
+        sb.append(MyMaidUtilites.EncourgingSentences.getSentence());
+        bigTextStyle.bigText(sb.toString());
+
+        Log.e(Defines.TAG, weatherBean.getTime());
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), Integer.valueOf(weatherBean.getTime().substring(0, 2)), Integer.valueOf(weatherBean.getTime().substring(3, 5)));
+        nBuilder.setWhen(calendar.getTimeInMillis());
+
+        nBuilder.setStyle(bigTextStyle);
+        nBuilder.setTicker(title);
+        nBuilder.setContentTitle(title);
+        nManager.cancel(WEATHER);
+        nManager.notify(WEATHER, nBuilder.build());
+    }
+
+    public void setWeather(WeatherNowBean weatherBean) {
+        String title = weatherBean.getTemp() + "℃";
+
+        NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
+        bigTextStyle.setBuilder(nBuilder);
+        bigTextStyle.bigText(weatherBean.getWS() + weatherBean.getWD() + " / " + GlobalContext.getResString(R.string.notify_weather_humidity).trim() + weatherBean.getSD() + "\n" + "--------------------------------" + "\n" + MyMaidUtilites.EncourgingSentences.getSentence());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), Integer.valueOf(weatherBean.getTime().substring(0, 2)), Integer.valueOf(weatherBean.getTime().substring(3, 5)));
+        nBuilder.setWhen(calendar.getTimeInMillis());
+
+        nBuilder.setStyle(bigTextStyle);
+        nBuilder.setTicker(title);
+        nBuilder.setContentTitle(title);
+        nBuilder.setContentText(weatherBean.getWS() + weatherBean.getWD() + " / " + GlobalContext.getResString(R.string.notify_weather_humidity).trim() + " " + weatherBean.getSD());
         nManager.cancel(WEATHER);
         nManager.notify(WEATHER, nBuilder.build());
     }

@@ -10,6 +10,7 @@ public class Defines {
     public final static String PM25_APP_KEY = "egcFicmNaR6JpWNcYS84";
 
     public final static int RESULT_DESTROYED_WEIBO = 2;
+    public final static int INPUT_SHOW_DELAY = 100;
 
     public final static String STATUS_BEAN = "status_bean";
     public final static String USER_BEAN = "user_bean";
@@ -17,8 +18,7 @@ public class Defines {
     public final static String PHOTO_FILE = "photo_file";
     public final static String IS_GIF = "is_gif";
 
-    public final static String TEMP_IMAGE_NAME = "tmp.png";
-    public final static String TEMP_IMAGE_PATH = Environment.getExternalStorageDirectory() + "/Android/data/com.joewoo.ontime/";
+    public final static String IMAGE_SAVE_PATH = Environment.getExternalStorageDirectory() + "/MyMaid/images/";
 
     public final static int GOT_ACCESS_TOKEN = 1;
     public final static int GOT_ACCESS_TOKEN_FAIL = 2;
@@ -77,13 +77,15 @@ public class Defines {
     public final static int GOT_COMMENTS_BY_ME_ADD_INFO = 55;
     public final static int GOT_COMMENTS_DESTROY_INFO = 56;
     public final static int GOT_COMMENTS_DESTROY_INFO_FAIL = 57;
+    public final static int GOT_AQI_INFO_FAIL = 58;
+    public final static int GOT_SAVED_IMAGE = 59;
+    public final static int GOT_SAVED_IMAGE_FAIL = 60;
 
 
     public final static int ACT_GOT_PHOTO = 1;
     public final static int ACT_GOT_AT = 2;
 
     public final static String TAG = "OnTime --- ";
-    public final static String LOG_DEVIDER = "=========================";
 
     public final static String KEY_AT_USER = "at_user";
 
@@ -94,65 +96,20 @@ public class Defines {
     public final static String STATUS = "status";
     public final static String FILE_PATH = "file_path";
     public final static String PIC = "pic";
-    public final static String AUTH_CODE = "auth_code";
     public final static String UID = "uid";
     public final static String SCREEN_NAME = "screen_name";
     public final static String LOCATION = "location";
-    public final static String NICKNAME = "nickname";
-    public final static String TEXT = "text";
-    public final static String COMMENTS_COUNT = "comments_count";
-    public final static String REPOSTS_COUNT = "reposts_count";
-    public final static String SOURCE = "source";
-    public final static String CREATED_AT = "created_at";
-    public final static String RETWEETED_STATUS = "retweeted_status";
-    public final static String RETWEETED_STATUS_UID = "retweeted_status_uid";
-    public final static String RETWEETED_STATUS_SCREEN_NAME = "retweeted_status_screen_name";
-    public final static String RETWEETED_STATUS_CREATED_AT = "retweeted_status_created_at";
-    public final static String RETWEETED_STATUS_COMMENTS_COUNT = "retweeted_status_comments_count";
-    public final static String RETWEETED_STATUS_REPOSTS_COUNT = "retweeted_status_reposts_count";
-    public final static String RETWEETED_STATUS_THUMBNAIL_PIC = "retweeted_status_thumbnail_pic";
-    public final static String RETWEETED_STATUS_BMIDDLE_PIC = "retweeted_status_bmiddle_pic";
-    public final static String RETWEETED_STATUS_ORIGINAL_PIC = "retweeted_status_original_pic";
-    public final static String RETWEETED_STATUS_PIC_URLS = "retweeted_status_pic_urls";
-    public final static String RETWEETED_STATUS_SOURCE = "retweeted_status_source";
     public final static String WEIBO_ID = "id";
-    public final static String REPOST_WEIBO_ID = "repost_weibo_id";
     public final static String COMMENT_ID = "comment_id";
     public final static String COMMENT = "comment";
     public final static String IS_COMMENT = "isComment";
-    public final static String HAVE_PIC = "havePic";
-    public final static String RETWEETED_STATUS_HAVE_PIC = "retweeted_status_havePic";
     public final static String IS_REPOST = "isRepost";
-    public final static String STATUS_TEXT = "status_text";
-    public final static String STATUS_SOURCE = "status_source";
-    public final static String STATUS_CREATED_AT = "status_created_at";
-    public final static String STATUS_COMMENTS_COUNT = "status_comments_count";
-    public final static String STATUS_REPOSTS_COUNT = "status_reposts_count";
-    public final static String STATUS_USER_SCREEN_NAME = "status_user_screen_name";
-    public final static String STATUS_PROFILE_IMAGE_URL = "status_profile_image";
-    public final static String STATUS_THUMBNAIL_PIC = "status_thumbnail_pic";
-    public final static String STATUS_BMIDDLE_PIC = "status_bmiddle_pic";
-    public final static String REPLY_COMMNET_TEXT = "reply_comment_text";
-    public final static String REPLY_COMMNET_USER_SCREEN_NAME = "reply_comment_user_screen_name";
     public final static String IS_REPLY = "isReply";
-    public final static String THUMBNAIL_PIC = "thumbnail_pic";
-    public final static String BMIDDLE_PIC = "bmiddle_pic";
-    public final static String ORIGINAL_PIC = "original_pic";
-    public final static String PIC_URLS = "pic_urls";
-    public final static String IS_FRAG_POST = "isFragPost";
     public final static String PROFILE_IMAGE = "profile_image";
-    public final static String USER_WEIBO = "user_weibo";
-    public final static String BLANK = "blank";
-
-    public final static String PROFILE_IMAGE_URL = "profile_image_url";
 
     public final static String[] dayNames = {"星期几", "星期日", "星期一", "星期二",
             "星期三", "星期四", "星期五", "星期六"};
 
-    public final static String PREFERENCES = "ontime";
-    public final static String LASTUID = "last_uid";
-    public final static String ALLUID = "all_uid";
-    public final static String ALLUSER = "all_user";
     public final static String DRAFT = "draft";
 
     public final static int MENU_ADD = 1;
@@ -177,6 +134,7 @@ public class Defines {
     public final static int MENU_STATUSES_DESTROY = 20;
     public final static int MENU_COPY_TEXT = 21;
     public final static int MENU_FAVOURITE_DESTORY = 22;
+    public final static int MENU_SAVE_PHOTO = 23;
 
     public final static String LOGIN_FROM_POST = "login_from_post";
 }

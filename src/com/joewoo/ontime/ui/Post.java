@@ -7,19 +7,20 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.dialog.UserChooserDialog;
+import com.joewoo.ontime.support.info.Defines;
 import com.joewoo.ontime.support.net.NetworkStatus;
 import com.joewoo.ontime.support.notification.MyMaidNotificationHelper;
 import com.joewoo.ontime.support.service.MyMaidServiceHelper;
@@ -74,9 +75,7 @@ public class Post extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.act_post);
-        setProgressBarIndeterminateVisibility(false);
         findViews();
 
         Log.e(TAG, "Post Weibo");
@@ -136,6 +135,13 @@ public class Post extends Activity {
         setTitle(R.string.title_act_post);
         getActionBar().setLogo(GlobalContext.getProfileImg());
         getActionBar().setSubtitle(GlobalContext.getScreenName());
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(et_post, 0);
+            }
+        }, Defines.INPUT_SHOW_DELAY);
     }
 
     private void findViews() {
@@ -194,6 +200,7 @@ public class Post extends Activity {
                     downTime = System.currentTimeMillis();
                 } else {
                     et_post.setText("");
+                    GlobalContext.setDraft(null);
                 }
                 break;
             }
@@ -203,15 +210,10 @@ public class Post extends Activity {
                     Intent ii = new Intent();
 
                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-
                         ii.setType("image/*");
                         ii.setAction(Intent.ACTION_GET_CONTENT);
                         startActivityForResult(ii, ACT_GOT_PHOTO);
-
                     } else {
-
-                        //TODO
-
                         ii.setAction(Intent.ACTION_PICK);
                         ii.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         startActivityForResult(ii, ACT_GOT_PHOTO);

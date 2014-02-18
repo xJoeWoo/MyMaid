@@ -30,7 +30,7 @@
 
     <string name="toast_press_again_to_clear_text">再按一次清除文字</string>
     <string name="toast_press_again_to_clear_img">再按一次删除图片</string>
-    <string name="toast_press_again_to_delete_statuse">再按一次删除微博</string>
+    <string name="toast_press_again_to_delete_statuse">再按一次删除</string>
     <string name="toast_say_sth">说点什么吧</string>
     <string name="toast_comment_success">评论成功</string>
     <string name="toast_comment_fail">评论失败…</string>
@@ -44,8 +44,6 @@
     <string name="toast_delete_fail">删除失败…</string>
     <string name="toast_clear_draft_success">清除草稿成功</string>
     <string name="toast_access_token_fail">获取授权信息失败</string>
-    <string name="toast_post_welcome_part_1">欢迎</string>
-    <string name="toast_post_welcome_part_2">Po主&#160;</string>
     <string name="toast_login_acquired">请先登录~</string>
     <string name="toast_no_network">没有网络神烦…</string>
     <string name="toast_no_network_to_at">没有网络自己@吧…</string>
@@ -57,6 +55,9 @@
     <string name="toast_repost_timeline_fail">获取转发微博失败…</string>
     <string name="toast_coming_soon">功能就快来了…</string>
     <string name="toast_statuses_show_fail">获取微博失败…</string>
+    <string name="toast_aqi_city_not_supported">城市不支持…</string>
+    <string name="toast_image_saved">保存成功</string>
+    <string name="toast_image_save_failed">保存失败</string>
 
     <string name="menu_repost">转发</string>
     <string name="menu_reply">回复</string>
@@ -80,6 +81,7 @@
     <string name="menu_unread_post_mentions">微博@&#160;</string>
     <string name="menu_unread_comments_mentions">\t\t评论@&#160;</string>
     <string name="menu_unread_comments">评论&#160;</string>
+    <string name="menu_save_photo">保存</string>
 
     <string name="post_send_success_part_1">SUCCESS!\n发表于 -&#160;</string>
     <string name="post_send_success_part_2">\nID -&#160;</string>
@@ -157,14 +159,20 @@
     <string name="notify_comment_create_sending">评论中…</string>
     <string name="notify_comment_create_fail">评论失败</string>
     <string name="notify_comment_create_success">评论成功</string>
-    <string name="notify_resend">重新发送</string>
+    <string name="notify_resend">重发</string>
     <string name="notify_discard">取消</string>
+    <string name="notify_weather_air_pollutant">污染\t</string>
+    <string name="notify_weather_wind">风力\t</string>
+    <string name="notify_weather_humidity">湿度\t</string>
 
     <string name="dialog_about_title">关于</string>
     <string name="dialog_about_message">感谢使用“自家用女仆”！\n\nBug多提示少是本软件的特色\n\n关于什么的就懒得写了 (///▽///)</string>
     <string name="dialog_about_cancle">返回</string>
 
+    <string name="dialog_weather_city_title">嘘寒问暖？</string>
     <string name="dialog_weather_city_et_hint">设置城市</string>
+    <string name="dialog_weather_city_btn_ok">好</string>
+    <string name="dialog_weather_city_btn_cancel">不用啦</string>
 
     <!-- <string name=""></string>
     <string name=""></string>

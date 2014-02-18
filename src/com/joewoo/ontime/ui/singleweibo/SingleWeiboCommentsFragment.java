@@ -47,6 +47,7 @@ public class SingleWeiboCommentsFragment extends Fragment {
     private List<CommentsBean> comments;
     private SingleWeiboCmtsAdapter adapter;
     private boolean isFreshing;
+    private int totalNumber = -1;
 
     public void showComments() {
         weiboID = act.getSingleWeiboFragment().getWeiboID();
@@ -106,9 +107,11 @@ public class SingleWeiboCommentsFragment extends Fragment {
 
                 // 滚到到尾刷新
                 if (view.getCount() > (Integer.valueOf(AcquireCount.COMMENTS_SHOW_COUNT) - 2) && !isFreshing && comments != null && comments.size() > 6 && view.getLastVisiblePosition() > (view.getCount() - 6)) {
-                    Log.e(TAG, "到底");
-                    MyMaidActionHelper.commentsShow(weiboID, comments.get(view.getCount() - 1).getId(), mHandler);
-                    isFreshing = true;
+                    if (totalNumber == -1 | view.getCount() < totalNumber) {
+                        Log.e(TAG, "到底");
+                        MyMaidActionHelper.commentsShow(weiboID, comments.get(view.getCount() - 1).getId(), mHandler);
+                        isFreshing = true;
+                    }
                 }
             }
 
@@ -146,7 +149,8 @@ public class SingleWeiboCommentsFragment extends Fragment {
                         }
                     }
 
-                    act.setCommentsCount(b.getTotalNumber());
+                    totalNumber = b.getTotalNumber();
+                    act.setCommentsCount(totalNumber);
 
                     break;
                 }

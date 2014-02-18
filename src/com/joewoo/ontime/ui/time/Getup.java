@@ -11,10 +11,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.action.aqi.Weather;
-import com.joewoo.ontime.support.bean.WeatherBean;
 import com.joewoo.ontime.support.bean.WeiboBackBean;
-import com.joewoo.ontime.support.info.GetupSentences;
+import com.joewoo.ontime.support.bean.weather.WeatherForecastBean;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.util.MyMaidUtilites;
@@ -47,7 +45,7 @@ public class Getup extends Activity {
         GlobalContext.setAccessToken(c.getString(c.getColumnIndex(MyMaidSQLHelper.ACCESS_TOKEN)));
         GlobalContext.setUID(c.getString(c.getColumnIndex(MyMaidSQLHelper.UID)));
 
-        new Weather(mHandler).start();
+//        new Weather(mHandler).start();
 
     }
 
@@ -81,7 +79,7 @@ public class Getup extends Activity {
                     break;
                 }
                 case GOT_WEATHER_INFO: {
-                    WeatherBean w = (WeatherBean) msg.obj;
+                    WeatherForecastBean w = (WeatherForecastBean) msg.obj;
 
                     String ampm = "。傍晚#";
 
@@ -102,7 +100,7 @@ public class Getup extends Activity {
                         ampm = "。明早#";
                     }
 
-                    String sentence = GetupSentences.getSentence();
+                    String sentence = MyMaidUtilites.EncourgingSentences.getSentence();
 
                     String minute;
                     if (c.get(Calendar.MINUTE) < 10) {

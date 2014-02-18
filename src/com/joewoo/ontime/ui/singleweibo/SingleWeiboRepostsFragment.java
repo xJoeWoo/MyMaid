@@ -46,6 +46,7 @@ public class SingleWeiboRepostsFragment extends Fragment {
     private SingleWeiboMensAdapter adapter;
     private List<StatusesBean> statuses;
     private boolean isFreshing;
+    private int totalNumber = -1;
 
     public void showReposts() {
         weiboID = act.getSingleWeiboFragment().getWeiboID();
@@ -77,7 +78,8 @@ public class SingleWeiboRepostsFragment extends Fragment {
                         }
                     }
 
-                    act.setRepostsCount(b.getTotalNumber());
+                    totalNumber = b.getTotalNumber();
+                    act.setRepostsCount(totalNumber);
 
                     break;
                 }
@@ -145,9 +147,11 @@ public class SingleWeiboRepostsFragment extends Fragment {
 
                 // 滚到到尾刷新
                 if (view.getCount() > (Integer.valueOf(AcquireCount.REPOSTS_TIMELINE_COUNT) - 2) && !isFreshing && statuses != null && statuses.size() > 6 && view.getLastVisiblePosition() > (view.getCount() - 6)) {
-                    Log.e(TAG, "到底");
-                    MyMaidActionHelper.statusesRepostTimeline(weiboID, statuses.get(view.getCount() - 1).getId(), mHandler);
-                    isFreshing = true;
+                    if (totalNumber == -1 | view.getCount() < totalNumber) {
+                        Log.e(TAG, "到底");
+                        MyMaidActionHelper.statusesRepostTimeline(weiboID, statuses.get(view.getCount() - 1).getId(), mHandler);
+                        isFreshing = true;
+                    }
                 }
             }
 

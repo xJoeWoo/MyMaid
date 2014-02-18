@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Transparent.Activity.Mymaid" parent="@android:style/Theme.Holo.Light">
+    <style name="Theme.Transparent.Activity.Mymaid" parent="@android:style/Theme.Holo">
         <item name="android:windowBackground">@color/tranPhoto</item>
         <item name="android:windowIsTranslucent">true</item>
-        <!--<item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>-->
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Transparent.Inner</item>
     </style>
 
     <style name="Theme.Mymaid.Soild" parent="Theme.Mymaid">
@@ -38,7 +40,7 @@
 
     <style name="ActionBar.Transparent.Inner" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:backgroundStacked">@drawable/ab_transparent_mymaid_new</item>
-        <item name="android:background">@drawable/ab_transparent_mymaid_new</item>
+        <item name="android:background">@null</item>
         <item name="android:backgroundSplit">@drawable/ab_transparent_mymaid_split_new</item>
     </style>
 

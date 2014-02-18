@@ -152,13 +152,13 @@ public class Login extends Activity {
 
                     MyMaidSQLHelper.setLastLogin(GlobalContext.getUID());
 
-                    if (!getIntent().getBooleanExtra(LOGIN_FROM_POST, false))
+                    if (getIntent().getBooleanExtra(LOGIN_FROM_POST, false)) {
                         startActivity(new Intent(Login.this, MainTimelineActivity.class));
-                    else {
+                        finish();
+                    } else {
                         WeatherDialog.show(true, Login.this);
                     }
 
-                    finish();
                     break;
                 }
                 case GOT_SHOW_INFO_FAIL: {

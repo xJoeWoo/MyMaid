@@ -270,8 +270,23 @@ public class SingleWeiboFragment extends Fragment {
 
     private void setImage() {
 
-        if ((status.getBmiddlePic() != null && status.getBmiddlePic().endsWith(".gif")) | (status.getRetweetedStatus() != null && status.getRetweetedStatus().getBmiddlePic() != null && status.getRetweetedStatus().getBmiddlePic().endsWith(".gif"))) {
-            // 动图
+        if (status.getBmiddlePic() != null && status.getBmiddlePic().endsWith(".gif")) {
+            // 原创动图
+
+            tv_load_gif.setVisibility(View.VISIBLE);
+            tv_load_gif.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (dGifp != null) {
+                        dGifp.cancel(true);
+                    }
+                    dGifp = new DownloadGIFPhoto(tv_rt_rl, SingleWeiboFragment.this);
+                    dGifp.execute(status.getBmiddlePic());
+                }
+            });
+
+        } else if (status.getRetweetedStatus() != null && status.getRetweetedStatus().getBmiddlePic() != null && status.getRetweetedStatus().getBmiddlePic().endsWith(".gif")) {
+            // 转发动图
 
             setFullProgress();
 
@@ -279,14 +294,13 @@ public class SingleWeiboFragment extends Fragment {
             tv_load_gif.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (dGifp != null) {
+                        dGifp.cancel(true);
+                    }
                     dGifp = new DownloadGIFPhoto(tv_rt_rl, SingleWeiboFragment.this);
-                    if (status.getRetweetedStatus() == null)
-                        dGifp.execute(status.getBmiddlePic());
-                    else
-                        dGifp.execute(status.getRetweetedStatus().getBmiddlePic());
+                    dGifp.execute(status.getRetweetedStatus().getBmiddlePic());
                 }
             });
-
         } else if (status.getPicURLs() != null && status.getPicURLs().size() > 1) {
             // 原创多图微博
 
@@ -296,6 +310,9 @@ public class SingleWeiboFragment extends Fragment {
             gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (dsp != null) {
+                        dsp.cancel(true);
+                    }
                     dsp = new DownloadSinglePhoto(tv_rt_rl, SingleWeiboFragment.this);
                     dsp.execute(status.getPicURLs().get(position).getBmiddlePic());
                 }
@@ -312,6 +329,9 @@ public class SingleWeiboFragment extends Fragment {
             gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (dsp != null) {
+                        dsp.cancel(true);
+                    }
                     dsp = new DownloadSinglePhoto(tv_rt_rl, SingleWeiboFragment.this);
                     dsp.execute(status.getRetweetedStatus().getPicURLs().get(position).getBmiddlePic());
                 }
@@ -333,8 +353,6 @@ public class SingleWeiboFragment extends Fragment {
 
         } else if (status.getRetweetedStatus() != null && status.getRetweetedStatus().getBmiddlePic() != null) {
             // 转发有图微博
-
-            setFullProgress();
 
             dp = new DownloadPhoto(iv_image, tv_rt_rl, true, SingleWeiboFragment.this);
             dp.execute(status.getRetweetedStatus().getBmiddlePic());
@@ -451,6 +469,9 @@ public class SingleWeiboFragment extends Fragment {
     }
 
     public void setGIFSize(double size) {
+
+        if (tv_load_gif.getText() != null && tv_load_gif.getText().toString().indexOf("(") > 0)
+            return;
 
         StringBuilder sb = new StringBuilder();
         DecimalFormat df = new DecimalFormat("#.0");

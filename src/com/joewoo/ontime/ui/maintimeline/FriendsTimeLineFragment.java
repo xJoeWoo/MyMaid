@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.MyMaidActionHelper;
+import com.joewoo.ontime.action.weather.Weather;
 import com.joewoo.ontime.support.adapter.listview.MainListViewAdapter;
 import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.dialog.UserChooserDialog;
@@ -37,6 +38,7 @@ import java.util.Locale;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
 
+import static com.joewoo.ontime.support.info.Defines.GOT_AQI_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_INFO_FAIL;
@@ -69,6 +71,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                     updateListView(statuses);
                     break;
                 }
+                case GOT_AQI_INFO_FAIL:
                 case GOT_FRIENDS_TIMELINE_INFO_FAIL: {
                     if (msg.obj != null)
                         Toast.makeText(act, (String) msg.obj, Toast.LENGTH_SHORT).show();
@@ -116,6 +119,8 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
         mPullToRefreshAttacher.addRefreshableView(lv, this);
 
         MyMaidActionHelper.statusesFriendsTimeLine(true, mHandler);
+
+        new Weather().start();
 
 //        lv.setFastScrollAlwaysVisible(true);
 
@@ -286,4 +291,5 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
     public void scrollListViewToTop() {
         lv.smoothScrollToPosition(0);
     }
+
 }

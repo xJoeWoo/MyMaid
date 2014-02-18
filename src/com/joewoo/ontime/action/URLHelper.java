@@ -41,6 +41,8 @@ public class URLHelper {
     public final static String STATUSES_SHOW = "https://api.weibo.com/2/statuses/show.json";
 
     public final static String AQI_DETAILS = "http://www.pm25.in/api/querys/aqi_details.json";
+    public final static String WEATHER_FORECAST = "http://m.weather.com.cn/data/";
+    public final static String WEATHER_NOW = "http://www.weather.com.cn/data/sk/";
 
     public final static String GOOGLE_GEO_CODE = "https://maps.googleapis.com/maps/api/geocode/json";
 

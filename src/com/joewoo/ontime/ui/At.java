@@ -36,6 +36,7 @@ public class At extends Activity {
         setContentView(R.layout.act_at);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayShowHomeEnabled(false);
 
         lv = (ListView) findViewById(R.id.lv_at);
         pb = (ProgressBar) findViewById(R.id.pb_at);

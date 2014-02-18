@@ -67,11 +67,15 @@ public class StatusesFriendsTimeLine extends Thread {
 
                 List<StatusesBean> statuses = f.getStatuses();
 
-                String[] adIDs = new String[f.getAd().size()];
-                for (int i = 0; i < f.getAd().size(); i++) {
-                    adIDs[i] = f.getAd().get(i).getId();
-                    Log.e(TAG, "Ad: " + adIDs[i]);
-                }
+//                String[] adIDs = new String[f.getAd().size()];
+//                for (int i = 0; i < f.getAd().size(); i++) {
+//                    adIDs[i] = f.getAd().get(i).getId();
+//                    Log.e(TAG, "Ad: " + adIDs[i]);
+//                }
+
+                String adID = null;
+                if (f.getAd().size() > 0)
+                    adID = f.getAd().get(0).getId();
 
                 int index = -1;
                 int adPosition = -1;
@@ -100,11 +104,11 @@ public class StatusesFriendsTimeLine extends Thread {
                     }
 
 
-                    for (String adID : adIDs)
-                        if (s.getId().equals(adID)) {
-                            Log.e(TAG, "HAAAAAAAA! CAUGHT AN AD!!!!");
-                            adPosition = index;
-                        }
+//                    for (String adID : adIDs)
+                    if (s.getId().equals(adID)) {
+                        Log.e(TAG, "HAAAAAAAA! CAUGHT AN AD!!!!");
+                        adPosition = index;
+                    }
 
                 }
 

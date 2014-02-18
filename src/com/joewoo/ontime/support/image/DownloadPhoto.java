@@ -58,7 +58,6 @@ public class DownloadPhoto extends AsyncTask<String, Integer, byte[]> implements
         Log.e(TAG, "Download Pic AsyncTask START");
         Log.e(TAG, "Pic URL - " + params[0]);
 
-
         if (!params[0].endsWith(".gif")) {
             try {
 

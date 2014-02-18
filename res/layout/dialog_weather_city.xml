@@ -15,6 +15,7 @@
         android:layout_alignParentLeft="true"
         android:hint="@string/dialog_weather_city_et_hint"
         android:id="@+id/et_dialog_weather_city"
+        android:layout_marginRight="8dp"
         android:layout_toLeftOf="@+id/sw_dialog_weather_city" />
 
     <Switch
