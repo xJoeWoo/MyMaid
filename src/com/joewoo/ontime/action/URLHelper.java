@@ -46,4 +46,7 @@ public class URLHelper {
 
     public final static String GOOGLE_GEO_CODE = "https://maps.googleapis.com/maps/api/geocode/json";
 
+    public final static String MYMAID_VERSION = "http://mymaid.sinaapp.com/version.mymaid";
+    public final static String MYMAID_DOWNLOAD = "http://mymaid-apk.stor.sinaapp.com/MyMaid.apk";
+
 }

@@ -61,6 +61,14 @@ public class MyMaidSettingView extends RelativeLayout {
 
     public MyMaidSettingView setName(int resID) {
         tv_name.setText(resID);
+        tv_name.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf"));
         return this;
     }
+
+    public MyMaidSettingView setName(int resID, Typeface tf) {
+        tv_name.setText(resID);
+        tv_name.setTypeface(tf);
+        return this;
+    }
+
 }

@@ -24,6 +24,7 @@ import com.joewoo.ontime.action.weather.Weather;
 import com.joewoo.ontime.support.adapter.listview.MainListViewAdapter;
 import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.dialog.UserChooserDialog;
+import com.joewoo.ontime.support.info.Defines;
 import com.joewoo.ontime.support.net.NetworkStatus;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.util.MyMaidUtilites;
@@ -38,7 +39,6 @@ import java.util.Locale;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
 
-import static com.joewoo.ontime.support.info.Defines.GOT_AQI_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_ADD_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_FRIENDS_TIMELINE_INFO_FAIL;
@@ -71,7 +71,6 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                     updateListView(statuses);
                     break;
                 }
-                case GOT_AQI_INFO_FAIL:
                 case GOT_FRIENDS_TIMELINE_INFO_FAIL: {
                     if (msg.obj != null)
                         Toast.makeText(act, (String) msg.obj, Toast.LENGTH_SHORT).show();
@@ -120,7 +119,12 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
 
         MyMaidActionHelper.statusesFriendsTimeLine(true, mHandler);
 
-        new Weather().start();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                new Weather().start();
+            }
+        }, Defines.WEATHER_REQUEST_DELAY);
 
 //        lv.setFastScrollAlwaysVisible(true);
 
@@ -157,7 +161,6 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
 
         lv.setOnScrollListener(new OnScrollListener() {
             int mLastFirstVisibleItem = 0;
-            int headerHeight = -1;
 
             @Override
             public void onScroll(AbsListView view, int arg1, int arg2, int arg3) {
@@ -178,25 +181,6 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
                     MyMaidActionHelper.statusesFriendsTimeLine(statuses.get(view.getCount() - 1 - lv.getHeaderViewsCount()).getId(), mHandler);
                     mPullToRefreshAttacher.setRefreshing(true);
                 }
-
-//                if(arg1 == 0) {
-//                    try {
-//
-//                        if(headerHeight == -1)
-//                            headerHeight = view.getChildAt(0).getHeight();
-//
-//                        int pos = headerHeight + view.getChildAt(0).getTop();
-//                        float percent = (float)pos / (float)headerHeight;
-//
-//                        header.setAlpha(percent * 2);
-//
-//                        act.getActionBar().
-//
-//
-//                    } catch (Exception ignored) { }
-//                }
-
-
             }
 
             @Override

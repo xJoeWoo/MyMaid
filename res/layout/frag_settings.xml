@@ -30,17 +30,40 @@
             android:layout_toRightOf="@+id/frag_setting_2"
             android:gravity="center" />
 
-        </RelativeLayout>
+    </RelativeLayout>
 
-    <TextView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MyMaid"
-        android:id="@+id/frag_setting_tv_app_name"
-        android:layout_below="@+id/frag_setting_rl"
-        android:textSize="40sp"
+        android:layout_marginTop="32dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="96dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/frag_setting_update_rl"
+        android:layout_below="@+id/frag_setting_rl">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MyMaid"
+            android:id="@+id/frag_setting_tv_app_name"
+            android:layout_alignParentTop="true"
+            android:textSize="40sp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="64dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:textSize="16sp"
+            android:id="@+id/frag_setting_tv_app_version"
+            android:layout_alignTop="@+id/frag_setting_tv_app_name"
+            android:layout_toRightOf="@+id/frag_setting_tv_app_name" />
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

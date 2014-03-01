@@ -25,4 +25,8 @@ public class HttpUtility {
         return new JavaHttpUtility().doDownloadImage(urlStr, listener);
     }
 
+    public String executeGetHTMLTask(String urlStr) throws Exception {
+        return new JavaHttpUtility().doGetHTML(urlStr);
+    }
+
 }

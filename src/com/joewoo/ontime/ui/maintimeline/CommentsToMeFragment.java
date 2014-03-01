@@ -201,7 +201,7 @@ public class CommentsToMeFragment extends Fragment implements OnRefreshListener 
         lv.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (view.getCount() > (Integer.valueOf(AcquireCount.COMMENTS_TO_ME_COUNT) - 5) && view.getLastVisiblePosition() > (view.getCount() - 6) && !mPullToRefreshAttacher.isRefreshing() && comments != null) {
+                if (view.getCount() > (Integer.valueOf(AcquireCount.COMMENTS_TO_ME_COUNT) - 5) && view.getLastVisiblePosition() > view.getCount() - 6 && !mPullToRefreshAttacher.isRefreshing() && comments != null) {
                     Log.e(TAG, "到底");
 
                     if (isCommentsToMe)

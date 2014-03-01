@@ -16,8 +16,6 @@ import com.joewoo.ontime.support.adapter.pager.MainPagerAdapter;
 import com.joewoo.ontime.support.dialog.UserChooserDialog;
 import com.joewoo.ontime.support.util.GlobalContext;
 
-import java.util.Locale;
-
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 
 import static com.joewoo.ontime.support.info.Defines.TAG;
@@ -51,14 +49,14 @@ public class MainTimelineActivity extends FragmentActivity {
             mViewPager.setOffscreenPageLimit(3);
 
             actionBar.addTab(actionBar.newTab()
-                    .setText(getString(R.string.title_frag_atme).toUpperCase(Locale.US))
-                    .setTabListener(tabListener));
+//                    .setText(getString(R.string.title_frag_atme).toUpperCase(Locale.US))
+                    .setTabListener(tabListener).setIcon(R.drawable.ic_ab_mention));
             actionBar.addTab(actionBar.newTab()
-                    .setText(getString(R.string.title_frag_friends_timeline).toUpperCase(Locale.US))
-                    .setTabListener(tabListener));
+//                    .setText(getString(R.string.title_frag_friends_timeline).toUpperCase(Locale.US))
+                    .setTabListener(tabListener).setIcon(R.drawable.ic_ab_timeline));
             actionBar.addTab(actionBar.newTab()
-                    .setText(getString(R.string.title_frag_comments_to_me).toUpperCase(Locale.US))
-                    .setTabListener(tabListener));
+//                    .setText(getString(R.string.title_frag_comments_to_me).toUpperCase(Locale.US))
+                    .setTabListener(tabListener).setIcon(R.drawable.ic_ab_comment));
 
             mSectionsPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
             mViewPager.setAdapter(mSectionsPagerAdapter);

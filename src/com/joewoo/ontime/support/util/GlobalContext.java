@@ -2,6 +2,7 @@ package com.joewoo.ontime.support.util;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -18,6 +19,7 @@ import static com.joewoo.ontime.support.info.Defines.TAG;
  */
 public class GlobalContext extends Application {
 
+    private static final int SMALL_PROFILE_IMG_WIDTH_HEIGHT = 50;
     private static GlobalContext globalContext;
     private static String accessToken;
     private static String uid;
@@ -27,42 +29,10 @@ public class GlobalContext extends Application {
     private static BitmapDrawable profileImg;
     private static BitmapDrawable smallProfileImg;
     private static SQLiteDatabase sql;
+    private static String versionName;
 
-    private static final int SMALL_PROFILE_IMG_WIDTH_HEIGHT = 50;
-
-    @Override
-    public void onCreate() {
-        Log.e(TAG, "MyMaid START!");
-        super.onCreate();
-
-        globalContext = this;
-
-        sql = new MyMaidSQLHelper(GlobalContext.getAppContext(), MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION).getWritableDatabase();
-
-        Cursor c = sql.query(MyMaidSQLHelper.USER_TABLE, new String[]{MyMaidSQLHelper.PROFILE_IMG, MyMaidSQLHelper.UID, MyMaidSQLHelper.SCREEN_NAME, MyMaidSQLHelper.DRAFT, MyMaidSQLHelper.ACCESS_TOKEN, MyMaidSQLHelper.PIC_FILE_PATH}, MyMaidSQLHelper.LAST_LOGIN + "=?", new String[]{"1"}, null, null, null);
-
-        if (c != null && c.getCount() > 0 && c.moveToFirst()) {
-            setUID(c.getString(c.getColumnIndex(MyMaidSQLHelper.UID)));
-            setAccessToken(c.getString(c.getColumnIndex(MyMaidSQLHelper.ACCESS_TOKEN)));
-            setScreenName(c.getString(c.getColumnIndex(MyMaidSQLHelper.SCREEN_NAME)));
-            setProfileImg(c.getBlob(c.getColumnIndex(MyMaidSQLHelper.PROFILE_IMG)));
-            Log.e(TAG, "Login: " + getScreenName());
-            try {
-                setDraft(c.getString(c.getColumnIndex(MyMaidSQLHelper.DRAFT)));
-                Log.e(TAG, c.getString(c.getColumnIndex(MyMaidSQLHelper.DRAFT)));
-            } catch (Exception e) {
-                Log.e(TAG, "No Draft");
-            }
-            try {
-                setPicPath(c.getString(c.getColumnIndex(MyMaidSQLHelper.PIC_FILE_PATH)));
-                Log.e(TAG, c.getString(c.getColumnIndex(MyMaidSQLHelper.PIC_FILE_PATH)));
-            } catch (Exception e) {
-                Log.e(TAG, "No Pic");
-            }
-            c.close();
-        } else {
-            Log.e(TAG, "No Last Login User Info");
-        }
+    public static String getVersionName() {
+        return versionName;
     }
 
     public static SQLiteDatabase getSQL() {
@@ -153,6 +123,47 @@ public class GlobalContext extends Application {
         setAccessToken(null);
         setScreenName(null);
         setProfileImg(null);
+    }
+
+    @Override
+    public void onCreate() {
+        Log.e(TAG, "MyMaid START!");
+        super.onCreate();
+
+        globalContext = this;
+
+        try {
+            versionName = GlobalContext.getAppContext().getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        sql = new MyMaidSQLHelper(GlobalContext.getAppContext(), MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION).getWritableDatabase();
+
+        Cursor c = sql.query(MyMaidSQLHelper.USER_TABLE, new String[]{MyMaidSQLHelper.PROFILE_IMG, MyMaidSQLHelper.UID, MyMaidSQLHelper.SCREEN_NAME, MyMaidSQLHelper.DRAFT, MyMaidSQLHelper.ACCESS_TOKEN, MyMaidSQLHelper.PIC_FILE_PATH}, MyMaidSQLHelper.LAST_LOGIN + "=?", new String[]{"1"}, null, null, null);
+
+        if (c != null && c.getCount() > 0 && c.moveToFirst()) {
+            setUID(c.getString(c.getColumnIndex(MyMaidSQLHelper.UID)));
+            setAccessToken(c.getString(c.getColumnIndex(MyMaidSQLHelper.ACCESS_TOKEN)));
+            setScreenName(c.getString(c.getColumnIndex(MyMaidSQLHelper.SCREEN_NAME)));
+            setProfileImg(c.getBlob(c.getColumnIndex(MyMaidSQLHelper.PROFILE_IMG)));
+            Log.e(TAG, "Login: " + getScreenName());
+            try {
+                setDraft(c.getString(c.getColumnIndex(MyMaidSQLHelper.DRAFT)));
+                Log.e(TAG, c.getString(c.getColumnIndex(MyMaidSQLHelper.DRAFT)));
+            } catch (Exception e) {
+                Log.e(TAG, "No Draft");
+            }
+            try {
+                setPicPath(c.getString(c.getColumnIndex(MyMaidSQLHelper.PIC_FILE_PATH)));
+                Log.e(TAG, c.getString(c.getColumnIndex(MyMaidSQLHelper.PIC_FILE_PATH)));
+            } catch (Exception e) {
+                Log.e(TAG, "No Pic");
+            }
+            c.close();
+        } else {
+            Log.e(TAG, "No Last Login User Info");
+        }
     }
 
 }

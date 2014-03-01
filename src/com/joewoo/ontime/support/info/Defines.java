@@ -11,6 +11,8 @@ public class Defines {
 
     public final static int RESULT_DESTROYED_WEIBO = 2;
     public final static int INPUT_SHOW_DELAY = 100;
+    public final static int CHECK_APP_VERSION_DELAY = 8000;
+    public final static int WEATHER_REQUEST_DELAY = 2000;
 
     public final static String STATUS_BEAN = "status_bean";
     public final static String USER_BEAN = "user_bean";
@@ -80,6 +82,7 @@ public class Defines {
     public final static int GOT_AQI_INFO_FAIL = 58;
     public final static int GOT_SAVED_IMAGE = 59;
     public final static int GOT_SAVED_IMAGE_FAIL = 60;
+    public final static int GOT_APP_VERSION_INFO = 61;
 
 
     public final static int ACT_GOT_PHOTO = 1;

@@ -460,12 +460,14 @@ public class SingleWeiboFragment extends Fragment {
     }
 
     public void jumpToPhoto(File file, boolean isGIF) {
-        Intent ii = new Intent(act, Photo.class);
-        ii.putExtra(Defines.PHOTO_FILE, file);
-        if (isGIF)
-            ii.putExtra(Defines.IS_GIF, true);
-        act.startActivity(ii);
-        act.overridePendingTransition(R.anim.in, R.anim.alpha_out);
+        if (file != null) {
+            Intent ii = new Intent(act, Photo.class);
+            ii.putExtra(Defines.PHOTO_FILE, file);
+            if (isGIF)
+                ii.putExtra(Defines.IS_GIF, true);
+            act.startActivity(ii);
+            act.overridePendingTransition(R.anim.in, R.anim.alpha_out);
+        }
     }
 
     public void setGIFSize(double size) {

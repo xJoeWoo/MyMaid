@@ -40,6 +40,20 @@ public class JavaHttpUtility {
 
     public static final int DOWNLOAD_IMAGE_BUFFER_SIZE = 1024;
 
+    public String doGetHTML(String urlStr) throws Exception {
+        try {
+            URL url = new URL(urlStr);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+            conn.connect();
+
+            return handleResponse(conn);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
     public byte[] doDownloadImage(String urlStr, MyMaidListeners.DownloadProgressListener downloadListener) throws Exception {
 
         InputStream in = null;
@@ -170,7 +184,7 @@ public class JavaHttpUtility {
             final Thread thread = Thread.currentThread();
             while (bytesRead > 0) {
                 if (thread.isInterrupted()) {
-                    targetFile.delete();
+//                    targetFile.delete();
                     throw new Exception();
                 }
                 out.write(buffer, 0, bufferSize);

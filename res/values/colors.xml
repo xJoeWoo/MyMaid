@@ -6,7 +6,7 @@
     <color name="greyAcquireCountDialog">#ff333333</color>
     <color name="greyText">#ff888888</color>
     <color name="greySource">#ff999999</color>
-    <color name="greyBackground">#ffeeeeee</color>
+    <color name="greyBackground">#fff0f0f0</color>
 
     <color name="pinkMyMaid">#fffbb2b2</color>
     <color name="pinkSource">#fff28686</color>
