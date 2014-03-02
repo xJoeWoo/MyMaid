@@ -28,6 +28,17 @@ public class At extends Activity {
     ListView lv;
     ProgressBar pb;
     ArrayAdapter<AtSuggestionBean> files;
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            pb.setVisibility(View.GONE);
+            switch (msg.what) {
+                case GOT_AT_SUGGESTIONS_INFO: {
+                    files = (ArrayAdapter<AtSuggestionBean>) msg.obj;
+                    lv.setAdapter(files);
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,18 +66,6 @@ public class At extends Activity {
             }
         });
     }
-
-    private Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            pb.setVisibility(View.GONE);
-            switch (msg.what) {
-                case GOT_AT_SUGGESTIONS_INFO: {
-                    files = (ArrayAdapter<AtSuggestionBean>) msg.obj;
-                    lv.setAdapter(files);
-                }
-            }
-        }
-    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -58,6 +58,7 @@
     <string name="toast_aqi_city_not_supported">城市不支持…</string>
     <string name="toast_image_saved">保存成功</string>
     <string name="toast_image_save_failed">保存失败</string>
+    <string name="toast_pull_right_to_update">\t\t\t\t有新版本\n→→ 拉到最右更新 →→</string>
 
     <string name="menu_repost">转发</string>
     <string name="menu_reply">回复</string>
@@ -174,7 +175,8 @@
     <string name="dialog_weather_city_btn_ok">好</string>
     <string name="dialog_weather_city_btn_cancel">不用啦</string>
 
-    <string name="dialog_update_title">更新</string>
+    <string name="frag_setting_update_hint">按这儿更新~ ↗</string>
+
 
     <!-- <string name=""></string>
     <string name=""></string>

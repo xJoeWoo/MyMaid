@@ -14,14 +14,15 @@ import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.update.CheckUpdate;
 import com.joewoo.ontime.support.dialog.UpdataDialog;
 import com.joewoo.ontime.support.dialog.WeatherDialog;
 import com.joewoo.ontime.support.info.Defines;
+import com.joewoo.ontime.support.setting.MyMaidSettingsHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.view.MyMaidSettingView;
 
@@ -35,14 +36,17 @@ public class AboutFragment extends Fragment {
     private MyMaidSettingView aboutView;
     private TextView tv;
     private TextView tv_ver;
+    private TextView tv_update_hint;
     private View v;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == Defines.GOT_APP_VERSION_INFO && msg.obj != null) {
                 String newVer = (String) msg.obj;
-                if (!newVer.substring(0, 11).equals(GlobalContext.getVersionName()))
+                if (compareVersion(newVer))
                     hasLatestVersion(newVer);
+
+                Toast.makeText(act, R.string.toast_pull_right_to_update, Toast.LENGTH_LONG).show();
             }
         }
     };
@@ -50,13 +54,14 @@ public class AboutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        v = inflater.inflate(R.layout.frag_settings, null);
+        v = inflater.inflate(R.layout.frag_setting, null);
 
         weatherView = (MyMaidSettingView) v.findViewById(R.id.frag_setting_2);
         aboutView = (MyMaidSettingView) v.findViewById(R.id.frag_setting_3);
 
         tv = (TextView) v.findViewById(R.id.frag_setting_tv_app_name);
         tv_ver = (TextView) v.findViewById(R.id.frag_setting_tv_app_version);
+        tv_update_hint = (TextView) v.findViewById(R.id.tv_frag_setting_update_hint);
 
         return v;
     }
@@ -79,8 +84,9 @@ public class AboutFragment extends Fragment {
 
         Typeface lightTf = Typeface.createFromAsset(act.getAssets(), "fonts/Roboto-Light.ttf");
 
-        weatherView.setMainImg(R.drawable.ic_weather).setName(R.string.title_weather, lightTf);
+        tv_update_hint.setTypeface(lightTf);
 
+        weatherView.setMainImg(R.drawable.ic_weather).setName(R.string.title_weather, lightTf);
         aboutView.setMainImg(R.drawable.ic_about).setName(R.string.title_about, lightTf);
 
         weatherView.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +95,6 @@ public class AboutFragment extends Fragment {
                 WeatherDialog.show(false, act);
             }
         });
-
         aboutView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,16 +107,34 @@ public class AboutFragment extends Fragment {
         });
 
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                new CheckUpdate(handler).start();
+        if (System.currentTimeMillis() - MyMaidSettingsHelper.getLong(MyMaidSettingsHelper.CHECK_UPDATE_TIME) > 60 * 60 * 24 * 1000) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    new CheckUpdate(handler).start();
+                }
+            }, Defines.CHECK_APP_VERSION_DELAY);
+        } else {
+            String newVer = MyMaidSettingsHelper.getString(MyMaidSettingsHelper.NEW_VERSION);
+            if (newVer != null && !newVer.equals("") && compareVersion(newVer)) {
+                hasLatestVersion(newVer);
             }
-        }, Defines.CHECK_APP_VERSION_DELAY);
-
+        }
     }
 
-    public void hasLatestVersion(final String newVer) {
+    private void hasLatestVersion(final String newVer) {
+
+        if (!MyMaidSettingsHelper.getBoolean(MyMaidSettingsHelper.UPDATED))
+            tv_update_hint.setVisibility(View.VISIBLE);
+
+
+        v.findViewById(R.id.frag_setting_update_rl).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UpdataDialog.show(newVer, act);
+            }
+        });
+
         tv_ver.setText(newVer.substring(0, 4) + "\n" + "NEW!");
         tv_ver.setTextColor(act.getResources().getColor(R.color.pinkHighlightSpan));
         Spannable ssb = new SpannableString("MyMaid");
@@ -120,12 +143,9 @@ public class AboutFragment extends Fragment {
         // Holo Orange Light
         ssb.setSpan(new ForegroundColorSpan(0xffffbb33), 2, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv.setText(ssb);
-        RelativeLayout rl = (RelativeLayout) v.findViewById(R.id.frag_setting_update_rl);
-        rl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UpdataDialog.show(newVer, act);
-            }
-        });
+    }
+
+    private boolean compareVersion(String newVer) {
+        return !newVer.substring(0, 11).equals(GlobalContext.getVersionName());
     }
 }

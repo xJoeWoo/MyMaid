@@ -261,7 +261,7 @@ public class MyMaidNotificationHelper {
         NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
         bigTextStyle.setBuilder(nBuilder);
         StringBuilder sb = new StringBuilder();
-        if (aqiBean.getPrimaryPollutant() != null) {
+        if (aqiBean.getPrimaryPollutant() != null && !aqiBean.getPrimaryPollutant().equals("")) {
             sb.append(GlobalContext.getResString(R.string.notify_weather_air_pollutant)).append(aqiBean.getPrimaryPollutant()).append("\n");
             nBuilder.setContentText(GlobalContext.getResString(R.string.notify_weather_air_pollutant) + aqiBean.getPrimaryPollutant());
         } else {

@@ -2,7 +2,6 @@ package com.joewoo.ontime.support.util;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -29,10 +28,14 @@ public class GlobalContext extends Application {
     private static BitmapDrawable profileImg;
     private static BitmapDrawable smallProfileImg;
     private static SQLiteDatabase sql;
-    private static String versionName;
 
     public static String getVersionName() {
-        return versionName;
+        try {
+            return GlobalContext.getAppContext().getPackageManager().getPackageInfo(GlobalContext.getAppContext().getPackageName(), 0).versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static SQLiteDatabase getSQL() {
@@ -131,12 +134,6 @@ public class GlobalContext extends Application {
         super.onCreate();
 
         globalContext = this;
-
-        try {
-            versionName = GlobalContext.getAppContext().getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
 
         sql = new MyMaidSQLHelper(GlobalContext.getAppContext(), MyMaidSQLHelper.SQL_NAME, null, MyMaidSQLHelper.SQL_VERSION).getWritableDatabase();
 

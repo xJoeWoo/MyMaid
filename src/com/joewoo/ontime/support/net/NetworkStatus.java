@@ -15,14 +15,24 @@ public class NetworkStatus {
 
     public static boolean check(boolean showToast) {
         NetworkInfo netInfo = ((ConnectivityManager) GlobalContext.getAppContext().getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
-        if(netInfo != null && netInfo.isAvailable())
+        if (netInfo != null && netInfo.isAvailable())
             return true;
         else {
-            if(showToast)
+            if (showToast)
                 Toast.makeText(GlobalContext.getAppContext(), R.string.toast_no_network, Toast.LENGTH_SHORT).show();
             return false;
         }
+    }
 
+    public static boolean isWifi() {
+        ConnectivityManager cm = (ConnectivityManager) GlobalContext.getAppContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

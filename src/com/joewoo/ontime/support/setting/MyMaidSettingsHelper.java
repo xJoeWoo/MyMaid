@@ -12,6 +12,9 @@ public class MyMaidSettingsHelper {
 
     public static final String WEATHER_STATUS = "weather";
     public static final String WEATHER_CITY = "weather_city";
+    public static final String CHECK_UPDATE_TIME = "check_update_time";
+    public static final String NEW_VERSION = "new_version";
+    public static final String UPDATED = "updated";
 
     public static final String STORE_NAME = "Settings.mymaid";
     private static SharedPreferences preferences;
@@ -30,8 +33,17 @@ public class MyMaidSettingsHelper {
         return preferences.getBoolean(key, false);
     }
 
+    public static long getLong(String key) {
+        return preferences.getLong(key, 0);
+    }
+
     public static void save(String key, String value) {
         editor.putString(key, value);
+        editor.apply();
+    }
+
+    public static void save(String key, long value) {
+        editor.putLong(key, value);
         editor.apply();
     }
 

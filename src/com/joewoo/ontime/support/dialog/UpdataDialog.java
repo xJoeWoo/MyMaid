@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.URLHelper;
-import com.joewoo.ontime.support.util.GlobalContext;
+import com.joewoo.ontime.support.setting.MyMaidSettingsHelper;
 
 /**
  * Created by Joe on 14-3-2.
@@ -28,8 +28,7 @@ public class UpdataDialog {
 
         String[] infos = verStr.split("\\|");
 
-        String size = infos[1];
-        builder.setTitle(GlobalContext.getResString(R.string.dialog_update_title) + " (" + size + "KB)");
+        builder.setTitle("MyMaid " + infos[0].substring(0, 4) + " (" + infos[1] + "KB)");
 
         String details = infos[2];
         details = details.replace("_", "\n");
@@ -38,6 +37,7 @@ public class UpdataDialog {
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                MyMaidSettingsHelper.save(MyMaidSettingsHelper.UPDATED, true);
                 Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(URLHelper.MYMAID_DOWNLOAD));
                 context.startActivity(i);
             }

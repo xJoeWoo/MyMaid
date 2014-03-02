@@ -63,6 +63,17 @@
             android:layout_alignTop="@+id/frag_setting_tv_app_name"
             android:layout_toRightOf="@+id/frag_setting_tv_app_name" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/frag_setting_update_hint"
+            android:textSize="18sp"
+            android:paddingRight="128dp"
+            android:id="@+id/tv_frag_setting_update_hint"
+            android:layout_below="@+id/frag_setting_tv_app_name"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone" />
+
     </RelativeLayout>
 
 
