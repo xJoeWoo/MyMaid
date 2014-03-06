@@ -129,7 +129,8 @@ public class AboutFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mNotification.setRemove();
+        if (mNotification != null)
+            mNotification.setRemove();
     }
 
     private void hasLatestVersion(final String newVer) {
