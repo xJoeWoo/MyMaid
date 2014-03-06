@@ -31,8 +31,8 @@ import com.joewoo.ontime.support.menu.CopyTextContextualMenu;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.util.MyMaidUtilites;
 import com.joewoo.ontime.support.view.gridview.MuiltPhotosGirdView;
-import com.joewoo.ontime.ui.Photo;
-import com.joewoo.ontime.ui.SingleUser;
+import com.joewoo.ontime.ui.ShowPhotoActivity;
+import com.joewoo.ontime.ui.SingleUserActivity;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -161,7 +161,7 @@ public class SingleWeiboFragment extends Fragment {
             muiltPhotosAdapter.cancelAllTasks();
         }
         if (dsp != null) {
-            Log.e(TAG, "Cancel Single Photo Thread");
+            Log.e(TAG, "Cancel Single ShowPhotoActivity Thread");
             dsp.cancel(true);
         }
         if (dGifp != null) {
@@ -420,13 +420,13 @@ public class SingleWeiboFragment extends Fragment {
     }
 
     private void jumpToSingleUser() {
-        Intent ii = new Intent(act, SingleUser.class);
+        Intent ii = new Intent(act, SingleUserActivity.class);
         ii.putExtra(USER_BEAN, status.getUser());
         startActivity(ii);
     }
 
     private void jumpToRetweetedUser() {
-        Intent ii = new Intent(act, SingleUser.class);
+        Intent ii = new Intent(act, SingleUserActivity.class);
         ii.putExtra(USER_BEAN, status.getRetweetedStatus().getUser());
         startActivity(ii);
     }
@@ -461,7 +461,7 @@ public class SingleWeiboFragment extends Fragment {
 
     public void jumpToPhoto(File file, boolean isGIF) {
         if (file != null) {
-            Intent ii = new Intent(act, Photo.class);
+            Intent ii = new Intent(act, ShowPhotoActivity.class);
             ii.putExtra(Defines.PHOTO_FILE, file);
             if (isGIF)
                 ii.putExtra(Defines.IS_GIF, true);

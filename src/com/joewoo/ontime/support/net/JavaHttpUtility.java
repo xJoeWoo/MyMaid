@@ -92,7 +92,7 @@ public class JavaHttpUtility {
             while ((byteread = in.read(buffer)) != -1) {
 
                 if (currentThread.isInterrupted()) {
-                    Log.e(TAG, "Download Photo Cancelled");
+                    Log.e(TAG, "Download ShowPhotoActivity Cancelled");
                     throw new Exception();
                 }
 

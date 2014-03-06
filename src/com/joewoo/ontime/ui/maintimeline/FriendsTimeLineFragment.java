@@ -29,8 +29,8 @@ import com.joewoo.ontime.support.net.NetworkStatus;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.util.MyMaidUtilites;
 import com.joewoo.ontime.support.view.header.MainTimelineHeaderView;
-import com.joewoo.ontime.ui.Post;
-import com.joewoo.ontime.ui.SingleUser;
+import com.joewoo.ontime.ui.PostActivity;
+import com.joewoo.ontime.ui.SingleUserActivity;
 import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
 
 import java.util.List;
@@ -217,7 +217,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case MENU_POST: {
-                startActivity(new Intent(act, Post.class));
+                startActivity(new Intent(act, PostActivity.class));
                 break;
             }
             case MENU_PROFILE_IMAGE: {
@@ -226,7 +226,7 @@ public class FriendsTimeLineFragment extends Fragment implements OnRefreshListen
             }
             case MENU_UNREAD_COUNT: {
                 if (NetworkStatus.check(true)) {
-                    Intent ii = new Intent(act, SingleUser.class);
+                    Intent ii = new Intent(act, SingleUserActivity.class);
                     ii.putExtra(SCREEN_NAME, GlobalContext.getScreenName());
                     startActivity(ii);
                 }

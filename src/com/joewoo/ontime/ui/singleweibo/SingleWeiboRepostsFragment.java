@@ -22,8 +22,8 @@ import com.joewoo.ontime.support.adapter.listview.SingleWeiboMensAdapter;
 import com.joewoo.ontime.support.bean.RepostTimelineBean;
 import com.joewoo.ontime.support.bean.StatusesBean;
 import com.joewoo.ontime.support.info.AcquireCount;
-import com.joewoo.ontime.ui.CommentRepost;
-import com.joewoo.ontime.ui.SingleUser;
+import com.joewoo.ontime.ui.CommentRepostActivity;
+import com.joewoo.ontime.ui.SingleUserActivity;
 
 import java.util.List;
 
@@ -122,7 +122,7 @@ public class SingleWeiboRepostsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                                     long arg3) {
-                Intent i = new Intent(act, CommentRepost.class);
+                Intent i = new Intent(act, CommentRepostActivity.class);
                 i.putExtra(IS_COMMENT, true);
                 i.putExtra(WEIBO_ID, statuses.get(arg2).getId());
                 startActivity(i);
@@ -133,7 +133,7 @@ public class SingleWeiboRepostsFragment extends Fragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int arg2, long arg3) {
-                Intent i = new Intent(act, SingleUser.class);
+                Intent i = new Intent(act, SingleUserActivity.class);
 //                i.putExtra(STATUS_BEAN, statuses.get(arg2));
                 i.putExtra(USER_BEAN, statuses.get(arg2).getUser());
                 startActivity(i);

@@ -40,7 +40,7 @@ public class DownloadSinglePhotoInGridView extends AsyncTask<String, Integer, Bi
     protected Bitmap doInBackground(String... params) {
         String imageUrl = params[0];
 
-        Log.e(TAG, "Download Single Photo AsyncTask START");
+        Log.e(TAG, "Download Single ShowPhotoActivity AsyncTask START");
         Log.e(TAG, "Pic URL - " + imageUrl);
 
         if (!imageUrl.endsWith(".gif")) {

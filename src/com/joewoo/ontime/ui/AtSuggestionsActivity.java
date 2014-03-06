@@ -23,7 +23,7 @@ import static com.joewoo.ontime.support.info.Defines.GOT_AT_SUGGESTIONS_INFO;
 import static com.joewoo.ontime.support.info.Defines.KEY_AT_USER;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
-public class At extends Activity {
+public class AtSuggestionsActivity extends Activity {
 
     ListView lv;
     ProgressBar pb;
@@ -86,7 +86,7 @@ public class At extends Activity {
                 String user = searchView.getQuery().toString().trim();
                 if (!"".equals(user)) {
                     Log.e(TAG, user);
-                    MyMaidActionHelper.suggestionsAt(user, mHandler, At.this);
+                    MyMaidActionHelper.suggestionsAt(user, mHandler, AtSuggestionsActivity.this);
                     pb.setVisibility(View.VISIBLE);
                 }
                 return false;

@@ -42,7 +42,7 @@ public class ReplyService extends Service {
                     break;
                 }
                 case GOT_REPLY_INFO_FAIL: {
-                    mNotification.setFail((String) msg.obj, ReplyService.this);
+                    mNotification.setFail((String) msg.obj);
                     break;
                 }
             }

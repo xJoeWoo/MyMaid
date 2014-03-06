@@ -16,8 +16,8 @@ import com.joewoo.ontime.R;
 import com.joewoo.ontime.support.adapter.gridview.UserChooserAdapter;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
-import com.joewoo.ontime.ui.Login;
-import com.joewoo.ontime.ui.Post;
+import com.joewoo.ontime.ui.LoginActivity;
+import com.joewoo.ontime.ui.PostActivity;
 import com.joewoo.ontime.ui.maintimeline.MainTimelineActivity;
 
 import static com.joewoo.ontime.support.info.Defines.LOGIN_FROM_POST;
@@ -74,8 +74,8 @@ public class UserChooserDialog implements DialogInterface.OnDismissListener {
 
                         act.finish();
 
-                        if (act instanceof Post)
-                            act.startActivity(new Intent(act, Post.class));
+                        if (act instanceof PostActivity)
+                            act.startActivity(new Intent(act, PostActivity.class));
                         else
                             act.startActivity(new Intent(act, MainTimelineActivity.class));
 
@@ -86,9 +86,9 @@ public class UserChooserDialog implements DialogInterface.OnDismissListener {
 
                 } else if (usersCount - position == 0) {
                     dialog.cancel();
-                    Intent i = new Intent(act, Login.class);
+                    Intent i = new Intent(act, LoginActivity.class);
 
-                    if (act instanceof Post)
+                    if (act instanceof PostActivity)
                         i.putExtra(LOGIN_FROM_POST, true);
 
                     act.finish();
@@ -110,7 +110,7 @@ public class UserChooserDialog implements DialogInterface.OnDismissListener {
                                 dialog.cancel();
                             }
                             act.finish();
-                            act.startActivity(new Intent(act, Login.class));
+                            act.startActivity(new Intent(act, LoginActivity.class));
                         }
                     });
                     builder.setNegativeButton(R.string.frag_ftl_dialog_confirm_logout_btn_cancle, null);

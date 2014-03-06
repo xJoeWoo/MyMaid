@@ -28,9 +28,9 @@ import com.joewoo.ontime.support.bean.UnreadCountBean;
 import com.joewoo.ontime.support.info.AcquireCount;
 import com.joewoo.ontime.support.net.NetworkStatus;
 import com.joewoo.ontime.support.util.GlobalContext;
-import com.joewoo.ontime.ui.CommentRepost;
-import com.joewoo.ontime.ui.Post;
-import com.joewoo.ontime.ui.SingleUser;
+import com.joewoo.ontime.ui.CommentRepostActivity;
+import com.joewoo.ontime.ui.PostActivity;
+import com.joewoo.ontime.ui.SingleUserActivity;
 import com.joewoo.ontime.ui.singleweibo.SingleWeiboActivity;
 
 import java.util.List;
@@ -165,7 +165,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                                     long arg3) {
                 Intent i = new Intent();
-                i.setClass(act, CommentRepost.class);
+                i.setClass(act, CommentRepostActivity.class);
                 i.putExtra(IS_COMMENT, true);
                 if (isNormalMention)
                     i.putExtra(WEIBO_ID, statuses.get(arg2 - lv.getHeaderViewsCount()).getId());
@@ -253,7 +253,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
                 break;
             }
             case MENU_POST: {
-                startActivity(new Intent(act, Post.class));
+                startActivity(new Intent(act, PostActivity.class));
                 break;
             }
             case MENU_UNREAD_COUNT: {
@@ -282,7 +282,7 @@ public class MentionsFragment extends Fragment implements OnRefreshListener {
             case MENU_PROFILE_IMAGE: {
                 if (GlobalContext.getUID().equals("1665287983")) {
                     Intent i = new Intent();
-                    i.setClass(act, SingleUser.class);
+                    i.setClass(act, SingleUserActivity.class);
                     i.putExtra(SCREEN_NAME, "Selley__LauChingYee");
                     startActivity(i);
                 } else {

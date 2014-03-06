@@ -16,7 +16,7 @@ import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.support.adapter.pager.SingleWeiboPagerAdapter;
 import com.joewoo.ontime.support.util.GlobalContext;
-import com.joewoo.ontime.ui.CommentRepost;
+import com.joewoo.ontime.ui.CommentRepostActivity;
 
 import java.util.Locale;
 
@@ -136,7 +136,7 @@ public class SingleWeiboActivity extends FragmentActivity {
             }
             case MENU_REPOST: {
                 Intent ii = new Intent();
-                ii.setClass(SingleWeiboActivity.this, CommentRepost.class);
+                ii.setClass(SingleWeiboActivity.this, CommentRepostActivity.class);
                 if (singleWeiboFragment.getStatus().getRetweetedStatus() != null)
                     ii.putExtra(STATUS, "//@" + singleWeiboFragment.getStatus().getUser().getScreenName() + ":"
                             + singleWeiboFragment.getStatus().getText());
@@ -147,7 +147,7 @@ public class SingleWeiboActivity extends FragmentActivity {
             }
             case MENU_COMMENT_CREATE: {
                 Intent ii = new Intent();
-                ii.setClass(SingleWeiboActivity.this, CommentRepost.class);
+                ii.setClass(SingleWeiboActivity.this, CommentRepostActivity.class);
                 ii.putExtra(IS_COMMENT, true);
                 ii.putExtra(WEIBO_ID, singleWeiboFragment.getStatus().getId());
                 startActivity(ii);

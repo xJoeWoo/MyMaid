@@ -55,11 +55,14 @@ public class StatusesRepostTimeline extends Thread {
             hm.put(WEIBO_ID, weiboID);
             hm.put(COUNT, AcquireCount.REPOSTS_TIMELINE_COUNT);
 
-            if(maxID != null) {
+            if (maxID != null) {
                 hm.put(MAX_ID, maxID);
             }
 
             httpResult = new HttpUtility().executeGetTask(URLHelper.REPOST_TIMELINE, hm);
+
+            if (httpResult.length() < 5)
+                return;
 
             hm = null;
 
@@ -71,11 +74,10 @@ public class StatusesRepostTimeline extends Thread {
 
         if (ErrorCheck.getError(httpResult) == null) {
 
-            if(maxID == null)
+            if (maxID == null)
                 mHandler.obtainMessage(GOT_REPOST_TIMELINE_INFO, new Gson().fromJson(httpResult,
                         RepostTimelineBean.class)).sendToTarget();
-            else
-            {
+            else {
                 List<StatusesBean> statuses = new Gson().fromJson(httpResult,
                         RepostTimelineBean.class).getReposts();
                 statuses.remove(0);

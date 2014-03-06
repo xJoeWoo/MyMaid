@@ -2,6 +2,7 @@ package com.joewoo.ontime.ui.maintimeline;
 
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +12,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +21,13 @@ import android.widget.Toast;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.update.CheckUpdate;
-import com.joewoo.ontime.support.dialog.UpdataDialog;
 import com.joewoo.ontime.support.dialog.WeatherDialog;
 import com.joewoo.ontime.support.info.Defines;
+import com.joewoo.ontime.support.notification.MyMaidNotificationHelper;
 import com.joewoo.ontime.support.setting.MyMaidSettingsHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.view.MyMaidSettingView;
+import com.joewoo.ontime.ui.UpdataActivity;
 
 /**
  * Created by JoeWoo on 14-1-12.
@@ -38,15 +41,16 @@ public class AboutFragment extends Fragment {
     private TextView tv_ver;
     private TextView tv_update_hint;
     private View v;
+    private MyMaidNotificationHelper mNotification;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == Defines.GOT_APP_VERSION_INFO && msg.obj != null) {
                 String newVer = (String) msg.obj;
-                if (compareVersion(newVer))
+                if (compareVersion(newVer)) {
                     hasLatestVersion(newVer);
-
-                Toast.makeText(act, R.string.toast_pull_right_to_update, Toast.LENGTH_LONG).show();
+                    Toast.makeText(act, R.string.toast_pull_right_to_update, Toast.LENGTH_LONG).show();
+                }
             }
         }
     };
@@ -122,7 +126,16 @@ public class AboutFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mNotification.setRemove();
+    }
+
     private void hasLatestVersion(final String newVer) {
+
+        Log.e(Defines.TAG, "Old Ver: " + GlobalContext.getVersionName());
+        Log.e(Defines.TAG, "New Ver: " + newVer.substring(0, 11));
 
         if (!MyMaidSettingsHelper.getBoolean(MyMaidSettingsHelper.UPDATED))
             tv_update_hint.setVisibility(View.VISIBLE);
@@ -131,7 +144,8 @@ public class AboutFragment extends Fragment {
         v.findViewById(R.id.frag_setting_update_rl).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UpdataDialog.show(newVer, act);
+//                UpdataActivity.show(newVer, act);
+                startActivity(new Intent(act, UpdataActivity.class));
             }
         });
 
@@ -143,6 +157,9 @@ public class AboutFragment extends Fragment {
         // Holo Orange Light
         ssb.setSpan(new ForegroundColorSpan(0xffffbb33), 2, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv.setText(ssb);
+
+        mNotification = new MyMaidNotificationHelper(MyMaidNotificationHelper.APP_UPDATE, null, act);
+        mNotification.setUpdate();
     }
 
     private boolean compareVersion(String newVer) {

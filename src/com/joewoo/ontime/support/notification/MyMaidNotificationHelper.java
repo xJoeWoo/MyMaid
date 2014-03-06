@@ -20,8 +20,10 @@ import com.joewoo.ontime.support.service.ReplyService;
 import com.joewoo.ontime.support.service.RepostService;
 import com.joewoo.ontime.support.service.UpdateService;
 import com.joewoo.ontime.support.service.UploadService;
+import com.joewoo.ontime.support.setting.MyMaidSettingsHelper;
 import com.joewoo.ontime.support.util.GlobalContext;
 import com.joewoo.ontime.support.util.MyMaidUtilites;
+import com.joewoo.ontime.ui.UpdataActivity;
 
 import java.util.Calendar;
 
@@ -36,6 +38,7 @@ public class MyMaidNotificationHelper {
     public static final int REPLY = 3;
     public static final int REPOST = 4;
     public static final int WEATHER = 5;
+    public static final int APP_UPDATE = 6;
     public static final int ALL = 99;
 
     public static final int PROGRESS_UPDATE_DELAY = 500;
@@ -45,6 +48,7 @@ public class MyMaidNotificationHelper {
     private Intent i;
     private String status;
     private NotificationCompat.BigPictureStyle bigPictureStyle;
+    private Context context;
 
     private long downTime = 0;
 
@@ -54,6 +58,7 @@ public class MyMaidNotificationHelper {
     public MyMaidNotificationHelper(int what, Intent intent, Context context) {
         this.what = what;
         this.i = intent;
+        this.context = context;
 
         String title = "";
 
@@ -81,6 +86,10 @@ public class MyMaidNotificationHelper {
             case COMMENT_CREATE: {
                 status = i.getStringExtra(Defines.COMMENT);
                 title = GlobalContext.getResString(R.string.notify_comment_create_sending);
+                break;
+            }
+            case APP_UPDATE: {
+                title = GlobalContext.getResString(R.string.notify_app_update);
                 break;
             }
         }
@@ -187,7 +196,7 @@ public class MyMaidNotificationHelper {
         }
     }
 
-    public void setFail(String error, Context context) {
+    public void setFail(String error) {
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         nBuilder.setOngoing(false);
         nBuilder.setContentText(error);
@@ -284,6 +293,16 @@ public class MyMaidNotificationHelper {
         nBuilder.setContentTitle(title);
         nManager.cancel(WEATHER);
         nManager.notify(WEATHER, nBuilder.build());
+    }
+
+    public void setUpdate() {
+//        Intent ii = new Intent(Intent.ACTION_VIEW, Uri.parse(URLHelper.MYMAID_DOWNLOAD));
+        PendingIntent pi = PendingIntent.getActivity(GlobalContext.getAppContext(), 0, new Intent(context, UpdataActivity.class), 0);
+        nBuilder.setAutoCancel(true);
+        nBuilder.setContentIntent(pi);
+        nBuilder.setContentText(GlobalContext.getResString(R.string.notify_app_update_content_text) + MyMaidSettingsHelper.getString(MyMaidSettingsHelper.NEW_VERSION).split("\\|")[1] + "KB");
+        nBuilder.setTicker(GlobalContext.getResString(R.string.notify_app_update));
+        nManager.notify(APP_UPDATE, nBuilder.build());
     }
 
     public void setWeather(WeatherNowBean weatherBean) {

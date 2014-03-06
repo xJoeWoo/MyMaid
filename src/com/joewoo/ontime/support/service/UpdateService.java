@@ -42,7 +42,7 @@ public class UpdateService extends Service {
                     break;
                 }
                 case GOT_UPDATE_INFO_FAIL: {
-                    mNotification.setFail((String) msg.obj, UpdateService.this);
+                    mNotification.setFail((String) msg.obj);
                     break;
                 }
             }
@@ -63,7 +63,7 @@ public class UpdateService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.e(TAG, "Post Service DESTROY!");
+        Log.e(TAG, "PostActivity Service DESTROY!");
     }
 
     @Override

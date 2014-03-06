@@ -46,7 +46,7 @@ public class UploadService extends Service implements MyMaidListeners.UploadProg
                     break;
                 }
                 case GOT_UPLOAD_INFO_FAIL: {
-                    mNotification.setFail((String) msg.obj, UploadService.this);
+                    mNotification.setFail((String) msg.obj);
                     break;
                 }
             }

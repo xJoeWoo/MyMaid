@@ -26,7 +26,7 @@ import pl.droidsonroids.gif.GifImageView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 
-public class Photo extends Activity implements PhotoViewAttacher.OnMatrixChangedListener, PhotoViewAttacher.OnViewTapListener {
+public class ShowPhotoActivity extends Activity implements PhotoViewAttacher.OnMatrixChangedListener, PhotoViewAttacher.OnViewTapListener {
 
     private GifImageView iv;
     private File imgFile;
@@ -35,11 +35,11 @@ public class Photo extends Activity implements PhotoViewAttacher.OnMatrixChanged
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case Defines.GOT_SAVED_IMAGE: {
-                    Toast.makeText(Photo.this, R.string.toast_image_saved, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShowPhotoActivity.this, R.string.toast_image_saved, Toast.LENGTH_SHORT).show();
                     break;
                 }
                 case Defines.GOT_SAVED_IMAGE_FAIL: {
-                    Toast.makeText(Photo.this, R.string.toast_image_save_failed, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShowPhotoActivity.this, R.string.toast_image_save_failed, Toast.LENGTH_SHORT).show();
                     break;
                 }
             }

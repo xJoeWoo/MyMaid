@@ -10,14 +10,12 @@ import android.util.Log;
 import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.support.notification.MyMaidNotificationHelper;
 import com.joewoo.ontime.support.sql.MyMaidSQLHelper;
-import com.joewoo.ontime.ui.CommentRepost;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.joewoo.ontime.support.info.Defines.GOT_REPOST_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_REPOST_INFO_FAIL;
-import static com.joewoo.ontime.support.info.Defines.IS_REPOST;
 import static com.joewoo.ontime.support.info.Defines.STATUS;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
@@ -45,7 +43,7 @@ public class RepostService extends Service {
                     break;
                 }
                 case GOT_REPOST_INFO_FAIL: {
-                    mNotification.setFail((String) msg.obj, RepostService.this);
+                    mNotification.setFail((String) msg.obj);
                     break;
                 }
             }

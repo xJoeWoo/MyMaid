@@ -38,7 +38,7 @@ import static com.joewoo.ontime.support.info.Defines.MENU_POST;
 import static com.joewoo.ontime.support.info.Defines.MENU_TOPIC;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
-public class Post extends Activity {
+public class PostActivity extends Activity {
 
     private EditText et_post;
     private long downTime = 0;
@@ -78,7 +78,7 @@ public class Post extends Activity {
         setContentView(R.layout.act_post);
         findViews();
 
-        Log.e(TAG, "Post Weibo");
+        Log.e(TAG, "PostActivity Weibo");
 
         getActionBar().setDisplayUseLogoEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -194,7 +194,7 @@ public class Post extends Activity {
             }
             case MENU_LETTERS: {
                 if (System.currentTimeMillis() - downTime > 2000) {
-                    Toast.makeText(Post.this,
+                    Toast.makeText(PostActivity.this,
                             R.string.toast_press_again_to_clear_text,
                             Toast.LENGTH_SHORT).show();
                     downTime = System.currentTimeMillis();
@@ -221,7 +221,7 @@ public class Post extends Activity {
 
                 } else {
                     if (System.currentTimeMillis() - downTime > 2000) {
-                        Toast.makeText(Post.this,
+                        Toast.makeText(PostActivity.this,
                                 R.string.toast_press_again_to_clear_img,
                                 Toast.LENGTH_SHORT).show();
                         downTime = System.currentTimeMillis();
@@ -245,7 +245,7 @@ public class Post extends Activity {
                     }
                     finish();
                 } else {
-                    Toast.makeText(Post.this, R.string.toast_say_sth,
+                    Toast.makeText(PostActivity.this, R.string.toast_say_sth,
                             Toast.LENGTH_SHORT).show();
                 }
 //                }
@@ -253,10 +253,10 @@ public class Post extends Activity {
             }
             case MENU_AT: {
                 if (NetworkStatus.check(false))
-                    startActivityForResult(new Intent(Post.this, At.class),
+                    startActivityForResult(new Intent(PostActivity.this, AtSuggestionsActivity.class),
                             ACT_GOT_AT);
                 else {
-                    Toast.makeText(Post.this, R.string.toast_no_network_to_at,
+                    Toast.makeText(PostActivity.this, R.string.toast_no_network_to_at,
                             Toast.LENGTH_SHORT).show();
                 }
                 break;

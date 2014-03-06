@@ -58,7 +58,7 @@
     <string name="toast_aqi_city_not_supported">City not supported…</string>
     <string name="toast_image_saved">Saved</string>
     <string name="toast_image_save_failed">Save failed…</string>
-    <string name="toast_pull_right_to_update">\t\t\t\tNEW VERSION\n→→ Pull Right to Update →→</string>
+    <string name="toast_pull_right_to_update">\t\t\tNEW VERSION\n→→ Pull Right to Update →→</string>
 
 
     <string name="menu_repost">REPOST</string>
@@ -164,6 +164,8 @@
     <string name="notify_weather_air_aqi">AQI\t</string>
     <string name="notify_weather_wind">Wind\t</string>
     <string name="notify_weather_humidity">Humidity\t</string>
+    <string name="notify_app_update">New MyMaid</string>
+    <string name="notify_app_update_content_text">Need&#160;</string>
 
     <string name="dialog_about_title">About</string>
     <string name="dialog_about_message">Thanks for using MyMaid!\n\nBugs could occur anytime and everywhere XD\n\nAnd I feel that\'s all my About (///▽///)</string>

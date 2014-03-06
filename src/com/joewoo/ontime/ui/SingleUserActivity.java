@@ -42,7 +42,7 @@ import static com.joewoo.ontime.support.info.Defines.STATUS_BEAN_POSITION;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 import static com.joewoo.ontime.support.info.Defines.USER_BEAN;
 
-public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefreshListener {
+public class SingleUserActivity extends Activity implements PullToRefreshAttacher.OnRefreshListener {
 
     private ListView lv;
     private List<StatusesBean> statuses;
@@ -62,7 +62,7 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
                 case GOT_USER_TIMELINE_INFO: {
                     statuses = (List<StatusesBean>) msg.obj;
 
-                    if(user == null) {
+                    if (user == null) {
                         user = statuses.get(0).getUser();
                         getActionBar().setTitle(user.getScreenName());
                         MyMaidActionHelper.profileImage(user.getAvatarLarge(), mHandler);
@@ -81,8 +81,8 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
                     break;
                 }
                 case GOT_USER_TIMELINE_INFO_FAIL: {
-                    if(msg.obj != null)
-                        Toast.makeText(SingleUser.this, (String) msg.obj, Toast.LENGTH_SHORT).show();
+                    if (msg.obj != null)
+                        Toast.makeText(SingleUserActivity.this, (String) msg.obj, Toast.LENGTH_SHORT).show();
                     mPullToRefreshAttacher.setRefreshing(false);
                     finish();
                     break;
@@ -94,7 +94,7 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
 
     @Override
     public void onRefreshStarted(View view) {
-        if(NetworkStatus.check(true))
+        if (NetworkStatus.check(true))
             refreshTimeLine();
         else
             mHandler.sendEmptyMessage(GOT_USER_TIMELINE_INFO_FAIL);
@@ -115,7 +115,7 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
         user = getIntent().getParcelableExtra(USER_BEAN);
         headerView = new UserTimelineHeaderView(this);
 
-        if(user != null) {
+        if (user != null) {
             getActionBar().setTitle(user.getScreenName());
             refreshTimeLine();
         } else {
@@ -132,7 +132,7 @@ public class SingleUser extends Activity implements PullToRefreshAttacher.OnRefr
                 if (b.getRetweetedStatus() != null && b.getRetweetedStatus().getUser() == null)
                     return; // 微博已被删除不继续进行
 
-                Intent ii = new Intent(SingleUser.this, SingleWeiboActivity.class);
+                Intent ii = new Intent(SingleUserActivity.this, SingleWeiboActivity.class);
                 ii.putExtra(STATUS_BEAN, b);
                 ii.putExtra(STATUS_BEAN_POSITION, arg2 - lv.getHeaderViewsCount());
                 startActivityForResult(ii, RESULT_DESTROYED_WEIBO);

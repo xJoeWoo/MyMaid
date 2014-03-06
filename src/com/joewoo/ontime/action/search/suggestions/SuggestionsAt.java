@@ -34,7 +34,7 @@ public class SuggestionsAt extends Thread {
     }
 
     public void run() {
-        Log.e(TAG, "At User Suggestions Thread START");
+        Log.e(TAG, "AtSuggestionsActivity User Suggestions Thread START");
         String httpResult;
 
         try {
@@ -62,7 +62,7 @@ public class SuggestionsAt extends Thread {
 
 
         } catch (Exception e) {
-            Log.e(TAG, "At User Suggesstions FAILED");
+            Log.e(TAG, "AtSuggestionsActivity User Suggesstions FAILED");
             e.printStackTrace();
         }
 

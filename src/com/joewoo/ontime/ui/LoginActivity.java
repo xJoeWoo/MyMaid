@@ -34,7 +34,7 @@ import static com.joewoo.ontime.support.info.Defines.GOT_SHOW_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.LOGIN_FROM_POST;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 
-public class Login extends Activity {
+public class LoginActivity extends Activity {
 
     public WebView wv_login;
 
@@ -105,7 +105,7 @@ public class Login extends Activity {
                 }
 
                 case GOT_ACCESS_TOKEN_FAIL: {
-                    Toast.makeText(Login.this, R.string.toast_access_token_fail, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.toast_access_token_fail, Toast.LENGTH_SHORT).show();
                     break;
                 }
                 case GOT_SHOW_INFO: {
@@ -153,10 +153,10 @@ public class Login extends Activity {
                     MyMaidSQLHelper.setLastLogin(GlobalContext.getUID());
 
                     if (getIntent().getBooleanExtra(LOGIN_FROM_POST, false)) {
-                        startActivity(new Intent(Login.this, MainTimelineActivity.class));
+                        startActivity(new Intent(LoginActivity.this, MainTimelineActivity.class));
                         finish();
                     } else {
-                        WeatherDialog.show(true, Login.this);
+                        WeatherDialog.show(true, LoginActivity.this);
                     }
 
                     break;

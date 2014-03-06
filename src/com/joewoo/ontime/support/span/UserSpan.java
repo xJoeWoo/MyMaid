@@ -7,7 +7,7 @@ import android.text.style.ClickableSpan;
 import android.view.View;
 
 import com.joewoo.ontime.R;
-import com.joewoo.ontime.ui.SingleUser;
+import com.joewoo.ontime.ui.SingleUserActivity;
 
 import static com.joewoo.ontime.support.info.Defines.SCREEN_NAME;
 
@@ -27,7 +27,7 @@ public class UserSpan extends ClickableSpan {
 
     @Override
     public void onClick(View sourceView) {
-        Intent i = new Intent(context, SingleUser.class);
+        Intent i = new Intent(context, SingleUserActivity.class);
         i.putExtra(SCREEN_NAME, getScreenName());
         context.startActivity(i);
     }

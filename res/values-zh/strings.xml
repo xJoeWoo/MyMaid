@@ -58,7 +58,7 @@
     <string name="toast_aqi_city_not_supported">城市不支持…</string>
     <string name="toast_image_saved">保存成功</string>
     <string name="toast_image_save_failed">保存失败</string>
-    <string name="toast_pull_right_to_update">\t\t\t\t有新版本\n→→ 拉到最右更新 →→</string>
+    <string name="toast_pull_right_to_update">\t\t\t有新版本\n→→ 拉到最右更新 →→</string>
 
     <string name="menu_repost">转发</string>
     <string name="menu_reply">回复</string>
@@ -165,6 +165,8 @@
     <string name="notify_weather_air_pollutant">污染\t</string>
     <string name="notify_weather_wind">风力\t</string>
     <string name="notify_weather_humidity">湿度\t</string>
+    <string name="notify_app_update">女仆有新版本</string>
+    <string name="notify_app_update_content_text">体重</string>
 
     <string name="dialog_about_title">关于</string>
     <string name="dialog_about_message">感谢使用“自家用女仆”！\n\nBug多提示少是本软件的特色\n\n关于什么的就懒得写了 (///▽///)</string>

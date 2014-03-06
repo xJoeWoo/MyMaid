@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.joewoo.ontime.action.MyMaidActionHelper;
 import com.joewoo.ontime.support.notification.MyMaidNotificationHelper;
-import com.joewoo.ontime.ui.CommentRepost;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -17,7 +16,6 @@ import java.util.TimerTask;
 import static com.joewoo.ontime.support.info.Defines.COMMENT;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENT_CREATE_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMENT_CREATE_INFO_FAIL;
-import static com.joewoo.ontime.support.info.Defines.IS_COMMENT;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
@@ -32,7 +30,7 @@ public class CommentCreateService extends Service {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case GOT_COMMENT_CREATE_INFO:{
+                case GOT_COMMENT_CREATE_INFO: {
                     mNotification.setSuccess();
                     new Timer().schedule(new TimerTask() {
                         @Override
@@ -43,7 +41,7 @@ public class CommentCreateService extends Service {
                     break;
                 }
                 case GOT_COMMENT_CREATE_INFO_FAIL: {
-                    mNotification.setFail((String) msg.obj, CommentCreateService.this);
+                    mNotification.setFail((String) msg.obj);
                     break;
                 }
             }

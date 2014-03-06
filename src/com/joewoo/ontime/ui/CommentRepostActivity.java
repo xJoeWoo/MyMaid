@@ -37,7 +37,7 @@ import static com.joewoo.ontime.support.info.Defines.STATUS;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 import static com.joewoo.ontime.support.info.Defines.WEIBO_ID;
 
-public class CommentRepost extends Activity {
+public class CommentRepostActivity extends Activity {
 
     private long downTime;
     private EditText et;
@@ -62,6 +62,7 @@ public class CommentRepost extends Activity {
         setProgressBarIndeterminateVisibility(false);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowTitleEnabled(true);
         et = (EditText) findViewById(R.id.comment_et);
 
@@ -167,7 +168,7 @@ public class CommentRepost extends Activity {
             }
             case MENU_LETTERS: {
                 if (System.currentTimeMillis() - downTime > 2000) {
-                    Toast.makeText(CommentRepost.this, R.string.toast_press_again_to_clear_text,
+                    Toast.makeText(CommentRepostActivity.this, R.string.toast_press_again_to_clear_text,
                             Toast.LENGTH_SHORT).show();
                     downTime = System.currentTimeMillis();
                 } else {
@@ -197,7 +198,7 @@ public class CommentRepost extends Activity {
                     finish();
 
                 } else {
-                    Toast.makeText(CommentRepost.this, R.string.toast_say_sth, Toast.LENGTH_SHORT)
+                    Toast.makeText(CommentRepostActivity.this, R.string.toast_say_sth, Toast.LENGTH_SHORT)
                             .show();
                 }
 
@@ -205,7 +206,7 @@ public class CommentRepost extends Activity {
             }
             case MENU_AT: {
 
-                startActivityForResult(new Intent(CommentRepost.this, At.class),
+                startActivityForResult(new Intent(CommentRepostActivity.this, AtSuggestionsActivity.class),
                         ACT_GOT_AT);
 
                 break;
@@ -229,7 +230,7 @@ public class CommentRepost extends Activity {
 //            sending = false;
 //            setProgressBarIndeterminateVisibility(false);
 //            invalidateOptionsMenu();
-//            Toast.makeText(CommentRepost.this, (String) msg.obj,
+//            Toast.makeText(CommentRepostActivity.this, (String) msg.obj,
 //                    Toast.LENGTH_SHORT).show();
 //            switch (msg.what) {
 //                case GOT_COMMENT_CREATE_INFO:

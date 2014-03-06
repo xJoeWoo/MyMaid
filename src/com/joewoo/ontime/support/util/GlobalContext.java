@@ -144,7 +144,7 @@ public class GlobalContext extends Application {
             setAccessToken(c.getString(c.getColumnIndex(MyMaidSQLHelper.ACCESS_TOKEN)));
             setScreenName(c.getString(c.getColumnIndex(MyMaidSQLHelper.SCREEN_NAME)));
             setProfileImg(c.getBlob(c.getColumnIndex(MyMaidSQLHelper.PROFILE_IMG)));
-            Log.e(TAG, "Login: " + getScreenName());
+            Log.e(TAG, "LoginActivity: " + getScreenName());
             try {
                 setDraft(c.getString(c.getColumnIndex(MyMaidSQLHelper.DRAFT)));
                 Log.e(TAG, c.getString(c.getColumnIndex(MyMaidSQLHelper.DRAFT)));
@@ -159,7 +159,7 @@ public class GlobalContext extends Application {
             }
             c.close();
         } else {
-            Log.e(TAG, "No Last Login User Info");
+            Log.e(TAG, "No Last LoginActivity User Info");
         }
     }
 

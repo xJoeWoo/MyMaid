@@ -18,8 +18,8 @@ import java.util.List;
 
 import static com.joewoo.ontime.support.info.Defines.ACCESS_TOKEN;
 import static com.joewoo.ontime.support.info.Defines.COUNT;
-import static com.joewoo.ontime.support.info.Defines.GOT_COMMNETS_SHOW_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMNETS_SHOW_ADD_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_COMMNETS_SHOW_INFO;
 import static com.joewoo.ontime.support.info.Defines.GOT_COMMNETS_SHOW_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.MAX_ID;
 import static com.joewoo.ontime.support.info.Defines.TAG;
@@ -58,6 +58,9 @@ public class CommentsShow extends Thread {
 
             httpResult = new HttpUtility().executeGetTask(URLHelper.COMMENTS_SHOW, hm);
 
+            if (httpResult.length() < 5)
+                return;
+
             hm = null;
 
         } catch (Exception e) {
@@ -69,7 +72,7 @@ public class CommentsShow extends Thread {
         if (ErrorCheck.getError(httpResult) == null) {
 
             if (maxID == null)
-                mHandler.obtainMessage(GOT_COMMNETS_SHOW_INFO,  new Gson().fromJson(httpResult,
+                mHandler.obtainMessage(GOT_COMMNETS_SHOW_INFO, new Gson().fromJson(httpResult,
                         CommentsToMeBean.class)).sendToTarget();
             else {
                 List<CommentsBean> comments = new Gson().fromJson(httpResult,
