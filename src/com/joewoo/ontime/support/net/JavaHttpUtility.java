@@ -16,7 +16,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
@@ -29,16 +28,31 @@ import static com.joewoo.ontime.support.info.Defines.TAG;
  */
 public class JavaHttpUtility {
 
-    public static final int CONNECT_TIMEOUT = 5 * 1000;
-    public static final int READ_TIMEOUT = 5 * 1000;
+    public static final int CONNECT_TIMEOUT = 20 * 1000;
+    public static final int READ_TIMEOUT = 20 * 1000;
 
-    public static final int UPLOAD_CONNECT_TIMEOUT = 10 * 1000;
-    public static final int UPLOAD_READ_TIMEOUT = 5 * 1000;
+    public static final int UPLOAD_CONNECT_TIMEOUT = 20 * 1000;
+    public static final int UPLOAD_READ_TIMEOUT = 20 * 1000;
 
-    public static final int DOWNLOAD_CONNECT_TIMEOUT = 5 * 1000;
-    public static final int DOWNLOAD_READ_TIMEOUT = 5 * 1000;
+    public static final int DOWNLOAD_CONNECT_TIMEOUT = 20 * 1000;
+    public static final int DOWNLOAD_READ_TIMEOUT = 20 * 1000;
 
     public static final int DOWNLOAD_IMAGE_BUFFER_SIZE = 1024;
+
+    private static String getBoundry() {
+        StringBuilder _sb = new StringBuilder();
+        for (int t = 1; t < 12; t++) {
+            long time = System.currentTimeMillis() + t;
+            if (time % 3 == 0) {
+                _sb.append((char) time % 9);
+            } else if (time % 3 == 1) {
+                _sb.append((char) (65 + time % 26));
+            } else {
+                _sb.append((char) (97 + time % 26));
+            }
+        }
+        return _sb.toString();
+    }
 
     public String doGetHTML(String urlStr) throws Exception {
         try {
@@ -79,7 +93,7 @@ public class JavaHttpUtility {
             int bytetotal = conn.getContentLength();
             Log.e(TAG, "Image to download size: " + String.valueOf(bytetotal));
             int bytesum = 0;
-            int byteread = 0;
+            int byteread;
 
             in = new BufferedInputStream(conn.getInputStream());
             in = conn.getInputStream();
@@ -138,7 +152,6 @@ public class JavaHttpUtility {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        int totalSent = 0;
         String lenstr = Integer.toString(contentLength);
 
         HttpURLConnection conn = null;
@@ -165,7 +178,6 @@ public class JavaHttpUtility {
 
             out = new BufferedOutputStream(conn.getOutputStream());
             out.write(sendStr.getBytes("UTF-8"));
-            totalSent += sendStr.getBytes("UTF-8").length;
 
 
             fis = new FileInputStream(targetFile);
@@ -201,9 +213,7 @@ public class JavaHttpUtility {
 
 
             out.write(barry);
-            totalSent += barry.length;
             out.write(barry);
-            totalSent += barry.length;
             out.flush();
             out.close();
             if (listener != null) {
@@ -360,28 +370,11 @@ public class JavaHttpUtility {
         return sb.toString();
     }
 
-    private static String getBoundry() {
-        StringBuilder _sb = new StringBuilder();
-        for (int t = 1; t < 12; t++) {
-            long time = System.currentTimeMillis() + t;
-            if (time % 3 == 0) {
-                _sb.append((char) time % 9);
-            } else if (time % 3 == 1) {
-                _sb.append((char) (65 + time % 26));
-            } else {
-                _sb.append((char) (97 + time % 26));
-            }
-        }
-        return _sb.toString();
-    }
-
     private String getBoundaryMessage(String boundary, Map params, String fileField, String fileName, String fileType) {
         StringBuilder res = new StringBuilder("--").append(boundary).append("\r\n");
 
-        Iterator keys = params.keySet().iterator();
-
-        while (keys.hasNext()) {
-            String key = (String) keys.next();
+        for (Object o : params.keySet()) {
+            String key = (String) o;
             String value = (String) params.get(key);
             res.append("Content-Disposition: form-data; name=\"")
                     .append(key).append("\"\r\n").append("\r\n")

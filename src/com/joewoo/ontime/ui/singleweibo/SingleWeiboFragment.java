@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.joewoo.ontime.R;
 import com.joewoo.ontime.action.MyMaidActionHelper;
@@ -38,6 +39,7 @@ import java.io.File;
 import java.text.DecimalFormat;
 
 import static com.joewoo.ontime.support.info.Defines.GOT_STATUSES_SHOW_INFO;
+import static com.joewoo.ontime.support.info.Defines.GOT_STATUSES_SHOW_INFO_FAIL;
 import static com.joewoo.ontime.support.info.Defines.STATUS_BEAN;
 import static com.joewoo.ontime.support.info.Defines.TAG;
 import static com.joewoo.ontime.support.info.Defines.USER_BEAN;
@@ -75,14 +77,23 @@ public class SingleWeiboFragment extends Fragment {
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == GOT_STATUSES_SHOW_INFO) {
-                status = (StatusesBean) msg.obj;
-                weiboID = status.getId();
-                in = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.in);
-                out = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.out);
-                setViewShow();
-                setStatus();
+            switch (msg.what) {
+                case GOT_STATUSES_SHOW_INFO: {
+                    status = (StatusesBean) msg.obj;
+                    weiboID = status.getId();
+                    in = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.in);
+                    out = AnimationUtils.loadAnimation(GlobalContext.getAppContext(), R.anim.out);
+                    setViewShow();
+                    setStatus();
+                    break;
+                }
+                case GOT_STATUSES_SHOW_INFO_FAIL: {
+                    if (msg.obj != null)
+                        Toast.makeText(act, (String) msg.obj, Toast.LENGTH_SHORT).show();
+                    break;
+                }
             }
+
         }
     };
     private DownloadPhoto dp;

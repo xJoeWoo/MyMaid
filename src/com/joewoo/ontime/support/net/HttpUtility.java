@@ -13,6 +13,8 @@ public class HttpUtility {
         return new JavaHttpUtility().doGet(urlStr, param);
     }
 
+    //链接URL, POST参数
+    //返回服务器的回应String
     public String executePostTask(String urlStr, Map<String, String> param) throws Exception {
         return new JavaHttpUtility().doPost(urlStr, param);
     }

@@ -51,23 +51,20 @@ public class PostActivity extends Activity {
         MyMaidNotificationHelper.cancel(MyMaidNotificationHelper.UPLOAD);
 
         String type = intent.getType();
+        String text = intent.getStringExtra(Intent.EXTRA_TEXT);
 
         if (Intent.ACTION_SEND.equals(intent.getAction()) && type != null) {// 分享到此Activity
             if (type.startsWith("text/")) { // 传入文件为文字
                 Log.e(TAG, "Share TEXT");
-                String text = intent.getStringExtra(Intent.EXTRA_TEXT);
-                if (text != null) {
-                    et_post.setText(text);
-                    et_post.setSelection(text.length());
-                }
             } else if (type.startsWith("image/")) { // 传入文件为图片
                 Log.e(TAG, "Share PHOTO");
                 Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
                 if (uri != null) {
-                    GlobalContext.setPicPath(getFilePath(uri));
+                    GlobalContext.setPicPath(getImgPath(uri));
                 }
                 invalidateOptionsMenu();
             }
+            setTextToEditText(text);
         }
     }
 
@@ -85,31 +82,37 @@ public class PostActivity extends Activity {
 
         Intent i = getIntent();
 
+        String text = i.getStringExtra(Intent.EXTRA_TEXT);
         String type = i.getType();
+
+        Log.e(TAG, "Action type: " + type);
 
         if (Intent.ACTION_SEND.equals(i.getAction()) && type != null) {// 分享到此Activity
             if (type.startsWith("text/")) { // 传入文件为文字
                 Log.e(TAG, "Share TEXT");
-                String text = i.getStringExtra(Intent.EXTRA_TEXT);
-                if (text != null) {
-                    et_post.setText(text);
-                    et_post.setSelection(text.length());
-                }
             } else if (type.startsWith("image/")) { // 传入文件为图片
                 Log.e(TAG, "Share PHOTO");
                 Uri uri = i.getParcelableExtra(Intent.EXTRA_STREAM);
                 if (uri != null) {
-                    GlobalContext.setPicPath(getFilePath(uri));
+                    Log.e(TAG, "Uri: " + uri.toString());
+                    String imgPath = uri.toString();
+                    try {
+                        imgPath = getImgPath(uri);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    GlobalContext.setPicPath(imgPath);
                 }
                 invalidateOptionsMenu();
             }
+            setTextToEditText(text);
         }
 
         if (GlobalContext.getAccessToken() != null) {
             String draft = GlobalContext.getDraft();
             if (draft != null && et_post.getText() != null && et_post.getText().toString().equals("")) {
-                et_post.setText(draft);
-                et_post.setSelection(draft.length());
+                setTextToEditText(draft);
             }
         } else {
             new UserChooserDialog().show(this);
@@ -199,7 +202,7 @@ public class PostActivity extends Activity {
                             Toast.LENGTH_SHORT).show();
                     downTime = System.currentTimeMillis();
                 } else {
-                    et_post.setText("");
+                    setTextToEditText("");
                     GlobalContext.setDraft(null);
                 }
                 break;
@@ -285,27 +288,33 @@ public class PostActivity extends Activity {
                 }
                 case ACT_GOT_PHOTO: {
                     Log.e(TAG, data.getData().toString());
-                    GlobalContext.setPicPath(getFilePath(data.getData()));
+                    GlobalContext.setPicPath(getImgPath(data.getData()));
                     invalidateOptionsMenu();
                     break;
                 }
             }
 
         }
-
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private String getFilePath(Uri uri) {
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(uri, filePathColumn, null,
-                null, null);
-        cursor.moveToFirst();
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        String filePath = cursor.getString(columnIndex);
-        cursor.close();
-        Log.e(TAG, "File Path: " + filePath);
-        return filePath;
+    private String getImgPath(Uri uri) {
+        String filePath = uri.toString();
+        if (filePath.startsWith("file://")) {
+            Log.e(TAG, "File Path: " + filePath.replace("file://", ""));
+            return filePath.replace("file://", "");
+        } else if (filePath.startsWith("content://")) {
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(uri, filePathColumn, null,
+                    null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            filePath = cursor.getString(columnIndex);
+            cursor.close();
+            Log.e(TAG, "File Path: " + filePath);
+            return filePath;
+        } else
+            return "";
     }
 
     @Override
@@ -315,6 +324,14 @@ public class PostActivity extends Activity {
         if (et_post.getText() != null && !et_post.getText().toString().trim().equals(""))
             GlobalContext.setDraft(et_post.getText().toString());
         MyMaidSQLHelper.saveDraft();
+    }
+
+    private void setTextToEditText(String text) {
+        if (text != null) {
+            et_post.setText(text);
+            if (text.length() > 0)
+                et_post.setSelection(text.length());
+        }
     }
 
     private void insertString(String toInert, boolean toInsertEnd) {

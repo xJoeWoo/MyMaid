@@ -35,7 +35,7 @@ public class StatusesUpload extends Thread {
 
     public void run() {
         Log.e(TAG, "Statuses Upload Weibo Thread START");
-        String httpResult = null;
+        String httpResult;
         try {
             HashMap<String, String> hm = new HashMap<String, String>();
 
